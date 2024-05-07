@@ -3,13 +3,11 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author 15279
@@ -52,31 +50,33 @@ public class StoreHouse implements Serializable {
      * 创建人
      */
     @TableField("createBy")
-    private Integer createby;
+    private Integer createBy;
+
+    private String createUser;
+
+    private String updateUser;
 
     /**
      * 创建时间
      */
-    @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createTime;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateby;
+    private Integer updateBy;
 
     /**
      * 修改时间
      */
-    @TableField("updateTime")
-    private LocalDateTime updatetime;
+    private Date updateTime;
 
     /**
      * 删除标识
      */
     @TableField("isDel")
-    private Integer isdel;
+    private Integer isDel;
 
     /**
      * 仓库编号

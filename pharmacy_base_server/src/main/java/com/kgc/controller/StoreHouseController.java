@@ -6,6 +6,7 @@ import com.kgc.entity.Page;
 import com.kgc.entity.StoreHouse;
 import com.kgc.service.StoreHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,14 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @create 2024/5/7 10:34
  */
 @RestController
-@RequestMapping("storehouse")
+@RequestMapping("/base")
 public class StoreHouseController {
-
     @Autowired
     private StoreHouseService service;
 
     @RequestMapping("getStoreHouseList")
-    public Message getStoreHouseList(String code, Page page) {
+    public Message getStoreHouseList(String code,@RequestBody Page page) {
         Message message = service.getStoreHouseList(code,page);
         return message;
     }

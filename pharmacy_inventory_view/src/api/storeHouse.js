@@ -1,17 +1,13 @@
 import request from '../utils/request.js';
 
-const baseUrl = '/base/storehouse';
+const baseUrl = '/base';
 
-const getStoreList = (page,code) => {
-    return request.post(baseUrl + "/getUserAddress",{
+export function getStoreList(page,code) {
+    return request.post(baseUrl + "/getStoreHouseList",{
         page:{
             pageNum:page.pageNum,
             pageSize:page.pageSize
         },
         code:code
     });
-}
-
-export {
-    getStoreList
 }
