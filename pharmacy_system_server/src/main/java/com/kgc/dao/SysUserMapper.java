@@ -4,6 +4,8 @@ import com.kgc.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -16,5 +18,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SysUserMapper extends BaseMapper<SysUser> {
      SysUser existUser(String userName);
      SysUser login(SysUser user);
+     List<SysUser> getUsersListByPage(SysUser user);
 
 }

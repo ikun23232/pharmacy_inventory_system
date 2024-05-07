@@ -37,4 +37,19 @@
           and password = #{password}
           and isDel = 0
     </select>
+    <select id="getUsersListByPage" resultType="com.kgc.entity.SysUser">
+        select userId, userName, password, age, six, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
+        <where>
+            isDel = 0
+            <if test="userName != null and userName != ''">
+                and userName like concat("%",#{userName},"%")
+            </if>
+            <if test="sex > 0">
+                and sex = #{sex}
+            </if>
+            <if test="isState > 0">
+                and isState = #{isState}
+            </if>
+        </where>
+    </select>
 </mapper>

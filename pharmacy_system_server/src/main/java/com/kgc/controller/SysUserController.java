@@ -2,6 +2,7 @@ package com.kgc.controller;
 
 
 import com.kgc.entity.Message;
+import com.kgc.entity.Page;
 import com.kgc.entity.SysUser;
 import com.kgc.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class SysUserController {
     @RequestMapping("/login")
     public Message login(@RequestBody SysUser user){
         Message message = userService.login(user);
+        return message;
+    }
+    @RequestMapping("/getUserListByPage")
+    public Message getUserListByPage(SysUser user, Page page){
+        Message message = userService.getUsersListByPage(user,page);
         return message;
     }
 }

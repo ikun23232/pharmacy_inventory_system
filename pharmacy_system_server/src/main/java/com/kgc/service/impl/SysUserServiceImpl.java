@@ -2,8 +2,11 @@ package com.kgc.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.Message;
+import com.kgc.entity.Page;
 import com.kgc.entity.SysUser;
 import com.kgc.service.SysUserService;
 import com.kgc.util.JwtUtil;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,5 +62,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //存放sessionId, 即 token
         info.put("sessionId", token);
         return Message.success(info);
+    }
+
+
+    @Override
+
+    public Message getUsersListByPage(SysUser user, Page page) {
+        PageHelper.startPage(page.getCurrentPageNo(), page.getPageSize());
+        List<SysUser> usersListByPage = sysUserMapper.getUsersListByPage(user);
+        PageInfo pageInfo = new PageInfo(usersListByPage);
+        if (usersListByPage != null){
+            return Message.success(pageInfo);
+        }
+        return Message.error("数据为空");
     }
 }
