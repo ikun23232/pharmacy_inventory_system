@@ -7,7 +7,7 @@
         placeholder=""
       ></el-input>
       <el-button type="primary" @click="getUserList(1, 5)">查询</el-button>
-      <el-button type="primary" @click="jump('addUser')">添加用户</el-button>
+      <el-button type="primary" @click="jump('addUser')">添加仓库</el-button>
     </div>
     <el-table :data="page.list" border style="width: 100%">
       <el-table-column fixed prop="createDate" label="日期"> </el-table-column>
@@ -57,35 +57,26 @@
 </template>
 
 <script>
-
+import {getStoreList} from '@/api/storeHouse'
 export default {
   name: "storeHouse",
   data() {
     return {
       page: {},
-      userName: "",
+      code: "",
     };
   },
   mounted() {
-    this.getUserList(1, 5);
+    this.getList(this.page,this.code);
   },
   methods: {
-    getUserList(pageNum, pageSize) {
-      axios
-        .get("getUserList", {
-          params: {
-            userName: this.userName,
-            pageNum: pageNum,
-            pageSize: pageSize,
-          },
-        })
-        .then((result) => {
-          console.log(result.data);
-          this.page = result.data.data;
-        });
+    getList() {
+     this.page = getStoreList(page,code)
+     console.log(this.page)
     },
     handleCurrentChange(val) {
-      this.getOrderList(val, 5);
+        this.page.pageNum = val
+        this.getList(this.page,this.code);
     },
     handleDelete(row) {
       if (confirm("你确定要删除吗？")) {

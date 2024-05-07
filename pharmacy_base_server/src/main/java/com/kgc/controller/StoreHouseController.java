@@ -1,7 +1,6 @@
 package com.kgc.controller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.StoreHouse;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 /**
  * @author 15279
