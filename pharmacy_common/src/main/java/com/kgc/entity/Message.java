@@ -29,6 +29,10 @@ public class Message {
         return new Message("201", "操作失败", null);
     }
 
+    public static Message error(String message,Object data) {
+        return new Message("201", message, data);
+    }
+
     public static Message error(String message) {
         return new Message("201", message, null);
     }
