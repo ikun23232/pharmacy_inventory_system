@@ -68,6 +68,4 @@ public class BaseUnit implements Serializable {
      */
     @TableField("isDel")
     private Integer isdel;
-
-
 }

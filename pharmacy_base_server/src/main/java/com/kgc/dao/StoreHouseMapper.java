@@ -10,7 +10,7 @@ import java.util.List;
  * @description 功能描述
  * @create 2024/5/7 8:51
  */
-public interface StoreHouseMapper extends BaseMapper<StoreHouseMapper> {
+public interface StoreHouseMapper extends BaseMapper<StoreHouse> {
     public List<StoreHouse> getStoreHouseList(String code);
     public int deleteStorehouse(int id);
     public StoreHouse checkName(String name);

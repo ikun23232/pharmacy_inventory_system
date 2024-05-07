@@ -24,6 +24,21 @@
     </select>
 
     <update id="deleteStorehouse">
---         update base_storehouse
+        update base_storehouse set isDel = 1 where id = #{id}
     </update>
+
+    <select id="checkName" resultType="StoreHouse">
+        select id,
+               name,
+               address,
+               capacity,
+               userId,
+               createBy,
+               createTime,
+               updateBy,
+               updateTime,
+               isDel,
+               code
+        from base_storehouse where isDel = 0 and name = #{name}
+    </select>
 </mapper>

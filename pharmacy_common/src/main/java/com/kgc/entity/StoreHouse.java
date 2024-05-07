@@ -1,8 +1,11 @@
 package com.kgc.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -14,9 +17,14 @@ import java.time.LocalDateTime;
  * @create 2024/5/7 8:54
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class StoreHouse implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 仓库id
+     */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -37,35 +45,42 @@ public class StoreHouse implements Serializable {
     /**
      * 负责人
      */
-    private Integer userId;
+    @TableField("userId")
+    private Integer userid;
 
     /**
      * 创建人
      */
-    private Integer createBy;
+    @TableField("createBy")
+    private Integer createby;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    @TableField("createTime")
+    private LocalDateTime createtime;
 
     /**
      * 修改人
      */
-    private Integer updateBy;
+    @TableField("updateBy")
+    private Integer updateby;
 
     /**
      * 修改时间
      */
-    private LocalDateTime updateTime;
+    @TableField("updateTime")
+    private LocalDateTime updatetime;
 
     /**
      * 删除标识
      */
-    private Integer isDel;
+    @TableField("isDel")
+    private Integer isdel;
 
     /**
      * 仓库编号
      */
     private String code;
 }
+
