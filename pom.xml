@@ -15,6 +15,7 @@
         <module>pharmacy_warehouse_server</module>
         <module>pharmacy_procurement_server</module>
         <module>pharmacy_finance_server</module>
+        <module>pharmacy_base_server</module>
     </modules>
 
     <properties>
