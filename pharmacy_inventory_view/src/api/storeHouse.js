@@ -11,3 +11,11 @@ export function getStoreList(page,code) {
         code:code
     });
 }
+
+export function deteleStoreHouse(id) {
+    return request.get(baseUrl + "/deleteStorehouse",{
+        params:{
+            id:id
+        }
+    });
+}

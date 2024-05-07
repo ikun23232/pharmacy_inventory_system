@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 /**
  * @author 15279
@@ -23,8 +25,13 @@ public class StoreHouseController {
     private StoreHouseService service;
 
     @RequestMapping("getStoreHouseList")
-    public Message getStoreHouseList(String code,@RequestBody Page page) {
-        Message message = service.getStoreHouseList(code,page);
+    public Message getStoreHouseList(@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> pageMap = (Map<String, Object>) requestBody.get("page");
+        int pageNum = (int) pageMap.get("pageNum");
+        int pageSize = (int) pageMap.get("pageSize");
+        String code = (String) requestBody.get("code");
+        Page page = new Page(pageNum, pageSize);
+        Message message = service.getStoreHouseList(code, page);
         return message;
     }
 
