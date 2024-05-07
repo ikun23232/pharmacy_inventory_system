@@ -2,7 +2,7 @@
   <div id="storeHouse">
     <div>
       <el-input v-model="code" style="width: 300px" placeholder=""></el-input>
-      <el-button type="primary" @click="getUserList(1, 5)">查询</el-button>
+      <el-button type="primary" @click="getList(1, 5)">查询</el-button>
       <el-button type="primary" @click="jump('addUser')">添加仓库</el-button>
     </div>
     <el-table :data="list.list" border style="width: 100%">
