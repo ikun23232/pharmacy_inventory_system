@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.BaseProviderMapper">
+    <update id="del">
+        update pharmacy.base_provider
+        set isDel = 1
+        where id = #{id}
+    </update>
+
+    <!-- 通用查询结果列 -->
+
+    <select id="getBaseProviderList" resultType="com.kgc.entity.BaseProvider">
+        select base_provider.id,
+        base_provider.name,
+        base_provider.address,
+        base_provider.type,
+        base_provider_type.type,
+        base_provider.createBy,
+        base_provider.createDate,
+        base_provider.updateBy,
+        base_provider.updateDate,
+        base_provider.isDel,
+        base_provider_type.id,
+        base_provider_type.type
+        from pharmacy.base_provider,
+        pharmacy.base_provider_type
+        where base_provider.type = base_provider_type.id
+        and base_provider.isDel = 0
+        <if test="name != '' and name != null">
+            and base_provider.name = #{name}
+        </if>
+        <if test="type != '' and type != 0 and type !=null">
+            and base_provider.type = #{type}
+        </if>
+    </select>
+
+    <select id="getBaseProviderById" resultType="com.kgc.entity.BaseProvider">
+        select id,
+               name,
+               address,
+               type,
+               createBy,
+               createDate,
+               updateBy,
+               updateDate,
+               isDel
+        from pharmacy.base_provider
+        where id = #{id}
+        and isDel = 0
+    </select>
+
+</mapper>
