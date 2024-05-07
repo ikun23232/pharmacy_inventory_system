@@ -11,6 +11,5 @@ import com.kgc.service.UnitService;
  * @create: 2024-05-07 10:02
  **/
 public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implements UnitService {
-    public void k(){
-    }
+
 }
