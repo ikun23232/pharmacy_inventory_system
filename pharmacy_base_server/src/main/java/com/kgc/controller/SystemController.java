@@ -40,18 +40,18 @@ public class SystemController {
      */
     private boolean CheckSign(HttpServletRequest request) {
         String timestamp = request.getHeader("timestamp");
-        String random = request.getHeader("signature");
+        String md5String = request.getHeader("signature");
         if (StringUtils.isEmpty(timestamp)) {
             logger.info("无时间戳");
             return false;
         }
-        if (StringUtils.isEmpty(random)) {
+        if (StringUtils.isEmpty(md5String)) {
             logger.info("无签名");
-            return  false;
+            return false;
         }
         //验签
 
-        String randomTemp = replayUtil.checkRandom(random);
+        String randomTemp = replayUtil.checkRandom(md5String);
         if (randomTemp == null) {
             logger.info("验签不通过");
             return false;
@@ -62,7 +62,7 @@ public class SystemController {
             return false;
         }
         //验签通过删uuid
-        replayUtil.removeRandom(random);
+        replayUtil.removeRandom(md5String);
         return true;
     }
 }

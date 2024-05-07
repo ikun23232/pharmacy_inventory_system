@@ -33,7 +33,8 @@ public class ReplayUtil {
         for (int i = 0; i < maxRandom - randomList.size(); i++) {
             String random = UUID.randomUUID().toString();
             randomList.add(random);
-            operations.set(random, random);
+            String md5String = Md5Util.getMD5String(random);
+            operations.set(md5String, random);
         }
     }
 
@@ -53,14 +54,13 @@ public class ReplayUtil {
      * @param random 需要检查的随机数
      * @return 返回随机数
      */
-//    public String checkRandom(String random) {
-////        String redisRandom = stringRedisTemplate.opsForValue().get(random);
-//        Md5Util.checkUUId(random,)
-//        if (randomList.size() <= minRandom) {
-//            createUUIDToRedis();
-//        }
-//        return redisRandom;
-//    }
+    public String checkRandom(String random) {
+        String redisRandom = stringRedisTemplate.opsForValue().get(random);
+        if (randomList.size() <= minRandom) {
+            createUUIDToRedis();
+        }
+        return redisRandom;
+    }
 
     /**
      * 获取随机数
