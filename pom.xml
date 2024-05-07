@@ -65,7 +65,11 @@
             <artifactId>druid</artifactId>
             <version>1.1.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.19.2</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -109,11 +113,6 @@
             <version>3.5.5</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter-test</artifactId>
-            <version>3.5.5</version>
-        </dependency>
 
         <!--功能模块引入-->
         <dependency>
