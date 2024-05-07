@@ -50,6 +50,7 @@ public class SystemController {
             return  false;
         }
         //验签
+
         String randomTemp = replayUtil.checkRandom(random);
         if (randomTemp == null) {
             logger.info("验签不通过");
