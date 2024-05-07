@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-<!--        <module>pharmacy_common</module>-->
+        <module>pharmacy_common</module>
         <module>pharmacy_nacos</module>
         <module>pharmacy_sale_server</module>
         <module>pharmacy_warehouse_server</module>
