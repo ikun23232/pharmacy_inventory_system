@@ -1,12 +1,17 @@
 package com.kgc.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.kgc.dao.StoreHouseMapper;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.StoreHouse;
 import com.kgc.service.StoreHouseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author 15279
@@ -15,29 +20,50 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, StoreHouse> implements StoreHouseService {
+
+    @Autowired
+    private StoreHouseMapper storeHouseMapper;
     @Override
     public Message getStoreHouseList(String code, Page page) {
-
-        return null;
+        PageHelper.startPage(page.getPageNum(),page.getPageSize());
+        List<StoreHouse> storeHouseList = storeHouseMapper.getStoreHouseList(code);
+        PageInfo pageInfo = new PageInfo(storeHouseList);
+        return Message.success(pageInfo);
     }
 
     @Override
     public Message deleteStorehouse(int id) {
-        return null;
+        int count = storeHouseMapper.deleteStorehouse(id);
+        if (count > 0){
+            return Message.success();
+        }
+        return Message.error("删除失败");
     }
 
     @Override
     public Message checkName(String name) {
-        return null;
+        StoreHouse storeHouse = storeHouseMapper.checkName(name);
+        if (storeHouse != null){
+            return Message.success(storeHouse);
+        }
+        return Message.error("没有该仓库");
     }
 
     @Override
     public Message addStoreHouse(StoreHouse storeHouse) {
-        return null;
+        boolean save = this.save(storeHouse);
+        if (save){
+            return Message.success();
+        }
+        return Message.error("添加失败");
     }
 
     @Override
     public Message updateStoreHouse(StoreHouse storeHouse) {
-        return null;
+        boolean b = this.updateById(storeHouse);
+        if (b){
+            return Message.success();
+        }
+        return Message.error("修改失败");
     }
 }
