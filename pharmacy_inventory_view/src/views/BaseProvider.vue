@@ -14,7 +14,7 @@
       <el-button type="primary" icon="el-icon-delete" style="background-color: #ff4e00; border: none"
         @click="clearsearch()"></el-button>
       <el-button type="primary" icon="el-icon-search" style="background-color: #ff4e00; border: none"
-        @click="handlegetproviderList()">搜索</el-button>
+        @click="handlegetproviderList(1)">搜索</el-button>
       <el-button type="primary" icon="el-icon-search" style="background-color: #ff4e00; border: none"
         @click="addProvider()">添加</el-button>
     </p>
@@ -28,15 +28,15 @@
       </el-table-column>
       <el-table-column prop="typeName" label="类别" width="130" align="center">
       </el-table-column>
-      <el-table-column prop="address" label="供应商地址" width="130" align="center">
+      <el-table-column prop="address" label="供应商地址" width="150" align="center">
       </el-table-column>
-      <el-table-column prop="createBy" label="创建人" width="300" align="center">
+      <el-table-column prop="createMan" label="创建人" width="100" align="center">
       </el-table-column>
-      <el-table-column prop="createDate" label="创建时间" width="100" align="center">
+      <el-table-column prop="createdate" label="创建时间" width="200" align="center">
       </el-table-column>
-      <el-table-column prop="updateBy" label="修改人" width="100" align="center">
+      <el-table-column prop="updateMan" label="修改人" width="100" align="center">
       </el-table-column>
-      <el-table-column prop="updateDate" label="修改时间" width="100" align="center">
+      <el-table-column prop="updatedate" label="修改时间" width="200" align="center">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200" align="center">
         <template slot-scope="scope">
@@ -105,7 +105,7 @@ export default {
   methods: {
     async handlegetproviderList(currentPageNo){
         let data = await init(this.input,this.type,currentPageNo,this.page.pageSize);
-        this.page = data.data
+        this.page = data.data.data
     },
     async getProviderType(){
         let data = await getProviderType();
@@ -117,7 +117,6 @@ export default {
     },
     addProvider(){
       this.dialogVisible = true
-      this.handlegetproviderList()
     },
     toUpdata(row){
       this.id = row.id

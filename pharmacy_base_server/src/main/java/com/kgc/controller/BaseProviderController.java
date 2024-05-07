@@ -7,10 +7,7 @@ import com.kgc.entity.Message;
 import com.kgc.service.BaseProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -21,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("/api/baseProvider")
+@RequestMapping("baseProvider")
 public class BaseProviderController {
 
     @Autowired
     private BaseProviderService baseProviderService;
 
 
-    @PostMapping("/getBaseProviderList")
+    @RequestMapping("getBaseProviderList")
     public Message getBaseProviderList(@RequestParam("name") String name, @RequestParam("type") int type, @RequestParam("currentPageNo") int currentPageNo, @RequestParam("pageSize") int pageSize) {
         Message message = baseProviderService.getBaseProviderList(name, type, currentPageNo, pageSize);
         return message;

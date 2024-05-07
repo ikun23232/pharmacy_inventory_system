@@ -10,30 +10,37 @@
     <!-- 通用查询结果列 -->
 
     <select id="getBaseProviderList" resultType="com.kgc.entity.BaseProvider">
-        select base_provider.id,
+        SELECT
+        base_provider.id,
         base_provider.name,
         base_provider.address,
         base_provider.type,
-        base_provider_type.type,
+        base_provider_type.type AS typeName,
         base_provider.createBy,
+        create_user.userName AS createMan,
         base_provider.createDate,
         base_provider.updateBy,
+        update_user.userName AS updateMan,
         base_provider.updateDate,
         base_provider.isDel,
-        base_provider_type.id,
-        base_provider_type.type
-        from pharmacy.base_provider,
-        pharmacy.base_provider_type
-        where base_provider.type = base_provider_type.id
-        and base_provider.isDel = 0
+        base_provider_type.id AS providerTypeId
+        FROM
+        pharmacy.base_provider
+        INNER JOIN
+        pharmacy.base_provider_type ON base_provider.type = base_provider_type.id
+        LEFT JOIN
+        pharmacy.sys_user AS create_user ON base_provider.createBy = create_user.userId
+        LEFT JOIN
+        pharmacy.sys_user AS update_user ON base_provider.updateBy = update_user.userId
+        WHERE
+        base_provider.isDel = 0
         <if test="name != '' and name != null">
-            and base_provider.name = #{name}
+            AND base_provider.name = #{name}
         </if>
         <if test="type != '' and type != 0 and type !=null">
-            and base_provider.type = #{type}
+            AND base_provider.type = #{type}
         </if>
     </select>
-
     <select id="getBaseProviderById" resultType="com.kgc.entity.BaseProvider">
         select id,
                name,
