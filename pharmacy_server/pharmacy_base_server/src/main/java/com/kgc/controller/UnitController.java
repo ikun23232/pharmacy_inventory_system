@@ -5,7 +5,9 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,9 +29,9 @@ public class UnitController {
 
     //分页查询查询全部计量单位
     @RequestMapping("/getUnitListByPage")
-    public Message getUnitListByPage(int currentPageNo, int pageSize) {
+    public Message getUnitListByPage(int currentPageNo, int pageSize,String name) {
         Page page = new Page();
-        page.setCurrentPageNo(currentPageNo);
+        page.setPageNum(currentPageNo);
         page.setPageSize(pageSize);
         Message unitListByPage = unitService.getUnitListByPage(page);
         return unitListByPage;
@@ -40,7 +42,7 @@ public class UnitController {
         return message;
     }
     @RequestMapping("/updateUnit")
-    public Message updateUnit(BaseUnit baseUnit) {
+    public Message updateUnit(@RequestBody BaseUnit baseUnit) {
         Message message = unitService.updateUnit(baseUnit);
         return message;
     }
@@ -49,6 +51,11 @@ public class UnitController {
         Message unitById = unitService.getUnitById(id);
         return unitById;
     }
+    @RequestMapping("/addUnit")
+    public Message addUnit(@RequestBody BaseUnit baseUnit){
+        Message message = unitService.addUnit(baseUnit);
+        return message;
+    }
 
     /**
      * 校验计量单位名称是否相同
@@ -56,7 +63,7 @@ public class UnitController {
      * @return
      */
     @RequestMapping("/CheckUnit")
-    public Message CheckUnit(String unit, int id) {
+    public Message CheckUnit(@RequestParam(value = "unit",required = false)String unit,@RequestParam(value = "id",required = false) int id) {
         Message message = unitService.CheckUnit(unit, id);
         return message;
     }
