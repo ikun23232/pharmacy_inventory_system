@@ -2,20 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BaseUnit from "@/views/BaseUnit";
-import BaseProvider from '../views/BaseProvider.vue'
+import BaseProvider from '../views/base/BaseProviderList.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/baseProvider',
-    name: 'baseProvider',
-    component: BaseProvider
+    name: 'BaseUnit',
+    component: BaseUnit
   },
   {
     path: '/about',
@@ -28,6 +23,11 @@ const routes = [
     path: '/baseUnit',
     name: 'BaseUnit',
     component: BaseUnit
+  },
+  {
+    path: '/baseProvider',
+    name: 'baseProvider',
+    component: BaseProvider
   }
 ]
 

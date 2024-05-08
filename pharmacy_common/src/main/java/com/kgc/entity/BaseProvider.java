@@ -56,7 +56,7 @@ public class BaseProvider implements Serializable {
      * 创建人
      */
     @TableField("createBy")
-    private Integer createby;
+    private Integer createBy;
     /**
      * 创建人名
      */
@@ -66,14 +66,14 @@ public class BaseProvider implements Serializable {
      * 创建时间
      */
     @TableField("createDate")
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createdate;
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private Date createDate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateby;
+    private Integer updateBy;
 
     /**
      * 修改人
@@ -85,7 +85,7 @@ public class BaseProvider implements Serializable {
      */
     @TableField("updateDate")
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date updatedate;
+    private Date updateDate;
 
     /**
      * 删除标识
