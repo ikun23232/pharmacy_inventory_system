@@ -54,13 +54,13 @@ public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implement
 
     @Override
     public Message updateUnit(BaseUnit baseUnit) {
+
+        baseUnit.setUpdatetime(new Date());
+        //写死修改人
+        int userId = 1;
+        baseUnit.setUpdateby(userId);
+
         int updateRow = unitMapper.updateById(baseUnit);
-        if (baseUnit.getUpdatetime()==null){
-            baseUnit.setUpdatetime(new Date());
-            //写死修改人
-            int userId=1;
-            baseUnit.setUpdateby(userId);
-        }
         if (updateRow > 0) {
             return Message.success();
         }
@@ -71,7 +71,7 @@ public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implement
     public Message addUnit(BaseUnit baseUnit) {
         baseUnit.setCreatetime(new Date());
         //写死修改人
-        int userId=1;
+        int userId = 1;
         baseUnit.setCreateby(userId);
         int updateRow = unitMapper.insert(baseUnit);
         if (updateRow > 0) {
@@ -90,9 +90,9 @@ public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implement
     public Message CheckUnit(String unit, int id) {
         // 查询数据库，看是否存在与新用户名相同的记录，且不是当前要修改的记录
         QueryWrapper<BaseUnit> queryWrapper = new QueryWrapper<>();
-        if (id>0){
+        if (id > 0) {
             queryWrapper.eq("name", unit).ne("id", id);
-        }else {
+        } else {
             queryWrapper.eq("name", unit);
         }
         // 查询条件：name 字段等于新用户名，并且 id 不等于当前记录的 id
