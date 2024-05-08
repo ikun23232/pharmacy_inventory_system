@@ -1,7 +1,9 @@
 package com.kgc.dao;
 
-import com.kgc.entity.BaseMedicine;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kgc.entity.BaseMedicine;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,6 +14,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2024-04-30
  */
 public interface BaseMedicineMapper extends BaseMapper<BaseMedicine> {
+
+    /**
+     * 分页查询药品
+     * @return
+     */
+    public List<BaseMedicine> getBaseMedicineList();
+
 
 
 }

@@ -1,7 +1,7 @@
 package com.kgc.dao;
 
-import com.kgc.entity.BaseMedicine;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kgc.entity.BaseUnit;
 
 /**
  * <p>
@@ -11,7 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author lemon
  * @since 2024-04-30
  */
-public interface BaseMedicineMapper extends BaseMapper<BaseMedicine> {
-
+public interface UnitMapper extends BaseMapper<BaseUnit> {
 
 }
