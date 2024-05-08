@@ -30,8 +30,7 @@
       </el-table-column>
       <el-table-column prop="createUser" label="创建人" width="120">
       </el-table-column>
-      <el-table-column prop="
-      " label="修改时间" width="120">
+      <el-table-column prop="updateTime" label="修改时间" width="120">
       </el-table-column>
       <el-table-column prop="updateUser" label="修改人" width="120">
       </el-table-column>

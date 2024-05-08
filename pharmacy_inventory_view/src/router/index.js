@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import storeHouse from '../views/storeHouse.vue'
-import BaseUnit from "@/views/BaseUnit";
+import BaseUnit from "../views/BaseUnit";
 
 Vue.use(VueRouter)
 
