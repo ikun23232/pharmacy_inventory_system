@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class BaseUnit implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createtime;
 
     /**
      * 修改人
@@ -59,7 +60,7 @@ public class BaseUnit implements Serializable {
      * 修改时间
      */
     @TableField("updateTime")
-    private String updatetime;
+    private Date updatetime;
 
     /**
      * 符号
@@ -72,6 +73,10 @@ public class BaseUnit implements Serializable {
     @TableLogic
     @TableField("isDel")
     private Integer isdel;
+    @TableField(exist = false)
+    private String createUserName;
+    @TableField(exist = false)
+    private String updateUserName;
 
 
 }
