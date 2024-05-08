@@ -10,6 +10,7 @@
         <module name="pharmacy_finance_server" />
         <module name="pharmacy_gateway" />
         <module name="pharmacy_base_server" />
+        <module name="pharmacy_nacos" />
         <module name="pharmacy_common" />
         <module name="pharmacy_sale_server" />
         <module name="pharmacy_warehouse_server" />
@@ -17,7 +18,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="pharmacy_nacos" target="1.8" />
       <module name="pharmacy_system" target="1.8" />
     </bytecodeTargetLevel>
   </component>

@@ -6,7 +6,7 @@ module.exports = defineConfig({
     proxy: {
       '/base': {
         target: 'http://localhost:8081',
-        changeOrigin: true,
+        changeOrigin: false,
         ws: false //是否支持websocket
       },
       '/menus': {
