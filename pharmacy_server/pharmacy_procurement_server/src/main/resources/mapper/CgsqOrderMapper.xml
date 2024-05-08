@@ -4,28 +4,54 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.kgc.entity.CgsqOrder">
-        <id column="id" property="id" />
-        <result column="code" property="code" />
-        <result column="subject" property="subject" />
-        <result column="sourceId" property="sourceid" />
-        <result column="type" property="type" />
-        <result column="demanderBy" property="demanderby" />
-        <result column="demandTime" property="demandtime" />
-        <result column="count" property="count" />
-        <result column="referenceAmount" property="referenceamount" />
-        <result column="orderStatus" property="orderstatus" />
-        <result column="approvalStatus" property="approvalstatus" />
-        <result column="remark" property="remark" />
-        <result column="effectiveTime" property="effectivetime" />
-        <result column="approverBy" property="approverby" />
-        <result column="approverRemark" property="approverremark" />
-        <result column="documenterBy" property="documenterby" />
-        <result column="voidState" property="voidstate" />
-        <result column="createTime" property="createtime" />
-        <result column="updateBy" property="updateby" />
-        <result column="updateTime" property="updatetime" />
+        <id column="id" property="id"/>
+        <result column="code" property="code"/>
+        <result column="subject" property="subject"/>
+        <result column="sourceId" property="sourceid"/>
+        <result column="type" property="type"/>
+        <result column="demanderBy" property="demanderby"/>
+        <result column="demandTime" property="demandtime"/>
+        <result column="count" property="count"/>
+        <result column="referenceAmount" property="referenceamount"/>
+        <result column="orderStatus" property="orderstatus"/>
+        <result column="approvalStatus" property="approvalstatus"/>
+        <result column="remark" property="remark"/>
+        <result column="effectiveTime" property="effectivetime"/>
+        <result column="approverBy" property="approverby"/>
+        <result column="approverRemark" property="approverremark"/>
+        <result column="documenterBy" property="documenterby"/>
+        <result column="voidState" property="voidstate"/>
+        <result column="createTime" property="createtime"/>
+        <result column="updateBy" property="updateby"/>
+        <result column="updateTime" property="updatetime"/>
     </resultMap>
 
+    <select id="getCgsqOrderList" resultType="com.kgc.entity.CgsqOrder">
+        SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
+        'demanderUserName',
+        (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
+        (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
+        (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName'
+        FROM cgsq_order o,cg_type t,order_statue s
+        WHERE o.type=t.id
+        AND s.id=o.orderStatus
+        <if test="code!=null and code!=''">
+            and o.code like concat('%',#{code},'%')
+        </if>
+        <if test="subject!=null and subject!=''">
+            and o.subject like concat('%',#{subject},'%')
+        </if>
+        <if test="type>0">
+            and o.type=#{type}
+        </if>
+        <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+            and o.demandTime BETWEEN #{startTime} AND #{endTime}
+        </if>
+           AND o.isDel=0
+        <if test="voidState>0">
+            AND o.voidState=#{voidState}
+        </if>
+    </select>
 
 
 </mapper>

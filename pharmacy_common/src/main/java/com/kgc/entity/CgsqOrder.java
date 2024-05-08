@@ -62,7 +62,7 @@ public class CgsqOrder implements Serializable {
      * 需求日期
      */
     @TableField("demandTime")
-    private LocalDateTime demandtime;
+    private Date demandtime;
 
     /**
      * 数量
@@ -96,7 +96,7 @@ public class CgsqOrder implements Serializable {
      * 生效时间
      */
     @TableField("effectiveTime")
-    private LocalDateTime effectivetime;
+    private Date effectivetime;
 
     /**
      * 核批人
@@ -156,6 +156,9 @@ public class CgsqOrder implements Serializable {
     private String documenterUserName;
     @TableField(exist = false)
     private String updateUserName;
+    @TableField(exist = false)
+    private String cgtype;
+
 
 
 
