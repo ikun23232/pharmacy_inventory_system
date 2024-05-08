@@ -3,11 +3,13 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -124,7 +126,7 @@ public class CgsqOrder implements Serializable {
      * 制单时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createtime;
 
     /**
      * 修改人
@@ -136,13 +138,26 @@ public class CgsqOrder implements Serializable {
      * 修改时间
      */
     @TableField("updateTime")
-    private LocalDateTime updatetime;
-
+    private Date updatetime;
     /**
-     * 供应商编号
+     * 删除标识
      */
-    @TableField("providerId")
-    private Integer providerid;
+    @TableLogic
+    @TableField("isDel")
+    private Integer isdel;
+
+
+    @TableField(exist = false)
+    private String demanderUserName;
+    @TableField(exist = false)
+    private String approverUserName;
+
+    @TableField(exist = false)
+    private String documenterUserName;
+    @TableField(exist = false)
+    private String updateUserName;
+
+
 
 
 }

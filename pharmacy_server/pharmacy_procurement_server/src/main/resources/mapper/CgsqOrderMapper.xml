@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CgsqOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.CgsqOrder">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="subject" property="subject" />
+        <result column="sourceId" property="sourceid" />
+        <result column="type" property="type" />
+        <result column="demanderBy" property="demanderby" />
+        <result column="demandTime" property="demandtime" />
+        <result column="count" property="count" />
+        <result column="referenceAmount" property="referenceamount" />
+        <result column="orderStatus" property="orderstatus" />
+        <result column="approvalStatus" property="approvalstatus" />
+        <result column="remark" property="remark" />
+        <result column="effectiveTime" property="effectivetime" />
+        <result column="approverBy" property="approverby" />
+        <result column="approverRemark" property="approverremark" />
+        <result column="documenterBy" property="documenterby" />
+        <result column="voidState" property="voidstate" />
+        <result column="createTime" property="createtime" />
+        <result column="updateBy" property="updateby" />
+        <result column="updateTime" property="updatetime" />
+    </resultMap>
+
+
+
+</mapper>
