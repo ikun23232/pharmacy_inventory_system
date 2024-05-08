@@ -7,11 +7,11 @@ import BaseUnit from "@/views/BaseUnit";
 Vue.use(VueRouter)
 
 const routes = [
-    {
-        path: '/storeHouse',
-        name: 'storeHouse',
-        component: storeHouse
-    },
+  {
+    path: '/storeHouse',
+    name: 'storeHouse',
+    component: storeHouse
+  },
   {
     path: '/baseUnit',
     name: 'BaseUnit',

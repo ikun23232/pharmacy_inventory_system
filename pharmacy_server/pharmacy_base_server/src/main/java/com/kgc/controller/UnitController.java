@@ -29,7 +29,7 @@ public class UnitController {
     @RequestMapping("/getUnitListByPage")
     public Message getUnitListByPage(int currentPageNo, int pageSize) {
         Page page = new Page();
-        page.setCurrentPageNo(currentPageNo);
+        page.setPageNum(currentPageNo);
         page.setPageSize(pageSize);
         Message unitListByPage = unitService.getUnitListByPage(page);
         return unitListByPage;

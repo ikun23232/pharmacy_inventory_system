@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -48,42 +49,46 @@ public class BaseStorehouse implements Serializable {
      * 负责人
      */
     @TableField("userId")
-    private Integer userid;
+    private Integer userId;
 
     /**
      * 创建人
      */
     @TableField("createBy")
-    private Integer createby;
+    private Integer createBy;
 
     /**
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createTime;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateby;
+    private Integer updateBy;
 
     /**
      * 修改时间
      */
     @TableField("updateTime")
-    private LocalDateTime updatetime;
+    private Date updateTime;
 
     /**
      * 删除标识
      */
     @TableField("isDel")
-    private Integer isdel;
+    private Integer isDel;
 
     /**
      * 仓库编号
      */
     private String code;
 
+    @TableField(exist=false)
+    private String createUser;
 
+    @TableField(exist=false)
+    private String updateUser;
 }
