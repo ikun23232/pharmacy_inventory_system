@@ -2,12 +2,17 @@ package com.kgc.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+<<<<<<<< HEAD:pharmacy_nacos/src/main/java/com/kgc/entity/BaseMedicine.java
+import java.io.Serializable;
+import java.util.Date;
+
+========
 import com.baomidou.mybatisplus.annotation.TableId;
+>>>>>>>> 6cd3204fa3bdca2294d361faa6e95f9112c9e316:pharmacy_common/src/main/java/com/kgc/entity/BaseMedicine.java
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * <p>
@@ -65,18 +70,6 @@ public class BaseMedicine implements Serializable {
      * 库存预警值
      */
     private Integer warning;
-
-    private Date createTime;
-
-    private Integer createBy;
-
-    private Date updateTime;
-
-    private Integer updateBy;
-
-    private String createByName;
-
-    private String updateByName;
 
 
 }

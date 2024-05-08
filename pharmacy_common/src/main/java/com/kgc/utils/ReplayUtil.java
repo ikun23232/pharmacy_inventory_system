@@ -17,9 +17,10 @@ import java.util.UUID;
 public class ReplayUtil {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    private Integer maxRandom=100; // 最大储存的随机数
+    private Integer maxRandom = 100; // 最大储存的随机数
 
-    private Integer minRandom=20; // 最小储存的随机数
+    private Integer minRandom = 20; // 最小储存的随机数
+
 
     private final List<String> randomList = new ArrayList<>(); // 待使用的随机数
 
@@ -32,7 +33,8 @@ public class ReplayUtil {
         for (int i = 0; i < maxRandom - randomList.size(); i++) {
             String random = UUID.randomUUID().toString();
             randomList.add(random);
-            operations.set(random, random);
+            String md5String = Md5Util.getMD5String(random);
+            operations.set(md5String, random);
         }
     }
 

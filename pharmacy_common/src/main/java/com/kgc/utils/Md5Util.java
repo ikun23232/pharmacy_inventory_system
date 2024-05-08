@@ -43,6 +43,10 @@ public class Md5Util {
         String s = getMD5String(password);
         return s.equals(md5PwdStr);
     }
+    public static boolean checkUUId(String UUId, String md5PwdStr) {
+        String s = getMD5String(UUId);
+        return s.equals(md5PwdStr);
+    }
 
 
     public static String getMD5String(byte[] bytes) {

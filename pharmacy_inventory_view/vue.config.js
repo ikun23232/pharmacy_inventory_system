@@ -1,13 +1,23 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  lintOnSave: false,//关闭语法检查
-  devServer: {
+  lintOnSave:false,
+  devServer:{
     proxy: {
-      '/api': {
+      '/base': {
+        target: 'http://localhost:8081',
+        changeOrigin: true,
+        ws: false //是否支持websocket
+      },
+      '/menus': {
         target: 'http://localhost:8082',
         changeOrigin: true,
-        pathRewrite: { '^/api': '' },//重写路径
+        ws: false //是否支持websocket
+      },
+      '/visitors': {
+        target: 'http://localhost:8083',
+        changeOrigin: true,
+        ws: false //是否支持websocket
       }
     }
   }
