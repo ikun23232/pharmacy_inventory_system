@@ -19,11 +19,11 @@ module.exports = defineConfig({
         changeOrigin: true,
         ws: false //是否支持websocket
       },
-      'procurement':{
+      '/procurement':{
         target: 'http://localhost:8084',
         changeOrigin: true,
         ws: false, //是否支持websocket
-        pathRewrite: {'^/procurement': ''}
+        // pathRewrite: {'^/procurement': ''}
       }
     }
   }
