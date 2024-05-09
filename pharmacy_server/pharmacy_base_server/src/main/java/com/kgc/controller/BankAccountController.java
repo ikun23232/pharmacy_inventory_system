@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("/base/bankAccount")
+@RequestMapping("/bankAccount")
 public class BankAccountController {
 
     @Autowired
@@ -52,8 +52,20 @@ public class BankAccountController {
     }
 
     @RequestMapping("getBankAccountBybandCount")
-    public Message getBankAccountBybandCount(@RequestParam("bandCount") String bandCount) {
-        Message message = bankAccountService.getBankAccountBybandCount(bandCount);
+    public Message getBankAccountBybandCount(@RequestParam("belongBank") String belongBank,@RequestParam("name") String name,@RequestParam("bandCount") String bandCount) {
+        Message message = bankAccountService.getBankAccountBybandCount(belongBank,name,bandCount);
+        return message;
+    }
+
+    @RequestMapping("checkaddBankAccount")
+    public Message checkaddBankAccount(@RequestParam("belongBank") String belongBank,@RequestParam("name") String name,@RequestParam("bandCount") String bandCount) {
+        Message message = bankAccountService.checkaddBankAccount(belongBank,name,bandCount);
+        return message;
+    }
+
+    @RequestMapping("checkupdateBankAccount")
+    public Message checkupdateBankAccount(@RequestParam("belongBank") String belongBank,@RequestParam("name") String name,@RequestParam("bandCount") String bandCount,@RequestParam("id") int id) {
+        Message message = bankAccountService.checkupdateBankAccount(belongBank,name,bandCount,id);
         return message;
     }
 }

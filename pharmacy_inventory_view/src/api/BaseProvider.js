@@ -36,11 +36,28 @@ const getBaseProviderById = (id) => {
         }
     })
 }
+const checkaddBaseProvider = (name) => {
+    return request.get(baseUrl + "/baseProvider/checkaddBaseProvider", {
+        params:{
+            name:name   
+        }
+    })
+}
+const checkupdateBaseProvider = (name,id) => {
+    return request.get(baseUrl + "/baseProvider/checkupdateBaseProvider", {
+        params:{
+            name:name,
+            id:id
+        }
+    })
+}
 export {
     init,
     getProviderType,
     addBaseProvider,
     getBaseProviderById,
     updateBaseProvider,
-    delBaseProvider
+    delBaseProvider,
+    checkaddBaseProvider,
+    checkupdateBaseProvider
 }
