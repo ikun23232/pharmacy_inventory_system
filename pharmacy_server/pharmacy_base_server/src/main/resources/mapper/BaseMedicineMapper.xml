@@ -18,6 +18,13 @@
         <if test="unitId!=null and unitId>0">and unitId=#{unitId}</if>
     </select>
 
+    <select id="getMedicineListByCode" resultType="BaseMedicine">
+        SELECT m.*,o.quantity,o.totalPrice
+        FROM base_medicine m,order_medicine o
+        WHERE o.medicineId=m.id
+          AND code=#{code}
+    </select>
+
 
 
 

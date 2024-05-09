@@ -19,4 +19,5 @@ public class CgVO implements Serializable {
     private String startTime;
     private String endTime;
     private int voidState;
+    private int approvalStatus;
 }

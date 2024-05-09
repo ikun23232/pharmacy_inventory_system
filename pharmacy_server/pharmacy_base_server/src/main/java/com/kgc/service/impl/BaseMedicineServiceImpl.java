@@ -80,4 +80,10 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
         }
         return message;
     }
+
+    @Override
+    public Message getMedicineListByCode(String code) {
+        List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
+        return Message.success(medicineListByCode);
+    }
 }

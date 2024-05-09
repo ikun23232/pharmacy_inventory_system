@@ -48,7 +48,7 @@
             and o.demandTime BETWEEN #{startTime} AND #{endTime}
         </if>
            AND o.isDel=0
-        <if test="voidState>0">
+        <if test="voidState>-1">
             AND o.voidState=#{voidState}
         </if>
     </select>

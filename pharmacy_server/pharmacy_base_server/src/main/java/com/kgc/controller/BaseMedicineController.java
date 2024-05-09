@@ -62,5 +62,11 @@ public class BaseMedicineController {
         return message;
     }
 
+    @RequestMapping("/getMedicineListByCode")
+    @ResponseBody
+    public Message getMedicineListByCode(String code){
+        Message medicineListByCode = baseMedicineService.getMedicineListByCode(code);
+        return medicineListByCode;
+    }
 }
 

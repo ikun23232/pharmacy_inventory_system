@@ -88,5 +88,9 @@ public class BaseMedicine implements Serializable {
     private String unitName;
     @TableField(exist=false)
     private Integer currentPage;
+    @TableField(exist=false)
+    private Integer quantity;
+    @TableField(exist=false)
+    private double totalPrice;
 
 }
