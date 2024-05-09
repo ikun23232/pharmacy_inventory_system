@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import storeHouse from '../views/storeHouse.vue'
 import BaseUnit from "../views/BaseUnit";
 import BaseProviderList from "../views/base/BaseProviderList.vue"
@@ -34,7 +33,17 @@ const routes = [
     path: '/cgsqManager',
     name: 'CgsqManager',
     component: CgsqManager
-  }
+  },
+  {
+    path: '/baseMedicine',
+    name: 'baseMedicine',
+    component: BaseMedicine
+  },
+  {
+    path: '/saleOrder',
+    name: 'saleOrder',
+    component: SaleOrder
+  },
 ]
 
 const router = new VueRouter({

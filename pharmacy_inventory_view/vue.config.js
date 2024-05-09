@@ -23,6 +23,11 @@ module.exports = defineConfig({
         target: 'http://localhost:8084',
         changeOrigin: true,
         ws: false //是否支持websocket
+      },
+      '/sale': {
+        target: 'http://localhost:8086',
+        changeOrigin: true,
+        ws: false //是否支持websocket
       }
     }
   }
