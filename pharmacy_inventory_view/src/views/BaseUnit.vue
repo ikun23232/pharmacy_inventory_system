@@ -132,9 +132,11 @@ export default {
   
     closeUpdateDiago(){
       this.updatedialogVisible = false;
+      this.getList(this.page);
     },
     addSuccess(){
       this.adddialogVisible = false;
+      this.getList(this.page);
     },
     jump(path) {
       this.$router.push({
