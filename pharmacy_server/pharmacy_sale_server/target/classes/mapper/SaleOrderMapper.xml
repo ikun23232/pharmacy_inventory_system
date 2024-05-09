@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.SaleOrderMapper">
+    <select id="getSaleOrderListByPage" resultType="XsOrder">
+        select o.id,orderNo,orderDate,totalNumber,totalPrice,bankAccountId,o.createBy,o.updateBy,o.updateDate,
+        b.bandCount as bankAccountName,
+        c.userName as createByName,u.userName as updateByName
+        from xs_order o
+        LEFT JOIN sys_user c on o.createBy=c.userId
+        LEFT JOIN sys_user u on o.updateBy=u.userId,
+        bank_account b
+        where o.bankAccountId=b.id and o.isDelete=0 and c.isDel=0 and u.isDel=0 and b.isDel=0
+        <if test="orderNo!=null and orderNo!=''">and orderNo like concat('%',#{orderNo},'%')</if>
+<!--        <if test="orderDate!=null and orderDate!=''">and orderDate between #{orderDateBegin} and #{orderDateEnd}</if>-->
+    </select>
+</mapper>
