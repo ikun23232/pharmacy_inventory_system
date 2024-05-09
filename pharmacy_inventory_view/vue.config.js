@@ -9,9 +9,6 @@ module.exports = defineConfig({
         target: 'http://localhost:8081',
         changeOrigin: true,
         ws: false, //是否支持websocket
-        pathRewrite : {
-          '^/base':''
-        }
       },
       // '/menus': {
       //   target: 'http://localhost:8082',

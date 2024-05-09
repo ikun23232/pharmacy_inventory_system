@@ -65,7 +65,7 @@ export default {
         async getProviderType() {
             let data = await getProviderType();
             console.log(data)
-            this.optionTypeList = data.data.data;
+            this.optionTypeList = data.data;
         },
 
 
@@ -95,7 +95,7 @@ export default {
         },
         async add(formdata) {
             let data = await addBaseProvider(formdata)
-            if (data.data.code === "200") {
+            if (data.code === "200") {
                 Message({
                     type: 'success',
                     message: '添加成功！'

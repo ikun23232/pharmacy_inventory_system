@@ -20,7 +20,7 @@ import java.util.Date;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("baseProvider")
+@RequestMapping("/base/baseProvider")
 public class BaseProviderController {
 
     @Autowired

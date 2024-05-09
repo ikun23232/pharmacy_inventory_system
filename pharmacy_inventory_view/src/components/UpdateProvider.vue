@@ -74,13 +74,13 @@ export default {
         async getProviderType() {
             let data = await getProviderType();
             console.log(data)
-            this.optionTypeList = data.data.data;
+            this.optionTypeList = data.data;
         },
 
         async getBaseProviderById() {
             let data = await getBaseProviderById(this.baseProvider.id);
             console.log(data);
-            this.baseProvider = data.data.data
+            this.baseProvider = data.data
         },
 
         resetForm() {
@@ -111,7 +111,7 @@ export default {
         },
         async add(formdata) {
             let data = await updateBaseProvider(formdata)
-            if (data.data.code === "200") {
+            if (data.code === "200") {
                 Message({
                     type: 'success',
                     message: '修改成功！'

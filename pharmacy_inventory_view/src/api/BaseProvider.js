@@ -1,9 +1,9 @@
 import request from '../utils/request.js';
 
-const baseUrl = '/baseProvider';
+const baseUrl = '/base';
 
 const init = (input, type, currentPageNo, pageSize) => {
-    return request.get(baseUrl + "/getBaseProviderList", {
+    return request.get(baseUrl + "/baseProvider/getBaseProviderList", {
         params: {
             name: input,
             type: type,
@@ -13,24 +13,24 @@ const init = (input, type, currentPageNo, pageSize) => {
     })
 }
 const getProviderType = async () => {
-    return request.post("/baseProviderType/getBaseProviderTypeList")
+    return request.post(baseUrl + "/baseProviderType/getBaseProviderTypeList")
 }
 
 const addBaseProvider = (formdata) => {
-    return request.post(baseUrl + "/addBaseProvider", formdata)
+    return request.post(baseUrl + "/baseProvider/addBaseProvider", formdata)
 }
 const updateBaseProvider = (formdata) => {
-    return request.post(baseUrl + "/updateBaseProvider", formdata)
+    return request.post(baseUrl + "/baseProvider/updateBaseProvider", formdata)
 }
 const delBaseProvider = (id) => {
-    return request.get(baseUrl + "/delBaseProvider", {
+    return request.get(baseUrl + "/baseProvider/delBaseProvider", {
         params: {
             id: id
         }
     })
 }
 const getBaseProviderById = (id) => {
-    return request.get(baseUrl + "/getBaseProviderById", {
+    return request.get(baseUrl + "/baseProvider/getBaseProviderById", {
         params: {
             id: id
         }
