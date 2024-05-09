@@ -13,6 +13,7 @@ Vue.prototype.$message = Message                //vue实例上挂载Message
 Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBox             
 
 
+
 Vue.use(VueRouter)
 Vue.use(ElementUI);
 Vue.use(Antd)
