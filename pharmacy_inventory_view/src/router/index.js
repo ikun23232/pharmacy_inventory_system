@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import BaseUnit from "@/views/BaseUnit";
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
+import PrintSaleOrder from "../views/sale/PrintSaleOrder.vue";
 
 
 Vue.use(VueRouter)
@@ -21,7 +22,12 @@ const routes = [
   {
     path: '/saleOrder',
     name: 'SaleOrder',
-    component: SaleOrder
+    component: SaleOrder,
+    children: [{
+      path: 'printSaleOrder', 
+      name: 'printSaleOrder',
+      component: PrintSaleOrder
+    },]
   },
 ]
 
