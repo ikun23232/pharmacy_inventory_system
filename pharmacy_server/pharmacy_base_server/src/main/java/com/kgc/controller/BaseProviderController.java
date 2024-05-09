@@ -20,7 +20,7 @@ import java.util.Date;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("/base/baseProvider")
+@RequestMapping("/baseProvider")
 public class BaseProviderController {
 
     @Autowired
@@ -52,8 +52,20 @@ public class BaseProviderController {
     }
 
     @RequestMapping("getBaseProviderById")
-    public Message getBaseProviderById(int id) {
+    public Message getBaseProviderById(@RequestParam("id")int id) {
         Message message = baseProviderService.getBaseProviderById(id);
+        return message;
+    }
+
+    @RequestMapping("checkaddBaseProvider")
+    public Message checkaddBaseProvider(@RequestParam("name")String name) {
+        Message message = baseProviderService.checkaddBaseProvider(name);
+        return message;
+    }
+
+    @RequestMapping("checkupdateBaseProvider")
+    public Message checkupdateBaseProvider(@RequestParam("name") String name,@RequestParam("id")int id) {
+        Message message = baseProviderService.checkupdateBaseProvider(name,id);
         return message;
     }
 }

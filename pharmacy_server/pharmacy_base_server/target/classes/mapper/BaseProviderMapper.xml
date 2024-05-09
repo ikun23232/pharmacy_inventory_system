@@ -35,7 +35,7 @@
         WHERE
         base_provider.isDel = 0
         <if test="name != '' and name != null">
-            AND base_provider.name = #{name}
+            AND base_provider.name like CONCAT("%",#{name},"%")
         </if>
         <if test="type != '' and type != 0 and type !=null">
             AND base_provider.type = #{type}
@@ -55,5 +55,18 @@
         where id = #{id}
         and isDel = 0
     </select>
-
+    <select id="checkaddBaseProvider" resultType="com.kgc.entity.BaseProvider">
+        select id,
+               name,
+               address,
+               type,
+               createBy,
+               createDate,
+               updateBy,
+               updateDate,
+               isDel
+        from pharmacy.base_provider
+        where isDel = 0
+          and name = #{name}
+    </select>
 </mapper>

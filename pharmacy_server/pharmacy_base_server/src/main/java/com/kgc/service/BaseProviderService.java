@@ -27,5 +27,9 @@ public interface BaseProviderService extends IService<BaseProvider> {
 
     public Message getBaseProviderById(int id);
 
+    public Message checkaddBaseProvider(String name);
+
+    public Message checkupdateBaseProvider(String name,int id);
+
 
 }

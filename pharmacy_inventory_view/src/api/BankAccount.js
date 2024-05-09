@@ -26,10 +26,31 @@ const delBankAccount = (bandCount) => {
         }
     })
 }
-const getBankAccountBybandCount = (bandCount) => {
+const getBankAccountBybandCount = (updatebelongBank,updatename,updatebandCount) => {
     return request.get(baseUrl + "/bankAccount/getBankAccountBybandCount", {
         params: {
+            belongBank: updatebelongBank,
+            name:updatename,
+            bandCount:updatebandCount
+        }
+    })
+}
+const checkaddBankAccount = (belongBank,name,bandCount) => {
+    return request.get(baseUrl + "/bankAccount/checkaddBankAccount", {
+        params: {
+            belongBank:belongBank,
+            name:name,
             bandCount: bandCount
+        }
+    })
+}
+const checkupdateBankAccount = (belongBank,name,bandCount,id) => {
+    return request.get(baseUrl + "/bankAccount/checkupdateBankAccount", {
+        params: {
+            belongBank:belongBank,
+            name:name,
+            bandCount: bandCount,
+            id:id
         }
     })
 }
@@ -38,5 +59,7 @@ export {
     addBankAccount,
     updateBankAccount,
     delBankAccount,
-    getBankAccountBybandCount
+    getBankAccountBybandCount,
+    checkaddBankAccount,
+    checkupdateBankAccount
 }
