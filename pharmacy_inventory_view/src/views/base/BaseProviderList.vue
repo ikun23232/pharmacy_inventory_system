@@ -141,7 +141,7 @@ export default {
         .then(async () => {
           try {
             let data = await delBaseProvider(row.id);
-            if (data.data.code === "200") {
+            if (data.code === "200") {
               Message({
                 type: 'success',
                 message: '删除成功！'
