@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import storeHouse from '../views/storeHouse.vue'
 import BaseUnit from "../views/BaseUnit";
-import CgsqManager from '../views/procurement/CGSQ/CGSQManager.vue'
+import BaseProviderList from "../views/base/BaseProviderList.vue"
+import BankAccountList from  "../views/base/BankAccountList.vue"
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,18 @@ const routes = [
     path: '/baseUnit',
     name: 'BaseUnit',
     component: BaseUnit
-  },{
+  },
+  {
+    path: '/baseProviderList',
+    name: 'baseProviderList',
+    component: BaseProviderList
+  },
+  {
+    path: '/bankAccountList',
+    name: 'bankAccountList',
+    component: BankAccountList
+  },
+  ,{
     path: '/cgsqManager',
     name: 'CgsqManager',
     component: CgsqManager
