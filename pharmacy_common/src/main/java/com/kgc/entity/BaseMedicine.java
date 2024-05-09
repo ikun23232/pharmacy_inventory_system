@@ -2,21 +2,18 @@ package com.kgc.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-<<<<<<<< HEAD:pharmacy_nacos/src/main/java/com/kgc/entity/BaseMedicine.java
-import java.io.Serializable;
-import java.util.Date;
-
-========
 import com.baomidou.mybatisplus.annotation.TableId;
->>>>>>>> 6cd3204fa3bdca2294d361faa6e95f9112c9e316:pharmacy_common/src/main/java/com/kgc/entity/BaseMedicine.java
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lemon
@@ -42,24 +39,25 @@ public class BaseMedicine implements Serializable {
     /**
      * 医用商品类型
      */
-    private Integer type;
+    private Integer categoryId;
 
     /**
      * 计量单位
      */
-    @TableField("measureId")
-    private Integer measureid;
+    @TableField("unitId")
+    private Integer unitId;
 
     /**
      * 删除标识
      */
+    @TableLogic
     @TableField("isDel")
-    private Integer isdel;
+    private Integer isDel;
 
     /**
      * 零售价
      */
-    private Double sale;
+    private Double salePrice;
 
     /**
      * 医用商品规格
@@ -70,6 +68,24 @@ public class BaseMedicine implements Serializable {
      * 库存预警值
      */
     private Integer warning;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date createTime;
 
+    private Integer createBy;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private Date updateTime;
+
+    private Integer updateBy;
+
+    @TableField(exist=false)
+    private String createByName;
+    @TableField(exist=false)
+    private String updateByName;
+    @TableField(exist=false)
+    private String categoryName;
+    @TableField(exist=false)
+    private String unitName;
+    @TableField(exist=false)
+    private Integer currentPage;
 
 }

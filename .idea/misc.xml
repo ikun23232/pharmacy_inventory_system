@@ -6,6 +6,8 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_common/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_nacos/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_server/pharmacy_sale_server/pom.xml" />
       </list>
     </option>
   </component>
