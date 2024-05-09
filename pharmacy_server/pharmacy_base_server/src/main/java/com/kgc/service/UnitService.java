@@ -11,6 +11,7 @@ public interface UnitService extends IService<BaseUnit> {
 
     public Message delUnitById(int id);
     public Message updateUnit(BaseUnit baseUnit);
+    public Message addUnit(BaseUnit baseUnit);
 
     public Message getUnitById(int id);
 

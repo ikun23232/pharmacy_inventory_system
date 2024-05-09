@@ -60,7 +60,7 @@ public class BaseUnit implements Serializable {
      * 修改时间
      */
     @TableField("updateTime")
-    private String updatetime;
+    private Date updatetime;
 
     /**
      * 符号
@@ -73,6 +73,10 @@ public class BaseUnit implements Serializable {
     @TableLogic
     @TableField("isDel")
     private Integer isdel;
+    @TableField(exist = false)
+    private String createUserName;
+    @TableField(exist = false)
+    private String updateUserName;
 
 
 }

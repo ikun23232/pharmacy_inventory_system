@@ -1,34 +1,40 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import BaseUnit from "@/views/BaseUnit";
-import BaseMedicine from "../views/base/BaseMedicine.vue";
-import SaleOrder from "../views/sale/SaleOrder.vue";
-import PrintSaleOrder from "../views/sale/PrintSaleOrder.vue";
-
+import HomeView from '../views/HomeView.vue'
+import storeHouse from '../views/storeHouse.vue'
+import BaseUnit from "../views/BaseUnit";
+import BaseProviderList from "../views/base/BaseProviderList.vue"
+import BankAccountList from  "../views/base/BankAccountList.vue"
+import CgsqManager from '../views/procurement/CGSQ/CGSQManager.vue';
 
 Vue.use(VueRouter)
 
 const routes = [
-{
+  {
+    path: '/storeHouse',
+    name: 'storeHouse',
+    component: storeHouse
+  },
+  {
     path: '/baseUnit',
     name: 'BaseUnit',
     component: BaseUnit
   },
   {
-    path: '/baseMedicine',
-    name: 'BaseMedicine',
-    component: BaseMedicine
+    path: '/baseProviderList',
+    name: 'baseProviderList',
+    component: BaseProviderList
   },
   {
-    path: '/saleOrder',
-    name: 'SaleOrder',
-    component: SaleOrder,
-    children: [{
-      path: 'printSaleOrder', 
-      name: 'printSaleOrder',
-      component: PrintSaleOrder
-    },]
+    path: '/bankAccountList',
+    name: 'bankAccountList',
+    component: BankAccountList
   },
+  ,{
+    path: '/cgsqManager',
+    name: 'CgsqManager',
+    component: CgsqManager
+  }
 ]
 
 const router = new VueRouter({

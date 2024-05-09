@@ -7,9 +7,9 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_common/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_nacos/pom.xml" />
-        <option value="$PROJECT_DIR$/pharmacy_server/pharmacy_sale_server/pom.xml" />
       </list>
     </option>
+    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.BankAccountMapper">
+
+    <select id="getBankAccountList" resultType="com.kgc.entity.BankAccount">
+        select a.id,
+        a.bandCount,
+        a.balance,
+        a.name,
+        a.createTime,
+        u1.username as createMan,
+        a.updateTime,
+        u2.username as updateMan,
+        a.tip,
+        a.isDel,
+        a.belongBank
+        from pharmacy.bank_account as a
+        left join pharmacy.sys_user as u1 on a.createBy = u1.userId
+        left join pharmacy.sys_user as u2 on a.updateBy = u2.userId
+        where a.isDel = 0
+        <if test="bandCount != '' and bandCount != null">
+            and a.bandCount like CONCAT("%", #{bandCount}, "%")
+        </if>
+        <if test="belongBank != '' and belongBank != null">
+            and a.belongBank like CONCAT("%", #{belongBank}, "%")
+        </if>
+        <if test="name != '' and name != null">
+            and a.name like CONCAT("%", #{name}, "%")
+        </if>
+    </select>
+    <select id="getBankAccountBybandCount" resultType="com.kgc.entity.BankAccount">
+        select id,
+               bandCount,
+               balance,
+               name,
+               createTime,
+               createBy,
+               updateTime,
+               updateBy,
+               tip,
+               isDel,
+               belongBank
+        from pharmacy.bank_account
+        where isDel = 0
+          and bandCount = #{bandCount}
+
+    </select>
+
+    <update id="delBankAccount">
+        update pharmacy.bank_account
+        set isDel = 1
+        where bandCount = #{bandCount}
+    </update>
+
+</mapper>
