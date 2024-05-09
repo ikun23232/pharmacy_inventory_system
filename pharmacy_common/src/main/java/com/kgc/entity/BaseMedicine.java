@@ -39,6 +39,7 @@ public class BaseMedicine implements Serializable {
     /**
      * 医用商品类型
      */
+    @TableField("categoryId")
     private Integer categoryId;
 
     /**

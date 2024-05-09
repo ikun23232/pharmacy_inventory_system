@@ -12,10 +12,6 @@ import { Message, MessageBox } from 'element-ui'  //引入Message, MessageBox
 Vue.prototype.$message = Message                //vue实例上挂载Message                
 Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBox             
 
-import { Message, MessageBox } from 'element-ui'  //引入Message, MessageBox
-
-Vue.prototype.$message = Message   //vue实例上挂载Message                
-Vue.prototype.$messagebox = MessageBox   //vue实例上挂载MessageBox
 
 
 Vue.use(VueRouter)

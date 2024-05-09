@@ -219,6 +219,7 @@ export default {
     async handleUpdate(id){
         this.title="修改医用商品信息";
         this.dialogFormVisible=true;  
+        alert(1)
         let data = await getBaseMedicineById(id);
        this.baseMedicine=data.data;
     },
