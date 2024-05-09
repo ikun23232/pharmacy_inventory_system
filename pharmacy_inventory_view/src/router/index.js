@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import storeHouse from '../views/storeHouse.vue'
 import BaseUnit from "../views/BaseUnit";
+import procurementOrder from '@/views/procurement/procurementOrder'
 
 Vue.use(VueRouter)
 
@@ -16,6 +16,11 @@ const routes = [
     path: '/baseUnit',
     name: 'BaseUnit',
     component: BaseUnit
+  },
+  {
+    path: '/procurementOrder',
+    name: 'procurementOrder',
+    component: procurementOrder
   }
 ]
 
