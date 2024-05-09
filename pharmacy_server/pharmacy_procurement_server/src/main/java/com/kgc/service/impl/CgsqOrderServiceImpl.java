@@ -1,6 +1,7 @@
 package com.kgc.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -61,6 +62,33 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             return Message.success();
         }
         return Message.error("删除失败");
+    }
+
+    @Override
+    public Message addCgsqOrder(CgsqOrder cgsqOrder) {
+        return null;
+    }
+
+    @Override
+    public Message updateCgsqOrder(CgsqOrder cgsqOrder) {
+        return null;
+    }
+
+    @Override
+    public Message getCgsqOrder(int id) {
+        return null;
+    }
+
+    @Override
+    public Message voidCgsqOrder(int id) {
+        UpdateWrapper<CgsqOrder> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("voidState", 1)
+                .eq("id", id); // 添加ID的条件
+        int updateRow = cgsqOrderMapper.update(null, updateWrapper);
+        if (updateRow>0){
+            return Message.success();
+        }
+        return Message.error("作废失败");
     }
 
 

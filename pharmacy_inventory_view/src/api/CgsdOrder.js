@@ -14,3 +14,11 @@ export function delCgsqOrderById(id) {
         }
     });
 }
+
+export function voidCgsqOrderById(id) {
+    return request.get(baseUrl + "/voidCgsqOrderById",{
+        params:{
+            id:id
+        }
+    });
+}
