@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import storeHouse from '../views/storeHouse.vue'
 import BaseUnit from "../views/BaseUnit";
 import BaseProviderList from "../views/base/BaseProviderList.vue"
 import BankAccountList from  "../views/base/BankAccountList.vue"
 import CgsqManager from '../views/procurement/CGSQ/CGSQManager.vue';
+
+import BaseMedicine from "../views/base/BaseMedicine.vue";
+import SaleOrder from "../views/sale/SaleOrder.vue";
+
 
 Vue.use(VueRouter)
 
@@ -36,12 +41,12 @@ const routes = [
   },
   {
     path: '/baseMedicine',
-    name: 'baseMedicine',
+    name: 'BaseMedicine',
     component: BaseMedicine
   },
   {
     path: '/saleOrder',
-    name: 'saleOrder',
+    name: 'SaleOrder',
     component: SaleOrder
   },
 ]

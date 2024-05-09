@@ -7,11 +7,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css"
 import VueRouter from 'vue-router'
-
 import { Message, MessageBox } from 'element-ui'  //引入Message, MessageBox
 
 Vue.prototype.$message = Message                //vue实例上挂载Message                
 Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBox             
+
 
 
 Vue.use(VueRouter)
