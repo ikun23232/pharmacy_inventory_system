@@ -25,4 +25,6 @@ public interface BankAccountService extends IService<BankAccount> {
 
     public Message updateBankAccount(BankAccount bankAccount);
 
+    public Message getAllBankCountList();
+
 }

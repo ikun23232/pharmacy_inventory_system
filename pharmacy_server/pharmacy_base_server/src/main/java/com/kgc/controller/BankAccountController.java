@@ -56,5 +56,11 @@ public class BankAccountController {
         Message message = bankAccountService.getBankAccountBybandCount(bandCount);
         return message;
     }
+
+    @RequestMapping("getAllBankCountList")
+    public Message getAllBankCountList() {
+        Message message = bankAccountService.getAllBankCountList();
+        return message;
+    }
 }
 

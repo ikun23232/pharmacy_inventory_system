@@ -15,11 +15,11 @@ export function addSaleOrder(xsOrder) {
 
     });
 }
-//修改回显
-export function getSaleOrderById(id) {
-    return request.get(baseUrl + "/getSaleOrderById", {
+//根据订单号查询订单详情
+export function getSaleOrderByOrderNo(orderNo) {
+    return request.get(baseUrl + "/getSaleOrderByOrderNo", {
         params: {
-            id: id,
+            orderNo: orderNo,
         }
 
     });

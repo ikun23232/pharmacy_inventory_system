@@ -1,145 +1,125 @@
 <template>
-    <div class="order">
-      <h1 class="title">销售订单</h1>
-      <div class="data">
-         <div class="field"><span>客户：</span></div><div class="value">测试测是是的</div>
-      </div>
-      <div class="data">
-          <div class="field">单据日期：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">单据编号：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">联系人：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">主题：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">付款方式：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">交货日期：</div><div class="value">收藏收藏是</div>
-      </div>
-      <div class="data">
-          <div class="field">结算方式：</div><div class="value">收藏收藏是</div>
-      </div>
-      <div class="data">
-          <div class="field">交货方式：</div><div class="value">收藏收藏是</div>
-      </div>
-      <div class="data">
-          <div class="field">结算日期：</div><div class="value">收藏收藏是</div>
-      </div>
-      <div class="data">
-          <div class="field">运输方式：</div><div class="value">收藏收藏是</div>
-      </div>
-      <div class="data">
-          <div class="field">开票方式：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">交货地点：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">发票类型：</div><div class="value">收藏收藏是</div>
-      </div>
-        <table>
-      <tr>
-        <td>序号</td>
-        <td>物料</td>
-        <td>规格型号</td>
-        <td>单位</td>
-        <td>数量</td>
-        <td>税率(%)</td>
-        <td>含税单价</td>
-        <td>折扣率</td>
-        <td>税额</td>
-        <td>含税金额</td>
-      </tr>
-      <tr v-for="item in list" :key="item.id">
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-        <td>{{item.value}}</td>
-      </tr>
-      <tr>
-        <td colspan="4">合计 </td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-      </tr>
-      <tr>
-        <td>备注</td>
-        <td colspan="9"></td>
-      </tr>
-    </table>
-      <div class="data">
-          <div class="field">业务部门：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">业务员：</div><div class="value">收藏收藏是</div>
-      </div>
-        <div class="data">
-          <div class="field">制单：</div><div class="value">收藏收藏是</div>
-      </div>
+<div>
+  <div v-loading="loading" style="padding: 10px;">
+    <div id="printView" style="padding-left: 90px; padding-right: 20px;">
+      <h2 style="text-align: center;margin: 30px 0 10px 0;font-family: SimSun;">销售订单</h2>
+      <table class="table" border="0pm" cellspacing="0" align="left" width="100%" style="font-size: 12px;font-family: SimSun;margin-bottom: 10px; table-layout:fixed;word-wrap:break-word;word-break:break-all">
+        <tr>
+          <td style="padding:5px;" align="left">单据编号:{{ saleOrder.orderNo }}</td>
+          <td style="padding:5px;" align="left">单据日期:{{ saleOrder.orderDate }}</td>
+          <td style="padding:5px;" align="left">制单人:{{ saleOrder.createByName }}</td>
+          <td style="padding:5px;" align="left">联系电话: 13480876632</td>
+        </tr>
+        <tr style="margin:0;padding:0;">
+          <td style="padding:5px;" align="left">客户: 李明</td>
+          <td style="padding:5px;" align="left">联系电话: 15578960074</td>
+          <td style="padding:5px;" align="left">付款备注：{{saleOrder.remark }}</td>        
+          <td style="padding:5px;" align="left">合计金额: {{ saleOrder.totalPrice }}元</td>
+        </tr>
+        <tr style="margin:0;padding:0;">
+          <td style="padding:5px;" align="left">收款人: {{ saleOrder.name }}</td>
+          <td style="padding:5px;" align="left">收款账号: {{ saleOrder.bankAccountName }}</td>
+          <td style="padding:5px;" align="left">收款银行: {{ saleOrder.belongBank}}</td>
+          <td style="padding:5px;" align="left">发票类型: 不开发票</td>
+        </tr>
+      </table>
+ 
+      <div style="font-size: 12px;font-family: SimSun;font-weight: bolder;margin: 0 0 10px 5px;float: left;">订单明细:</div>
+      <table class="yk-table" border="1pm" cellspacing="0" align="center" width="100%" style="font-size: 12px;font-family: SimSun; table-layout:fixed;word-wrap:break-word;word-break:break-all">
+        <tr>
+          <th width="55px">序号</th>
+          <th>医用商品名称</th>
+          <th>型号规格</th>
+          <th>药品类型</th>
+          <th>计量单位</th>
+          <th>数量</th>
+          <th>金额（元）</th>
+        </tr>
+        <tr v-for="(item, index) in medicineDetailList" :key="index" align="center">
+          <td>{{ index + 1 }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.specification}}</td>
+          <td>{{ item.categoryName}}</td>
+          <td>{{ item.unitName }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.totalPrice }}</td>
+        </tr>
+        <tr align="center">
+          <td colspan="5" style="font-weight: bolder;">合计</td>
+          <td>{{saleOrder.totalNumber}}</td>
+          <td>{{saleOrder.totalPrice}}</td>
+        </tr>
+        <tr align="center">
+          <td style="font-weight: bolder;">备注</td>
+          <td colspan="6">{{saleOrder.remark}}</td>
+        </tr>
+      </table>
     </div>
+ 
+    <div class="drawer-bottom-bar">
+      <el-button v-print="'#printView'" type="primary" size="small">打印</el-button>
+      <el-button @click="$parent.$parent.closePrintDialog()" size="small">取消</el-button>
+    </div>
+  </div>
+</div>
   </template>
   
   <script>
+  import {getSaleOrderByOrderNo} from "../../api/saleOrder.js";
+import SaleOrder from "./SaleOrder.vue";
   export default {
-      name:"salesOrder",
+      name:"printView",
       data() {
-        return {
-      
-        }
+       return{
+        saleOrder:"",
+        medicineDetailList:"",
+        commonStyle: { width: '100%' },
+        // name:"123",
+        //   specification:"123",
+        //   categoryName:"123",
+        //   unitName:"123",
+        //   quantity:"123",
+        //   totalPrice:"123",
+       }
       },
+      mounted() {
+        console.log("123",this.$route.query.orderNo)
+        this.getSaleOrderByOrderNo(this.$route.query.orderNo);
+      },
+      methods:{
+        async getSaleOrderByOrderNo(orderNo) {
+          let data = await getSaleOrderByOrderNo(orderNo);
+          this.saleOrder=data.data;
+          this.medicineDetailList = this.saleOrder.baseMedicineList;
+        },
+      }
   }
   </script>
   
-  <style>
-    .order{
-      width: 1000px;
-      height: 450px;
-      margin: 0px auto;
+  <style media="print">
+  @page {
+    size: auto;
+    margin: 3mm;
+  }
+  html {
+    background-color: #ffffff;
+    margin: 0px;
+  }
+  body {
+    border: solid 1px #ffffff;
+  }
+  </style>
+  <style lang="scss" scoped>
+  @media print {
+    #printView {
+      display: block;
+      width: 100%;
+      overflow: hidden;
     }
-    .title{
-      margin-left:400px;
-    }
-    .data{
-      width: 300px;
-      height: 20;
-      float: left;
-      margin-bottom: 10px;
-      margin-left: 20px;
-    }
-    .field{
-      width: 80px;
-      text-align:justify; 
-      text-justify:inter-ideograph;
-      float: left;
-      text-align: center;
-    }
-    .value{
-      float: left;
-    }
-    table{
-      float: left;
-      width: 1000px;
-      border-collapse:collapse;
-      text-align:center;
-      margin-bottom: 10px;
-    }
-    table td{
-        border: 1px solid black;
-        height: 30px;
-    }
+  }
+  .drawer-bottom-bar{
+    float: right;
+    margin-top: 20px;
+    margin-right: 20px;
+  }
   </style>

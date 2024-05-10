@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/sale")
@@ -29,15 +32,15 @@ public class SaleOrderController {
 
     @RequestMapping("/addSaleOrder")
     @ResponseBody
-    public Message addSaleOrder(XsOrder xsOrder) {
-        Message message=saleOrderService.addSaleOrder(xsOrder);
+    public Message addSaleOrder(@RequestBody Map<String, Object> map) {
+        Message message=saleOrderService.addSaleOrder(map);
         return message;
     }
 
-    @RequestMapping("/getSaleOrderById")
+    @RequestMapping("/getSaleOrderByOrderNo")
     @ResponseBody
-    public Message getSaleOrderById(String orderNO) {
-        Message message=saleOrderService.getSaleOrderById(orderNO);
+    public Message getSaleOrderByOrderNo(@RequestParam("orderNo") String orderNo) {
+        Message message=saleOrderService.getSaleOrderByOrderNo(orderNo);
         return message;
     }
 

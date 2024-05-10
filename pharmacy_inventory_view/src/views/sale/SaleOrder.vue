@@ -22,7 +22,7 @@
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
                 <el-button icon="el-icon-refresh-right" >重置</el-button>
-                 <el-button type="text" icon="el-icon-plus" @click="handleAdd('addSaleOrder')">添加</el-button>
+                 <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导出</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
             </el-form-item>
@@ -59,15 +59,15 @@
         <el-button @click="handleUpdate(scope.row.id)" type="text">编辑
         </el-button>
         <el-dropdown>
-      <span class="el-dropdown-link">
-        更多<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>删除</el-dropdown-item>
-        <el-dropdown-item>作废</el-dropdown-item>
-        <el-dropdown-item @click.native="printSaleOrder">打印</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+          <span class="el-dropdown-link">
+            更多<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>删除</el-dropdown-item>
+            <el-dropdown-item>作废</el-dropdown-item>
+            <el-dropdown-item @click.native="printSaleOrder(scope.row.orderNo)">打印</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </template>
     </el-table-column>
   </el-table>
@@ -77,23 +77,27 @@
       <span style="color: gray;float: right;margin-top: 5px;">共{{ pageInfo.total }}条</span>
     </p>
 
-    <el-dialog title="" :visible.sync="dialogVisible" width="100%">
-      <div id="printView">
-        <router-view></router-view>
-      </div> 
-      <span slot="footer" class="dialog-footer">
-        <el-button v-print="printViewInfo" type="primary">打 印</el-button>
-        <el-button @click="dialogVisible = false">取 消</el-button>
-      </span>
+    <!-- 添加销售订单 -->
+    <el-dialog
+      title="销售订单-添加"
+      :visible.sync="dialogFormVisible"
+      width="90%"
+    >
+      <AddSaleOrder></AddSaleOrder>
     </el-dialog>
+
   </div>
 </div>
 </template>
 
 <script>
-import {initSaleOrder,addSaleOrder,getSaleOrderById,updateSaleOrder,deleteSaleOrder} from "../../api/saleOrder.js";
+import {initSaleOrder} from "../../api/saleOrder.js";
+import AddSaleOrder from "../sale/AddSaleOrder.vue";
 export default {
   name:"SaleOrder",
+  components: {
+    AddSaleOrder,
+  },
   data(){
     return{
       object:{
@@ -105,29 +109,7 @@ export default {
         },
         pageInfo:"",
         list:"",
-        dialogVisible: false,
-      msg: "打印",
-      printViewInfo: {
-        id: "printView", //打印区域的唯一的id属性
-        popTitle: '配置页眉标题', // 页眉文字 （不设置时显示undifined）（页眉页脚可以在打印页面的更多设置的选项中取消勾选）
-        extraHead: '打印，印刷', // 最左上方的头部文字，附加在head标签上的额外标签，使用逗号分割
-        preview: false, // 是否启动预览模式，默认是false （开启预览模式ture会占满整个屏幕，不建议开启，除非业务需要）
-        previewTitle: '预览的标题', // 打印预览的 标题(预览模式preview为true时才显示)
-        previewPrintBtnLabel: '预览结束，开始打印', // 打印预览的标题下方的按钮文本，点击可进入打印(预览模式preview为true时才显示)
-        zIndex: 20002, // 预览窗口的z-index，默认是20002，最好比默认值更高
-        previewBeforeOpenCallback (that) { console.log('正在加载预览窗口！'); console.log(that.msg, this) }, // 预览窗口打开之前的callback (预览模式preview为true时才执行) （that可以取到data里的变量值）
-        previewOpenCallback () { console.log('已经加载完预览窗口，预览打开了！') }, // 预览窗口打开时的callback (预览模式preview为true时才执行)
-        beforeOpenCallback () { console.log('开始打印之前！') }, // 开始打印之前的callback
-        openCallback () { console.log('执行打印了！') }, // 调用打印时的callback
-        closeCallback () { console.log('关闭了打印工具！') }, // 关闭打印的callback(无法区分确认or取消)
-        clickMounted () { console.log('点击v-print绑定的按钮了！') },
-        standard: '',
-        extarCss: ''
-      },
-      list:[{
-          id:0,
-          value:"1"
-      }]
+        dialogFormVisible:false,
     }
   },
   mounted() {
@@ -144,8 +126,17 @@ export default {
       this.currentPage = val;
       this.initMedicineListByPage(this.currentPage);
     },
-    printSaleOrder(){
-      this.dialogVisible = true
+    printSaleOrder(orderNo){
+      // this.$router.push("/printSaleOrder");
+      const newPage= this.$router.resolve({ 
+        path: "/printSaleOrder",
+        query:{ //要传的参数 可传多个
+        orderNo:orderNo
+      }})
+      window.open(newPage.href,'_blank')
+    },
+    handleAdd(){
+      this.dialogFormVisible=true;
     }
   }
 }

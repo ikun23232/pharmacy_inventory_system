@@ -33,10 +33,16 @@ const getBankAccountBybandCount = (bandCount) => {
         }
     })
 }
+
+const getAllBankCountList = () => {
+    return request.get(baseUrl + "/bankAccount/getAllBankCountList")
+}
+
 export {
     init,
     addBankAccount,
     updateBankAccount,
     delBankAccount,
-    getBankAccountBybandCount
+    getBankAccountBybandCount,
+    getAllBankCountList
 }
