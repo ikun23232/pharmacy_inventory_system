@@ -51,7 +51,11 @@
         <if test="voidState>-1">
             AND o.voidState=#{voidState}
         </if>
+        <if test="approvalStatus>-1">
+            AND o.approvalStatus=#{approvalStatus}
+        </if>
     </select>
+
 
 
 </mapper>

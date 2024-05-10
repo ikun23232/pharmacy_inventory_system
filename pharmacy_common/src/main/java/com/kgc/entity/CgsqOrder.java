@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -158,6 +159,10 @@ public class CgsqOrder implements Serializable {
     private String updateUserName;
     @TableField(exist = false)
     private String cgtype;
+
+    @TableField(exist = false)
+    private List<BaseMedicine> MedicineList;
+
 
 
 

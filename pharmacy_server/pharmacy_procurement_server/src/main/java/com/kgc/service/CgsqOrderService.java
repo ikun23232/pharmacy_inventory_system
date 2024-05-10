@@ -24,7 +24,49 @@ public interface CgsqOrderService extends IService<CgsqOrder> {
      * @return
      */
     Message getCgsqOrderList(CgVO cgVO);
+
+    /**
+     * 单个删除
+     * @param id
+     * @return
+     */
     Message delCgsqOrderById(int id);
+
+    /**
+     * 添加采购订单
+     * @param cgsqOrder
+     * @return
+     */
+    Message addCgsqOrder(CgsqOrder cgsqOrder);
+
+    /**
+     * 更新采购订单
+     * @param cgsqOrder
+     * @return
+     */
+
+    Message updateCgsqOrder(CgsqOrder cgsqOrder);
+
+    /**
+     * 获得采购订单
+     * @param id
+     * @return
+     */
+    Message getCgsqOrder(int id);
+
+    /**
+     * 作废订单
+     * @param id
+     * @return
+     */
+    Message voidCgsqOrder(int id);
+
+
+
+
+
+
+
 
 
 

@@ -24,7 +24,10 @@ public interface BankAccountMapper extends BaseMapper<BankAccount> {
      */
     public List<BankAccount> getBankAccountList(@Param("belongBank") String belongBank, @Param("name") String name,@Param("bandCount") String bandCount);
 
-    public BankAccount getBankAccountBybandCount(@Param("bandCount") String bandCount);
+    public BankAccount getBankAccountBybandCount(@Param("belongBank") String belongBank, @Param("name") String name,@Param("bandCount") String bandCount);
+    public BankAccount getBankAccountById(@Param("id") int id);
 
     public int delBankAccount(@Param("bandCount") String bandCount);
+
+    public BankAccount checkaddBankAccount(@Param("belongBank") String belongBank, @Param("name") String name,@Param("bandCount") String bandCount);
 }

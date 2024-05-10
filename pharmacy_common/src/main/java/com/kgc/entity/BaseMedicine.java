@@ -92,6 +92,20 @@ public class BaseMedicine implements Serializable {
     private Integer quantity;
     @TableField(exist=false)
     private double totalPrice;
+
+    @TableField(exist=false)
+    private double providerId;
+
+    @TableField(exist=false)
+    private double providerName;
+    @TableField(exist=false)
+    private double purchasePrice;
+
+
+
+
+
     @TableField(exist=false)
     private String code;//单据编号
+
 }

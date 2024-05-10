@@ -70,12 +70,13 @@
         </el-table>
         <!-- 添加弹窗 -->
         <el-dialog title="添加银行账户" :visible.sync="dialogVisible" width="30%" v-if="dialogVisible">
-            <AddBankAccount @updateSuccess="handleUpdateSuccess"></AddBankAccount>
+            <AddBankAccount @updateSuccess="handleUpdateSuccess" @close="close"></AddBankAccount>
         </el-dialog>
 
         <!-- 修改弹窗 -->
         <el-dialog title="修改银行账户" :visible.sync="updatedialogVisible" width="30%" v-if="updatedialogVisible">
-            <UpdateBankAccount :bandCount="updateBandCount" @updateSuccess="handleUpdateSuccess"></UpdateBankAccount>
+            <UpdateBankAccount :bandCount="updateBandCount" :belongBank="updatebelongBank" :name="updatename" :id="id"
+                @updateSuccess="handleUpdateSuccess" @close="close"></UpdateBankAccount>
         </el-dialog>
 
         <div style="width: 100%; height: 30px"></div>
@@ -104,7 +105,10 @@ export default {
                 pageSize: 5
             },
             //修改需要的id
+            id: '',
             updateBandCount: '',
+            updatebelongBank: '',
+            updatename: '',
             // 条件查询数据
             bandCount: '',
             name: '',
@@ -119,23 +123,30 @@ export default {
     },
     methods: {
         async handlegetbankAccountList(currentPageNo) {
-            let data = await init(this.bandCount, this.name,this.belongBank,currentPageNo, this.page.pageSize);
+            let data = await init(this.bandCount, this.name, this.belongBank, currentPageNo, this.page.pageSize);
             this.page = data.data
             console.log(this.page)
 
         },
         clearsearch() {
-           this.bandCount = '',
-           this.name = '',
-           this.belongBank = '' 
-           this.handlegetbankAccountList(1)
+            this.bandCount = '',
+                this.name = '',
+                this.belongBank = ''
+            this.handlegetbankAccountList(1)
         },
         addBankAccount() {
             this.dialogVisible = true
         },
         toUpdata(row) {
+            this.id = row.id
             this.updateBandCount = row.bandCount
+            this.updatebelongBank = row.belongBank
+            this.updatename = row.name
             this.updatedialogVisible = true
+        },
+        close() {
+            this.dialogVisible = false
+            this.updatedialogVisible = false
         },
         async del(row) {
             this.$messagebox

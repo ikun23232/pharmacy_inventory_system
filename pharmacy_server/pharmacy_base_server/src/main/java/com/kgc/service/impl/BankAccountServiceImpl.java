@@ -39,8 +39,8 @@ public class BankAccountServiceImpl extends ServiceImpl<BankAccountMapper, BankA
     }
 
     @Override
-    public Message getBankAccountBybandCount(String bandCount) {
-        BankAccount bankAccount = bankAccountMapper.getBankAccountBybandCount(bandCount);
+    public Message getBankAccountBybandCount(String belongBank,String name,String bandCount) {
+        BankAccount bankAccount = bankAccountMapper.getBankAccountBybandCount(belongBank,name,bandCount);
         if (bankAccount != null) {
             return Message.success(bankAccount);
         } else {
@@ -59,6 +59,16 @@ public class BankAccountServiceImpl extends ServiceImpl<BankAccountMapper, BankA
     }
 
     @Override
+    public Message getBankAccountById(int id) {
+        BankAccount bankAccount = bankAccountMapper.getBankAccountById(id);
+        if (bankAccount != null) {
+            return Message.success(bankAccount);
+        } else {
+            return Message.error();
+        }
+    }
+
+    @Override
     public Message addBankAccount(BankAccount bankAccount) {
         bankAccount.setCreateTime(new Date());
         int insert = bankAccountMapper.insert(bankAccount);
@@ -71,16 +81,40 @@ public class BankAccountServiceImpl extends ServiceImpl<BankAccountMapper, BankA
 
     @Override
     public Message updateBankAccount(BankAccount bankAccount) {
-        BankAccount bankAccount1 = bankAccountMapper.getBankAccountBybandCount(bankAccount.getBandCount());
+        BankAccount bankAccount1 = bankAccountMapper.getBankAccountById(bankAccount.getId());
         bankAccount.setUpdateTime(new Date());
-        bankAccount.setUpdateTime(bankAccount1.getCreateTime());
+        bankAccount.setCreateTime(bankAccount1.getCreateTime());
         UpdateWrapper<BankAccount> wrapper = new UpdateWrapper<>();
-        wrapper.eq("bandCount",bankAccount.getBandCount());
+        wrapper.eq("id",bankAccount.getId());
         int update = bankAccountMapper.update(bankAccount,wrapper);
         if(update>0){
             return Message.success();
         }else {
             return Message.error();
+        }
+    }
+
+    @Override
+    public Message checkaddBankAccount(String belongBank, String name, String bandCount) {
+        BankAccount bankAccount = bankAccountMapper.checkaddBankAccount(belongBank, name, bandCount);
+        if(bankAccount!=null){
+            return Message.error();
+        }else {
+            return Message.success();
+        }
+    }
+
+    @Override
+    public Message checkupdateBankAccount(String belongBank, String name, String bandCount, int id) {
+            BankAccount bankAccount1 = bankAccountMapper.getBankAccountById(id);
+        BankAccount bankAccount = bankAccountMapper.checkaddBankAccount(belongBank, name, bandCount);
+        if(bankAccount!=null){
+            if(bankAccount1.getBandCount().equals(bankAccount.getBandCount())){
+                return Message.success();
+            }
+            return Message.error();
+        }else {
+            return Message.success();
         }
     }
 

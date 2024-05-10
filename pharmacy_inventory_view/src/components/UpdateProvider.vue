@@ -20,14 +20,14 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('baseProvider')">立即创建</el-button>
-                <el-button @click="updatedialogVisible = false">取 消</el-button>
+                <el-button @click="close()">取 消</el-button>
                 <el-button @click="resetForm()">重置</el-button>
             </el-form-item>
         </el-form>
     </span>
 </template>
 <script>
-import { getProviderType, getBaseProviderById ,updateBaseProvider} from "../api/BaseProvider.js"
+import { getProviderType, getBaseProviderById ,updateBaseProvider,checkupdateBaseProvider} from "../api/BaseProvider.js"
 import { Message } from "element-ui";
 export default {
     props: {
@@ -53,15 +53,21 @@ export default {
                 userId: 1,
                 userName: "admin"
             },
+            flag:{
+                nameFlag:false
+            },
             rules: {
                 name: [
                     { required: true, message: "请输入供应商名", trigger: "blur" },
+                    { min: 3, max: 14, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+                    { validator: this.checkupdateBaseProvider, trigger: 'blur' }
                 ],
                 type: [
                     { required: true, message: "请选择类别", trigger: "blur" },
                 ],
                 address: [
                     { required: true, message: "请输入地址", trigger: "blur" },
+                    { min: 3, max: 14, message: '长度在 5 到 14 个字符', trigger: 'blur' },
                 ],
             }
         }
@@ -76,7 +82,23 @@ export default {
             console.log(data)
             this.optionTypeList = data.data;
         },
-
+        close(){
+            this.$emit("close");
+        },
+        async checkupdateBaseProvider(rule, value, callback) {
+            try {
+                let data = await checkupdateBaseProvider(this.baseProvider.name,this.baseProvider.id);
+                if (data.code ==="200") {
+                    this.flag.nameFlag = true
+                    callback();
+                } else {
+                    this.flag.nameFlag = false
+                    callback(new Error("该供应商公司已被注册！"))
+                }
+            } catch (error) {
+                callback(new Error('验证失败，请重试')); // 验证出错
+            }
+        },
         async getBaseProviderById() {
             let data = await getBaseProviderById(this.baseProvider.id);
             console.log(data);
