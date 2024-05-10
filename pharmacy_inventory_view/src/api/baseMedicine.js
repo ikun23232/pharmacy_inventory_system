@@ -44,3 +44,6 @@ export function getMedicineListByCode(code) {
 
     });
 }
+export function getAllBaseMedicine(code) {
+    return request.get(baseUrl + "/getAllBaseMedicine")
+}
