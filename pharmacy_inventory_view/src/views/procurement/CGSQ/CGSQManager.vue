@@ -48,14 +48,15 @@
     </p>
   
     <el-table :data="list.list" border style="width: 100%">
-      <el-table-column prop="id" label="订单序号" width="120">
+      <el-table-column type="selection" width="55" fixed></el-table-column>
+      <el-table-column prop="id" label="#" width="75" fixed>
         <template slot-scope="scope">
         {{scope.$index+1}}
         </template>
          </el-table-column>
       <el-table-column prop="code" label="订单编码" width="150" fixed>
         <template slot-scope="scope">
-      <a href="javascript:void(0)">{{scope.row.code}}</a>  
+      <a href="#" @click="viewOrder">{{scope.row.code}}</a>  
         </template>
       </el-table-column>
       <el-table-column prop="cgtype" label="采购类型" width="120">
@@ -120,42 +121,47 @@
     </div>
     <!-- 修改订单状态 -->
     <el-dialog
-      title="修改计量单位"
+      title="修改采购申请详情"
       :visible.sync="updatedialogVisible"
       width="30%"
       v-if="updatedialogVisible"
     >
+
       <updateOrderStatus
         :serialNumber="serialNumber"
         @closeUpdateDiago="closeUpdateDiago"
       ></updateOrderStatus>
     </el-dialog>
     <el-dialog
-      title="添加计量单位"
+      title="采购申请订单详情"
       :visible.sync="adddialogVisible"
-      width="30%"
+      width="85%"
       v-if="adddialogVisible"
     >
-      <AddUnit
-        @addSuccess="addSuccess"
-      ></AddUnit>
+    <CGSQaddOrder
+    :visible.sync="viewdialogVisible"
+     width="75%"
+    :id="id"
+    @closeUpdateDiago="closeUpdateDiago">
+    
+    </CGSQaddOrder>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { delUnit, initUnit } from "@/api/BaseUnit";
-import {initCgSqOrderList,delCgsqOrderById} from '@/api/CgsdOrder'
+// import { delUnit, initUnit } from "@/api/BaseUnit";
+import {initCgSqOrderList,delCgsqOrderById,voidCgsqOrderById} from '@/api/CgsdOrder'
 import { Message } from "element-ui";
-// import updateOrderStatus from "./UpdateOrderStatus.vue";
+import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
 // import AddUnit from "./AddUnit.vue";
 
 export default {
   name: "storeHouse",
-  // components: {
-  //   updateOrderStatus,
-  //   AddUnit
-  // },
+  components: {
+    CGSQaddOrder,
+    // AddUnit
+  },
   data() {
     return {
       code: "",
@@ -179,6 +185,7 @@ export default {
       dialogVisible: false,
       updatedialogVisible: false,
       adddialogVisible:false,
+      viewdialogVisible:false,
       pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -250,8 +257,11 @@ export default {
     addOrder() {
       this.adddialogVisible = true;
     },
-  
-    closeUpdateDiago(){
+    viewOrder() {
+      alert(1)
+      this.viewdialogVisible = true;
+    },
+      closeUpdateDiago(){
       this.updatedialogVisible = false;
       this.getList(this.page);
     },
@@ -263,6 +273,20 @@ export default {
       this.$router.push({
         name: path,
       });
+    },
+  async  voidOrder(row){
+      if (!confirm("你确定要删除吗？")) {
+        return;
+      }
+      let resp = await voidCgsqOrderById(row.id);
+      console.log(resp);
+      if (resp.code == "200") {
+        Message({
+          type: "success",
+          message: "作废成功",
+        });
+        this.initCgSqOrderList();
+      }
     },
     handleEdit(row) {
       this.$router.push({

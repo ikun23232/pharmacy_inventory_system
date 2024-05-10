@@ -35,6 +35,11 @@ public class CgsqOrderController {
         Message message = cgsqOrderService.delCgsqOrderById(id);
         return message;
     }
+    @RequestMapping("/voidCgsqOrderById")
+    public Message voidCgsqOrderById(int id){
+        Message message = cgsqOrderService.voidCgsqOrder(id);
+        return  message;
+    }
 
 
 }
