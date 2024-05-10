@@ -34,7 +34,7 @@ const routes = [
     name: 'bankAccountList',
     component: BankAccountList
   },
-  ,{
+  {
     path: '/cgsqManager',
     name: 'CgsqManager',
     component: CgsqManager
