@@ -105,4 +105,6 @@ public class BaseMedicine implements Serializable {
 
 
 
+    @TableField(exist=false)
+    private String code;//单据编号
 }

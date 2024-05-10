@@ -46,3 +46,11 @@ export function getBaseMedicineListByProviderId(id) {
         }
     });
 }
+export function getMedicineListByCode(code) {
+    return request.get(baseUrl + "/getMedicineListByCode", {
+        params: {
+            code: code,
+        }
+
+    });
+}

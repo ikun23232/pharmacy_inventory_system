@@ -87,7 +87,7 @@ export default {
       }
     };
     var validateCapacity = (rule, value, callback) => {
-      // 对传入的字符串类型数据进行手动转换为数字类型
+      //对传入的字符串类型数据进行手动转换为数字类型
       const capacityNumber = value ? Number(value) : null;
       if (
         capacityNumber !== null &&

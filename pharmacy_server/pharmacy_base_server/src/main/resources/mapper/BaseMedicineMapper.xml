@@ -20,10 +20,17 @@
     </select>
 
     <select id="getMedicineListByCode" resultType="BaseMedicine">
-        SELECT m.*,o.quantity,o.totalPrice
-        FROM base_medicine m,order_medicine o
-        WHERE o.medicineId=m.id
-          AND code=#{code}
+        SELECT b.*,o.quantity,o.totalPrice,o.code,
+               b.createBy,b.createTime,b.updateBy,b.updateTime,
+               un.name as unitName,mc.name as categoryName,
+               (SELECT userName FROM sys_user u WHERE b.createBy=u.userId)
+                       as createByName, (SELECT userName FROM sys_user u WHERE b.updateBy=u.userId) as updateByName
+        from base_medicine b,
+             base_unit un,base_medicine_category mc,order_medicine o
+        where  o.medicineId=b.id and b.categoryId=mc.id and b.unitId=un.id and b.isDel=0 and un.isDel=0 and mc.isDel=0
+#         FROM base_medicine m,order_medicine o
+#         WHERE o.medicineId=m.id
+          AND o.code=#{code}
     </select>
 
     <select id="getBaseMedicineListByProviderId" resultType="BaseMedicine">
@@ -39,8 +46,6 @@
           AND p.medicineId=b.id
           AND p.providerId=#{providerId}
     </select>
-
-
 
 
 </mapper>
