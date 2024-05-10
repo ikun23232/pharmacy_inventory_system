@@ -26,7 +26,7 @@ import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("/baseProviderType")
+@RequestMapping("/base/baseProviderType")
 public class BaseProviderTypeController {
 
     @Autowired

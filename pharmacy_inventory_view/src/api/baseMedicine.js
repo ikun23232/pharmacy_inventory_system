@@ -35,3 +35,14 @@ export function deleteBaseMedicine(id) {
 
     });
 }
+
+
+
+
+export function getBaseMedicineListByProviderId(id) {
+    return request.get(baseUrl + "/getBaseMedicineListByProviderId", {
+        params: {
+            providerId: id,
+        }
+    });
+}
