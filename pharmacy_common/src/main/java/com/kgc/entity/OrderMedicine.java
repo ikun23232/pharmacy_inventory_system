@@ -50,5 +50,6 @@ public class OrderMedicine implements Serializable {
     @TableField("totalPrice")
     private Double totalprice;
 
-
+    @TableField("providerId")
+    private int providerId;
 }

@@ -67,6 +67,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
                 orderMedicine.setMedicineid(baseMedicine.getId());
                 orderMedicine.setQuantity(baseMedicine.getQuantity());
                 orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+                orderMedicine.setProviderId(cgddOrder.getProviderId());
                 int temp = orderMapper.insert(orderMedicine);
                 if (temp > 0){
                     count1++;
