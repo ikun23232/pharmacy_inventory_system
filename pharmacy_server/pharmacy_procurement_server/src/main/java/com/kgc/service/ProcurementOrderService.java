@@ -15,4 +15,8 @@ import java.util.List;
  */
 public interface ProcurementOrderService extends IService<CgddOrder> {
     public Message getCgddOrder(CgddOrder cgddOrder, Page page);
+
+    public Message addCgddOrder(CgddOrder cgddOrder);
+
+    public Message deleteById(int id);
 }

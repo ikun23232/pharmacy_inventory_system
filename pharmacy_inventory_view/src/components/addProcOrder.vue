@@ -11,7 +11,11 @@
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据编号" prop="code">
-              <el-input type="text" v-model="CgddOrder.code"></el-input>
+              <el-input
+                type="text"
+                disabled
+                v-model="CgddOrder.code"
+              ></el-input>
             </el-form-item></div
         ></el-col>
         <el-col :span="6"
@@ -116,76 +120,159 @@
       </el-form-item>
       <el-tabs v-model="activeName">
         <el-tab-pane label="采购申请单" name="first">
+          <el-form>
+            <el-form-item>
+              <el-button
+                icon="el-icon-plus"
+                @click="cgsqdialog = true"
+                style="float: left"
+                >申请单</el-button
+              >
+              <el-button
+                icon="el-icon-delete"
+                type="danger"
+                @click="deleteCgsq"
+                style="float: left"
+                >删除</el-button
+              >
+            </el-form-item>
+            <el-table
+              :data="cgsqList"
+              show-summary
+              border
+              style="width: 1200px"
+              @selection-change="handleCgsqChange"
+            >
+              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column prop="code" label="订单编码" width="150" fixed>
+              </el-table-column>
+              <el-table-column prop="demandtime" label="单据日期" width="300">
+              </el-table-column>
+              <el-table-column prop="subject" label="单据主题" width="120">
+              </el-table-column>
+              <el-table-column prop="cgtype" label="采购类型" width="120">
+              </el-table-column>
+              <el-table-column
+                prop="demanderUserName"
+                label="需求人"
+                width="120"
+              >
+              </el-table-column>
+              <el-table-column prop="demandTime" label="需求日期" width="120">
+              </el-table-column>
+              <el-table-column prop="count" label="数量" width="120">
+              </el-table-column>
+              <el-table-column
+                prop="referenceamount"
+                label="参考金额"
+                width="120"
+              >
+              </el-table-column>
+              <el-table-column prop="remark" label="备注" width="120">
+              </el-table-column>
+            </el-table>
+            <el-divider></el-divider>
+            <el-button
+                icon="el-icon-plus"
+                :disabled="medicineList == null"
+                style="float: left"
+                >添加</el-button
+              >
+              <el-button
+                icon="el-icon-delete"
+                type="danger"
+                style="float: left"
+                >删除</el-button
+              >
+            <el-table
+              :data="medicineList"
+              show-summary
+              border
+              style="width: 1200px"
+              @selection-change="handleCgsqMedicineionChange"
+            >
+              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column prop="code" label="单据编号" width="150" fixed>
+              </el-table-column>
+              <el-table-column prop="name" label="医药品名称" width="300">
+              </el-table-column>
+              <el-table-column
+                prop="specification"
+                label="医药品规格"
+                width="120"
+              >
+              </el-table-column>
+              <el-table-column prop="unitName" label="单位" width="120">
+              </el-table-column>
+              <el-table-column prop="quantity" label="数量" width="120">
+              </el-table-column>
+              <el-table-column prop="salePrice" label="售价" width="120">
+              </el-table-column>
+              <el-table-column prop="totalPrice" label="总价格" width="120">
+              </el-table-column>
+            </el-table>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="明细" name="second">
           <el-button
             icon="el-icon-plus"
             @click="cgsqdialog = true"
-            style="float: left"
-            >申请单</el-button
-          >
-          <el-table
-            ref="multipleTable"
-            :data="tableData"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55"> </el-table-column>
-            <el-table-column prop="id" label="订单序号" width="120">
-              <template slot-scope="scope">
-                {{ scope.$index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column label="日期" width="120" fixed>
-              <template slot-scope="scope">{{ scope.row.date }}</template>
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
-            </el-table-column>
-            <el-table-column prop="address" label="地址" show-overflow-tooltip>
-            </el-table-column>
-          </el-table>
+            style="float: left">新增</el-button>
         </el-tab-pane>
-        <el-tab-pane label="明细" name="second">明细</el-tab-pane>
       </el-tabs>
       <el-form-item style="width: 500px">
-        <el-button class="anniu" type="primary" @click="submitForm('CgddOrder')"
-          >立即添加</el-button
-        >
-        <el-button class="anniu" s @click="resetForm('CgddOrder')"
-          >重置</el-button
-        >
-        <el-button class="anniu" @click="cancel()">取 消</el-button>
+        <el-row type="flex" justify="center">
+          <el-col :span="6"
+            ><div class="grid-content bg-purple">
+              <el-button type="primary" @click="submitForm('CgddOrder')"
+                >立即添加</el-button
+              >
+            </div></el-col
+          >
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-button s @click="resetForm('CgddOrder')">重置</el-button>
+            </div></el-col
+          >
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-button @click="cancel()">取 消</el-button>
+            </div></el-col>
+        </el-row>
       </el-form-item>
     </el-form>
     <el-dialog
       title="采购申请单"
       :visible.sync="cgsqdialog"
-      width="100%"
+      width="1200px"
       v-if="cgsqdialog"
     >
-        <p>
-          <el-form :inline="true" :model="vo" class="demo-form-inline">
-            <el-form-item label="单据编号">
+      <div class="container">
+        <!-- 表单部分 -->
+        <div>
+          <!-- 这里放你的表单内容 -->
+          <el-form :inline="true" :model="cgsqList" style="width: 1200px">
+            <el-form-item class="anniu" label="单据编号">
               <el-input
                 v-model="vo.code"
                 placeholder="请输入单据编号"
               ></el-input>
             </el-form-item>
-            <el-form-item label="单据主题">
+            <el-form-item class="anniu" label="单据主题">
               <el-input
                 v-model="vo.subject"
                 placeholder="请输入单据编号"
               ></el-input>
             </el-form-item>
-
-            <el-form-item label="采购类型">
+            <el-form-item class="anniu" label="采购类型">
               <el-select v-model="vo.type" placeholder="请选择采购类型">
                 <el-option label="请选择" value="0"></el-option>
                 <el-option label="直接采购" value="1"></el-option>
                 <el-option label="紧急采购" value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="作废状态">
-              <el-select v-model="vo.voidState" placeholder="请选择采购类型">
+            <el-form-item class="anniu" label="作废状态">
+              <el-select v-model="vo.voidState" placeholder="请选择作废状态">
                 <el-option label="请选择" value="-1"></el-option>
                 <el-option label="已作废" value="0"></el-option>
                 <el-option label="未作废" value="1"></el-option>
@@ -206,64 +293,75 @@
             </div>
           </el-form-item> -->
             <el-form-item>
-              <el-button type="primary" @click="initCgSqOrderList()"
+              <el-button
+                class="anniu"
+                type="primary"
+                @click="initCgSqOrderList()"
                 >查询</el-button
               >
             </el-form-item>
           </el-form>
-        </p>
-
-        <el-table
-          :data="list.list"
-          border
-          style="width: 100%"
-          @selection-change="handleCgsqSelectionChange"
-        >
-          <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="id" label="订单序号" width="120">
-            <template slot-scope="scope">
-              {{ scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="code" label="订单编码" width="150" fixed>
-          </el-table-column>
-          <el-table-column prop="demandtime" label="单据日期" width="300">
-          </el-table-column>
-          <el-table-column prop="subject" label="单据主题" width="120">
-          </el-table-column>
-          <el-table-column prop="cgtype" label="采购类型" width="120">
-          </el-table-column>
-          <el-table-column prop="demanderUserName" label="需求人" width="120">
-          </el-table-column>
-          <el-table-column prop="demandTime" label="需求日期" width="120">
-          </el-table-column>
-          <el-table-column prop="count" label="数量" width="120">
-          </el-table-column>
-          <el-table-column prop="effectivetime" label="生效时间" width="120">
-          </el-table-column>
-          <el-table-column prop="referenceamount" label="参考金额" width="120">
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination
-            @current-change="handleCurrentChange"
-            :current-page.sync="list.pageNum"
-            :page-size="list.pageSize"
-            layout="prev, pager, next, jumper"
-            :total="list.total"
-          >
-          </el-pagination>
-          <el-row type="flex" justify="center">
-            <el-col :span="2">
-              <el-button type="primary" @click="getMedicineList()"
-                >确认</el-button
-              >
-            </el-col>
-            <el-col :span="2">
-              <el-button @click="cgsqdialog = false">取消</el-button>
-            </el-col>
-          </el-row>
         </div>
+        <!-- 表格部分 -->
+        <div class="dataTable">
+          <!-- 这里放你的表格内容 -->
+          <el-table
+            :data="list.list"
+            border
+            style="width: 1200px"
+            @selection-change="handleCgsqSelectionChange"
+          >
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="id" label="订单序号" width="120">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="code" label="订单编码" width="150" fixed>
+            </el-table-column>
+            <el-table-column prop="demandtime" label="单据日期" width="300">
+            </el-table-column>
+            <el-table-column prop="subject" label="单据主题" width="120">
+            </el-table-column>
+            <el-table-column prop="cgtype" label="采购类型" width="120">
+            </el-table-column>
+            <el-table-column prop="demanderUserName" label="需求人" width="120">
+            </el-table-column>
+            <el-table-column prop="demandTime" label="需求日期" width="120">
+            </el-table-column>
+            <el-table-column prop="count" label="数量" width="120">
+            </el-table-column>
+            <el-table-column prop="effectivetime" label="生效时间" width="120">
+            </el-table-column>
+            <el-table-column
+              prop="referenceamount"
+              label="参考金额"
+              width="120"
+            >
+            </el-table-column>
+          </el-table>
+          <div class="block">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page.sync="list.pageNum"
+              :page-size="list.pageSize"
+              layout="prev, pager, next, jumper"
+              :total="list.total"
+            >
+            </el-pagination>
+            <el-row type="flex" justify="center">
+              <el-col :span="2">
+                <el-button type="primary" @click="getMedicineList()"
+                  >确认</el-button
+                >
+              </el-col>
+              <el-col :span="2">
+                <el-button @click="cgsqdialog = false">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </div>
+      </div>
     </el-dialog>
   </span>
 </template>
@@ -272,6 +370,8 @@
 // import { addStoreHouse, checkName } from "@/api/storeHouse.js";
 import { Message } from "element-ui";
 import { initCgSqOrderList } from "@/api/CgsdOrder";
+import { getMedicineListByCode } from "@/api/baseMedicine";
+import { getCurrentTime } from "./../api/util.js";
 export default {
   name: "addProcOrder",
   data() {
@@ -288,7 +388,7 @@ export default {
     return {
       CgddOrder: {
         code: "",
-        createTime: "",
+        createTime: new Date(),
         phone: "",
         contactperson: "",
         providerId: 1,
@@ -296,7 +396,6 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        createTime: "",
       },
       vo: {
         currentPageNo: 1,
@@ -306,13 +405,16 @@ export default {
         type: "0",
         startTime: "",
         endTime: "",
-        voidState: "",
+        voidState: 0,
+        approvalStatus: 1,
       },
       list: {},
       activeName: "first",
       adddialogVisible: false,
       cgsqdialog: false,
+      medicineList: [],
       cgsqList: [],
+      cgsqListTemp: [],
       rules: {
         //     name: [
         //       { required: true, message: "请输入仓库名称", trigger: "blur" },
@@ -335,18 +437,19 @@ export default {
       },
     };
   },
-  mounted() {
-    this.initCgSqOrderList();
+  async mounted() {
+    await this.initCgSqOrderList();
+    this.CgddOrder.code = await getCurrentTime("CGDD");
   },
   methods: {
     async initCgSqOrderList() {
       let data = await initCgSqOrderList(this.vo);
       console.log(data);
       this.list = data.data;
+      console.log(this.list);
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
-      this.getList(this.page);
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -378,11 +481,50 @@ export default {
       this.multipleSelection = val;
     },
     handleCgsqSelectionChange(val) {
-      this.cgsqList = val;
+      this.cgsqListTemp = val;
+      console.log("cgsqList", this.cgsqList.length);
     },
-    getMedicineList(){
-        
-    }
+    handleCgsqMedicineionChange(val) {},
+    handleCgsqChange(val) {
+      this.cgsqListTemp = val;
+    },
+    async getMedicineList() {
+      console.log(this.cgsqListTemp.length <= 0);
+      if (this.cgsqListTemp.length <= 0) {
+        Message({
+          message: "请选择采购申请单",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      console.log(this.cgsqListTemp.length);
+      for (let index = 0; index < this.cgsqListTemp.length; index++) {
+        const cgsq = this.cgsqListTemp[index];
+        console.log("cgsq", cgsq.code);
+        var data = await getMedicineListByCode(cgsq.code);
+        console.log("data:", data);
+        for (let i = 0; i < data.data.length; i++) {
+          this.medicineList.push(data.data[i]);
+        }
+        console.log("medicineList:", this.medicineList);
+      }
+      this.cgsqdialog = false;
+      this.cgsqList = this.cgsqListTemp;
+      // this.page.pageNum = 1;
+      this.initCgSqOrderList();
+    },
+    async deleteCgsq() {
+      this.cgsqList = this.cgsqListTemp;
+      console.log(this.cgsqList);
+      for (let index = 0; index < this.cgsqListTemp.length; index++) {
+        const cgsq = this.cgsqListTemp[index];
+        console.log("cgsq", cgsq.code);
+        var data = await getMedicineListByCode(cgsq.code);
+        console.log("data:", data);
+        this.medicineList = data.data;
+      }
+    },
   },
 };
 </script>
@@ -390,5 +532,14 @@ export default {
 <style>
 .anniu {
   float: left;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 如果需要居中对齐可以添加这个样式 */
+}
+
+.dataTable {
+  margin-top: 20px; /* 设置表格与表单之间的间距 */
 }
 </style>

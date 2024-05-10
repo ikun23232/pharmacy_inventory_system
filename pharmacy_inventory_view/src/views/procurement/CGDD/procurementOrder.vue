@@ -18,10 +18,13 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         :picker-options="pickerOptions"
+        @change="test"
       >
       </el-date-picker>
       <el-button type="primary" @click="getOrderList(1, 5)">查询</el-button>
-      <el-button type="primary" @click="adddialogVisible = true">添加</el-button>
+      <el-button type="primary" @click="adddialogVisible = true"
+        >添加</el-button
+      >
     </div>
     <el-table :data="list.list" border style="width: 100%">
       <el-table-column prop="id" label="订单序号" width="120">
@@ -53,13 +56,13 @@
         width="120"
       ></el-table-column>
       <el-table-column prop="phone" label="电话" width="120"></el-table-column>
-      <el-table-column prop="fax" label="传真" width="120"> </el-table-column>
+      <el-table-column prop="fax" label="传真" width="120"></el-table-column>
       <el-table-column prop="deliveryDate" label="交货日期" width="120">
       </el-table-column>
       <el-table-column prop="deliveryName" label="交货人名称" width="120">
       </el-table-column>
-      <el-table-column prop="fax" label="传真" width="120"> </el-table-column>
-      <el-table-column prop="count" label="数量" width="120"> </el-table-column>
+      <el-table-column prop="fax" label="传真" width="120"></el-table-column>
+      <el-table-column prop="count" label="数量" width="120"></el-table-column>
       <el-table-column prop="effectiveTime" label="生效时间" width="120">
       </el-table-column>
       <el-table-column prop="referenceAmount" label="参考金额" width="120">
@@ -115,10 +118,11 @@
       >
       </el-pagination>
     </div>
+    px
     <el-dialog
       title="采购订单添加"
       :visible.sync="adddialogVisible"
-      width="100%"
+      width="1300px"
       v-if="adddialogVisible"
     >
       <addProcOrder
@@ -128,10 +132,10 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
-import { getProcList } from "@/api/procurementOrder";
+import { getProcList, deleteById } from "@/api/procurementOrder";
 import addProcOrder from "../../../components/addProcOrder.vue";
+import { Message } from "element-ui";
 export default {
   name: "procOrder",
   components: {
@@ -211,10 +215,33 @@ export default {
       this.getList(1, 5);
     },
     cancel() {
-      this.adddialogVisible = false; // 关闭 el- 
+      this.adddialogVisible = false; // 关闭 el-
     },
     updateOrder(row) {},
-    handleDelete(row) {},
+    handleDelete(row) {
+      if (confirm("你确定要删除吗？")) {
+        deleteById(row.id).then((resp) => {
+          console.log(resp);
+          if (resp.code == 200) {
+            Message({
+              message: "删除成功!",
+              type: "success",
+              center: "true",
+            });
+            this.getOrderList(1, 5);
+          } else {
+            Message({
+              message: "删除失败!",
+              type: "error",
+              center: "true",
+            });
+          }
+        });
+      }
+    },
+    test(val){
+      alert(val)
+    }
   },
 };
 </script>

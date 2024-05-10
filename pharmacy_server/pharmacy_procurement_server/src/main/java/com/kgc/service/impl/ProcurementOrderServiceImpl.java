@@ -50,4 +50,18 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         }
         return Message.error("没有数据");
     }
+
+    @Override
+    public Message addCgddOrder(CgddOrder cgddOrder) {
+        return null;
+    }
+
+    @Override
+    public Message deleteById(int id) {
+        int count = mapper.deleteById(id);
+        if (count > 0){
+            return Message.success();
+        }
+        return Message.error("删除失败！");
+    }
 }

@@ -3,6 +3,7 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -217,4 +218,8 @@ public class CgddOrder implements Serializable {
 
     @TableField(exist = false)
     private Date endDate;
+
+    @TableLogic
+    @TableField("isDel")
+    private int isDel;
 }
