@@ -1,9 +1,9 @@
 <template>
   <span slot="footer" class="dialog-footer">
     <el-form
-      :model="CgddOrder"
+      :model="CgsqOrder"
       :rules="rules"
-      ref="CgddOrder"
+      ref="CgsqOrder"
       label-width="100px"
       class="demo-ruleForm"
     >
@@ -11,14 +11,14 @@
         <el-col :span="8"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据编号" prop="code">
-              <el-input type="text" v-model="CgddOrder.code" disabled></el-input>
+              <el-input type="text" v-model="CgsqOrder.code" disabled></el-input>
             </el-form-item></div
         ></el-col>
         <el-col :span="8"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据日期" prop="createTime">
               <el-date-picker
-                v-model="CgddOrder.createTime"
+                v-model="CgsqOrder.createTime"
                 type="date"
                 placeholder="选择日期"
                 format="yyyy 年 MM 月 dd 日"
@@ -29,7 +29,7 @@
         <el-col :span="8"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
-              <el-input type="text" v-model="CgddOrder.subject"></el-input>
+              <el-input type="text" v-model="CgsqOrder.subject"></el-input>
             </el-form-item></div
         ></el-col>
         
@@ -37,7 +37,7 @@
           ><div class="grid-content bg-purple">
             <el-form-item label="采购类型" prop="type">
               <el-select
-                v-model="CgddOrder.type"
+                v-model="CgsqOrder.type"
                 placeholder="请选择采购类型1"
                 clearable
                 filterable
@@ -54,7 +54,7 @@
           ><div class="grid-content bg-purple">
             <el-form-item label="需求人" prop="type">
               <el-select
-                v-model="CgddOrder.demainerId"
+                v-model="CgsqOrder.demainerId"
                 placeholder="请选择需求人"
                 clearable
                 filterable
@@ -234,9 +234,9 @@
        
        <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
        <div style="text-align: left;">
-       <div style=" margin-bottom:25px;">合计7878元</div> 
+       <div style=" margin-bottom:25px;">合计{{totalPrice}}元</div>
 
-     <span>备注:</span><el-input class="" v-model="CgddOrder.remark"  placeholder="请输入备注" style="width: 1000px;"></el-input>
+     <span>备注:</span><el-input class="" v-model="CgsqOrder.remark"  placeholder="请输入备注" style="width: 1000px;"></el-input>
     </div>
 
 
@@ -264,7 +264,7 @@
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgddOrder.approvement" placeholder="请选择">
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择">
 
     <el-option
       label="未通过"
@@ -279,10 +279,10 @@
 </div>
 
       <el-form-item style="width: 500px">
-        <el-button class="anniu" type="primary" @click="submitForm('CgddOrder')"
+        <el-button class="anniu" type="primary" @click="resetForm('CgsqOrder')"
           >取 消</el-button
         >
-        <el-button class="anniu" s @click="resetForm('CgddOrder')"
+        <el-button class="anniu" s @click="submitForm('CgsqOrder')"
           >保 存</el-button
         >
         <el-button class="anniu" @click="cancel()">提 交</el-button>
@@ -405,7 +405,8 @@
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
-import { initCgSqOrderList } from "@/api/CgsdOrder";
+import { initCgSqOrderList,addCgddOrder} from "@/api/CgsdOrder";
+import { getCurrentTime } from "./../api/util.js";
 export default {
   name: "addProcOrder",
   data() {
@@ -424,7 +425,8 @@ export default {
       //选中的从表数据
       checkedDetail: [],
 
-      CgddOrder: {
+
+      CgsqOrder: {
         code: "",
         phone: "",
         contactperson: "",
@@ -475,9 +477,10 @@ export default {
       },
     };
   },
-  mounted() {
+ async mounted() {
     this.initCgSqOrderList();
     this.initProvider()
+    this.CgsqOrder.code = await getCurrentTime("CGSQ");
   },
   methods: {
     async initCgSqOrderList() {
@@ -492,7 +495,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addStoreHouse(this.CgddOrder).then((resp) => {
+
+          addCgddOrder().then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
               Message({
@@ -614,6 +618,15 @@ export default {
       // console.log(obj.medicineList)
     }
   },
+  computed: {
+    totalPrice() {
+      // 使用 reduce 方法计算总价
+      if (this.bcglXiangXiList==undefined){
+        return 0
+      }
+      return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice*item.quantity, 0);
+    }
+  }
 
 
 
