@@ -23,4 +23,6 @@ public interface BaseMedicineMapper extends BaseMapper<BaseMedicine> {
      * @return
      */
     public List<BaseMedicine> getBaseMedicineListByPage(BaseMedicine baseMedicine);
+
+    List<BaseMedicine> getMedicineListByCode(String code);
 }

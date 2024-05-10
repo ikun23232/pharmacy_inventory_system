@@ -19,4 +19,5 @@ public interface CgsqOrderMapper extends BaseMapper<CgsqOrder> {
     List<CgsqOrder> getCgsqOrderList(Map map);
 
 
+    List<CgsqOrder> getCgsqOrderListByApprove();
 }

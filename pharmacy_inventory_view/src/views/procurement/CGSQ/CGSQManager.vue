@@ -20,8 +20,8 @@
   <el-form-item label="作废状态">
     <el-select v-model="vo.voidState" placeholder="请选择采购类型">
       <el-option label="请选择" value="-1"></el-option>
-      <el-option label="已作废" value="0"></el-option>
-      <el-option label="未作废" value="1"></el-option>
+      <el-option label="未作废" value="0"></el-option>
+      <el-option label="已作废" value="1"></el-option>
     </el-select>
   </el-form-item>
   <el-form-item label="日期">
@@ -33,6 +33,7 @@
       range-separator="至"
       start-placeholder="开始日期"
       end-placeholder="结束日期"
+     
       align="right">
     </el-date-picker>
   </div>
@@ -40,11 +41,12 @@
   <el-form-item>
     <el-button type="primary" @click="initCgSqOrderList();">查询</el-button>
       <el-button type="primary" @click="addOrder">添加</el-button>
+<el-button type="success">导出</el-button>
+
   </el-form-item>
 </el-form>
-<el-button type="success">导出</el-button>
     </p>
-   
+  
     <el-table :data="list.list" border style="width: 100%">
       <el-table-column prop="id" label="订单序号" width="120">
         <template slot-scope="scope">
@@ -52,6 +54,9 @@
         </template>
          </el-table-column>
       <el-table-column prop="code" label="订单编码" width="150" fixed>
+        <template slot-scope="scope">
+      <a href="javascript:void(0)">{{scope.row.code}}</a>  
+        </template>
       </el-table-column>
       <el-table-column prop="cgtype" label="采购类型" width="120">
       </el-table-column>
@@ -75,9 +80,9 @@
         {{scope.row.orderstatus==0?"未通过":"通过"}}
         </template>
       </el-table-column>
-      <el-table-column prop="voidState" label="核批结果" width="120">
+      <el-table-column prop="voidState" label="作废状态" width="120">
         <template slot-scope="scope">
-        {{scope.row.voidState==0?"否":"是"}}
+        {{scope.row.voidstate==0?"否":"是"}}
         </template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="120">
@@ -166,7 +171,7 @@ export default {
          type:'0',
          startTime:'',
          endTime:'',
-         voidState:''
+         voidState:"-1"
       },
       serialNumber: "",
       list: {},
@@ -210,6 +215,12 @@ export default {
   },
   methods: {
     async initCgSqOrderList() {
+      this.vo.startTime=''
+      this.vo.endTime=''
+      if (this.value2!=null&&this.value2.length > 0) {
+        this.vo.startTime = this.value2[0];
+        this.vo.endTime = this.value2[1];
+      }
       let data = await initCgSqOrderList(this.vo);
       console.log(data);
       this.list = data.data;
@@ -260,8 +271,8 @@ export default {
           userName: row.userName,
         },
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

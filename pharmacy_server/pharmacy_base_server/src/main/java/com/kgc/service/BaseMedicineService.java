@@ -28,4 +28,6 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
 
     public Message deleteBaseMedicineById(int id);
 
+    public Message getMedicineListByCode(String code);
+
 }

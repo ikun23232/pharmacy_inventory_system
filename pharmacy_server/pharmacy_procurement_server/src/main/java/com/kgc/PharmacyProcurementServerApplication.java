@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @MapperScan(basePackages = "com.kgc.dao")
 public class PharmacyProcurementServerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(PharmacyProcurementServerApplication.class, args);
     }
