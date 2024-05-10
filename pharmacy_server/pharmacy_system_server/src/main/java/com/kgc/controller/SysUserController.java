@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @author lemon
  * @since 2024-04-30
  */
-@RestController
-@RequestMapping("/user")
-public class SysUserController {
-    @Autowired
-    private SysUserService userService;
-    @RequestMapping("/login")
-    public Message login(@RequestBody SysUser user){
-        Message message = userService.login(user);
-        return message;
-    }
-}
+//@RestController
+//@RequestMapping("/user")
+//public class SysUserController {
+//    @Autowired
+//    private SysUserService userService;
+//    @RequestMapping("/login")
+//    public Message login(@RequestBody SysUser user){
+//        Message message = userService.login(user);
+//        return message;
+//    }
+//}
 

@@ -13,3 +13,9 @@ export function deleteById(id) {
         }
     });
 }
+
+export function addCgddOrder(cgddOrder) {
+    return request.post(baseUrl + "/addCgddOrder",{
+        cgddOrder:cgddOrder
+    });
+}

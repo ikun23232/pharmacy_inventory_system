@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * @author 15279
@@ -43,8 +46,10 @@ public class ProcurementOrderController {
     }
 
     @RequestMapping("/addCgddOrder")
-    public Message addCgddOrder(CgddOrder cgddOrder) {
-        return null;
+    public Message addCgddOrder(@RequestBody Map map) {
+        CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
+        Message message = procurementOrderService.addCgddOrder(cgddOrder);
+        return message;
     }
 
     @RequestMapping("/deleteById")

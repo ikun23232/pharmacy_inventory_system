@@ -4,19 +4,21 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.ProcurementOrderMapper;
-import com.kgc.entity.CgddOrder;
-import com.kgc.entity.Message;
-import com.kgc.entity.Page;
+import com.kgc.dao.PublicOMedicineMapper;
+import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
+import com.kgc.service.PublicOMedicineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -25,9 +27,12 @@ import java.util.TimeZone;
  * @create 2024/5/8 15:57
  */
 @Service
+@Transactional
 public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMapper, CgddOrder> implements ProcurementOrderService {
     @Autowired
     private ProcurementOrderMapper mapper;
+    @Autowired
+    private PublicOMedicineMapper orderMapper;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {
@@ -53,7 +58,22 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public Message addCgddOrder(CgddOrder cgddOrder) {
-        return null;
+        int count = mapper.insert(cgddOrder);
+        int count1 = 0;
+        if (count > 0){
+            for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
+                OrderMedicine orderMedicine = new OrderMedicine();
+                orderMedicine.setCode(cgddOrder.getCode());
+                orderMedicine.setMedicineid(baseMedicine.getId());
+                orderMedicine.setQuantity(baseMedicine.getQuantity());
+                orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+                int temp = orderMapper.insert(orderMedicine);
+                if (temp > 0){
+                    count1++;
+                }
+            }
+        }
+        return Message.error("添加订单失败");
     }
 
     @Override
