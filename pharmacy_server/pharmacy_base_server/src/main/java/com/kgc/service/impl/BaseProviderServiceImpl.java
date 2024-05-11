@@ -82,4 +82,28 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
         }
 
     }
+
+    @Override
+    public Message checkaddBaseProvider(String name) {
+        BaseProvider baseProvider = baseProviderMapper.checkaddBaseProvider(name);
+        if(baseProvider!=null){
+            return Message.error();
+        }else {
+            return Message.success();
+        }
+    }
+
+    @Override
+    public Message checkupdateBaseProvider(String name,int id) {
+        BaseProvider baseProvider = baseProviderMapper.checkaddBaseProvider(name);
+        BaseProvider baseProvider1 = baseProviderMapper.getBaseProviderById(id);
+        if(baseProvider!=null){
+            if(baseProvider.getName().equals(baseProvider1.getName())){
+                return Message.success();
+            }
+            return Message.error();
+        }else {
+            return Message.success();
+        }
+    }
 }

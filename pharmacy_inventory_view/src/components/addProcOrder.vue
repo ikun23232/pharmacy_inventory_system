@@ -2,7 +2,7 @@
   <span slot="footer" class="dialog-footer">
     <el-form
       :model="CgddOrder"
-      :rules="rules"
+      :rules="cgddRules"
       ref="CgddOrder"
       label-width="100px"
       class="demo-ruleForm"
@@ -45,11 +45,11 @@
                 clearable
                 filterable
               >
-                <!-- <el-option v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option> -->
+                <el-option v-for="item in cgType"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
               </el-select>
             </el-form-item>
           </div></el-col
@@ -61,7 +61,7 @@
             <el-form-item label="付款方式" prop="payType">
               <el-select
                 v-model="CgddOrder.payType"
-                placeholder="请选择采购类型"
+                placeholder="请选择付款方式"
                 clearable
                 filterable
               >
@@ -70,6 +70,14 @@
                     :label="item.label"
                     :value="item.value">
                 </el-option> -->
+                <el-option 
+                    label="货到付款"
+                    value="0">
+                </el-option>
+                <el-option 
+                    label="全款后发货"
+                    value="1">
+                </el-option>
               </el-select>
             </el-form-item>
           </div></el-col
@@ -90,8 +98,7 @@
           ><div class="grid-content bg-purple">
             <el-form-item label="联系电话" prop="phone">
               <el-input type="text" v-model="CgddOrder.phone"></el-input>
-            </el-form-item></div
-        ></el-col>
+            </el-form-item></div></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="供应商" prop="providerId">
@@ -101,11 +108,11 @@
                 clearable
                 filterable
               >
-                <!-- <el-option v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option> -->
+              <el-option v-for="item in cgType"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
               </el-select>
             </el-form-item>
           </div></el-col
@@ -174,7 +181,7 @@
             <el-divider></el-divider>
             <el-button
                 icon="el-icon-plus"
-                :disabled="medicineList == null"
+                :disabled="CgddOrder.medicineList == null"
                 style="float: left"
                 >添加</el-button
               >
@@ -185,7 +192,7 @@
                 >删除</el-button
               >
             <el-table
-              :data="medicineList"
+              :data="CgddOrder.medicineList"
               show-summary
               border
               style="width: 1200px"
@@ -312,11 +319,6 @@
             @selection-change="handleCgsqSelectionChange"
           >
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="id" label="订单序号" width="120">
-              <template slot-scope="scope">
-                {{ scope.$index + 1 }}
-              </template>
-            </el-table-column>
             <el-table-column prop="code" label="订单编码" width="150" fixed>
             </el-table-column>
             <el-table-column prop="demandtime" label="单据日期" width="300">
@@ -372,30 +374,23 @@ import { Message } from "element-ui";
 import { initCgSqOrderList } from "@/api/CgsdOrder";
 import { getMedicineListByCode } from "@/api/baseMedicine";
 import { getCurrentTime } from "./../api/util.js";
+import {addCgddOrder} from './../api/procurementOrder.js'
+import {getPayType} from './../api/public.js'
 export default {
   name: "addProcOrder",
   data() {
-    // var check = (rule, value, callback) => {
-    //   let data = checkName(value).then((resp) => {
-    //     console.log(resp.data);
-    //     if (resp.code == 200) {
-    //       callback(new Error("仓库名已经存在"));
-    //     } else {
-    //       callback();
-    //     }
-    //   });
-    // };
     return {
       CgddOrder: {
         code: "",
         createTime: new Date(),
         phone: "",
         contactperson: "",
-        providerId: 1,
+        providerId: "",
         deliveryDate: "",
         payType: "",
         type: "",
         subject: "",
+        medicineList: [],
       },
       vo: {
         currentPageNo: 1,
@@ -409,37 +404,34 @@ export default {
         approvalStatus: 1,
       },
       list: {},
+      cgType:{},
       activeName: "first",
       adddialogVisible: false,
       cgsqdialog: false,
-      medicineList: [],
-      cgsqList: [],
       cgsqListTemp: [],
-      rules: {
-        //     name: [
-        //       { required: true, message: "请输入仓库名称", trigger: "blur" },
-        //       { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        //       { validator: check, trigger: "blur" },
-        //     ],
-        //     address: [
-        //       { required: true, message: "请输入仓库地址", trigger: "blur" },
-        //       { min: 3, max: 5, message: "长度在 2 到 10 个字符", trigger: "blur" },
-        //     ],
-        //     capacity: [
-        //       { required: true, message: "仓库面积不能为空" },
-        //       {
-        //         type: "number",
-        //         min: 1,
-        //         max: 10000,
-        //         message: "仓库面积必须为范围在1-10000的整数",
-        //       },
-        //     ],
+      cgsqList: [],
+      cgddRules: {
+            type: [
+              { required: true, message: "请输入采购类型", trigger: "change" },
+            ],
+            providerId: [
+              { required: true, message: "请输入供应商", trigger: "change" },
+            ],
+            deliveryDate: [
+              { required: true, message: "交货日期不能为空",trigger: "change" },
+            ],
+            payType:[
+              { required: true, message: "付款方式不能为空",trigger: "change" },
+            ]
       },
     };
   },
   async mounted() {
     await this.initCgSqOrderList();
     this.CgddOrder.code = await getCurrentTime("CGDD");
+    let data = await getPayType();
+    this.cgType = data.data
+    console.log(this.cgType)
   },
   methods: {
     async initCgSqOrderList() {
@@ -454,7 +446,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addStoreHouse(this.CgddOrder).then((resp) => {
+          addCgddOrder(this.CgddOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
               Message({
@@ -472,7 +464,9 @@ export default {
       });
     },
     resetForm(formName) {
+      var data = this.CgddOrder.code;
       this.$refs[formName].resetFields();
+      this.CgddOrder.code = data
     },
     cancel() {
       this.$emit("cancel");
@@ -484,7 +478,9 @@ export default {
       this.cgsqListTemp = val;
       console.log("cgsqList", this.cgsqList.length);
     },
-    handleCgsqMedicineionChange(val) {},
+    handleCgsqMedicineionChange(val) {
+      
+    },
     handleCgsqChange(val) {
       this.cgsqListTemp = val;
     },
@@ -505,16 +501,23 @@ export default {
         var data = await getMedicineListByCode(cgsq.code);
         console.log("data:", data);
         for (let i = 0; i < data.data.length; i++) {
-          this.medicineList.push(data.data[i]);
+          this.CgddOrder.medicineList.push(data.data[i]);
         }
-        console.log("medicineList:", this.medicineList);
+        console.log("medicineList:", this.CgddOrder.medicineList);
       }
       this.cgsqdialog = false;
       this.cgsqList = this.cgsqListTemp;
+      this.cgsqListTemp = []
       // this.page.pageNum = 1;
       this.initCgSqOrderList();
     },
     async deleteCgsq() {
+      for (let index = 0; index < this.cgsqList.length; index++) {
+        const element = this.cgsqList[index];
+        for (let i = 0; i < this.cgsqListTemp.length; i++) {
+          const temp = this.cgsqListTemp[i];
+        }
+      }
       this.cgsqList = this.cgsqListTemp;
       console.log(this.cgsqList);
       for (let index = 0; index < this.cgsqListTemp.length; index++) {
@@ -522,7 +525,7 @@ export default {
         console.log("cgsq", cgsq.code);
         var data = await getMedicineListByCode(cgsq.code);
         console.log("data:", data);
-        this.medicineList = data.data;
+        this.CgddOrder.medicineList = data.data;
       }
     },
   },

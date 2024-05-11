@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,6 +68,12 @@ public class BaseMedicineController {
     public Message getMedicineListByCode(String code){
         Message medicineListByCode = baseMedicineService.getMedicineListByCode(code);
         return medicineListByCode;
+    }
+    @RequestMapping("/getBaseMedicineListByProviderId")
+    @ResponseBody
+    public Message getBaseMedicineListByProviderId(int providerId) {
+        Message baseMedicineList=baseMedicineService.getBaseMedicineListByProviderId(providerId);
+        return Message.success(baseMedicineList);
     }
 }
 

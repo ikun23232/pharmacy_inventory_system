@@ -23,14 +23,14 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('bankAccount')">立即创建</el-button>
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="close()">取 消</el-button>
                 <el-button @click="resetForm()">重置</el-button>
             </el-form-item>
         </el-form>
     </span>
 </template>
 <script>
-import { addBankAccount } from "../api/BankAccount.js";
+import { addBankAccount,checkaddBankAccount } from "../api/BankAccount.js";
 import { Message } from "element-ui";
 export default {
     data() {
@@ -44,6 +44,11 @@ export default {
                 tip: '',
                 belongBank: ''
             },
+            flag:{
+                bandCountFlag:false,
+                nameFlag:false,
+                belongBank:false
+            },
             user: {
                 userId: 1,
                 userName: "admin"
@@ -51,18 +56,25 @@ export default {
             rules: {
                 bandCount: [
                     { required: true, message: "请输入银行账户", trigger: "blur" },
+                    { min: 3, max: 14, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+                    { validator: this.checkaddBankAccount, trigger: 'blur' }
                 ],
                 name: [
                     { required: true, message: "请输入账户名", trigger: "blur" },
+                    { min: 3, max: 14, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+                    { validator: this.checkaddBankAccount, trigger: 'blur' }
                 ],
                 balance: [
                     { required: true, message: "请输入余额", trigger: "blur" },
                 ],
                 tip: [
                     { required: true, message: "请选择备注", trigger: "blur" },
+                    { min: 3, max: 14, message: '长度在 2 到 10 个字符', trigger: 'blur' },
                 ],
                 belongBank: [
                     { required: true, message: "请输入所属银行", trigger: "blur" },
+                    { min: 3, max: 14, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+                    { validator: this.checkaddBankAccount, trigger: 'blur' }
                 ],
             }
         }
@@ -75,7 +87,24 @@ export default {
                 this.bankAccount.tip = '',
                 this.bankAccount.belongBank = ''
         },
-
+        async checkaddBankAccount(rule, value, callback) {
+            try {
+                let data = await checkaddBankAccount(this.bankAccount.belongBank,this.bankAccount.name,this.bankAccount.bandCount);
+                if (data.code ==="200") {
+                    this.flag.nameFlag = true
+                    this.flag.bandCountFlag = true
+                    this.flag.belongBank = true
+                    callback();
+                } else {
+                    this.flag.nameFlag = false
+                    this.flag.bandCountFlag = false
+                    this.flag.belongBank = false
+                    callback(new Error("此银行已存在该银行账户和账户名！"))
+                }
+            } catch (error) {
+                callback(new Error('验证失败，请重试')); // 验证出错
+            }
+        },
         submitForm(bankAccount) {
             return new Promise((resolve, reject) => {
                 this.$refs[bankAccount].validate((valid) => {
@@ -91,6 +120,9 @@ export default {
                     }
                 })
             });
+        },
+        close(){
+            this.$emit("close");
         },
         async add(formdata) {
             let data = await addBankAccount(formdata)

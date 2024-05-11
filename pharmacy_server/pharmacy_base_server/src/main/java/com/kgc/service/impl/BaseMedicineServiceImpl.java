@@ -86,4 +86,10 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
         List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
         return Message.success(medicineListByCode);
     }
+
+    @Override
+    public Message getBaseMedicineListByProviderId(int providerId) {
+        List<BaseMedicine> baseMedicineList=baseMedicineMapper.getBaseMedicineListByProviderId(providerId);
+        return Message.success(baseMedicineList);
+    }
 }

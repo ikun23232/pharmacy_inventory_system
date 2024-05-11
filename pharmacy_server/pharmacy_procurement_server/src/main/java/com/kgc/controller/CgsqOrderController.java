@@ -1,6 +1,9 @@
 package com.kgc.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.kgc.entity.CgsqOrder;
 import com.kgc.entity.Message;
 import com.kgc.service.CgsqOrderService;
 import com.kgc.vo.CgVO;
@@ -40,6 +43,13 @@ public class CgsqOrderController {
         Message message = cgsqOrderService.voidCgsqOrder(id);
         return  message;
     }
+    @RequestMapping("/addCgsqOrder")
+    public Message addCgsqOrder(@RequestBody Map map){
+        CgsqOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgsqOrder")), CgsqOrder.class);
+        Message message = cgsqOrderService.addCgsqOrder(cgsqOrder1);
+        return  message;
+    }
+
 
 
 }

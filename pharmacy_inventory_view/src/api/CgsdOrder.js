@@ -21,3 +21,9 @@ export function voidCgsqOrderById(id) {
         }
     });
 }
+
+export function addCgddOrder(cgsqOrder) {
+    return request.post(baseUrl + "/addCgsqOrder",{
+        cgsqOrder:cgsqOrder
+    });
+}

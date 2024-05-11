@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -123,7 +124,7 @@ public class CgddOrder implements Serializable {
      * 作废状态
      */
     @TableField("voidState")
-    private String voidState;
+    private int voidState;
 
     /**
      * 制单时间
@@ -222,4 +223,7 @@ public class CgddOrder implements Serializable {
     @TableLogic
     @TableField("isDel")
     private int isDel;
+
+    @TableField(exist = false)
+    private List<BaseMedicine> medicineList;
 }

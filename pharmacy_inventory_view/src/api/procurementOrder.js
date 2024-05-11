@@ -41,3 +41,9 @@ export function getCgPayNumList(year,pageNum,pageSize) {
         }
     });
 }
+
+export function addCgddOrder(cgddOrder) {
+    return request.post(baseUrl + "/addCgddOrder",{
+        cgddOrder:cgddOrder
+    });
+}

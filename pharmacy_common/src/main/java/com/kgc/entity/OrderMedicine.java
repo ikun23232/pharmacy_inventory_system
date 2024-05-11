@@ -51,4 +51,6 @@ public class OrderMedicine implements Serializable {
     private Double totalprice;
 
 
+    private Integer providerId;
+
 }

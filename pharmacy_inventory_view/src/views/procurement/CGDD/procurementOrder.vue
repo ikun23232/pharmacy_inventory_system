@@ -118,7 +118,6 @@
       >
       </el-pagination>
     </div>
-    px
     <el-dialog
       title="采购订单添加"
       :visible.sync="adddialogVisible"
@@ -206,8 +205,7 @@ export default {
       });
     },
     handleCurrentChange(val) {
-      this.page.pageNum = val;
-      this.getOrderList(val);
+      this.getOrderList(val,this.procPage.pageSize);
     },
     handleAddSuccess() {
       this.adddialogVisible = false; // 关闭 el-dialog

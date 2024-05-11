@@ -40,4 +40,9 @@ public interface BaseProviderMapper extends BaseMapper<BaseProvider> {
      */
     public BaseProvider getBaseProviderById(@Param("id") int id);
 
+    /**
+     * 重名校验
+     */
+    public BaseProvider checkaddBaseProvider(@Param("name") String name);
+
 }
