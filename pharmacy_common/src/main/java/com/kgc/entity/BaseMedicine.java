@@ -94,7 +94,7 @@ public class BaseMedicine implements Serializable {
     private double totalPrice;
 
     @TableField(exist=false)
-    private double providerId;
+    private Integer providerId;
 
     @TableField(exist=false)
     private double providerName;
