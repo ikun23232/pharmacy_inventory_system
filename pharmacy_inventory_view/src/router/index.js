@@ -59,7 +59,13 @@ const routes = [
     path:'/procurementTJ',
     name: 'procurementTJ',
     component: () => import('../views/procurement/ProcurementTJ.vue')
+  },
+  {
+    path:'/KcReported',
+    name: 'KcReported',
+    component: () => import('../views/warehouse/KCBC/KcReported.vue')
   }
+
 ]
 
 const router = new VueRouter({

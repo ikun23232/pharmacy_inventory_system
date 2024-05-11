@@ -25,8 +25,15 @@ public class KcMedicine implements Serializable {
     /**
      * 库存-药品主键id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
+
+    /**
+     * 仓库id
+     */
+    @TableField("storehouseId")
+    private Integer storehouseId;
 
     /**
      * 仓库编号
@@ -37,13 +44,19 @@ public class KcMedicine implements Serializable {
      * 批次编号
      */
     @TableField("batchCode")
-    private Integer batchcode;
+    private Integer batchCode;
 
     /**
      * 药品id
      */
     @TableField("medicineId")
-    private Integer medicineid;
+    private Integer medicineId;
+
+    /**
+     * 供应商id
+     */
+    @TableField("providerId")
+    private Integer providerId;
 
     /**
      * 数量
@@ -54,6 +67,18 @@ public class KcMedicine implements Serializable {
      * 库存价值
      */
     private String money;
+
+    /**
+     * 药品名称
+     */
+    @TableField("medicineName")
+    private String medicineName;
+
+    /**
+     * 供应商名称
+     */
+    @TableField("providerName")
+    private String providerName;
 
 
 }

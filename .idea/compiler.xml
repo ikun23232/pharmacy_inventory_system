@@ -22,4 +22,7 @@
       <module name="pharmacy_system" target="1.8" />
     </bytecodeTargetLevel>
   </component>
+  <component name="TypeScriptCompiler">
+    <option name="useService" value="false" />
+  </component>
 </project>
