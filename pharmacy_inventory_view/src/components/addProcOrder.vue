@@ -270,12 +270,191 @@
         <el-tab-pane label="明细" name="second">
           <el-button
             icon="el-icon-plus"
-            @click="cgsqdialog = true"
+            @click="handleAddDetails"
             style="float: left"
             >新增</el-button
           >
+          <el-button
+            type="success"
+            icon="el-icon-delete"
+            size="mini"
+            @click="handleDeleteDetails"
+            >删除</el-button
+          >
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="handleDeleteAllDetails"
+            >清空</el-button
+          >
+          <el-table
+            v-loading="loading"
+            :data="bcglXiangXiList"
+            :row-class-name="rowClassName"
+            @selection-change="handleDetailSelectionChange"
+            ref="tb"
+          >
+            <el-table-column type="selection" width="30" align="center" />
+            <el-table-column
+              label="序号"
+              align="center"
+              prop="xh"
+              width="50"
+            ></el-table-column>
+            <el-table-column
+              label="药品"
+              align="center"
+              prop="medicineId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changeMedicine(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].medicineId">
+                  <el-option
+                    v-for="dict in scope.row.medicineList"
+                    :key="dict.id"
+                    :label="dict.name"
+                    :value="dict.id"/>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="规格型号"
+              align="center"
+              prop="measureId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changezdts(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].specification"
+                  disabled
+                >
+                  <el-option
+                    :label="scope.row.specification"
+                    :value="scope.row.specification"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="单位"
+              align="center"
+              prop="unitId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changezdts(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].unitName"
+                  disabled
+                >
+                  <el-option
+                    v-for="dict in zdtsOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="数量"
+              align="center"
+              prop="price"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input-number
+                  v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
+                  controls-position="right"
+                  @change="handleChange"
+                  :min="1"
+                  :max="10"
+                ></el-input-number>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="单价"
+              align="center"
+              prop="price"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changezdts(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].price"
+                  disabled
+                >
+                  <el-option
+                    v-for="dict in zdtsOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="参考总价"
+              align="center"
+              prop="totalPrice"
+              width="150"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.quantity * scope.row.price }}
+              </template>
+            </el-table-column>
+          </el-table>
         </el-tab-pane>
       </el-tabs>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="备注 " style="margin-top: 10px" prop="remark">
+            <el-input
+              style="width: 300px"
+              type="text"
+              v-model="CgddOrder.remark"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item
+            label="核批意见"
+            style="margin-top: 10px"
+            prop="approverRemark"
+          >
+            <el-input
+              style="width: 300px"
+              type="text"
+              v-model="CgddOrder.approverRemark"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item
+            label="核批结果"
+            style="margin-top: 10px"
+            prop="approvalStatus"
+          >
+            <el-select
+              v-model="CgddOrder.approvalStatus"
+              placeholder="请选择审批结果"
+              clearable
+              filterable
+            >
+              <el-option label="通过" value="0"></el-option>
+              <el-option label="不通过" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item style="width: 500px">
         <el-row type="flex" justify="center">
           <el-col :span="6"
@@ -422,6 +601,7 @@
 // import { addStoreHouse, checkName } from "@/api/storeHouse.js";
 import { Message } from "element-ui";
 import { initCgSqOrderList } from "@/api/CgsdOrder";
+import { init } from "../api/BaseProvider.js";
 import { getMedicineListByCode } from "@/api/baseMedicine";
 import { getCurrentTime } from "./../api/util.js";
 import { addCgddOrder } from "./../api/procurementOrder.js";
@@ -430,7 +610,11 @@ export default {
   name: "addProcOrder",
   data() {
     return {
+      bcglXiangXiList: [],
       CgddOrder: {
+        approvalStatus: "",
+        approverRemark: "",
+        remark: "",
         orderStatus: "1",
         email: "",
         fax: "",
@@ -466,6 +650,7 @@ export default {
       cgsqListTemp: [],
       cgsqList: [],
       medicineListTemp: [],
+      providerList: [],
       cgddRules: {
         type: [
           { required: true, message: "请输入采购类型", trigger: "change" },
@@ -509,6 +694,7 @@ export default {
   async mounted() {
     await this.initCgSqOrderList();
     this.CgddOrder.code = await getCurrentTime("CGDD");
+    this.initProvider();
     let data = await getPayType();
     this.cgType = data.data;
     console.log(this.cgType);
@@ -519,6 +705,10 @@ export default {
       console.log(data);
       this.list = data.data;
       console.log(this.list);
+    },
+    async initProvider() {
+      let resp = await init("", 0, 1, 5);
+      this.providerList = resp.data.list;
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
@@ -626,6 +816,37 @@ export default {
         return;
       }
       this.cgsqdialog = true;
+    },
+    async handleAddDetails() {
+      if (this.bcglXiangXiList == undefined) {
+        this.bcglXiangXiList = new Array();
+      }
+      let obj = {
+        providerList: [],
+        medicineList: [],
+        providerId: "",
+        medicineId: "",
+        unitName: "",
+        specification: "",
+        price: "",
+        totalPrice: "",
+        quantity: "",
+      };
+      console.log(this.providerList);
+      obj.providerList = this.providerList;
+      obj.dkdd = "1";
+      obj.sjfw = ["07:00", "07:30"];
+      obj.jxsjfw = ["06:00", "12:00"];
+      this.bcglXiangXiList.push(obj);
+    },
+    handleDeleteDetails() {
+      if (this.checkedDetail.length == 0) {
+        this.$alert("请先选择要删除的数据", "提示", {
+          confirmButtonText: "确定",
+        });
+      } else {
+        this.bcglXiangXiList.splice(this.checkedDetail[0].xh - 1, 1);
+      }
     },
   },
 };

@@ -387,9 +387,7 @@
           </el-pagination>
           <el-row type="flex" justify="center">
             <el-col :span="2">
-              <el-button type="primary" @click="getMedicineList()"
-                >确认</el-button
-              >
+              <el-button type="primary" @click="getMedicineList()">确认</el-button>
             </el-col>
             <el-col :span="2">
               <el-button @click="cgsqdialog = false">取消</el-button>
@@ -401,7 +399,6 @@
 </template>
 
 <script>
-// import { addStoreHouse, checkName } from "@/api/storeHouse.js";
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
@@ -424,8 +421,6 @@ export default {
       bcglXiangXiList: [],
       //选中的从表数据
       checkedDetail: [],
-
-
       CgsqOrder: {
         code: "",
         phone: "",

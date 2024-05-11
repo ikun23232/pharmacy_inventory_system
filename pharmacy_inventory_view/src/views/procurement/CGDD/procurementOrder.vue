@@ -25,6 +25,9 @@
       <el-button type="primary" @click="adddialogVisible = true"
         >添加</el-button
       >
+      <el-button type="primary" @click="printExcel"
+        >导出</el-button
+      >
     </div>
     <el-table :data="list.list" border style="width: 100%">
       <el-table-column prop="id" label="订单序号" width="120">
@@ -96,12 +99,24 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             @click="updateOrder(scope.row.id)"
             type="primary"
             size="small"
             >编辑
-          </el-button>
+          </el-button> -->
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <el-button type="primary" size="small">编辑 </el-button>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click="updateOrder(scope.row.id)"
+                >修改</el-dropdown-item
+              >
+              <el-dropdown-item @click="printExcel">打印</el-dropdown-item>
+              <el-dropdown-item>螺蛳粉</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-button @click="handleDelete(scope.row)" type="danger" size="small"
             >删除
           </el-button>
@@ -132,6 +147,7 @@
   </div>
 </template>
 <script>
+import { setExcel } from "./../../../api/public.js";
 import { getProcList, deleteById } from "@/api/procurementOrder";
 import addProcOrder from "../../../components/addProcOrder.vue";
 import { Message } from "element-ui";
@@ -205,7 +221,7 @@ export default {
       });
     },
     handleCurrentChange(val) {
-      this.getOrderList(val,this.procPage.pageSize);
+      this.getOrderList(val, this.procPage.pageSize);
     },
     handleAddSuccess() {
       this.adddialogVisible = false; // 关闭 el-dialog
@@ -237,9 +253,12 @@ export default {
         });
       }
     },
-    test(val){
-      alert(val)
-    }
+    test(val) {
+      alert(val);
+    },
+    async printExcel() {
+      await setExcel(this.list.list, "采购订单");
+    },
   },
 };
 </script>
