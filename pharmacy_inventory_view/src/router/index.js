@@ -54,6 +54,11 @@ const routes = [
     path: '/procurementOrder',
     name: 'procurementOrder',
     component: procurementOrder
+  },
+  {
+    path:'/procurementTJ',
+    name: 'procurementTJ',
+    component: () => import('../views/procurement/ProcurementTJ.vue')
   }
 ]
 

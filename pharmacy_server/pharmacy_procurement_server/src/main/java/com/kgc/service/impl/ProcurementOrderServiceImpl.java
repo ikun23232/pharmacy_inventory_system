@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.ProcurementOrderMapper;
-import com.kgc.entity.CgddOrder;
-import com.kgc.entity.Message;
-import com.kgc.entity.Page;
+import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,5 +61,34 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             return Message.success();
         }
         return Message.error("删除失败！");
+    }
+
+    @Override
+    public Message getCgPayCom(String year, String month) {
+        List<CgPayCom> cgPayCom = mapper.getCgPayCom(year, month);
+        if (cgPayCom != null){
+            return Message.success(cgPayCom);
+        }
+        return Message.error("没有数据");
+    }
+
+    @Override
+    public Message getCgPayNum(String year) {
+        List<CgPayNum> cgPayNum = mapper.getCgPayNum(year);
+        if (cgPayNum != null){
+            return Message.success(cgPayNum);
+        }
+        return Message.error("没有数据");
+    }
+
+    @Override
+    public Message getCgPayNumList(String year,int pageNum,int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<CgPayNum> cgPayNum = mapper.getCgPayNum(year);
+        PageInfo pageInfo = new PageInfo(cgPayNum);
+        if (cgPayNum != null){
+            return Message.success(pageInfo);
+        }
+        return Message.error("没有数据");
     }
 }
