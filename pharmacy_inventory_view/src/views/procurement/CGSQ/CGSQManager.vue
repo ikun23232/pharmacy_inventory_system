@@ -12,9 +12,11 @@
 
         <el-form-item label="采购类型">
           <el-select v-model="vo.type" placeholder="请选择采购类型">
-            <el-option label="请选择" value="0"></el-option>
-            <el-option label="直接采购" value="1"></el-option>
-            <el-option label="紧急采购" value="2"></el-option>
+
+              <el-option label="请选择" value="0"></el-option>
+              <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
+
+
           </el-select>
         </el-form-item>
         <el-form-item label="作废状态">
@@ -154,6 +156,8 @@
 import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/CgsdOrder'
 import {Message} from "element-ui";
 import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
+import {getPayType} from "@/api/public";
+
 // import AddUnit from "./AddUnit.vue";
 
 
@@ -216,11 +220,13 @@ export default {
         }]
       },
       value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-      value2: ''
+      value2: '',
+      cgTypeList:[]
     };
   },
   mounted() {
     this.initCgSqOrderList();
+    this.initCgType();
   },
   methods: {
     async initCgSqOrderList() {
@@ -233,6 +239,10 @@ export default {
       let data = await initCgSqOrderList(this.vo);
       console.log(data);
       this.list = data.data;
+    },
+    async initCgType(){
+      let resp = await getPayType();
+      this.cgTypeList=resp.data
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;

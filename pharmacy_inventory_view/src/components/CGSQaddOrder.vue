@@ -38,21 +38,20 @@
             <el-form-item label="采购类型" prop="type">
               <el-select
                 v-model="CgsqOrder.type"
-                placeholder="请选择采购类型1"
+                placeholder="请选择采购类型"
                 clearable
                 filterable
               >
             <el-option label="请选择" value="0"></el-option>
-      <el-option label="直接采购" value="1"></el-option>
-      <el-option label="紧急采购" value="2"></el-option>
-                
+          <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
+
               </el-select>
             </el-form-item>
           </div></el-col
         >
         <el-col :span="6"
           ><div class="grid-content bg-purple">
-            <el-form-item label="需求人" prop="type">
+            <el-form-item label="需求人" prop="demainerId">
               <el-select
                 v-model="CgsqOrder.demainerId"
                 placeholder="请选择需求人"
@@ -70,39 +69,10 @@
         >
       </el-row>
 
-      
+
       <el-tabs v-model="activeName">
       
         <el-tab-pane label="明细" name="first">
-          <!-- <el-table
-            ref="multipleTable"
-            :data="tableData"
-            tooltip-effect="dark"
-            style="width: 100%"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55"> </el-table-column>
-            <el-table-column prop="id" label="#" width="120">
-              <template slot-scope="scope">
-                {{ scope.$index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column label="建议零货商" width="120" fixed>
-              <template slot-scope="scope">{{ scope.row.date }}</template>
-            </el-table-column>
-            <el-table-column prop="name" label="商品" width="120">
-            </el-table-column>
-            <el-table-column prop="address" label="规格型号" show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column prop="address" label="单位" show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column prop="address" label="数量" show-overflow-tooltip>
-            </el-table-column>
-            <el-table-column prop="address" label="总价" show-overflow-tooltip>
-            </el-table-column>
-          
-          </el-table> -->
-
           <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddDetails">添加</el-button>
           			 
 			 <el-button
@@ -124,10 +94,10 @@
          v-loading="loading"
          :data="bcglXiangXiList"
          :row-class-name="rowClassName"
-         @selection-change="handleDetailSelectionChange"
+         @selection-change="chandleDetailSelectionChange"
          ref="tb"
        >
-         <el-table-column type="selection" width="30" align="center" />
+         <el-table-column type="selection" width="30" align="center"/>
          <el-table-column label="序号" align="center" prop="xh" width="50"></el-table-column>
 
          <el-table-column label="建议供应商" width="250" prop="providerId">
@@ -196,7 +166,7 @@
              </el-select>
            </template>
          </el-table-column>
-         <el-table-column label="数量" align="center" prop="price" width="150">
+         <el-table-column label="数量" align="center" prop="totalPrice" width="150">
            <template slot-scope="scope">
 
                <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
@@ -221,8 +191,8 @@
            </template>
          </el-table-column>
          <el-table-column label="参考总价" align="center" prop="totalPrice" width="150">
-           <template slot-scope="scope">
-          {{scope.row.quantity*scope.row.price}}
+           <template slot-scope="scope" @change="cacltotalPrice(scope.row)">
+          {{ calculatedTotalPrice(scope.row) }}
            </template>
          </el-table-column>
         
@@ -402,6 +372,7 @@
 
 <script>
 // import { addStoreHouse, checkName } from "@/api/storeHouse.js";
+import {getPayType} from "@/api/public"
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
@@ -424,8 +395,6 @@ export default {
       bcglXiangXiList: [],
       //选中的从表数据
       checkedDetail: [],
-
-
       CgsqOrder: {
         code: "",
         phone: "",
@@ -437,7 +406,8 @@ export default {
         subject: "",
         createTime: new Date(),
         remark: "",
-        approvement:''
+        approvement:'',
+        medicineList:[]
       },
       vo: {
         currentPageNo: 1,
@@ -455,31 +425,32 @@ export default {
       cgsqdialog: false,
       cgsqList: [],
       providerList:[],
+      cgTypeList:[],
       rules: {
-        //     name: [
-        //       { required: true, message: "请输入仓库名称", trigger: "blur" },
-        //       { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        //       { validator: check, trigger: "blur" },
-        //     ],
-        //     address: [
-        //       { required: true, message: "请输入仓库地址", trigger: "blur" },
-        //       { min: 3, max: 5, message: "长度在 2 到 10 个字符", trigger: "blur" },
-        //     ],
-        //     capacity: [
-        //       { required: true, message: "仓库面积不能为空" },
-        //       {
-        //         type: "number",
-        //         min: 1,
-        //         max: 10000,
-        //         message: "仓库面积必须为范围在1-10000的整数",
-        //       },
-        //     ],
+        subject: [
+              { required: true, message: "请输入主题名称", trigger: "blur" },
+              { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+            ],
+        type: [
+              { required: true, message: "请选择采购类型", trigger: "blur" },
+            ],
+
+            capacity: [
+              { required: true, message: "仓库面积不能为空" },
+              {
+                type: "number",
+                min: 1,
+                max: 10000,
+                message: "仓库面积必须为范围在1-10000的整数",
+              },
+            ],
       },
     };
   },
  async mounted() {
     this.initCgSqOrderList();
     this.initProvider()
+   this.initCgType()
     this.CgsqOrder.code = await getCurrentTime("CGSQ");
   },
   methods: {
@@ -488,6 +459,10 @@ export default {
       console.log(data);
       this.list = data.data;
     },
+    async initCgType(){
+      let resp = await getPayType();
+      this.cgTypeList=resp.data
+    },
     handleCurrentChange(val) {
       this.page.pageNum = val;
       this.getList(this.page);
@@ -495,8 +470,27 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-
-          addCgddOrder().then((resp) => {
+          if (this.bcglXiangXiList.length==0){
+            Message({
+              message: "请输入对应采购商品",
+              type: "error",
+              center: "true",
+            });
+return
+          }else {
+          for (const obj of this.bcglXiangXiList) {
+            if (obj.providerId==''||obj.providerId==undefined||obj.medicineId==''||obj.medicineId==undefined){
+              Message({
+                message: "您商品明细没输入全哦",
+                type: "error",
+                center: "true",
+              });
+              return;
+            }
+          }
+          }
+          this.CgsqOrder.medicineList=this.bcglXiangXiList
+          addCgddOrder(this.CgsqOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
               Message({
@@ -541,6 +535,18 @@ export default {
       if (this.bcglXiangXiList == undefined) {
         this.bcglXiangXiList = new Array();
       }
+      if (this.bcglXiangXiList.length>0){
+        for (const objElement of this.bcglXiangXiList) {
+          if (objElement.medicineId==''){
+            Message({
+              message: "请先填写完别的商品明细先!",
+              type: "error",
+              center: "true",
+            });
+            return
+          }
+        }
+      }
       let obj = {
         providerList:[],
         medicineList:[],
@@ -569,6 +575,7 @@ export default {
           confirmButtonText: "确定",
         });
       } else {
+
         this.bcglXiangXiList.splice(this.checkedDetail[0].xh - 1, 1);
       }
     },
@@ -576,37 +583,54 @@ export default {
       this.bcglXiangXiList = undefined;
     },
    async changeProvider(obj){
+      if (obj.providerId==''){
+
+        obj.medicineId=''
+        obj.specification=''
+        obj.price=''
+        obj.totalPrice=''
+        obj.unitName=''
+      }
       obj.medicineList=[]
-     let resp=await getBaseMedicineListByProviderId(obj.providerId)
+     if (obj.providerId!=''){
+       let resp=await getBaseMedicineListByProviderId(obj.providerId)
+       obj.medicineList=resp.data.data
+     }
+
      // console.log(resp)
-     obj.medicineList=resp.data.data
+
      console.log(obj.medicineList)
     },
     async changeMedicine(obj){
       console.log(obj)
+      console.log(this.bcglXiangXiList)
 
+      for (let i = 0; i <= this.bcglXiangXiList.length-2; i++) {
+        if (this.bcglXiangXiList[i].medicineId==obj.medicineId){
+          // alert(i)
+          // alert(this.bcglXiangXiList[i].providerId)
+          // alert(obj.providerId)
+          if (this.bcglXiangXiList[i].providerId!=obj.providerId){
+            break;
+          }
 
-
-      // alert(this.bcglXiangXiList.length)
-      // for (const objElement of this.bcglXiangXiList) {
-      //     let index=1
-      //   if (index==1){
-      //     index++;
-      //     break;
-      //   }
-      //
-      //   if (obj.medicineId==objElement.medicineId){
-      //     alert("您重复添加了商品")
-      //     return
-      //   }
-      // }
-
+          Message({
+            message: "您重复添加了商品!",
+            type: "error",
+            center: "true",
+          });
+          obj.medicineId=''
+          return
+        }
+      }
 
       for (const objElement of obj.medicineList) {
         if (obj.medicineId==objElement.id){
-             obj.unitName=objElement.unitName
+          obj.unitName=objElement.unitName
           obj.specification=objElement.specification
           obj.price=objElement.purchasePrice
+          obj.id=obj.medicineId
+          obj.purchasePrice=objElement.purchasePrice
         }
       }
 
@@ -616,7 +640,25 @@ export default {
       // // console.log(resp)
       // obj.medicineList=resp.data.data
       // console.log(obj.medicineList)
+    },
+    cacltotalPrice(row){
+      alert(row)
+    },
+    checkProductList(){
+
+      // for (const obj of this.bcglXiangXiList) {
+      //   if (obj.providerId==''||obj.providerId==undefined||obj.medicineId==''||obj.medicineId==undefined){
+      //     Message({
+      //       message: "请输入对应采购商品",
+      //       type: "error",
+      //       center: "true",
+      //     });
+      //     return;
+      //   }
+      //
+      // }
     }
+
   },
   computed: {
     totalPrice() {
@@ -625,6 +667,12 @@ export default {
         return 0
       }
       return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice*item.quantity, 0);
+    },
+    calculatedTotalPrice() {
+      return row => {
+        row.totalPrice=row.quantity * row.price;
+        return row.quantity * row.price;
+      };
     }
   }
 

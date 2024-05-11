@@ -121,7 +121,7 @@ public class CgsqOrder implements Serializable {
      * 作废状态
      */
     @TableField("voidState")
-    private String voidstate;
+    private Integer voidstate;
 
     /**
      * 制单时间
