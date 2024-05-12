@@ -4,8 +4,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil implements ApplicationContextAware {
     @Autowired
     private static StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     public  void setKey(String key, String value, int minutes) {
@@ -32,6 +36,16 @@ public class RedisUtil implements ApplicationContextAware {
     public  boolean removeKey(String key) {
         Boolean deleteFalg = stringRedisTemplate.delete(key);
         return deleteFalg;
+    }
+
+    public void del(String... key) {
+        if (key != null && key.length > 0) {
+            if (key.length == 1) {
+                redisTemplate.delete(key[0]);
+            } else {
+                redisTemplate.delete(CollectionUtils.arrayToList(key));
+            }
+        }
     }
 
     @Override

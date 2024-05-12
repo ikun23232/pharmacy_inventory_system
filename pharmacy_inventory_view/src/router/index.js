@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import axios from "@/utils/request";
 import store from "@/store/index"
+import Home from '../views/operate/Home.vue'
+import Index from '../views/operate/Index.vue'
 
 Vue.use(VueRouter)
 
@@ -20,29 +22,24 @@ const routes = [
 				component: Index
 			},
 		
-			// {
-			// 	path: '/sys/users',
-			// 	name: 'SysUser',
-			// 	component: User
-			// },
-			// {
-			// 	path: '/sys/roles',
-			// 	name: 'SysRole',
-			// 	component: Role
-			// },
-			// {
-			// 	path: '/sys/menus',
-			// 	name: 'SysMenu',
-			// 	component: Menu
-			// },
 		]
 	},
 
 	{
 		path: '/login',
 		name: 'Login',
-		component: () => import('@/views/Login.vue')
-	}
+		component: () => import('../views/operate/Login.vue')
+	},
+	// {
+	// 	path: '/Rolelst',
+	// 	name: 'RoleList',
+	// 	component: () => import('../views/role/Role.vue')
+	// },
+	// {
+	// 	path: '/Basecat',
+	// 	name: 'BaseCat',
+	// 	component: () => import('../views/medicneCategory/baseCategory.vue')
+	// }
 ]
 
 const router = new VueRouter({
@@ -55,39 +52,50 @@ router.beforeEach((to, from, next) => {
 
 	let hasRoute = store.state.menus.hasRoutes
 
-	let token = localStorage.getItem("token")
+let token = localStorage.getItem("token")
 
-	if (to.path == '/login') {
-		next()
+if (to.path == '/login') {
+	next()
 
-	} else if (!token) {
-		next({path: '/login'})
+} else if (!token) {
+	next({path: '/login'})
 
 
-	} else if(token && !hasRoute) {
-		axios.get("/sys/menu/nav", {
-			headers: {
-				Authorization: localStorage.getItem("token")
-			}
-		}).then(res => {
+} else if(token && !hasRoute) {
+	axios.get("/user/menu/nav", {
+		headers: {
+			Authorization: localStorage.getItem("token")
+		}
+	}).then(res => {
 
-			console.log(res.data.data)
+		console.log(res.data.data.nav)
 
-			// 拿到menuList
-			store.commit("setMenuList", res.data.data.nav)
+		// 拿到menuList
+		store.commit("setMenuList", res.data.data.nav)
 
-			// 拿到用户权限
-			store.commit("setPermList", res.data.data.authoritys)
+		// 拿到用户权限
+		store.commit("setPermList", res.data.data.authoritys)
 
-			console.log(store.state.menus.menuList)
+		console.log(store.state.menus.menuList)
 
-			// 动态绑定路由
-			let newRoutes = router.options.routes
+		// 动态绑定路由
+		let newRoutes = router.options.routes
 
-			res.data.data.nav.forEach(menu => {
-				if (menu.children) {
-					menu.children.forEach(e => {
+		res.data.data.nav.forEach(menu => {
+			if (menu.children && menu.children.length > 0) {
+				menu.children.forEach(e => {
 
+					if (e.children && e.children.length > 0) {
+						e.children.forEach(child => {
+							// 转成路由
+							let route = menuToRoute(child)
+
+							// 吧路由添加到路由管理中
+							if (route) {
+								newRoutes[0].children.push(route)
+							}
+						})
+					} else {
 						// 转成路由
 						let route = menuToRoute(e)
 
@@ -95,42 +103,37 @@ router.beforeEach((to, from, next) => {
 						if (route) {
 							newRoutes[0].children.push(route)
 						}
+					}
 
-					})
-				}
-			})
-
-			console.log("newRoutes")
-			console.log(newRoutes)
-			router.addRoutes(newRoutes)
-
-			hasRoute = true
-			store.commit("changeRouteStatus", hasRoute)
+				})
+			}
+		
 		})
-	}
+		router.addRoutes(newRoutes)
 
-
-
-	next()
+		hasRoute = true
+		store.commit("changeRouteStatus", hasRoute)
+	})
+}
+next()
 })
 
 
 // 导航转成路由
 const menuToRoute = (menu) => {
-
+	
 	if (!menu.component) {
 		return null
 	}
 
 	let route = {
-		name: menu.name,
+		name: menu.perms,
 		path: menu.path,
 		meta: {
-			icon: menu.icon,
 			title: menu.title
 		}
 	}
-	route.component = () => import('@/views/' + menu.component +'.vue')
+	route.component = () => import('../views/' + menu.component +'.vue')
 
 	return route
 }

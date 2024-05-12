@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -38,14 +41,13 @@ public class SysRole implements Serializable {
     /**
      * 1：默认启用 2：禁用 
      */
-    @TableField("isUse")
-    private Integer isuse;
+    private Integer isUse;
 
     /**
      * 创造时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createtime;
 
     /**
      * 创造人
@@ -57,7 +59,7 @@ public class SysRole implements Serializable {
      * 修改时间
      */
     @TableField("updateTime")
-    private LocalDateTime updatetime;
+    private Date updatetime;
 
     /**
      * 修改人
@@ -71,5 +73,9 @@ public class SysRole implements Serializable {
     @TableField("isDel")
     private Integer isdel;
 
+    private String code;
+
+    @TableField(exist = false)
+    private List<Integer> menuIds = new ArrayList<>();
 
 }

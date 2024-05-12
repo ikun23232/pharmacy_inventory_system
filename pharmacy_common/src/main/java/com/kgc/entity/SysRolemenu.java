@@ -26,19 +26,19 @@ public class SysRolemenu implements Serializable {
      * 角色权限id
      */
       @TableId(value = "roleMenuId", type = IdType.AUTO)
-    private Integer rolemenuid;
+    private Integer roleMenuId;
 
     /**
      * 菜单Id
      */
     @TableField("menuId")
-    private Integer menuid;
+    private Integer menuId;
 
     /**
      * 角色Id
      */
     @TableField("roleId")
-    private Integer roleid;
+    private Integer roleId;
 
 
 }
