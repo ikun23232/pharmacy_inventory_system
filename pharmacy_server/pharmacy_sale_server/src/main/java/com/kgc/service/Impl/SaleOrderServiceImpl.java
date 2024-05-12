@@ -21,8 +21,6 @@ import java.util.Objects;
 public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> implements SaleOrderService {
     @Autowired
     private SaleOrderMapper saleOrderMapper;
-
-
     @Override
     public Message getSaleOrderListByPage(XsOrder xsOrder) {
         Message message=new Message();

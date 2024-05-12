@@ -81,7 +81,8 @@
     <el-dialog
       title="销售订单-添加"
       :visible.sync="dialogFormVisible"
-      width="90%"
+      width="1000px"
+      @handleDialogFormVisible="changeDialogFormVisible"
     >
       <AddSaleOrder></AddSaleOrder>
     </el-dialog>
@@ -137,6 +138,10 @@ export default {
     },
     handleAdd(){
       this.dialogFormVisible=true;
+    },
+    changeDialogFormVisible(val){
+      console.log("123",val)
+        this.dialogFormVisible=val;
     }
   }
 }

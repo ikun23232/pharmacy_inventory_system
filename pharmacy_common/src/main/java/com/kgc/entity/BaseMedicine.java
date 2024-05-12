@@ -92,5 +92,7 @@ public class BaseMedicine implements Serializable {
     private int quantity;
     @TableField(exist=false)
     private double totalPrice;
+    @TableField(exist=false)
+    private int stock;
 
 }

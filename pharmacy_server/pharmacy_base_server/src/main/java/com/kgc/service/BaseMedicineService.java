@@ -22,7 +22,7 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
 
     public Message addBaseMedicine(BaseMedicine baseMedicine);
 
-    public Message getBaseMedicineById(int id);
+    public Message getBaseMedicineById(int id,int batchCode);
 
     public Message updateBaseMedicineById(BaseMedicine baseMedicine);
 
@@ -31,5 +31,8 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
     public Message getMedicineListByCode(String code);
 
     public Message getAllBaseMedicine();
+
+    public Message getAllBatchCodeByMedicineId(int medicineId);
+
 
 }

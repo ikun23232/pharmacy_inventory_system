@@ -55,5 +55,7 @@ public class KcMedicine implements Serializable {
      */
     private String money;
 
+    private int isDel;
+
 
 }

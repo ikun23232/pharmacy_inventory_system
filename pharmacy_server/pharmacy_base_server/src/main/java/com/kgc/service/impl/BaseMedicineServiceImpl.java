@@ -1,10 +1,12 @@
 package com.kgc.service.impl;
 
+import ch.qos.logback.core.db.dialect.MsSQLDialect;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.entity.BaseMedicine;
+import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.BaseMedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +53,9 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
     }
 
     @Override
-    public Message getBaseMedicineById(int id) {
+    public Message getBaseMedicineById(int id,int batchCode) {
         Message message=new Message();
-        BaseMedicine baseMedicine=baseMedicineMapper.selectById(id);
+        BaseMedicine baseMedicine=baseMedicineMapper.getBaseMedicineById(id,batchCode);
         if(baseMedicine!=null){
             message.setCode("200");
             message.setData(baseMedicine);
@@ -89,11 +91,21 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Override
     public Message getAllBaseMedicine() {
-        List<BaseMedicine> baseMedicineList=baseMedicineMapper.selectList(null);
+        List<BaseMedicine> baseMedicineList=baseMedicineMapper.getAllBaseMedicine();
         if(baseMedicineList!=null){
            return Message.success(baseMedicineList);
         }else{
            return Message.error();
+        }
+    }
+
+    @Override
+    public Message getAllBatchCodeByMedicineId(int medicineId) {
+        List<KcMedicine> kcMedicineList=baseMedicineMapper.getAllBatchCodeByMedicineId(medicineId);
+        if(kcMedicineList!=null){
+            return Message.success(kcMedicineList);
+        }else{
+            return Message.error();
         }
     }
 }
