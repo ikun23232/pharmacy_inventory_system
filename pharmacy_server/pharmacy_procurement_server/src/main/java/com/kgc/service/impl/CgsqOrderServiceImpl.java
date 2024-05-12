@@ -88,7 +88,6 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }
         cgsqOrder.setCount(count);
         cgsqOrder.setReferenceamount(referencCount.doubleValue());
-        cgsqOrder.setApprovalstatus(0);
         cgsqOrder.setOrderstatus(1);
         cgsqOrder.setDemanderby(1);
         cgsqOrder.setVoidstate(0);
@@ -102,15 +101,39 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMapper.insert(orderMedicine);
         }
-
-        return Message.error("添加订单失败");
-
-
+        return Message.success();
     }
 
     @Override
     public Message updateCgsqOrder(CgsqOrder cgsqOrder) {
-        return null;
+        //          cgsqOrder.
+
+        List<BaseMedicine> medicineList = cgsqOrder.getMedicineList();
+        int count=0;
+
+        BigDecimal referencCount = BigDecimal.ZERO;
+        for (BaseMedicine baseMedicine : medicineList) {
+            count += baseMedicine.getQuantity();
+            BigDecimal quantity = new BigDecimal(baseMedicine.getQuantity()); // 数量转为BigDecimal
+            BigDecimal purchasePrice = new BigDecimal(baseMedicine.getPurchasePrice()); // 单价转为BigDecimal
+            BigDecimal multiply = quantity.multiply(purchasePrice); // 使用BigDecimal的multiply方法进行精确乘法计算
+            referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
+        }
+        cgsqOrder.setCount(count);
+        cgsqOrder.setReferenceamount(referencCount.doubleValue());
+        cgsqOrder.setUpdatetime(new Date());
+        cgsqOrder.setUpdateby(1);
+        cgsqOrderMapper.updateById(cgsqOrder);
+        for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgsqOrder.getCode());
+            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setProviderId(baseMedicine.getProviderId());
+            orderMapper.updateById(orderMedicine);
+        }
+        return Message.success();
     }
 
     @Override
@@ -128,6 +151,18 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             return Message.success();
         }
         return Message.error("作废失败");
+    }
+
+    @Override
+    public Message approveCgsqOrder(int id) {
+        UpdateWrapper<CgsqOrder> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("approvalStatus", 1)
+                .eq("id", id); // 添加ID的条件
+        int updateRow = cgsqOrderMapper.update(null, updateWrapper);
+        if (updateRow > 0) {
+            return Message.success();
+        }
+        return Message.error("审核失败");
     }
 
 

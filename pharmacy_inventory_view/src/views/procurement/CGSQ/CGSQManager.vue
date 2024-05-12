@@ -90,7 +90,7 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="120">
       </el-table-column>
-      <el-table-column prop="documenterUserName" label="制单人" width="120">
+      <el-table-column prop="demanderUserName" label="制单人" width="120">
       </el-table-column>
       <el-table-column prop="updateUserName" label="修改人" width="120">
       </el-table-column>
@@ -113,7 +113,7 @@
     </el-table>
     <div class="block">
       <el-pagination
-          @current-change="handleCurrentChange"
+          @current-change="initCgSqOrderList"
           :current-page.sync="list.pageNum"
           :page-size="list.pageSize"
           layout="prev, pager, next, jumper"
@@ -123,28 +123,27 @@
     </div>
     <!-- 修改订单状态 -->
     <el-dialog
-        title="修改采购申请详情"
+        title="修改采购申请单"
         :visible.sync="updatedialogVisible"
-        width="30%"
+        width="85%"
         v-if="updatedialogVisible"
     >
 
-      <updateOrderStatus
+      <CGSQupdateOrder
           :serialNumber="serialNumber"
           @closeUpdateDiago="closeUpdateDiago"
-      ></updateOrderStatus>
+      ></CGSQupdateOrder>
     </el-dialog>
     <el-dialog
-        title="采购申请订单详情"
+        title="采购申请订单添加"
         :visible.sync="adddialogVisible"
         width="85%"
         v-if="adddialogVisible"
     >
       <CGSQaddOrder
-          :visible.sync="viewdialogVisible"
           width="75%"
           :id="id"
-          @closeUpdateDiago="closeUpdateDiago">
+          @addSuccess="addSuccess">
 
       </CGSQaddOrder>
     </el-dialog>
@@ -156,6 +155,7 @@
 import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/CgsdOrder'
 import {Message} from "element-ui";
 import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
+import CGSQupdateOrder from "@/components/CGSQupdateOrder";
 import {getPayType} from "@/api/public";
 
 // import AddUnit from "./AddUnit.vue";
@@ -166,6 +166,7 @@ export default {
   name: "storeHouse",
   components: {
     CGSQaddOrder,
+    CGSQupdateOrder
     // AddUnit
   },
   data() {
@@ -225,11 +226,12 @@ export default {
     };
   },
   mounted() {
-    this.initCgSqOrderList();
+    this.initCgSqOrderList(1);
     this.initCgType();
   },
   methods: {
-    async initCgSqOrderList() {
+    async initCgSqOrderList(currentPageNo) {
+      this.vo.currentPageNo=currentPageNo
       this.vo.startTime = ''
       this.vo.endTime = ''
       if (this.value2 != null && this.value2.length > 0) {
@@ -239,6 +241,7 @@ export default {
       let data = await initCgSqOrderList(this.vo);
       console.log(data);
       this.list = data.data;
+
     },
     async initCgType(){
       let resp = await getPayType();
@@ -259,7 +262,7 @@ export default {
           type: "success",
           message: "删除成功",
         });
-        this.initCgSqOrderList();
+        this.initCgSqOrderList(1);
       }
     },
     updateOrder(serialNumber) {
@@ -297,7 +300,7 @@ export default {
           type: "success",
           message: "作废成功",
         });
-        this.initCgSqOrderList();
+        this.initCgSqOrderList(1);
       }
     },
     handleEdit(row) {
