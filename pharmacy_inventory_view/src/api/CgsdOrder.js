@@ -27,3 +27,26 @@ export function addCgddOrder(cgsqOrder) {
         cgsqOrder:cgsqOrder
     });
 }
+
+export function updateCgsqOrder(cgsqOrder) {
+    return request.post(baseUrl + "/updateCgsqOrder",{
+        cgsqOrder:cgsqOrder
+    });
+}
+export function getCgsqOrderById(id) {
+    return request.get(baseUrl + "/getCgsqOrderById",{
+        params:{
+            id:id
+        }
+    });
+}
+export function approveCgsqOrder(id,approveRemark) {
+    return request.get(baseUrl + "/approveCgsqOrder",{
+        params:{
+            id:id,
+            approveRemark:approveRemark
+
+        }
+    });
+}
+

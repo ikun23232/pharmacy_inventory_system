@@ -231,12 +231,12 @@
   <el-input
       placeholder="请输入内容"
       prefix-icon="el-icon-search"
-      v-model="input2"
-      style="width: 1000px;" disabled>
+      v-model="CgsqOrder.approvementRemark"
+      style="width: 1000px;">
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择" disabled>
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择">
 
     <el-option
         label="未通过"
@@ -251,15 +251,14 @@
 </div>
 
       <el-form-item style="width: 500px">
-
-         <el-button class="anniu" type="primary" @click="cancel()"
-         >取 消</el-button
+        <el-button class="anniu" type="success" @click="cancel()"
+        >取消</el-button
+        >
+         <el-button class="anniu" type="primary" @click="approveCgsqOrder()"
+         >审核</el-button
          >
 
-        <el-button class="anniu" s @click="submitForm('CgsqOrder')"
-        >保 存</el-button
-        >
-        <el-button class="anniu" @click="submitForm('CgsqOrder',1)">提 交</el-button>
+
       </el-form-item>
     </el-form>
     <el-dialog
@@ -335,7 +334,14 @@ import {getPayType} from "@/api/public"
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
-import { initCgSqOrderList,addCgddOrder,updateCgsqOrder,getCgsqOrderById} from "@/api/CgsdOrder";
+import {
+  initCgSqOrderList,
+  addCgddOrder,
+  updateCgsqOrder,
+  getCgsqOrderById,
+  approveCgsqOrder,
+  voidCgsqOrderById
+} from "@/api/CgsdOrder";
 export default {
   name: "addProcOrder",
   props: {
@@ -362,6 +368,7 @@ export default {
         createTime: new Date(),
         remark: "",
         approvement:'',
+
         medicineList:[]
       },
       vo: {
@@ -409,7 +416,7 @@ export default {
   },
   methods: {
     async initCgSqOrder(id){
-       let resp = await getCgsqOrderById(id);
+      let resp = await getCgsqOrderById(id);
       this.CgsqOrder=resp.data
       for (const medicineListElement of resp.data.medicineList) {
         medicineListElement.medicineId=medicineListElement.id;
@@ -418,8 +425,8 @@ export default {
       this.bcglXiangXiList=resp.data.medicineList
       this.checkFalg=false
       for (const Obj of this.bcglXiangXiList) {
-       await this.changeProvider(Obj)
-         this.changeMedicine(Obj)
+        await this.changeProvider(Obj)
+        this.changeMedicine(Obj)
         console.log("-------")
         console.log(Obj)
       }
@@ -486,7 +493,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     cancel() {
-      this.$emit("closeUpdateDiago");
+      this.$emit("closeapproveDiago");
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -577,27 +584,27 @@ export default {
     },
     async changeMedicine(obj){
 
- if (this.checkFalg) {
-   for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
-     if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-       // alert(i)
-       // alert(this.bcglXiangXiList[i].providerId)
-       // alert(obj.providerId)
-       if (this.bcglXiangXiList[i].providerId != obj.providerId) {
-         break;
-       }
+      if (this.checkFalg) {
+        for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
+          if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
+            // alert(i)
+            // alert(this.bcglXiangXiList[i].providerId)
+            // alert(obj.providerId)
+            if (this.bcglXiangXiList[i].providerId != obj.providerId) {
+              break;
+            }
 
-       Message({
-         message: "您重复添加了商品!",
-         type: "error",
-         center: "true",
-       });
-       obj.medicineId = ''
-       this.index=2;
-       return
-     }
-   }
- }
+            Message({
+              message: "您重复添加了商品!",
+              type: "error",
+              center: "true",
+            });
+            obj.medicineId = ''
+            this.index=2;
+            return
+          }
+        }
+      }
       this.checkFalg=true
 
       for (const objElement of obj.medicineList) {
@@ -614,9 +621,19 @@ export default {
     cacltotalPrice(row){
       alert(row)
     },
-    checkProductList(){
+  async  approveCgsqOrder(){
+    if (!confirm("你确定要审核吗？")) {
+      return;
+    }
+    let resp=await  approveCgsqOrder(this.CgsqOrder.id,this.CgsqOrder.approvement);
+    console.log(resp);
+    if (resp.code == "200") {
+      Message({
+        type: "success",
+        message: "审核成功",
+      });
 
-
+    }
     }
 
   },

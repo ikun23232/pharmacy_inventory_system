@@ -50,7 +50,23 @@ public class CgsqOrderController {
         return  message;
     }
 
+    @RequestMapping("/updateCgsqOrder")
+    public Message updateCgsqOrder(@RequestBody Map map){
+        CgsqOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgsqOrder")), CgsqOrder.class);
+        Message message = cgsqOrderService.updateCgsqOrder(cgsqOrder1);
+        return  message;
+    }
+    @RequestMapping("/getCgsqOrderById")
+    public Message getCgsqOrder(int id){
+        Message message = cgsqOrderService.getCgsqOrder(id);
+        return  message;
+    }
 
+    @RequestMapping("/approveCgsqOrder")
+    public Message approveCgsqOrder(int id,String approveRemark,int approveMent){
+        Message message = cgsqOrderService.approveCgsqOrder(id,approveRemark,approveMent);
+        return  message;
+    }
 
 }
 

@@ -73,7 +73,6 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     @Override
     public Message addCgsqOrder(CgsqOrder cgsqOrder) {
 //          cgsqOrder.
-        cgsqOrder.setApproverby(1);
         cgsqOrder.setDemandtime(new Date());
         List<BaseMedicine> medicineList = cgsqOrder.getMedicineList();
         int count=0;
@@ -88,7 +87,12 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }
         cgsqOrder.setCount(count);
         cgsqOrder.setReferenceamount(referencCount.doubleValue());
-        cgsqOrder.setOrderstatus(1);
+        if (cgsqOrder.getOrderstatus()!=null){
+            cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
+
+        }else {
+            cgsqOrder.setOrderstatus(0);
+        }
         cgsqOrder.setDemanderby(1);
         cgsqOrder.setVoidstate(0);
         cgsqOrderMapper.insert(cgsqOrder);
@@ -121,6 +125,9 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }
         cgsqOrder.setCount(count);
         cgsqOrder.setReferenceamount(referencCount.doubleValue());
+        if (cgsqOrder.getOrderstatus()!=null){
+            cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
+        }
         cgsqOrder.setUpdatetime(new Date());
         cgsqOrder.setUpdateby(1);
         cgsqOrderMapper.updateById(cgsqOrder);
@@ -138,7 +145,8 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
 
     @Override
     public Message getCgsqOrder(int id) {
-        return null;
+        CgsqOrder cgSqOrderById = cgsqOrderMapper.getCgSqOrderById(id);
+        return Message.success(cgSqOrderById);
     }
 
     @Override
@@ -154,11 +162,18 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     }
 
     @Override
-    public Message approveCgsqOrder(int id) {
-        UpdateWrapper<CgsqOrder> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("approvalStatus", 1)
-                .eq("id", id); // 添加ID的条件
-        int updateRow = cgsqOrderMapper.update(null, updateWrapper);
+    public Message approveCgsqOrder(int id,String approveRemark,int approveMent) {
+        CgsqOrder cgsqOrder=new CgsqOrder();
+        cgsqOrder.setId(id);
+        cgsqOrder.setApprovalstatus(1);
+        cgsqOrder.setEffectivetime(new Date());
+        cgsqOrder.setApproverremark(approveRemark);
+
+//批准人
+        int approverBy=1;
+        cgsqOrder.setApproverby(approverBy);
+        int updateRow = cgsqOrderMapper.updateById(cgsqOrder);
+
         if (updateRow > 0) {
             return Message.success();
         }

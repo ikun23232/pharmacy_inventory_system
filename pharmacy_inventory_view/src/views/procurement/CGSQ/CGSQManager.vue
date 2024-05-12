@@ -106,8 +106,25 @@
               size="small"
           >编辑
           </el-button>
-          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
-          </el-button>
+          <el-dropdown>
+      <span class="el-dropdown-link">
+        更多<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
+              </el-button></el-dropdown-item>
+
+              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
+              </el-button></el-dropdown-item>
+
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" type="success" size="small">审核
+              </el-button></el-dropdown-item>
+              <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="primary" size="small">打印
+              </el-button></el-dropdown-item>
+
+            </el-dropdown-menu>
+          </el-dropdown>
+
         </template>
       </el-table-column>
     </el-table>
@@ -128,12 +145,23 @@
         width="85%"
         v-if="updatedialogVisible"
     >
-
       <CGSQupdateOrder
-          :serialNumber="serialNumber"
+          :id="this.id"
           @closeUpdateDiago="closeUpdateDiago"
       ></CGSQupdateOrder>
     </el-dialog>
+    <el-dialog
+        title="审核采购申请单"
+        :visible.sync="approvedialogVisible"
+        width="85%"
+        v-if="approvedialogVisible"
+    >
+      <CGSQapproveOrder
+          :id="this.id"
+          @closeapproveDiago="closeapproveDiago"
+      ></CGSQapproveOrder>
+    </el-dialog>
+
     <el-dialog
         title="采购申请订单添加"
         :visible.sync="adddialogVisible"
@@ -156,6 +184,7 @@ import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/Cgsd
 import {Message} from "element-ui";
 import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
 import CGSQupdateOrder from "@/components/CGSQupdateOrder";
+import CGSQapproveOrder from "@/components/CGSQapproveOrder";
 import {getPayType} from "@/api/public";
 
 // import AddUnit from "./AddUnit.vue";
@@ -166,7 +195,8 @@ export default {
   name: "storeHouse",
   components: {
     CGSQaddOrder,
-    CGSQupdateOrder
+    CGSQupdateOrder,
+    CGSQapproveOrder
     // AddUnit
   },
   data() {
@@ -193,6 +223,7 @@ export default {
       updatedialogVisible: false,
       adddialogVisible: false,
       viewdialogVisible: false,
+      approvedialogVisible:false,
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -265,12 +296,16 @@ export default {
         this.initCgSqOrderList(1);
       }
     },
-    updateOrder(serialNumber) {
-      this.serialNumber = serialNumber;
+    updateOrder(id) {
+      this.id = id;
       this.updatedialogVisible = true;
     },
     addOrder() {
       this.adddialogVisible = true;
+    },
+    approveOrder(id) {
+      this.id = id;
+      this.approvedialogVisible = true;
     },
     viewOrder() {
       alert(1)
@@ -278,6 +313,10 @@ export default {
     },
     closeUpdateDiago() {
       this.updatedialogVisible = false;
+      this.getList(this.page);
+    },
+    closeapproveDiago() {
+      this.approvedialogVisible = false;
       this.getList(this.page);
     },
     addSuccess() {
@@ -290,7 +329,7 @@ export default {
       });
     },
     async voidOrder(row) {
-      if (!confirm("你确定要删除吗？")) {
+      if (!confirm("你确定要作废吗？")) {
         return;
       }
       let resp = await voidCgsqOrderById(row.id);
@@ -310,7 +349,11 @@ export default {
           userName: row.userName,
         },
       });
+    },
+     async approveRemark(id){
+
     }
+
   }
 };
 </script>
