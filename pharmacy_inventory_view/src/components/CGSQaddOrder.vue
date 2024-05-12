@@ -91,6 +91,7 @@
 
 
           <el-table
+
          v-loading="loading"
          :data="bcglXiangXiList"
          :row-class-name="rowClassName"
