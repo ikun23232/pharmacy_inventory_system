@@ -37,7 +37,7 @@ public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implement
 
     @Override
     public Message getUnitListByPage(Page page) {
-        PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(), page.getPageSize());
         List<BaseUnit> unitListByPage = unitMapper.getUnitListByPage();
         PageInfo<BaseUnit> pageInfo = new PageInfo<>(unitListByPage);
         return Message.success(pageInfo);

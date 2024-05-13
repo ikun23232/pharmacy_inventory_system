@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -26,13 +29,13 @@ public class SysMenu implements Serializable {
     /**
      * 菜单Id
      */
-      @TableId(value = "menuId", type = IdType.AUTO)
-    private Integer menuid;
+      @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 路由路径
      */
-    private String url;
+    private String path;
 
     /**
      * 类型（0: 目录,1:菜单,2:按钮）
@@ -42,19 +45,18 @@ public class SysMenu implements Serializable {
     /**
      * 菜单名称
      */
-    private String title;
+    private String name;
 
     /**
      * 启用id默认1启用，2禁用
      */
-    @TableField("isUse")
-    private Integer isuse;
+    private Integer statu;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createdate;
 
     /**
      * 创造人
@@ -66,9 +68,9 @@ public class SysMenu implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    private Date updatedate;
 
-    /**
+    /**console.log(menu);
      * 修改人
      */
     @TableField("updateBy")
@@ -89,13 +91,12 @@ public class SysMenu implements Serializable {
     /**
      * 权限字段
      */
-    private String code;
+    private String perms;
+    private String component;
+    @TableField(exist = false)
+    private String title;
 
-    /**
-     * 父级名称
-     */
-    @TableField("parentName")
-    private String parentname;
-
+    @TableField(exist = false)
+    private List<SysMenu> children;
 
 }

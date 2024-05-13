@@ -6,17 +6,37 @@
     <resultMap id="BaseResultMap" type="com.kgc.entity.SysRole">
         <id column="roleId" property="roleid" />
         <result column="roleName" property="rolename" />
-        <result column="isUse" property="isuse" />
+        <result column="isUse" property="isUse" />
         <result column="createTime" property="createtime" />
         <result column="createBy" property="createby" />
         <result column="updateTime" property="updatetime" />
         <result column="updateBy" property="updateby" />
         <result column="isDel" property="isdel" />
+        <result column="code" property="code" />
+
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        roleId, roleName, isUse, createTime, createBy, updateTime, updateBy, isDel
+        roleId, roleName, isUse, createTime, createBy, updateTime, updateBy, isDel,code
     </sql>
+    <select id="getRoleList" resultType="com.kgc.entity.SysRole">
 
+        SELECT  *  FROM sys_role   WHERE (roleId IN (select roleId from sys_userrole where userId = #{userId}))
+    </select>
+
+    <select id="getRoleListPage" resultType="com.kgc.entity.SysRole">
+
+        SELECT  *  FROM sys_role
+        <where>
+            isDel = 0
+            <if test="rolename != null and rolename != ''">
+                and roleName like concat("%",#{rolename},"%")
+            </if>
+
+            <if test="isUse ==0 or isUse ==1">
+                and isUse = #{isUse}
+            </if>
+        </where>
+    </select>
 </mapper>

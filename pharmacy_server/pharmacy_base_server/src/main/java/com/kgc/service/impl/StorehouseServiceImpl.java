@@ -30,7 +30,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
     private StoreHouseMapper storeHouseMapper;
     @Override
     public Message getStoreHouseList(String code, Page page) {
-        PageHelper.startPage(page.getPageNum(),page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(),page.getPageSize());
         List<BaseStorehouse> storeHouseList = storeHouseMapper.getStoreHouseList(code);
         PageInfo pageInfo = new PageInfo(storeHouseList);
         return Message.success(pageInfo);

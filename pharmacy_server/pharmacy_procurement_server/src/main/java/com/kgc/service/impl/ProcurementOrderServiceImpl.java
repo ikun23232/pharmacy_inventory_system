@@ -47,7 +47,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        PageHelper.startPage(page.getPageNum(),page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(),page.getPageSize());
         List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
         PageInfo pageInfo = new PageInfo(order);
         if (order != null){

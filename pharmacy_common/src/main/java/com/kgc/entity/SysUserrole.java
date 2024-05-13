@@ -26,19 +26,19 @@ public class SysUserrole implements Serializable {
      * 用户角色id
      */
       @TableId(value = "userRoleId", type = IdType.AUTO)
-    private Integer userroleid;
+    private Integer userRoleId;
 
     /**
      * 用户id
      */
     @TableField("userId")
-    private Integer userid;
+    private Integer userId;
 
     /**
      * 角色id
      */
     @TableField("roleId")
-    private Integer roleid;
+    private Integer roleId;
 
 
 }

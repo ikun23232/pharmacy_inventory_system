@@ -16,13 +16,13 @@ import java.util.List;
  * @create 2024/5/10 17:10
  */
 @RestController
-@RequestMapping("/menus")
+@RequestMapping("/user")
 public class PublicPayTypeController {
 
     @Autowired
     private PublicPayTypeService service;
 
-    @RequestMapping("getPayType")
+        @RequestMapping("/menus/getPayType")
     public Message getPayType() {
         Message message = service.getPayType();
         return message;

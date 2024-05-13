@@ -8,16 +8,18 @@ import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css"
 import VueRouter from 'vue-router'
 import { Message, MessageBox } from 'element-ui'  //引入Message, MessageBox
-
-Vue.prototype.$message = Message                //vue实例上挂载Message                
-Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBox             
-
-
+import axios from './utils/request'
+import global from './globalFun'
+Vue.prototype.$message = Message                //vue实例上挂载Message
+Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBox
+Vue.prototype.$axios = axios //
 
 Vue.use(VueRouter)
 Vue.use(ElementUI);
 Vue.use(Antd)
+Vue.use(Message);
 Vue.config.productionTip = false
+Vue.prototype.$message = Message;
 
 new Vue({
   router,
