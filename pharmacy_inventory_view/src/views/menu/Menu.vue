@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
 	<div>
 
 		<el-form :inline="true">
@@ -13,7 +13,6 @@
 				row-key="id"
 				border
 				stripe
-				default-expand-all
 				:tree-props="{children: 'children', hasChildren: 'hasChildren'}">
 
 			<el-table-column
@@ -27,11 +26,6 @@
 					label="权限编码"
 					sortable
 					width="180">
-			</el-table-column>
-
-			<el-table-column
-					prop="icon"
-					label="图标">
 			</el-table-column>
 
 			<el-table-column
@@ -52,10 +46,6 @@
 			<el-table-column
 					prop="component"
 					label="菜单组件">
-			</el-table-column>
-			<el-table-column
-					prop="orderNum"
-					label="排序号">
 			</el-table-column>
 			<el-table-column
 					prop="statu"
@@ -95,12 +85,13 @@
 
 			<el-form :model="editForm" :rules="editFormRules" ref="editForm" label-width="100px" class="demo-editForm">
 
-				<el-form-item label="上级菜单" prop="parentId">
-					<el-select v-model="editForm.parentId" placeholder="请选择上级菜单">
+				<el-form-item label="上级菜单" prop="parentid">
+					<el-select v-model="editForm.parentid" placeholder="请选择上级菜单">
+						<el-option :label="'一级目录'" :value="0"></el-option>
 						<template v-for="item in tableData">
-							<el-option :label="item.name" :value="item.id"></el-option>
+							<el-option :label="item.name" :value="item.id" :key="item.id"></el-option>
 							<template v-for="child in item.children">
-								<el-option :label="child.name" :value="child.id">
+								<el-option :label="child.name" :value="child.id" :key="child.id">
 									<span>{{ "- " + child.name }}</span>
 								</el-option>
 							</template>
@@ -116,9 +107,6 @@
 					<el-input v-model="editForm.perms" autocomplete="off"></el-input>
 				</el-form-item>
 
-				<el-form-item label="图标" prop="icon" label-width="100px">
-					<el-input v-model="editForm.icon" autocomplete="off"></el-input>
-				</el-form-item>
 				<el-form-item label="菜单URL" prop="path" label-width="100px">
 					<el-input v-model="editForm.path" autocomplete="off"></el-input>
 				</el-form-item>
@@ -142,11 +130,6 @@
 					</el-radio-group>
 				</el-form-item>
 
-				<el-form-item label="排序号" prop="orderNum" label-width="100px">
-					<el-input-number v-model="editForm.orderNum" :min="1" label="排序号">1</el-input-number>
-				</el-form-item>
-
-
 				<el-form-item>
 					<el-button type="primary" @click="submitForm('editForm')">立即创建</el-button>
 					<el-button @click="resetForm('editForm')">重置</el-button>
@@ -166,11 +149,9 @@
 		data() {
 			return {
 				dialogVisible: false,
-				editForm: {
-
-				},
+				editForm: {},
 				editFormRules: {
-					parentId: [
+					parentid: [
 						{required: true, message: '请选择上级菜单', trigger: 'blur'}
 					],
 					name: [
@@ -182,9 +163,7 @@
 					type: [
 						{required: true, message: '请选择状态', trigger: 'blur'}
 					],
-					orderNum: [
-						{required: true, message: '请填入排序号', trigger: 'blur'}
-					],
+					
 					statu: [
 						{required: true, message: '请选择状态', trigger: 'blur'}
 					]
@@ -197,14 +176,16 @@
 		},
 		methods: {
 			getMenuTree() {
-				this.$axios.get("/sys/menu/list").then(res => {
+				this.$axios.get("/user/menu/list").then(res => {
+					console.log("kkk");
+					console.log(res.data.data);
 					this.tableData = res.data.data
 				})
 			},
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.$axios.post('/sys/menu/' + (this.editForm.id?'update' : 'save'), this.editForm)
+						this.$axios.post('/user/menu/' + (this.editForm.id?'update' : 'save'), this.editForm)
 							.then(res => {
 
 								this.$message({
@@ -225,7 +206,9 @@
 				});
 			},
 			editHandle(id) {
-				this.$axios.get('/sys/menu/info/' + id).then(res => {
+				this.$axios.get('/user/menu/info/' + id).then(res => {
+					console.log("111lllppp");
+					console.log(res.data.data);
 					this.editForm = res.data.data
 
 					this.dialogVisible = true
@@ -240,7 +223,7 @@
 				this.resetForm('editForm')
 			},
 			delHandle(id) {
-				this.$axios.post("/sys/menu/delete/" + id).then(res => {
+				this.$axios.post("/user/menu/delete/" + id).then(res => {
 					this.$message({
 						showClose: true,
 						message: '恭喜你，操作成功',
@@ -258,4 +241,4 @@
 
 <style scoped>
 
-</style> -->
+</style>

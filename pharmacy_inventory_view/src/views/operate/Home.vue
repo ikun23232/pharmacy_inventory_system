@@ -1,23 +1,23 @@
 <template>
   <el-container>
     <el-aside :width="isCollapseValue ? '64px' : '230px'">
-      
-  <SideMenu @collapse-change="handleCollapseChange"></SideMenu>
-</el-aside>
+      <SideMenu @collapse-change="handleCollapseChange"></SideMenu>
+    </el-aside>
     <el-container>
       <el-header>
-        <i style="float:left">医药商品进销存管理系统</i>
-
-        <div class="header-avatar">
-         
+        <i style="float: left">医药商品进销存管理系统</i>
+        
+        <el-button style="position: absolute;top: 9px;right: 235px">
+            <span >{{ dateFormat(newDate) }}</span>
+          </el-button>
+        <div class="header-avatar" style="position: relative;">
           <el-avatar
             size="medium"
             :src="require('@/assets/favicon.png')"
           ></el-avatar>
-
           <el-dropdown>
             <span class="el-dropdown-link">
-              {{ userInfo.username}}
+              {{ userInfo.username }}
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
@@ -26,7 +26,7 @@
               <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-         
+          <el-link href="https://kdocs.cn/l/cgFcNROVB65l" target="_blank">日报</el-link>
         </div>
       </el-header>
       <el-main>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-
 import SideMenu from "@/views/operate/SideMenu";
 import Tabs from "@/views/operate/Tabs";
 
@@ -49,12 +48,12 @@ import { selectUser, logout } from "@/api/test";
 export default {
   name: "Home",
   components: {
-  	SideMenu, Tabs
+    SideMenu,
+    Tabs,
   },
   data() {
     return {
-     
-      isCollapseValue:false,
+      isCollapseValue: false,
       sideMenuWidth: "230px",
       userInfo: {
         userid: "",
@@ -67,6 +66,47 @@ export default {
   },
 
   methods: {
+    dateFormat() {
+      var date = new Date();
+      var year = date.getFullYear();
+      var month =
+        date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1;
+      var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+      var hours =
+        date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+      var minutes =
+        date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+      var seconds =
+        date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      let week = date.getDay(); // 星期
+      let weekArr = [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六",
+      ];
+      // 拼接 时间格式处理
+      return (
+        year +
+        "年" +
+        month +
+        "月" +
+        day +
+        "日 " +
+        hours +
+        ":" +
+        minutes +
+        ":" +
+        seconds +
+        " " +
+        weekArr[week]
+      );
+    },
     handleCollapseChange(isCollapse) {
       console.log(isCollapse);
       this.isCollapseValue = isCollapse;
@@ -80,11 +120,11 @@ export default {
       }
     },
     async logout() {
-      let res =await logout();
+      let res = await logout();
       if (res.data.code === "200") {
         localStorage.clear();
         sessionStorage.clear();
-        this.$store.commit("resetState")
+        this.$store.commit("resetState");
         this.$router.push("/login");
       }
     },
@@ -139,11 +179,11 @@ a {
 }
 
 .el-submenu {
-    margin-right: 64px;
+  margin-right: 64px;
 }
 .el-header::after {
   position: absolute;
-  content: '';
+  content: "";
   bottom: 0;
   left: 0;
   width: 100%;

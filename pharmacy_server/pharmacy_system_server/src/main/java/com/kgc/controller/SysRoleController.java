@@ -3,11 +3,13 @@ package com.kgc.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.*;
 import com.kgc.service.SysRoleMenuService;
 import com.kgc.service.SysRoleService;
 import com.kgc.service.SysUserRoleService;
 import com.kgc.service.SysUserService;
+import com.kgc.utils.GetUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +39,8 @@ public class SysRoleController {
     private SysRoleService sysRoleService;
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
@@ -73,9 +77,10 @@ public class SysRoleController {
 
     @RequestMapping("/role/save")
     public Message save(@Validated @RequestBody SysRole sysRole) {
-
+        String token = GetUser.getUser();
+        SysUser sysUser = sysUserMapper.existUser(token);
+        sysRole.setCreateby(sysUser.getUserid());
         sysRole.setCreatetime(new Date());
-        sysRole.setCode("normal");
         sysRoleService.save(sysRole);
         return Message.success(sysRole);
     }

@@ -9,6 +9,7 @@ import com.kgc.entity.Message;
 import com.kgc.entity.SysUser;
 import com.kgc.service.BaseMedicineCategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kgc.utils.GetUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,9 +71,8 @@ public class BaseMedicineCategoryServiceImpl extends ServiceImpl<BaseMedicineCat
 
     @Override
     public Message updateCat(BaseMedicineCategory baseMedicineCategory) {
-        String tokenValue = StpUtil.getTokenValue();
-        String loginIdByToken = (String)StpUtil.getLoginIdByToken(tokenValue);
-        SysUser loginUser = sysUserMapper.existUser(loginIdByToken);
+        String token = GetUser.getUser();
+        SysUser loginUser = sysUserMapper.existUser(token);
         baseMedicineCategory.setUpdateby(loginUser.getUserid());
         baseMedicineCategory.setUpdatedate(new Date());
         int updateRow = baseMedicineCategoryMapper.updateById(baseMedicineCategory);

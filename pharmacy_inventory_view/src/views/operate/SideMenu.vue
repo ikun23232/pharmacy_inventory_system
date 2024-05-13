@@ -73,11 +73,14 @@
 	  return {
 		isCollapse: false,
 		iconsObj: {
-      	'1':'el-icon-user-solid',//用户管理
-      	'2':'el-icon-s-check',//权限管理
-      	'3':'el-icon-s-goods',//商品管理
-      	'4':'el-icon-s-order',//订单管理
-      	'5':'el-icon-s-data',//数据管理
+      	'1':'el-icon-s-goods',//用户管理
+      	'2':'el-icon-suitcase',//权限管理
+      	'3':'el-icon-coin',//商品管理
+      	'4':'el-icon-s-shop',//订单管理
+      	'5':'el-icon-reading',//数据管理
+		'6':'el-icon-s-tools',//数据管理
+		'7':'el-icon-folder-opened'
+		
     }
 
 	  };

@@ -34,7 +34,7 @@
         select m.* ,name as title from sys_menu m,sys_rolemenu r,sys_userrole u WHERE m.id = r.menuId and r.roleId=u.roleId and m.isDel=0 and u.userId=#{userId} and m.type IN(0,1)
     </select>
     <select id="getAllMenuList" resultType="com.kgc.entity.SysMenu">
-        select m.* ,name as title from sys_menu m,sys_rolemenu r WHERE m.id = r.menuId and m.isDel=0
+        select m.* ,name as title from sys_menu m WHERE  m.isDel=0
     </select>
 
 </mapper>
