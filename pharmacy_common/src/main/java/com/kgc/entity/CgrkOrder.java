@@ -3,11 +3,13 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -46,6 +48,10 @@ public class CgrkOrder implements Serializable {
     @TableField("purchaseId")
     private Integer purchaseid;
 
+    @TableField(exist = false)
+    private String providerName;
+
+
     /**
      * 备注
      */
@@ -54,13 +60,16 @@ public class CgrkOrder implements Serializable {
     /**
      * 生效时间
      */
-    private LocalDateTime datetime;
+    @TableField("effectiveTime")
+    private Date effectiveTime;
 
     /**
      * 审批人
      */
     @TableField("approverBy")
     private Integer approverby;
+    @TableField(exist = false)
+    private String approverUserName;
 
     /**
      * 审批结果：0-未审批 1-未通过 2-通过
@@ -85,6 +94,8 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("documenterBy")
     private Integer documenterby;
+    @TableField(exist = false)
+    private String documenterUserName;
 
     /**
      * 作废状态
@@ -95,32 +106,53 @@ public class CgrkOrder implements Serializable {
     /**
      * 创造时间
      */
-    @TableField("createDate")
-    private LocalDateTime createdate;
+    @TableField("creatTime")
+    private Date createTime;
 
     /**
      * 创造人
      */
     @TableField("createBy")
     private Integer createby;
+    @TableField(exist = false)
+    private String demanderUserName;
 
     /**
      * 修改时间
      */
-    @TableField("updateDate")
-    private LocalDateTime updatedate;
+    @TableField("updateTime")
+    private LocalDateTime updateTime;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
     private Integer updateby;
+    @TableField(exist = false)
+    private String updateUserName;
+
+
 
     /**
      * 删除id 0：未删除 1：删除
      */
+    @TableLogic
     @TableField("isDel")
     private Integer isdel;
+    @TableField("subject")
+    private String subject;
+
+    @TableField(exist = false)
+    private String orderStatueName;
+
+    @TableField(exist = false)
+    private String sourceCode;
+    @TableField(exist = false)
+    private int count;
+    @TableField(exist = false)
+    private double referenceAmount;
+
+
 
 
 }

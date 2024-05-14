@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router/index";
+import Element from "element-ui";
 const instance = axios.create({
     baseURL: '/',
     // timeout: 5000
@@ -49,7 +50,7 @@ instance.interceptors.response.use(
 		}
 
 		if (error.response.status === 500) {
-			router.push("/login")
+			// router.push("/login")
 		}
 
 		Element.Message.error(error.response.data.massage, {duration: 3000})

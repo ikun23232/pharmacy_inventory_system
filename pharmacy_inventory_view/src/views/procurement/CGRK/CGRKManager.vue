@@ -1,6 +1,6 @@
 <template>
   <div id="storeHouse">
-    <h1>采购申请订单</h1>
+    <h1>采购入库订单</h1>
     <p>
       <el-form :inline="true" :model="vo" class="demo-form-inline">
         <el-form-item label="单据编号">
@@ -10,13 +10,10 @@
           <el-input v-model="vo.subject" placeholder="请输入单据编号"></el-input>
         </el-form-item>
 
-        <el-form-item label="采购类型">
-          <el-select v-model="vo.type" placeholder="请选择采购类型">
-
-              <el-option label="请选择" value="0"></el-option>
-              <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
-
-
+        <el-form-item label="供应商">
+          <el-select v-model="vo.providerId" placeholder="请选择供应商">
+            <el-option label="请选择" value="0"></el-option>
+            <el-option v-for="item in providerList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="作废状态">
@@ -61,20 +58,23 @@
           <a href="#" @click="viewOrder(scope.row.id)">{{ scope.row.code }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="cgtype" label="采购类型" width="120">
+      <el-table-column prop="sourceCode" label="源单号" width="120">
       </el-table-column>
-      <el-table-column prop="demandtime" label="单据日期" width="300">
+      <el-table-column prop="createTime" label="单据日期" width="200">
       </el-table-column>
       <el-table-column prop="subject" label="单据主题" width="120">
+      </el-table-column>
+      <el-table-column prop="providerName" label="供应商" width="120">
       </el-table-column>
       <el-table-column prop="demanderUserName" label="需求人" width="120">
       </el-table-column>
       <el-table-column prop="count" label="数量" width="120">
 
       </el-table-column>
-      <el-table-column prop="effectivetime" label="生效时间" width="120">
+
+      <el-table-column prop="referenceAmount" label="参考金额" width="120">
       </el-table-column>
-      <el-table-column prop="referenceamount" label="参考金额" width="120">
+      <el-table-column prop="effectiveTime" label="生效时间" width="120">
       </el-table-column>
       <el-table-column prop="orderStatueName" label="单据状态" width="120">
       </el-table-column>
@@ -96,7 +96,7 @@
       </el-table-column>
       <el-table-column prop="updateUserName" label="修改人" width="120">
       </el-table-column>
-      <el-table-column prop="updatetime" label="修改时间" width="120">
+      <el-table-column prop="updateTime" label="修改时间" width="120">
       </el-table-column>
 
 
@@ -197,13 +197,14 @@
 <script>
 // import { delUnit, initUnit } from "@/api/BaseUnit";
 import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/CgsdOrder'
+import {initCgrkOrderList,delCgrqOrderById,voidCgrkOrderById} from '@/api/CgrkOrder'
+import {init} from '@/api/BaseProvider'
 import {Message} from "element-ui";
 import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
 import CGSQupdateOrder from "@/components/CGSQupdateOrder";
 import CGSQapproveOrder from "@/components/CGSQapproveOrder";
 import CGSQviewOrder from "@/components/CGSQviewOrder";
 import {getPayType} from "@/api/public";
-
 // import AddUnit from "./AddUnit.vue";
 
 
@@ -272,12 +273,12 @@ export default {
       },
       value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       value2: '',
-      cgTypeList:[]
+      providerList:[]
     };
   },
   mounted() {
     this.initCgSqOrderList(1);
-    this.initCgType();
+    this.initProvider();
   },
   methods: {
     async initCgSqOrderList(currentPageNo) {
@@ -288,14 +289,15 @@ export default {
         this.vo.startTime = this.value2[0];
         this.vo.endTime = this.value2[1];
       }
-      let data = await initCgSqOrderList(this.vo);
+      let data = await initCgrkOrderList(this.vo);
       console.log(data);
       this.list = data.data;
 
     },
-    async initCgType(){
-      let resp = await getPayType();
-      this.cgTypeList=resp.data
+    async initProvider(){
+      let resp = await init('',0,1,10);
+      console.log(resp)
+      this.providerList=resp.data.list
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
@@ -305,7 +307,7 @@ export default {
       if (!confirm("你确定要删除吗？")) {
         return;
       }
-      let resp = await delCgsqOrderById(row.id);
+      let resp = await delCgrqOrderById(row.id);
       console.log(resp);
       if (resp.code == "200") {
         Message({
@@ -354,7 +356,7 @@ export default {
       if (!confirm("你确定要作废吗？")) {
         return;
       }
-      let resp = await voidCgsqOrderById(row.id);
+      let resp = await voidCgrkOrderById(row.id);
       console.log(resp);
       if (resp.code == "200") {
         Message({
@@ -372,7 +374,7 @@ export default {
         },
       });
     },
-     async approveRemark(id){
+    async approveRemark(id){
 
     }
 

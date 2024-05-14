@@ -17,7 +17,7 @@ Vue.prototype.$axios = axios //
 Vue.use(VueRouter)
 Vue.use(ElementUI);
 Vue.use(Antd)
-Vue.use(Message);
+// Vue.use(Message);
 Vue.config.productionTip = false
 Vue.prototype.$message = Message;
 

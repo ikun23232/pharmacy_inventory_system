@@ -6,6 +6,7 @@
         ref="CgsqOrder"
         label-width="100px"
         class="demo-ruleForm"
+        disabled
     >
       <el-row :gutter="20">
         <el-col :span="8"
@@ -16,14 +17,17 @@
         ></el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
-                       <el-form-item label="单据日期" prop="subject">
+
+           <el-form-item label="单据日期" >
               <el-input type="text" v-model="CgsqOrder.createtime" disabled></el-input>
-            </el-form-item></div
-        ></el-col>
+            </el-form-item></div>
+
+
+       </el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
-              <el-input type="text" v-model="CgsqOrder.subject" disabled></el-input>
+              <el-input type="text" v-model="CgsqOrder.subject"></el-input>
             </el-form-item></div
         ></el-col>
 
@@ -35,7 +39,6 @@
                   placeholder="请选择采购类型"
                   clearable
                   filterable
-                  disabled
               >
             <el-option label="请选择" value="0"></el-option>
           <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
@@ -52,7 +55,6 @@
                   placeholder="请选择需求人"
                   clearable
                   filterable
-                  disabled
               >
                 <!-- <el-option v-for="item in options"
                     :key="item.value"
@@ -97,14 +99,13 @@
          <el-table-column type="selection" width="30" align="center"/>
          <el-table-column label="序号" align="center" prop="xh" width="50"></el-table-column>
 
-         <el-table-column label="建议供应商" width="250" prop="providerId" >
+         <el-table-column label="建议供应商" width="250" prop="providerId">
           <template slot-scope="scope">
              <el-select
                  clearable
                  filterable
                  @change="changeProvider(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].providerId"
-                 disabled
              >
                <el-option
                    v-for="dict in providerList"
@@ -122,7 +123,6 @@
                  clearable
                  @change="changeMedicine(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].medicineId"
-                 disabled
              >
                <el-option
                    v-for="dict in scope.row.medicineList"
@@ -168,7 +168,7 @@
          <el-table-column label="数量" align="center" prop="totalPrice" width="150">
            <template slot-scope="scope">
 
-               <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right" @change="handleChange" :min="1" :max="100" disabled></el-input-number>
+               <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
            </template>
 
          </el-table-column>
@@ -205,7 +205,7 @@
        <div style="text-align: left;">
        <div style=" margin-bottom:25px;">合计{{totalPrice}}元</div>
 
-     <span>备注:</span><el-input class="" v-model="CgsqOrder.remark"  placeholder="请输入备注" style="width: 1000px;" disabled></el-input>
+     <span>备注:</span><el-input class="" v-model="CgsqOrder.remark"  placeholder="请输入备注" style="width: 1000px;"></el-input>
     </div>
 
 
@@ -225,16 +225,15 @@
       <div style="text-align: left;">
       <div class="demo-input-suffix">
   核批意见:
-
   <el-input
       placeholder="请输入内容"
       prefix-icon="el-icon-search"
-      v-model="CgsqOrder.approvementRemark"
-      style="width: 1000px;">
+      v-model="input2"
+      style="width: 1000px;" disabled>
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择">
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择" disabled>
 
     <el-option
         label="未通过"
@@ -248,16 +247,19 @@
 </div>
 </div>
 
-      <el-form-item style="width: 500px">
-        <el-button class="anniu" type="success" @click="cancel()"
-        >取消</el-button
-        >
-         <el-button class="anniu" type="primary" @click="approveCgsqOrder()"
-         >审核</el-button
+      <el-form-item style="width: 500px" :disabled="false">
+
+         <el-button class="anniu" type="primary" @click="closeDiago()"
+         >取 消</el-button
          >
 
-
+        <el-button class="anniu" s @click="submitForm('CgsqOrder')"
+        >保 存</el-button
+        >
+        <el-button class="anniu" @click="submitForm('CgsqOrder',1)">提 交</el-button>
       </el-form-item>
+
+
     </el-form>
     <el-dialog
         title="采购申请单"
@@ -332,21 +334,14 @@ import {getPayType} from "@/api/public"
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
-import {
-  initCgSqOrderList,
-  addCgddOrder,
-  updateCgsqOrder,
-  getCgsqOrderById,
-  approveCgsqOrder,
-  voidCgsqOrderById
-} from "@/api/CgsdOrder";
+import { initCgSqOrderList,addCgddOrder,updateCgsqOrder,getCgsqOrderById} from "@/api/CgsdOrder";
 export default {
   name: "addProcOrder",
   props: {
     id: {
       type: Number,
       required: true,
-    },
+    }
   },
   data() {
 
@@ -363,10 +358,9 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        createTime: new Date(),
+        createTime: '',
         remark: "",
         approvement:'',
-
         medicineList:[]
       },
       vo: {
@@ -408,6 +402,7 @@ export default {
     };
   },
   async mounted() {
+
     this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
@@ -437,7 +432,7 @@ export default {
       this.page.pageNum = val;
       this.getList(this.page);
     },
-    submitForm(formName) {
+    submitForm(formName,type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.bcglXiangXiList.length==0){
@@ -491,7 +486,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     cancel() {
-      this.$emit("closeapproveDiago");
+      this.$emit("c");
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -619,38 +614,9 @@ export default {
     cacltotalPrice(row){
       alert(row)
     },
-  async  approveCgsqOrder(){
-    if (this.CgsqOrder.approvementRemark==''||this.CgsqOrder.approvementRemark==undefined){
-      Message({
-        message: "请输入核批意见!",
-        type: "error",
-        center: "true",
-      });
-      return
+    closeDiago(){
+      this.$emit("closeviewOrder");
     }
-    if (this.CgsqOrder.approvement==undefined){
-      Message({
-        message: "请选择核批是否通过!",
-        type: "error",
-        center: "true",
-      });
-      return
-    }
-
-    if (!confirm("你确定要审核吗？")) {
-      return;
-    }
-
-    let resp=await approveCgsqOrder(this.CgsqOrder.id,this.CgsqOrder.approvementRemark,this.CgsqOrder.approvement);
-    console.log(resp);
-    if (resp.code == "200") {
-      Message({
-        type: "success",
-        message: "审核成功",
-      });
-      this.$emit("closeapproveDiago");
-    }
-  }
 
   },
   computed: {

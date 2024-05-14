@@ -16,16 +16,13 @@
         ></el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
-            <el-form-item label="单据日期" prop="createTime">
-              <el-date-picker
-                  v-model="CgsqOrder.createTime"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-                  :disabled="true">
-              </el-date-picker>
-            </el-form-item></div
-        ></el-col>
+
+           <el-form-item label="单据日期" >
+              <el-input type="text" v-model="CgsqOrder.createtime" disabled></el-input>
+            </el-form-item></div>
+
+
+       </el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
@@ -227,7 +224,6 @@
       <div style="text-align: left;">
       <div class="demo-input-suffix">
   核批意见:
-
   <el-input
       placeholder="请输入内容"
       prefix-icon="el-icon-search"
@@ -261,6 +257,8 @@
         >
         <el-button class="anniu" @click="submitForm('CgsqOrder',1)">提 交</el-button>
       </el-form-item>
+
+
     </el-form>
     <el-dialog
         title="采购申请单"
@@ -335,14 +333,14 @@ import {getPayType} from "@/api/public"
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
-import { initCgSqOrderList,addCgddOrder,updateCgsqOrder,getCgsqOrderById} from "@/api/CgsdOrder";
+import { updateCgsqOrder,getCgsqOrderById} from "@/api/CgsdOrder";
 export default {
   name: "addProcOrder",
   props: {
     id: {
       type: Number,
       required: true,
-    },
+    }
   },
   data() {
 
@@ -359,7 +357,7 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        createTime: new Date(),
+        createTime: '',
         remark: "",
         approvement:'',
         medicineList:[]
@@ -403,6 +401,7 @@ export default {
     };
   },
   async mounted() {
+
     this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
@@ -432,7 +431,7 @@ export default {
       this.page.pageNum = val;
       this.getList(this.page);
     },
-    submitForm(formName) {
+    submitForm(formName,type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.bcglXiangXiList.length==0){
@@ -454,6 +453,7 @@ export default {
               }
             }
           }
+
           if (type==1){
             this.CgsqOrder.orderstatus=2
 
@@ -614,9 +614,9 @@ export default {
     cacltotalPrice(row){
       alert(row)
     },
-    checkProductList(){
-
-
+    closeDiago(){
+      this.formDisabled=false;
+      this.$emit("closeUpdateDiago");
     }
 
   },

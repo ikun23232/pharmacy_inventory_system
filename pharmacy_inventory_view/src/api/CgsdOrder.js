@@ -40,11 +40,13 @@ export function getCgsqOrderById(id) {
         }
     });
 }
-export function approveCgsqOrder(id,approveRemark) {
+export function approveCgsqOrder(id,approveRemark,approveMent) {
     return request.get(baseUrl + "/approveCgsqOrder",{
         params:{
             id:id,
-            approveRemark:approveRemark
+            approveRemark:approveRemark,
+            approveMent:approveMent
+
 
         }
     });

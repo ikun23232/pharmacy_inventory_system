@@ -7,6 +7,7 @@ import BaseProviderList from "../views/base/BaseProviderList.vue"
 import BankAccountList from "../views/base/BankAccountList.vue"
 import CgsqManager from '../views/procurement/CGSQ/CGSQManager.vue';
 import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
+import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
 
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
@@ -46,11 +47,15 @@ const routes = [
     name: 'storeHouse',
     component: storeHouse
   }
-  ,
+  ,{
+        path: '/baseProviderList',
+        name: 'baseProviderList',
+        component: BaseProviderList
+    },
   {
-    path: '/baseProviderList',
-    name: 'baseProviderList',
-    component: BaseProviderList
+    path: '/cgrkManager',
+    name: 'CGRKManager',
+    component: CGRKManager
   },
   {
     path: '/bankAccountList',

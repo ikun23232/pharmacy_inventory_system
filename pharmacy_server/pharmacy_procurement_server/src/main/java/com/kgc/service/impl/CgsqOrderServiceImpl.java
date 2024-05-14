@@ -91,7 +91,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
 
         }else {
-            cgsqOrder.setOrderstatus(0);
+            cgsqOrder.setOrderstatus(1);
         }
         cgsqOrder.setDemanderby(1);
         cgsqOrder.setVoidstate(0);
@@ -131,6 +131,12 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         cgsqOrder.setUpdatetime(new Date());
         cgsqOrder.setUpdateby(1);
         cgsqOrderMapper.updateById(cgsqOrder);
+
+
+        Map<String, Object> columnMap = new HashMap<>();
+        columnMap.put("code", cgsqOrder.getCode());
+        // 调用 deleteByMap 方法，传入 Map 对象删除满足条件的数据
+        orderMapper.deleteByMap(columnMap);
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
@@ -138,9 +144,9 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMapper.updateById(orderMedicine);
+            orderMapper.insert(orderMedicine);
         }
-        return Message.success();
+            return Message.success();
     }
 
     @Override
@@ -168,6 +174,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         cgsqOrder.setApprovalstatus(1);
         cgsqOrder.setEffectivetime(new Date());
         cgsqOrder.setApproverremark(approveRemark);
+        cgsqOrder.setOrderstatus(3);
 
 //批准人
         int approverBy=1;
