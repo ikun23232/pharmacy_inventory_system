@@ -64,4 +64,10 @@ public class StoreHouseController {
         Message message = service.getStoreHouseById(id);
         return message;
     }
+
+    @RequestMapping("getAllStoreHouseList")
+    public Message getAllStoreHouseList() {
+        Message message = service.getAllStoreHouseList();
+        return message;
+    }
 }

@@ -7,7 +7,6 @@ import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
-import com.kgc.service.PublicOMedicineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * @author 15279
@@ -47,7 +44,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        PageHelper.startPage(page.getPageNum(),page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(),page.getPageSize());
         List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
         PageInfo pageInfo = new PageInfo(order);
         if (order != null){

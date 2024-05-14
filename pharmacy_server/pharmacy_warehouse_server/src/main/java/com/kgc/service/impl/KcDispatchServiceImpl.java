@@ -11,6 +11,9 @@ import com.kgc.vo.DispatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,6 +29,16 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
     private KcDispatchMapper kcDispatchMapper;
     @Override
     public Message getKcDispathList(DispatchVO dispatchVO) {
+        SimpleDateFormat inputSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat outputSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date beginDate = inputSdf.parse(dispatchVO.getStartTime());
+            Date endDate = inputSdf.parse(dispatchVO.getEndTime());
+            dispatchVO.setStartTime(outputSdf.format(beginDate));
+            dispatchVO.setEndTime(outputSdf.format(endDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         PageHelper.startPage(dispatchVO.getCurrentPageNo(), dispatchVO.getPageSize());
         List<KcDispatch> kcDispathList = kcDispatchMapper.getKcDispathList(dispatchVO);
         PageInfo pageInfo = new PageInfo(kcDispathList);

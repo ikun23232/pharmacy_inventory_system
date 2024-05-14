@@ -12,6 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Page implements Serializable {
-    private int pageNum;
+    private int currentPageNo;
     private int pageSize;
 }

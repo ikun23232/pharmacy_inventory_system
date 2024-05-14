@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -40,7 +39,7 @@ public class ProcurementOrderController {
         cgddOrder.setType(procPage.getType());
         cgddOrder.setEndTime(procPage.getEndTime());
         Page page = new Page();
-        page.setPageNum(procPage.getPageNum());
+        page.setCurrentPageNo(procPage.getPageNum());
         page.setPageSize(procPage.getPageSize());
         Message message = procurementOrderService.getCgddOrder(cgddOrder,page);
         return message;
