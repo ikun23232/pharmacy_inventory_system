@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -66,6 +67,16 @@ public class BaseProviderController {
     @RequestMapping("checkupdateBaseProvider")
     public Message checkupdateBaseProvider(@RequestParam("name") String name,@RequestParam("id")int id) {
         Message message = baseProviderService.checkupdateBaseProvider(name,id);
+        return message;
+    }
+
+    /**
+     * 获得全部供应商
+     * @return
+     */
+    @RequestMapping("getAllBaseProvider")
+    public Message getAllBaseProvider() {
+        Message message= baseProviderService.getAllBaseProvider();
         return message;
     }
 }

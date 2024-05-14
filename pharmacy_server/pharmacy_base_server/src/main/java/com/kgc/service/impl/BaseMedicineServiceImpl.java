@@ -7,6 +7,8 @@ import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.BaseMedicineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Autowired
     private BaseMedicineMapper baseMedicineMapper;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Message getBaseMedicineListByPage(BaseMedicine baseMedicine) {
@@ -83,6 +87,7 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Override
     public Message getMedicineListByCode(String code) {
+        logger.debug("getMedicineListByCode code:"+code);
         List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
         return Message.success(medicineListByCode);
     }

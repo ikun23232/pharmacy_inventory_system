@@ -51,6 +51,11 @@ const checkupdateBaseProvider = (name,id) => {
         }
     })
 }
+
+const getAllBaseProvider = () => {
+    return request.get(baseUrl + "/baseProvider/getAllBaseProvider")
+}
+
 export {
     init,
     getProviderType,
@@ -59,5 +64,6 @@ export {
     updateBaseProvider,
     delBaseProvider,
     checkaddBaseProvider,
-    checkupdateBaseProvider
+    checkupdateBaseProvider,
+    getAllBaseProvider
 }

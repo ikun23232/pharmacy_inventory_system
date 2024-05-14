@@ -55,5 +55,17 @@
           AND o.id=#{id}
     </select>
 
+    <select id="getCgsqOrderByCode" resultType="CgsqOrder">
+        SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
+                             'demanderUserName',
+               (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
+               (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
+               (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName'
+        FROM cgsq_order o,cg_type t,order_statue s
+        WHERE o.type=t.id
+          AND s.id=o.orderStatus
+          AND o.code=#{code}
+    </select>
+
 
 </mapper>

@@ -31,5 +31,5 @@ public interface BaseProviderService extends IService<BaseProvider> {
 
     public Message checkupdateBaseProvider(String name,int id);
 
-
+    public Message getAllBaseProvider();
 }

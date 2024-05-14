@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -48,14 +49,18 @@ public class KcDispatch implements Serializable {
      * 原仓库Id
      */
     @TableField("beforeWarehouseId")
-    private Integer beforewarehouseid;
+    private Integer beforeWarehouseId;
 
+    @TableField(exist = false)
+    private String beforeWareName;
     /**
      * 目标仓库Id
      */
     @TableField("AimWarehouseId")
-    private Integer aimwarehouseid;
+    private Integer AimWarehouseId;
 
+    @TableField(exist = false)
+    private String AimWareName;
     /**
      * 备注
      */
@@ -65,55 +70,63 @@ public class KcDispatch implements Serializable {
      * 审批人
      */
     @TableField("approverBy")
-    private Integer approverby;
+    private Integer approverBy;
+
+    @TableField(exist = false)
+    private String approverName;
 
     /**
      * 审批结果：0-未审批 1-未通过 2-通过
      */
     @TableField("approvalStatus")
-    private Integer approvalstatus;
+    private Integer approvalStatus;
 
     /**
      * 核批备注
      */
     @TableField("approverRemark")
-    private String approverremark;
+    private String approverRemark;
 
     /**
      * 制单人
      */
     @TableField("documenterBy")
-    private Integer documenterby;
+    private Integer documenterBy;
 
     /**
      * 作废状态
      */
     @TableField("voidState")
-    private Integer voidstate;
+    private Integer voidState;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createDate;
 
-    /**
-     * 创造人
-     */
-    @TableField("createBy")
-    private Integer createby;
+
+    @TableField(exist = false)
+    private String createName;
 
     /**
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    private Date updateDate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateby;
+    private Integer updateBy;
 
+    @TableField(exist = false)
+    private String updateName;
 
+    private Integer orderStatus;
+
+    private String orderStatusResult;
+
+    private Integer isDel;//删除id
 }

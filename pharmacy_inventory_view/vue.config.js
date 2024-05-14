@@ -36,6 +36,7 @@ module.exports = defineConfig({
         changeOrigin: true,
         ws: false //是否支持websocket
       }
+      }
     }
   }
 })

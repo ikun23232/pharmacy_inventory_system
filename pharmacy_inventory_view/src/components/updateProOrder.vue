@@ -162,10 +162,10 @@
                   :value="item.id"
                 >
                 </el-option> -->
-                <el-option label="未编制" value="1"></el-option>
-                <el-option label="编制完" value="2"></el-option>
-                <el-option label="执行中" value="3"></el-option>
-                <el-option label="执行完" value="4"></el-option>
+                <el-option label="未编制" :value="1"></el-option>
+                <el-option label="编制完" :value="2"></el-option>
+                <el-option label="执行中" :value="3"></el-option>
+                <el-option label="执行完" :value="4"></el-option>
               </el-select>
             </el-form-item>
           </div>
@@ -247,7 +247,12 @@
               @selection-change="handleCgsqMedicineionChange"
             >
               <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column prop="code" label="源单据编号" width="150" fixed>
+              <el-table-column
+                prop="sourceCode"
+                label="源单据编号"
+                width="150"
+                fixed
+              >
               </el-table-column>
               <el-table-column prop="name" label="医药品名称" width="300">
               </el-table-column>
@@ -628,15 +633,25 @@
 <script>
 // import { addStoreHouse, checkName } from "@/api/storeHouse.js";
 import { Message } from "element-ui";
-import { initCgSqOrderList } from "@/api/CgsdOrder";
+import { initCgSqOrderList, getCgsqOrderByCode } from "@/api/CgsdOrder";
 import { init } from "../api/BaseProvider.js";
 import { getMedicineListByCode } from "@/api/baseMedicine";
 import { getCurrentTime } from "./../api/util.js";
-import { addCgddOrder } from "./../api/procurementOrder.js";
+import { addCgddOrder, getCgddByCode,updateCgddById } from "./../api/procurementOrder.js";
 import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
 import { getPayType } from "./../api/public.js";
 export default {
-  name: "addProcOrder",
+  name: "updateProcOrder",
+  props: {
+    code: {
+      type: String,
+      required: true,
+    },
+    id: {
+      type: Number,
+      require: true,
+    },
+  },
   data() {
     return {
       bcglXiangXiList: [],
@@ -656,7 +671,6 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        createTime: new Date(),
         documenterBy: 1,
         medicineList: [],
       },
@@ -711,7 +725,7 @@ export default {
           { required: true, message: "请输入电话", trigger: "blur" },
           {
             pattern: /^[1][3,5,7,8][0-9]{9}$/,
-            message: "请输入1至3、5、7、8开头的电话格式",
+            message: "请输入1至3、5、7,8开头的电话格式",
             trigger: "blur",
           },
         ],
@@ -723,12 +737,29 @@ export default {
     };
   },
   async mounted() {
+    let cgdd = await getCgddByCode(this.code);
+    this.CgddOrder = cgdd.data;
+    let medicineList = await getMedicineListByCode(this.code);
+    for (let index = 0; index < medicineList.data.length; index++) {
+      if (
+        medicineList.data[index].sourceCode != null &&
+        medicineList.data[index].sourceCode != ""
+      ) {
+        let cgsq = await getCgsqOrderByCode(
+          medicineList.data[index].sourceCode
+        );
+        this.cgsqList.push(cgsq.data);
+      }
+    }
+    this.medicineListTemp = medicineList.data;
+    this.cgddMedicineionList = this.medicineListTemp
+    this.getMedicineListDetail();
     await this.initCgSqOrderList();
-    this.CgddOrder.code = await getCurrentTime("CGDD");
     this.initProvider();
     let data = await getPayType();
     this.cgType = data.data;
     console.log(this.cgType);
+    this.CgddOrder.approvalStatus = ""
   },
   methods: {
     async initCgSqOrderList() {
@@ -747,15 +778,15 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addCgddOrder(this.CgddOrder).then((resp) => {
+          updateCgddById(this.CgddOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
               Message({
-                message: "添加成功!",
+                message: "修改成功!",
                 type: "success",
                 center: "true",
               });
-              this.$emit("handleAddSuccess");
+              this.$emit("handleUpdateSuccess");
             }
           });
         } else {
@@ -770,7 +801,7 @@ export default {
       this.CgddOrder.code = data;
     },
     cancel() {
-      this.$emit("cancel");
+      this.$emit("cancelUpdate");
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -928,32 +959,12 @@ export default {
     handleDeleteAllDetails() {
       this.bcglXiangXiList = undefined;
     },
-    // async changeProvider() {
-    //   // if (obj.providerId == "") {
-    //   //   obj.medicineId = "";
-    //   //   obj.specification = "";
-    //   //   obj.price = "";
-    //   //   obj.totalPrice = "";
-    //   //   obj.unitName = "";
-    //   // }
-    //   // obj.medicineList = [];
-    //   // if (obj.providerId != "") {
-    //   let resp = await getBaseMedicineListByProviderId(
-    //     this.CgddOrder.providerId
-    //   );
-    //   this.bcglXiangXiList.medicineList = resp.data.data;
-    //   // }
-    //   console.log(obj.medicineList);
-    // },
+
     async changeMedicine(obj) {
       console.log(obj);
       console.log(this.bcglXiangXiList);
-
       for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
         if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-          // alert(i)
-          // alert(this.bcglXiangXiList[i].providerId)
-          // alert(obj.providerId)
           if (this.bcglXiangXiList[i].providerId != obj.providerId) {
             break;
           }
@@ -1014,7 +1025,7 @@ export default {
             price: this.cgddMedicineionList[index].purchasePrice,
             totalPrice: this.cgddMedicineionList[index].totalPrice,
             quantity: this.cgddMedicineionList[index].quantity,
-            sourceCode:this.cgddMedicineionList[index].code
+            medicineOrderId: this.cgddMedicineionList[index].medicineOrderId,
           };
           obj.dkdd = "1";
           obj.sjfw = ["07:00", "07:30"];
