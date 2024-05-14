@@ -46,9 +46,15 @@ export function approveCgsqOrder(id,approveRemark,approveMent) {
             id:id,
             approveRemark:approveRemark,
             approveMent:approveMent
-
-
         }
     });
 }
+export function getCgsqOrderByCode(code) {
+    return request.get(baseUrl + "/getCgsqOrderByCode",{
+        params:{
+            code:code
+        }
+    });
+}
+
 

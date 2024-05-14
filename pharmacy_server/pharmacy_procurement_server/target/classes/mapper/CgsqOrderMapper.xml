@@ -15,7 +15,8 @@
         'demanderUserName',
         (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
         (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
-        (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName'
+        (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName',
+        s.type AS 'orderStatueName'
         FROM cgsq_order o,cg_type t,order_statue s
         WHERE o.type=t.id
         AND s.id=o.orderStatus
@@ -29,7 +30,7 @@
             and o.type=#{type}
         </if>
         <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
-            and o.demandTime BETWEEN #{startTime} AND #{endTime}
+            and o.createTime BETWEEN #{startTime} AND #{endTime}
         </if>
            AND o.isDel=0
         <if test="voidState>-1">
@@ -38,6 +39,7 @@
         <if test="approvalStatus>0">
             AND o.approvalStatus=#{approvalStatus}
         </if>
+         order by o.createTime Desc
     </select>
     <select id="getCgSqOrderById" resultMap="BaseResultMap">
         SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
@@ -51,6 +53,18 @@
           AND s.id=o.orderStatus
           AND o.`code`=m.`code`
           AND o.id=#{id}
+    </select>
+
+    <select id="getCgsqOrderByCode" resultType="CgsqOrder">
+        SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
+                             'demanderUserName',
+               (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
+               (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
+               (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName'
+        FROM cgsq_order o,cg_type t,order_statue s
+        WHERE o.type=t.id
+          AND s.id=o.orderStatus
+          AND o.code=#{code}
     </select>
 
 

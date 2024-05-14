@@ -2,8 +2,8 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave:false,
-  devServer:{
-    port:8080,
+  devServer: {
+    port: 8080,
     proxy: {
       '/base': {
         target: 'http://localhost:8081',
@@ -21,7 +21,7 @@ module.exports = defineConfig({
         changeOrigin: true,
         ws: false //是否支持websocket
       },
-      '/procurement':{
+      '/procurement': {
         target: 'http://localhost:8084',
         changeOrigin: true,
         ws: false //是否支持websocket
@@ -35,8 +35,9 @@ module.exports = defineConfig({
         target: 'http://localhost:8088',
         changeOrigin: true,
         ws: false //是否支持websocket
-      }
-      }
+
+
+  }
     }
   }
 })

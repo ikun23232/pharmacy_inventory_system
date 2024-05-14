@@ -40,7 +40,7 @@ public class ProcurementOrderController {
         cgddOrder.setType(procPage.getType());
         cgddOrder.setEndTime(procPage.getEndTime());
         Page page = new Page();
-        page.setPageNum(procPage.getPageNum());
+        page.setCurrentPageNo(procPage.getPageNum());
         page.setPageSize(procPage.getPageSize());
         Message message = procurementOrderService.getCgddOrder(cgddOrder,page);
         return message;
