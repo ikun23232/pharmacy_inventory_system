@@ -165,5 +165,9 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         return Message.error("审核失败");
     }
 
-
+    @Override
+    public Message getCgsqOrderByCode(CgsqOrder cgsqOrder) {
+        CgsqOrder cgsqOrderByCode = cgsqOrderMapper.getCgsqOrderByCode(cgsqOrder);
+        return Message.success(cgsqOrderByCode);
+    }
 }

@@ -27,3 +27,11 @@ export function addCgddOrder(cgsqOrder) {
         cgsqOrder:cgsqOrder
     });
 }
+
+export function getCgsqOrderByCode(code) {
+    return request.get(baseUrl + "/getCgsqOrderByCode",{
+        params:{
+            code:code
+        }
+    });
+}

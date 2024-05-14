@@ -53,6 +53,11 @@ public class CgddOrder implements Serializable {
      */
     private Integer type;
 
+    /**
+     * 采购类型
+     */
+    private String cgType;
+
     @TableField(exist = false)
     @ExcelProperty("采购编号")
     private String OrderTypeName;//订单类型名字
@@ -232,6 +237,7 @@ public class CgddOrder implements Serializable {
     @ExcelProperty("交货人")
     private String deliveryName;//交货人名字
 
+
     /**
      * 结算方式(0-货到付款 1-全款后发货)
      */
@@ -249,7 +255,7 @@ public class CgddOrder implements Serializable {
      * 支付状态(0-未支付 1-已支付)
      */
     @TableField("isPay")
-    private String isPay;
+    private int isPay;
 
     @TableField(exist = false)
     private String beginTime;

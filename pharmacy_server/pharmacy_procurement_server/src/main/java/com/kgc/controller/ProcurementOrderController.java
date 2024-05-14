@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -55,6 +56,32 @@ public class ProcurementOrderController {
     @RequestMapping("/deleteById")
     public Message deleteById(int id) {
         Message message = procurementOrderService.deleteById(id);
+        return message;
+    }
+
+    @RequestMapping("/setVoidState")
+    public Message setVoidState(CgddOrder cgddOrder) {
+        Message message = procurementOrderService.setVoidState(cgddOrder);
+        return message;
+    }
+
+    @RequestMapping("/getCgddByCode")
+    public Message getCgddByCode(CgddOrder cgddOrder) {
+        Message message = procurementOrderService.getCgddByCode(cgddOrder);
+        return message;
+    }
+
+    @RequestMapping("/updateCgddById")
+    public Message updateCgddById(@RequestBody Map map) {
+        CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
+        Message message = procurementOrderService.updateCgddById(cgddOrder);
+        return message;
+    }
+
+    @RequestMapping("/auditingOrder")
+    public Message auditingOrder(@RequestBody Map map) {
+        CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
+        Message message = procurementOrderService.auditingOrder(cgddOrder);
         return message;
     }
 }

@@ -2,6 +2,7 @@ package com.kgc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.CgddOrder;
+import com.kgc.entity.CgsqOrder;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import org.springframework.stereotype.Service;
@@ -20,4 +21,12 @@ public interface ProcurementOrderService extends IService<CgddOrder> {
     public Message addCgddOrder(CgddOrder cgddOrder);
 
     public Message deleteById(int id);
+
+    public Message setVoidState(CgddOrder cgddOrder);
+
+    public Message getCgddByCode(CgddOrder cgddOrder);
+
+    public Message updateCgddById(CgddOrder cgddOrder);
+
+    public Message auditingOrder(CgddOrder cgddOrder);
 }

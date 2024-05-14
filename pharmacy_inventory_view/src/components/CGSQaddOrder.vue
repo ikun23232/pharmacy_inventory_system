@@ -96,8 +96,7 @@
          :data="bcglXiangXiList"
          :row-class-name="rowClassName"
          @selection-change="chandleDetailSelectionChange"
-         ref="tb"
-       >
+         ref="tb">
          <el-table-column type="selection" width="30" align="center"/>
          <el-table-column label="序号" align="center" prop="xh" width="50"></el-table-column>
 
@@ -362,9 +361,7 @@
           </el-pagination>
           <el-row type="flex" justify="center">
             <el-col :span="2">
-              <el-button type="primary" @click="getMedicineList()"
-                >确认</el-button
-              >
+              <el-button type="primary" @click="getMedicineList()">确认</el-button>
             </el-col>
             <el-col :span="2">
               <el-button @click="cancel">取消</el-button>

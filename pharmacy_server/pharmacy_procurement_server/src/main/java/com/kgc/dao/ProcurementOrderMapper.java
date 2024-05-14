@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface ProcurementOrderMapper extends BaseMapper<CgddOrder> {
     public List<CgddOrder> getCgddOrder(CgddOrder cgddOrder);
+    public CgddOrder getCgddByCode(CgddOrder cgddOrder);
 }

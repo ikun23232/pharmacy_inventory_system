@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,7 +51,10 @@ public class CgsqOrderController {
         return  message;
     }
 
-
-
+    @RequestMapping("getCgsqOrderByCode")
+    public Message getCgsqOrderByCode(CgsqOrder cgsqOrder) {
+        Message message = cgsqOrderService.getCgsqOrderByCode(cgsqOrder);
+        return message;
+    }
 }
 

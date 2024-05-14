@@ -58,23 +58,36 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public Message addCgddOrder(CgddOrder cgddOrder) {
-        int count = mapper.insert(cgddOrder);
         int count1 = 0;
-        if (count > 0){
-            for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
-                OrderMedicine orderMedicine = new OrderMedicine();
-                orderMedicine.setCode(cgddOrder.getCode());
-                orderMedicine.setMedicineid(baseMedicine.getId());
-                orderMedicine.setQuantity(baseMedicine.getQuantity());
-                orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
-                orderMedicine.setProviderId(cgddOrder.getProviderId());
-                int temp = orderMapper.insert(orderMedicine);
-                if (temp > 0){
-                    count1++;
-                }
+        int num = 0;
+        double price  =0.0;
+        for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgddOrder.getCode());
+            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setSourceCode(baseMedicine.getSourceCode());
+            orderMedicine.setProviderId(cgddOrder.getProviderId());
+            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            int temp = orderMapper.insert(orderMedicine);
+            if (temp > 0){
+                count1++;
+                num += orderMedicine.getQuantity();
+                price += orderMedicine.getTotalprice();
             }
         }
-        return Message.error("添加订单失败");
+        if (cgddOrder.getMedicineList().size() != count1){
+            return Message.error("添加失败");
+        }
+        cgddOrder.setCount(num);
+        cgddOrder.setReferenceAmount(price);
+        cgddOrder.setOrderStatus(2);
+        int count = mapper.insert(cgddOrder);
+        if (count > 0){
+            return Message.success();
+        }
+        throw new RuntimeException("添加药品详细失败");
     }
 
     @Override
@@ -84,5 +97,74 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             return Message.success();
         }
         return Message.error("删除失败！");
+    }
+
+    @Override
+    public Message setVoidState(CgddOrder cgddOrder) {
+        int count = mapper.updateById(cgddOrder);
+        if (count >0){
+            return Message.success();
+        }
+        return Message.error("作废失败！");
+    }
+
+    @Override
+    public Message getCgddByCode(CgddOrder cgddOrder) {
+        CgddOrder cgddByCode = mapper.getCgddByCode(cgddOrder);
+        if (cgddByCode != null){
+            return Message.success(cgddByCode);
+        }
+        return Message.error("该订单编号没有订单");
+    }
+
+    @Override
+    public Message updateCgddById(CgddOrder cgddOrder) {
+        int count1 = 0;
+        int num = 0;
+        double price  =0.0;
+        for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgddOrder.getCode());
+            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setSourceCode(baseMedicine.getCode());
+            orderMedicine.setProviderId(cgddOrder.getProviderId());
+            orderMedicine.setId(baseMedicine.getMedicineOrderId());
+            int temp = orderMapper.updateById(orderMedicine);
+            if (temp > 0){
+                count1++;
+                num += orderMedicine.getQuantity();
+                price += orderMedicine.getTotalprice();
+            }
+        }
+        if (cgddOrder.getMedicineList().size() != count1){
+            return Message.error("修改失败");
+        }
+        cgddOrder.setCount(num);
+        cgddOrder.setReferenceAmount(price);
+        cgddOrder.setUpdateBy(1);
+        cgddOrder.setUpdateTime(new Date());
+        int count = mapper.updateById(cgddOrder);
+        if (count > 0){
+            return Message.success();
+        }
+        throw new RuntimeException("修改订单失败");
+    }
+
+    @Override
+    public Message auditingOrder(CgddOrder cgddOrder) {
+        if (cgddOrder.getApprovalStatus() == 1){
+            cgddOrder.setEffectiveTime(new Date());
+            cgddOrder.setIsPay(1);
+            cgddOrder.setPayTime(new Date());
+            cgddOrder.setOrderStatus(3);
+        }
+        cgddOrder.setApproverBy(1);
+        int count = mapper.updateById(cgddOrder);
+        if (count > 0){
+            return Message.success();
+        }
+        return Message.error("审批失败");
     }
 }
