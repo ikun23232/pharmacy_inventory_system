@@ -3,11 +3,14 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -18,7 +21,9 @@ import java.time.LocalDateTime;
  * @since 2024-04-30
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,17 +53,17 @@ public class SysUser implements Serializable {
     /**
      * 性别，1：男 2：女
      */
-    private Integer six;
+    private Integer sex;
     /**
      * 邮箱
      */
-    private Integer email;
+    private String email;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createdate;
 
     /**
      * 创造人
@@ -70,17 +75,18 @@ public class SysUser implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    private Date updatedate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private String updateby;
+    private Integer updateby;
 
     /**
      * 删除标识
      */
+    @TableLogic
     @TableField("isDel")
     private Integer isdel;
 
@@ -93,5 +99,10 @@ public class SysUser implements Serializable {
     @TableField("nickName")
     private String nickname;
 
+//    @TableField(exist = false)
+//    private List<BaseMedicineCategory> children;
 
+
+    @TableField(exist = false)
+    private List<SysRole> sysRoles = new ArrayList<>();
 }

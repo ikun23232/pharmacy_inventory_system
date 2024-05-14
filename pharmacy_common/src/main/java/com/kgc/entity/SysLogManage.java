@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -54,7 +55,7 @@ public class SysLogManage implements Serializable {
      * 创建日期
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createdate;
 
     /**
      * 日志类型

@@ -16,16 +16,13 @@
         ></el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
-            <el-form-item label="单据日期" prop="createTime">
-              <el-date-picker
-                  v-model="CgsqOrder.createTime"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-                  :disabled="true">
-              </el-date-picker>
-            </el-form-item></div
-        ></el-col>
+
+           <el-form-item label="单据日期" >
+              <el-input type="text" v-model="CgsqOrder.createtime" disabled></el-input>
+            </el-form-item></div>
+
+
+       </el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
@@ -223,10 +220,10 @@
         </el-tab-pane>
       </el-tabs>
       <el-divider></el-divider>
+
       <div style="text-align: left;">
       <div class="demo-input-suffix">
   核批意见:
-
   <el-input
       placeholder="请输入内容"
       prefix-icon="el-icon-search"
@@ -254,14 +251,14 @@
          <el-button class="anniu" type="primary" @click="cancel()"
          >取 消</el-button
          >
-        <!--        <el-button class="anniu" type="primary" @click="resetForm('CgsqOrder')"-->
-        <!--          >取 消</el-button-->
-        <!--        >-->
+
         <el-button class="anniu" s @click="submitForm('CgsqOrder')"
         >保 存</el-button
         >
-        <el-button class="anniu" @click="cancel()">提 交</el-button>
+        <el-button class="anniu" @click="submitForm('CgsqOrder',1)">提 交</el-button>
       </el-form-item>
+
+
     </el-form>
     <el-dialog
         title="采购申请单"
@@ -298,20 +295,7 @@
                 <el-option label="未作废" value="1"></el-option>
               </el-select>
             </el-form-item>
-            <!-- <el-form-item label="日期">
-            <div class="block">
-              <el-date-picker
-                v-model="value2"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right"
-              >
-              </el-date-picker>
-            </div>
-          </el-form-item> -->
+
             <el-form-item>
               <el-button type="primary" @click="initCgSqOrderList()"
               >查询</el-button
@@ -319,38 +303,6 @@
             </el-form-item>
           </el-form>
         </p>
-
-      <!-- <el-table
-        :data="list.list"
-        border
-        style="width: 100%"
-        @selection-change="handleCgsqSelectionChange"
-      >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="id" label="订单序号" width="120">
-          <template slot-scope="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="code" label="订单编码" width="150" fixed>
-        </el-table-column>
-        <el-table-column prop="demandtime" label="单据日期" width="300">
-        </el-table-column>
-        <el-table-column prop="subject" label="单据主题" width="120">
-        </el-table-column>
-        <el-table-column prop="cgtype" label="采购类型" width="120">
-        </el-table-column>
-        <el-table-column prop="demanderUserName" label="需求人" width="120">
-        </el-table-column>
-        <el-table-column prop="demandTime" label="需求日期" width="120">
-        </el-table-column>
-        <el-table-column prop="count" label="数量" width="120">
-        </el-table-column>
-        <el-table-column prop="effectivetime" label="生效时间" width="120">
-        </el-table-column>
-        <el-table-column prop="referenceamount" label="参考金额" width="120">
-        </el-table-column>
-      </el-table> -->
         <div class="block">
           <el-pagination
               @current-change="handleCurrentChange"
@@ -381,21 +333,17 @@ import {getPayType} from "@/api/public"
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
 import {init}from "../api/BaseProvider.js"
 import { Message } from "element-ui";
-import { initCgSqOrderList,addCgddOrder} from "@/api/CgsdOrder";
-import { getCurrentTime } from "./../api/util.js";
+import { updateCgsqOrder,getCgsqOrderById} from "@/api/CgsdOrder";
 export default {
   name: "addProcOrder",
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    }
+  },
   data() {
-    // var check = (rule, value, callback) => {
-    //   let data = checkName(value).then((resp) => {
-    //     console.log(resp.data);
-    //     if (resp.code == 200) {
-    //       callback(new Error("仓库名已经存在"));
-    //     } else {
-    //       callback();
-    //     }
-    //   });
-    // };
+
     return {
       bcglXiangXiList: [],
       //选中的从表数据
@@ -409,7 +357,7 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        createTime: new Date(),
+        createTime: '',
         remark: "",
         approvement:'',
         medicineList:[]
@@ -453,16 +401,27 @@ export default {
     };
   },
   async mounted() {
-    this.initCgSqOrderList();
+
+    this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
-    this.CgsqOrder.code = await getCurrentTime("CGSQ");
   },
   methods: {
-    async initCgSqOrderList() {
-      let data = await initCgSqOrderList(this.vo);
-      console.log(data);
-      this.list = data.data;
+    async initCgSqOrder(id){
+       let resp = await getCgsqOrderById(id);
+      this.CgsqOrder=resp.data
+      for (const medicineListElement of resp.data.medicineList) {
+        medicineListElement.medicineId=medicineListElement.id;
+      }
+      // console.log(resp.data[0].medicineList)
+      this.bcglXiangXiList=resp.data.medicineList
+      this.checkFalg=false
+      for (const Obj of this.bcglXiangXiList) {
+       await this.changeProvider(Obj)
+         this.changeMedicine(Obj)
+        console.log("-------")
+        console.log(Obj)
+      }
     },
     async initCgType(){
       let resp = await getPayType();
@@ -472,7 +431,7 @@ export default {
       this.page.pageNum = val;
       this.getList(this.page);
     },
-    submitForm(formName) {
+    submitForm(formName,type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.bcglXiangXiList.length==0){
@@ -494,19 +453,24 @@ export default {
               }
             }
           }
+
+          if (type==1){
+            this.CgsqOrder.orderstatus=2
+
+          }
           this.CgsqOrder.medicineList=this.bcglXiangXiList
-          addCgddOrder(this.CgsqOrder).then((resp) => {
+          updateCgsqOrder(this.CgsqOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
               Message({
-                message: "添加成功!",
+                message: "修改成功!",
                 type: "success",
                 center: "true",
               });
-              this.$emit("addSuccess");
+              this.$emit("closeUpdateDiago");
             }else {
               Message({
-                message: "添加失败!",
+                message: "修改失败!",
                 type: "error",
                 center: "true",
               });
@@ -522,7 +486,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     cancel() {
-      this.$emit("addSuccess");
+      this.$emit("closeUpdateDiago");
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -610,30 +574,31 @@ export default {
 
       // console.log(resp)
 
-      console.log(obj.medicineList)
     },
     async changeMedicine(obj){
-      console.log(obj)
-      console.log(this.bcglXiangXiList)
 
-      for (let i = 0; i <= this.bcglXiangXiList.length-2; i++) {
-        if (this.bcglXiangXiList[i].medicineId==obj.medicineId){
-          // alert(i)
-          // alert(this.bcglXiangXiList[i].providerId)
-          // alert(obj.providerId)
-          if (this.bcglXiangXiList[i].providerId!=obj.providerId){
-            break;
-          }
+ if (this.checkFalg) {
+   for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
+     if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
+       // alert(i)
+       // alert(this.bcglXiangXiList[i].providerId)
+       // alert(obj.providerId)
+       if (this.bcglXiangXiList[i].providerId != obj.providerId) {
+         break;
+       }
 
-          Message({
-            message: "您重复添加了商品!",
-            type: "error",
-            center: "true",
-          });
-          obj.medicineId=''
-          return
-        }
-      }
+       Message({
+         message: "您重复添加了商品!",
+         type: "error",
+         center: "true",
+       });
+       obj.medicineId = ''
+       this.index=2;
+       return
+     }
+   }
+ }
+      this.checkFalg=true
 
       for (const objElement of obj.medicineList) {
         if (obj.medicineId==objElement.id){
@@ -649,9 +614,9 @@ export default {
     cacltotalPrice(row){
       alert(row)
     },
-    checkProductList(){
-
-
+    closeDiago(){
+      this.formDisabled=false;
+      this.$emit("closeUpdateDiago");
     }
 
   },

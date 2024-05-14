@@ -163,6 +163,9 @@ public class CgsqOrder implements Serializable {
     @TableField(exist = false)
     private List<BaseMedicine> MedicineList;
 
+    @TableField(exist = false)
+    private String orderStatueName;
+
 
 
 

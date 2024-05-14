@@ -1,9 +1,9 @@
 import request from '../utils/request.js';
 
-const baseUrl = '/menus';
+const baseUrl = '/user';
 
 export function getPayType() {
-    return request.post(baseUrl + "/getPayType");
+    return request.post(baseUrl + "/menus/getPayType");
 }
 export function setExcel(list, name) {
     return request.post(baseUrl + "/setExcel", {
@@ -12,6 +12,6 @@ export function setExcel(list, name) {
     }, {
         responseType: 'blob'
     }).then(resp =>{
-        
+
     });
 }

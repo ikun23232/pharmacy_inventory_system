@@ -28,6 +28,27 @@ export function addCgddOrder(cgsqOrder) {
     });
 }
 
+export function updateCgsqOrder(cgsqOrder) {
+    return request.post(baseUrl + "/updateCgsqOrder",{
+        cgsqOrder:cgsqOrder
+    });
+}
+export function getCgsqOrderById(id) {
+    return request.get(baseUrl + "/getCgsqOrderById",{
+        params:{
+            id:id
+        }
+    });
+}
+export function approveCgsqOrder(id,approveRemark,approveMent) {
+    return request.get(baseUrl + "/approveCgsqOrder",{
+        params:{
+            id:id,
+            approveRemark:approveRemark,
+            approveMent:approveMent
+        }
+    });
+}
 export function getCgsqOrderByCode(code) {
     return request.get(baseUrl + "/getCgsqOrderByCode",{
         params:{
@@ -35,3 +56,5 @@ export function getCgsqOrderByCode(code) {
         }
     });
 }
+
+

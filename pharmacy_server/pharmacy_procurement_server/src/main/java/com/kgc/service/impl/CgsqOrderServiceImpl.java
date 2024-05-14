@@ -73,7 +73,6 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     @Override
     public Message addCgsqOrder(CgsqOrder cgsqOrder) {
 //          cgsqOrder.
-        cgsqOrder.setApproverby(1);
         cgsqOrder.setDemandtime(new Date());
         List<BaseMedicine> medicineList = cgsqOrder.getMedicineList();
         int count=0;
@@ -88,7 +87,12 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }
         cgsqOrder.setCount(count);
         cgsqOrder.setReferenceamount(referencCount.doubleValue());
-        cgsqOrder.setOrderstatus(1);
+        if (cgsqOrder.getOrderstatus()!=null){
+            cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
+
+        }else {
+            cgsqOrder.setOrderstatus(1);
+        }
         cgsqOrder.setDemanderby(1);
         cgsqOrder.setVoidstate(0);
         cgsqOrderMapper.insert(cgsqOrder);
@@ -121,9 +125,18 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }
         cgsqOrder.setCount(count);
         cgsqOrder.setReferenceamount(referencCount.doubleValue());
+        if (cgsqOrder.getOrderstatus()!=null){
+            cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
+        }
         cgsqOrder.setUpdatetime(new Date());
         cgsqOrder.setUpdateby(1);
         cgsqOrderMapper.updateById(cgsqOrder);
+
+
+        Map<String, Object> columnMap = new HashMap<>();
+        columnMap.put("code", cgsqOrder.getCode());
+        // 调用 deleteByMap 方法，传入 Map 对象删除满足条件的数据
+        orderMapper.deleteByMap(columnMap);
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
@@ -131,14 +144,15 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMapper.updateById(orderMedicine);
+            orderMapper.insert(orderMedicine);
         }
-        return Message.success();
+            return Message.success();
     }
 
     @Override
     public Message getCgsqOrder(int id) {
-        return null;
+        CgsqOrder cgSqOrderById = cgsqOrderMapper.getCgSqOrderById(id);
+        return Message.success(cgSqOrderById);
     }
 
     @Override
@@ -154,11 +168,19 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     }
 
     @Override
-    public Message approveCgsqOrder(int id) {
-        UpdateWrapper<CgsqOrder> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("approvalStatus", 1)
-                .eq("id", id); // 添加ID的条件
-        int updateRow = cgsqOrderMapper.update(null, updateWrapper);
+    public Message approveCgsqOrder(int id,String approveRemark,int approveMent) {
+        CgsqOrder cgsqOrder=new CgsqOrder();
+        cgsqOrder.setId(id);
+        cgsqOrder.setApprovalstatus(1);
+        cgsqOrder.setEffectivetime(new Date());
+        cgsqOrder.setApproverremark(approveRemark);
+        cgsqOrder.setOrderstatus(3);
+
+//批准人
+        int approverBy=1;
+        cgsqOrder.setApproverby(approverBy);
+        int updateRow = cgsqOrderMapper.updateById(cgsqOrder);
+
         if (updateRow > 0) {
             return Message.success();
         }

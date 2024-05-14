@@ -256,10 +256,10 @@
 <!--        <el-button class="anniu" type="primary" @click="resetForm('CgsqOrder')"-->
 <!--          >取 消</el-button-->
 <!--        >-->
-        <el-button class="anniu" s @click="submitForm('CgsqOrder')"
+        <el-button class="anniu"  @click="submitForm('CgsqOrder')"
           >保 存</el-button
         >
-        <el-button class="anniu" @click="cancel()">提 交</el-button>
+        <el-button class="anniu" @click="submitForm('CgsqOrder',1)">提 交</el-button>
       </el-form-item>
     </el-form>
     <el-dialog
@@ -469,7 +469,7 @@ export default {
       this.page.pageNum = val;
       this.getList(this.page);
     },
-    submitForm(formName) {
+    submitForm(formName,type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.bcglXiangXiList.length==0){
@@ -478,7 +478,7 @@ export default {
               type: "error",
               center: "true",
             });
-return
+           return
           }else {
           for (const obj of this.bcglXiangXiList) {
             if (obj.providerId==''||obj.providerId==undefined||obj.medicineId==''||obj.medicineId==undefined){
@@ -490,6 +490,10 @@ return
               return;
             }
           }
+          }
+          if (type==1){
+            this.CgsqOrder.orderstatus=2
+
           }
           this.CgsqOrder.medicineList=this.bcglXiangXiList
           addCgddOrder(this.CgsqOrder).then((resp) => {
@@ -645,10 +649,6 @@ return
     },
     cacltotalPrice(row){
       alert(row)
-    },
-    checkProductList(){
-
-
     }
 
   },

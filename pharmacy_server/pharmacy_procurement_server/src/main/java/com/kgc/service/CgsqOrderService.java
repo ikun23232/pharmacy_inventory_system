@@ -61,11 +61,11 @@ public interface CgsqOrderService extends IService<CgsqOrder> {
      */
     Message voidCgsqOrder(int id);
     /**
-     * 作废订单
+     * 审核订单
      * @param id
      * @return
      */
-    Message approveCgsqOrder(int id);
+    Message approveCgsqOrder(int id,String approveRemark,int approveMent);
 
     /**
      * 通过code获取采购申请单
