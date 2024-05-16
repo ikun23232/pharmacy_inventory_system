@@ -44,14 +44,14 @@ public class CgrkOrderController {
     }
     @RequestMapping("/addCgrkOrder")
     public Message addCgsqOrder(@RequestBody Map map){
-        CgrkOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgsqOrder")), CgrkOrder.class);
+        CgrkOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgrkOrder")), CgrkOrder.class);
         Message message = cgrkOrderService.addCgrkOrder(cgsqOrder1);
         return  message;
     }
 
     @RequestMapping("/updateCgrkOrder")
     public Message updateCgsqOrder(@RequestBody Map map){
-        CgrkOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgsqOrder")), CgrkOrder.class);
+        CgrkOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgrkOrder")), CgrkOrder.class);
         Message message = cgrkOrderService.updateCgrkOrder(cgsqOrder1);
         return  message;
     }

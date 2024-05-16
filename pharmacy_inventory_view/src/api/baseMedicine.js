@@ -54,3 +54,12 @@ export function getMedicineListByCode(code) {
 
     });
 }
+
+export function getMedicineListByCodeComblie(code) {
+    return request.get(baseUrl + "/getMedicineListByCodeComblie", {
+        params: {
+            code: code,
+        }
+
+    });
+}

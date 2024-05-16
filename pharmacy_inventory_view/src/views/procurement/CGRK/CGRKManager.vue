@@ -120,7 +120,7 @@
               <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderstatus==2" type="success" size="small">审核
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderStatus==2" type="success" size="small">审核
               </el-button></el-dropdown-item>
               <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
@@ -179,28 +179,27 @@
     </el-dialog>
 
     <el-dialog
-        title="采购申请订单添加"
+        title="采购入库单添加"
         :visible.sync="adddialogVisible"
         width="85%"
         v-if="adddialogVisible"
     >
-      <CGSQaddOrder
+      <AddCGRKOrder
           width="75%"
           :id="id"
           @addSuccess="addSuccess">
 
-      </CGSQaddOrder>
+      </AddCGRKOrder>
     </el-dialog>
   </div>
 </template>
 
 <script>
 // import { delUnit, initUnit } from "@/api/BaseUnit";
-import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/CgsdOrder'
 import {initCgrkOrderList,delCgrqOrderById,voidCgrkOrderById} from '@/api/CgrkOrder'
 import {init} from '@/api/BaseProvider'
 import {Message} from "element-ui";
-import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
+import AddCGRKOrder from "../../../components/AddCGRKOrder.vue";
 import CGSQupdateOrder from "@/components/CGSQupdateOrder";
 import CGSQapproveOrder from "@/components/CGSQapproveOrder";
 import CGSQviewOrder from "@/components/CGSQviewOrder";
@@ -212,10 +211,11 @@ import {getPayType} from "@/api/public";
 export default {
   name: "storeHouse",
   components: {
-    CGSQaddOrder,
+    AddCGRKOrder,
     CGSQupdateOrder,
     CGSQapproveOrder,
-    CGSQviewOrder
+    CGSQviewOrder,
+    // CGSQaddOrder
     // AddUnit
   },
   data() {

@@ -75,5 +75,11 @@ public class BaseMedicineController {
         Message baseMedicineList=baseMedicineService.getBaseMedicineListByProviderId(providerId);
         return Message.success(baseMedicineList);
     }
+    @RequestMapping("/getMedicineListByCodeComblie")
+    @ResponseBody
+    public Message getMedicineListByCodeComblie(String code){
+        Message medicineListByCode = baseMedicineService.getMedicineListByCodeComblie(code);
+        return medicineListByCode;
+    }
 }
 

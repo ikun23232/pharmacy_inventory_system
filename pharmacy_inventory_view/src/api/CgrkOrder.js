@@ -23,13 +23,13 @@ export function voidCgrkOrderById(id) {
 
 export function addCgrkOrder(cgsqOrder) {
     return request.post(baseUrl + "/addCgrkOrder",{
-        cgsqOrder:cgsqOrder
+        cgrkOrder:cgsqOrder
     });
 }
 
 export function updateCgrkOrder(cgsqOrder) {
     return request.post(baseUrl + "/updateCgrkOrder",{
-        cgsqOrder:cgsqOrder
+        cgrkOrder:cgsqOrder
     });
 }
 export function getCgrkOrderById(id) {

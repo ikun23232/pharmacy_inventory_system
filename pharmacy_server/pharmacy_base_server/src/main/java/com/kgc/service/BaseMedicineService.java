@@ -34,6 +34,5 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
     public Message getBaseMedicineListByProviderId(int providerId);
 
 
-
-
+    Message getMedicineListByCodeComblie(String code);
 }

@@ -56,4 +56,8 @@ public class OrderMedicine implements Serializable {
 
     @TableField("providerId")
     private Integer providerId;
+    @TableField("fowardWarHouseId")
+    private Integer fowardWarHouseId;
+
+    private String batchCode;
 }

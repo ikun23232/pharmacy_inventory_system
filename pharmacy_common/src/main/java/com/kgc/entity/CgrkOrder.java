@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -106,7 +107,7 @@ public class CgrkOrder implements Serializable {
     /**
      * 创造时间
      */
-    @TableField("creatTime")
+    @TableField("createTime")
     private Date createTime;
 
     /**
@@ -151,6 +152,20 @@ public class CgrkOrder implements Serializable {
     private int count;
     @TableField(exist = false)
     private double referenceAmount;
+    @TableField(exist = false)
+    private List<BaseMedicine> medicineList;
+
+    private  int orderStatus;
+    private  int providerId;
+
+    private int warhouseUserId;
+    @TableField(exist = false)
+    private String warhouseUserName;
+    private Integer purchaseId;
+
+
+
+
 
 
 

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -96,5 +97,32 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
     public Message getBaseMedicineListByProviderId(int providerId) {
         List<BaseMedicine> baseMedicineList=baseMedicineMapper.getBaseMedicineListByProviderId(providerId);
         return Message.success(baseMedicineList);
+    }
+
+    @Override
+    public Message getMedicineListByCodeComblie(String code) {
+        List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
+        ArrayList<BaseMedicine> baseMedicines = new ArrayList<>();
+        if (medicineListByCode!=null){
+            boolean falg=true;
+            for (BaseMedicine baseMedicine : medicineListByCode) {
+               if (baseMedicines!=null&&baseMedicines.size()>0){
+                   for (int i = 0; i < baseMedicines.size(); i++) {
+                       if (baseMedicines.get(i).getId()==baseMedicine.getId()){
+                           baseMedicines.get(i).setQuantity(baseMedicines.get(i).getQuantity()+baseMedicine.getQuantity());
+                           System.out.println(baseMedicines.get(i).getQuantity());
+                           falg=false;
+                           break;
+                       }
+                   }
+               }
+               if (falg){
+                   baseMedicines.add(baseMedicine);
+               }
+            }
+        }
+
+
+        return Message.success(baseMedicines);
     }
 }

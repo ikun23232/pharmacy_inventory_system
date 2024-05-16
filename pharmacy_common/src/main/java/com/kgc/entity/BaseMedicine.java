@@ -123,4 +123,8 @@ public class BaseMedicine implements Serializable {
     private Integer medicineOrderId;
 
     private Integer medicineId;
+
+    private Integer fowardWarHouseId;//目标仓库Id
+
+
 }

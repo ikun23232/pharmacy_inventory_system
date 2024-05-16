@@ -648,7 +648,6 @@ export default {
         email: "",
         fax: "",
         code: "",
-        createTime: new Date(),
         phone: "",
         contactperson: "",
         providerId: "",
