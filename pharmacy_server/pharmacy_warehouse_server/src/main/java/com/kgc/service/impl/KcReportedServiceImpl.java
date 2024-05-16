@@ -198,6 +198,10 @@ public class KcReportedServiceImpl implements KcReportedService {
         delKcReporteddetailByCode(kcReported.getCode());
 
         for (int i = 0; i < list.size(); i++){
+            if (kcReported.getApprovalStatus()==2){
+                KcMedicine kcMedicine = (KcMedicine) list.get(i);
+                this.kcMedicineService.updateQuantityById(kcMedicine);
+            }
 //            this.kcMedicineService.updateQuantityById((KcMedicine) list.get(i));//修改库存数量
             KcReporteddetail kcReporteddetail = new KcReporteddetail();
             kcReporteddetail.setReportedCode((String) kcReportedMap.get("code"));
