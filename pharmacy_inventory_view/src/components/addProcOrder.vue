@@ -14,10 +14,8 @@
               <el-input
                 type="text"
                 disabled
-                v-model="CgddOrder.code"
-              ></el-input>
-            </el-form-item></div
-        ></el-col>
+                v-model="CgddOrder.code"></el-input>
+            </el-form-item></div></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据日期" prop="createTime">
@@ -304,24 +302,6 @@
               prop="xh"
               width="50"
             ></el-table-column>
-
-            <!-- <el-table-column label="供应商" width="250" prop="providerId">
-              <template slot-scope="scope">
-                <el-select
-                  clearable
-                  filterable
-                  v-model="bcglXiangXiList[scope.row.xh - 1].providerId"
-                >
-                  <el-option
-                    v-for="dict in providerList"
-                    :key="dict.id"
-                    :label="dict.name"
-                    :value="dict.id"
-                  />
-                </el-select>
-              </template>
-            </el-table-column> -->
-
             <el-table-column
               label="药品"
               align="center"
@@ -897,7 +877,6 @@ export default {
         this.CgddOrder.providerId
       );
       let obj = {
-        // providerList: [],
         medicineList: resp.data.data,
         providerId: this.CgddOrder.providerId,
         medicineId: "",
@@ -908,7 +887,6 @@ export default {
         quantity: "",
       };
       console.log(this.providerList);
-      // obj.providerList = this.providerList;
       obj.dkdd = "1";
       obj.sjfw = ["07:00", "07:30"];
       obj.jxsjfw = ["06:00", "12:00"];
@@ -927,32 +905,12 @@ export default {
     handleDeleteAllDetails() {
       this.bcglXiangXiList = undefined;
     },
-    // async changeProvider() {
-    //   // if (obj.providerId == "") {
-    //   //   obj.medicineId = "";
-    //   //   obj.specification = "";
-    //   //   obj.price = "";
-    //   //   obj.totalPrice = "";
-    //   //   obj.unitName = "";
-    //   // }
-    //   // obj.medicineList = [];
-    //   // if (obj.providerId != "") {
-    //   let resp = await getBaseMedicineListByProviderId(
-    //     this.CgddOrder.providerId
-    //   );
-    //   this.bcglXiangXiList.medicineList = resp.data.data;
-    //   // }
-    //   console.log(obj.medicineList);
-    // },
     async changeMedicine(obj) {
       console.log(obj);
       console.log(this.bcglXiangXiList);
 
       for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
         if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-          // alert(i)
-          // alert(this.bcglXiangXiList[i].providerId)
-          // alert(obj.providerId)
           if (this.bcglXiangXiList[i].providerId != obj.providerId) {
             break;
           }

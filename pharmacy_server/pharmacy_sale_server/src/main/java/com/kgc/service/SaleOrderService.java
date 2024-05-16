@@ -7,6 +7,8 @@ import com.kgc.entity.XsOrder;
 
 import java.awt.image.RescaleOp;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public interface SaleOrderService extends IService<XsOrder> {
 
@@ -14,11 +16,16 @@ public interface SaleOrderService extends IService<XsOrder> {
 
     public Message addSaleOrder(XsOrder xsOrder);
 
-    public Message getSaleOrderById(String orderNo);
+    public Message saveSaleOrder(XsOrder xsOrder);
+
+    public Message getSaleOrderByOrderNo(String orderNo);
 
     public Message updateSaleOrder(XsOrder xsOrder);
+
+    public Message saveUpdateSaleOrder(XsOrder xsOrder);
 
     public Message deleteSaleOrder(String orderNo);
 
     public Message cancelSaleOrder(String orderNo);
+
 }

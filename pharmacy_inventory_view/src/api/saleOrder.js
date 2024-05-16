@@ -7,37 +7,42 @@ export function initSaleOrder(xsOrder) {
     return request.post(baseUrl + "/getSaleOrderListByPage",xsOrder);
 }
 
+//添加销售订单
 export function addSaleOrder(xsOrder) {
-    return request.get(baseUrl + "/addSaleOrder", {
-        params: {
-            xsOrder: xsOrder,
-        }
-
-    });
+    return request.post(baseUrl + "/addSaleOrder",{xsOrder:xsOrder});
 }
-//修改回显
-export function getSaleOrderById(id) {
-    return request.get(baseUrl + "/getSaleOrderById", {
+//保存销售订单
+export function saveSaleOrder(xsOrder) {
+    return request.post(baseUrl + "/saveSaleOrder",{xsOrder:xsOrder});
+}
+//根据订单号查询订单详情
+export function getSaleOrderByOrderNo(orderNo) {
+    return request.get(baseUrl + "/getSaleOrderByOrderNo", {
         params: {
-            id: id,
+            orderNo: orderNo,
         }
-
     });
 }
 export function updateSaleOrder(xsOrder) {
-    return request.get(baseUrl + "/updateSaleOrder", {
-        params: {
-            xsOrder: xsOrder,
-        }
-
-    });
+    return request.post(baseUrl + "/updateSaleOrder",{xsOrder:xsOrder});
 }
 
-export function deleteSaleOrder(id) {
+export function saveUpdateSaleOrder(xsOrder) {
+    return request.post(baseUrl + "/saveUpdateSaleOrder",{xsOrder:xsOrder});
+}
+//销售订单作废
+export function cancelSaleOrder(orderNo) {
+    return request.get(baseUrl + "/cancelSaleOrder", {
+        params: {
+            orderNo: orderNo,
+        }
+    });
+}
+//销售订单删除
+export function deleteSaleOrder(orderNo) {
     return request.get(baseUrl + "/deleteSaleOrder", {
         params: {
-            id: id,
+            orderNo: orderNo,
         }
-
     });
 }

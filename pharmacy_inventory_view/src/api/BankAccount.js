@@ -54,6 +54,11 @@ const checkupdateBankAccount = (belongBank,name,bandCount,id) => {
         }
     })
 }
+
+const getAllBankCountList = () => {
+    return request.get(baseUrl + "/bankAccount/getAllBankCountList")
+}
+
 export {
     init,
     addBankAccount,
@@ -61,5 +66,6 @@ export {
     delBankAccount,
     getBankAccountBybandCount,
     checkaddBankAccount,
-    checkupdateBankAccount
+    checkupdateBankAccount,
+    getAllBankCountList
 }

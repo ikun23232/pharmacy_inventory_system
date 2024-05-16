@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author 15279
@@ -85,5 +84,14 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
             return Message.success(storeHouse);
         }
         return Message.error("没有该用户");
+    }
+
+    @Override
+    public Message getAllStoreHouseList() {
+        List<BaseStorehouse> storeHouseList = storeHouseMapper.getStoreHouseList(null);
+        if (storeHouseList.isEmpty()){
+            return Message.error("没有数据");
+        }
+        return Message.success(storeHouseList);
     }
 }

@@ -22,7 +22,7 @@ public class PublicPayTypeController {
     @Autowired
     private PublicPayTypeService service;
 
-        @RequestMapping("/menus/getPayType")
+    @RequestMapping("/menus/getPayType")
     public Message getPayType() {
         Message message = service.getPayType();
         return message;

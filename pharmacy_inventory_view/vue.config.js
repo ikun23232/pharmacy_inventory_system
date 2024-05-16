@@ -15,7 +15,6 @@ module.exports = defineConfig({
         changeOrigin: true,
         ws: false //是否支持websocket
       },
-
       '/finance': {
         target: 'http://localhost:8089',
         changeOrigin: true,
@@ -35,8 +34,6 @@ module.exports = defineConfig({
         target: 'http://localhost:8088',
         changeOrigin: true,
         ws: false //是否支持websocket
-
-
   }
     }
   }

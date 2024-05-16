@@ -11,7 +11,17 @@ export function setExcel(list, name) {
         name: name
     }, {
         responseType: 'blob'
-    }).then(resp =>{
-
-    });
+    }).then(response => {
+        // 处理响应数据
+        const blob = new Blob([response.data]);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name + '.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }).catch(error => {
+        console.error('Error:', error);
+    });;
 }

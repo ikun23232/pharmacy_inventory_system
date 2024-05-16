@@ -124,6 +124,15 @@ public class BaseMedicine implements Serializable {
 
     private Integer medicineId;
 
+    private int stock;
+
+    @TableField(exist=false)
+    private String batchCode;
+
+
+    @TableField(exist=false)
+    private String storehouseName;
+
     private Integer fowardWarHouseId;//目标仓库Id
 
 

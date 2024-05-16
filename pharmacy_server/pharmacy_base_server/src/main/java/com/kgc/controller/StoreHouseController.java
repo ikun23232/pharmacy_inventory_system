@@ -24,7 +24,7 @@ public class StoreHouseController {
     @Autowired
     private StoreHouseService service;
 
-    @RequestMapping("getStoreHouseList")
+    @RequestMapping("/getStoreHouseList")
     public Message getStoreHouseList(@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> pageMap = (Map<String, Object>) requestBody.get("page");
         int pageNum = (int) pageMap.get("pageNum");
@@ -35,33 +35,39 @@ public class StoreHouseController {
         return message;
     }
 
-    @RequestMapping("deleteStorehouse")
+    @RequestMapping("/deleteStorehouse")
     public Message deleteStorehouse(int id) {
         Message message = service.deleteStorehouse(id);
         return message;
     }
 
-    @RequestMapping("checkName")
+    @RequestMapping("/checkName")
     public Message checkName(String name) {
         Message message = service.checkName(name);
         return message;
     }
 
-    @RequestMapping("addStoreHouse")
+    @RequestMapping("/addStoreHouse")
     public Message addStoreHouse(@RequestBody BaseStorehouse storeHouse) {
         Message message = service.addStoreHouse(storeHouse);
         return message;
     }
 
-    @RequestMapping("updateStoreHouse")
+    @RequestMapping("/updateStoreHouse")
     public Message updateStoreHouse(@RequestBody BaseStorehouse storeHouse) {
         Message message = service.updateStoreHouse(storeHouse);
         return message;
     }
 
-    @RequestMapping("getStoreHouseById")
+    @RequestMapping("/getStoreHouseById")
     public Message getStoreHouseById(int id) {
         Message message = service.getStoreHouseById(id);
+        return message;
+    }
+
+    @RequestMapping("/getAllStoreHouseList")
+    public Message getAllStoreHouseList() {
+        Message message = service.getAllStoreHouseList();
         return message;
     }
 }

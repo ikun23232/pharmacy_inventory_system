@@ -118,5 +118,15 @@ public class BankAccountServiceImpl extends ServiceImpl<BankAccountMapper, BankA
         }
     }
 
+    @Override
+    public Message getAllBankCountList() {
+        List<BankAccount> bankAccountList=bankAccountMapper.selectList(null);
+        if(bankAccountList!=null){
+            return Message.success(bankAccountList);
+        }else{
+            return Message.error();
+        }
+    }
+
 
 }
