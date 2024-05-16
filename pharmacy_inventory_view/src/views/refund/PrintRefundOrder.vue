@@ -1,0 +1,118 @@
+<template>
+    <div>
+      <div v-loading="loading" style="padding: 10px;">
+        <div id="printView" style="padding-left: 90px; padding-right: 20px;">
+          <h2 style="text-align: center;margin: 30px 0 10px 0;font-family: SimSun;">销售退货订单</h2>
+          <table class="table" border="0pm" cellspacing="0" align="left" width="100%" style="font-size: 12px;font-family: SimSun;margin-bottom: 10px; table-layout:fixed;word-wrap:break-word;word-break:break-all">
+            <tr>
+              <td style="padding:5px;" align="left">单据编号:{{ saleOrder.orderNo }}</td>
+              <td style="padding:5px;" align="left">单据日期:{{ saleOrder.orderDate }}</td>
+              <td style="padding:5px;" align="left">制单人:{{ saleOrder.createByName }}</td>
+              <td style="padding:5px;" align="left">联系电话: 13480876632</td>
+            </tr>
+            <tr style="margin:0;padding:0;">
+              <td style="padding:5px;" align="left">客户: 李明</td>
+              <td style="padding:5px;" align="left">联系电话: 15578960074</td>
+              <td style="padding:5px;" align="left">退款备注：{{saleOrder.remark }}</td>        
+              <td style="padding:5px;" align="left">合计金额: {{ saleOrder.totalPrice }}元</td>
+            </tr>
+            <tr style="margin:0;padding:0;">
+              <td style="padding:5px;" align="left">付款人: {{ saleOrder.name }}</td>
+              <td style="padding:5px;" align="left">付款账号: {{ saleOrder.bankAccountName }}</td>
+              <td style="padding:5px;" align="left">付款银行: {{ saleOrder.belongBank}}</td>
+              <td style="padding:5px;" align="left">发票类型: 不开发票</td>
+            </tr>
+          </table>
+     
+          <div style="font-size: 12px;font-family: SimSun;font-weight: bolder;margin: 0 0 10px 5px;float: left;">订单明细:</div>
+          <table class="yk-table" border="1pm" cellspacing="0" align="center" width="100%" style="font-size: 12px;font-family: SimSun; table-layout:fixed;word-wrap:break-word;word-break:break-all">
+            <tr>
+              <th width="55px">序号</th>
+              <th>医用商品名称</th>
+              <th>型号规格</th>
+              <th>药品类型</th>
+              <th>计量单位</th>
+              <th>数量</th>
+              <th>退款金额（元）</th>
+            </tr>
+            <tr v-for="(item, index) in medicineDetailList" :key="index" align="center">
+              <td>{{ index + 1 }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.specification}}</td>
+              <td>{{ item.categoryName}}</td>
+              <td>{{ item.unitName }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.totalPrice }}</td>
+            </tr>
+            <tr align="center">
+              <td colspan="5" style="font-weight: bolder;">合计</td>
+              <td>{{saleOrder.totalNumber}}</td>
+              <td>{{saleOrder.totalPrice}}</td>
+            </tr>
+            <tr align="center">
+              <td style="font-weight: bolder;">备注</td>
+              <td colspan="6">{{saleOrder.remark}}</td>
+            </tr>
+          </table>
+        </div>
+     
+        <div class="drawer-bottom-bar">
+          <el-button v-print="'#printView'" type="primary" size="small">打印</el-button>
+          <!-- <el-button @click="$parent.$parent.closePrintDialog()" size="small">取消</el-button> -->
+        </div>
+      </div>
+    </div>
+      </template>
+      
+      <script>
+      import {getSaleOrderByOrderNo} from "../../api/saleOrder.js";
+      export default {
+          name:"printView",
+          data() {
+           return{
+            saleOrder:"",
+            medicineDetailList:"",
+            commonStyle: { width: '100%' },
+           }
+          },
+          mounted() {
+            console.log("123",this.$route.query.orderNo)
+            this.getSaleOrderByOrderNo(this.$route.query.orderNo);
+          },
+          methods:{
+            async getSaleOrderByOrderNo(orderNo) {
+              let data = await getSaleOrderByOrderNo(orderNo);
+              this.saleOrder=data.data;
+              this.medicineDetailList = this.saleOrder.baseMedicineList;
+            },
+          }
+      }
+      </script>
+      
+      <style media="print">
+      @page {
+        size: auto;
+        margin: 3mm;
+      }
+      html {
+        background-color: #ffffff;
+        margin: 0px;
+      }
+      body {
+        border: solid 1px #ffffff;
+      }
+      </style>
+      <style lang="scss" scoped>
+      @media print {
+        #printView {
+          display: block;
+          width: 100%;
+          overflow: hidden;
+        }
+      }
+      .drawer-bottom-bar{
+        float: right;
+        margin-top: 20px;
+        margin-right: 20px;
+      }
+      </style>

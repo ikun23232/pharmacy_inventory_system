@@ -16,7 +16,6 @@
         <if test="categoryId!=null and categoryId>0">and categoryId=#{categoryId}</if>
         <if test="specification!=null and specification!=''">and specification like concat('%',#{specification},'%')</if>
         <if test="unitId!=null and unitId>0">and unitId=#{unitId}</if>
-
     </select>
 
     <select id="getMedicineListByCode" resultType="BaseMedicine">
@@ -49,6 +48,28 @@
           AND p.medicineId=b.id
           AND p.providerId=#{providerId}
     </select>
+
+    <select id="getBaseMedicineById" resultType="BaseMedicine">
+        select DISTINCT b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
+               c.userName as createByName,u.userName as updateByName,
+               un.name as unitName,mc.name as categoryName,k.quantity as stock
+        from base_medicine b
+                 LEFT JOIN sys_user c on b.createBy=c.userId
+                 LEFT JOIN sys_user u on b.updateBy=u.userId,
+             base_unit un,base_medicine_category mc,kc_medicine k
+        where b.categoryId=mc.id and b.unitId=un.id and k.medicineId=b.id
+          and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0 and k.isDel=0
+          and b.id=#{id} and k.batchCode=#{batchCode}
+    </select>
+
+    <select id="getAllBaseMedicine" resultType="BaseMedicine">
+        select DISTINCT base_medicine.* FROM base_medicine,kc_medicine where kc_medicine.medicineId=base_medicine.id and code=1
+    </select>
+
+    <select id="getAllBatchCodeByMedicineId" resultType="KcMedicine">
+        select kc_medicine.* FROM kc_medicine where medicineId=#{medicineId}
+    </select>
+
 
 
 </mapper>

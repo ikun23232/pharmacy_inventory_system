@@ -55,8 +55,6 @@ export function cgddExcel(cgddOrder) {
     }, {
         responseType: 'blob'
     }).then(resp => {
-        console.log("111111111111");
-        console.log("resp:",resp)
         let blob = new Blob([resp], { type: 'application/xlsx' });
         let url = window.URL.createObjectURL(blob);
         const link = document.createElement('a'); //创建a标签

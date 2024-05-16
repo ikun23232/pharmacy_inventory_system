@@ -123,4 +123,13 @@ public class BaseMedicine implements Serializable {
     private Integer medicineOrderId;
 
     private Integer medicineId;
+
+    private int stock;
+
+    @TableField(exist=false)
+    private String batchCode;
+
+
+    @TableField(exist=false)
+    private String storehouseName;
 }

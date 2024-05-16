@@ -264,7 +264,7 @@ import { deleteById, setVoidState } from "@/api/procurementOrder";
 import { getKcDispathList } from "@/api/WareHouse";
 import { Message } from "element-ui";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
-import AddDispatch from './../../components/AddDispatch.vue'
+import AddDispatch from '../../../components/AddDispatch.vue'
 export default {
   name: "dispatch",
     components: {

@@ -94,7 +94,7 @@
         <el-tab-pane label="采购申请单" name="first">
           <el-button
             icon="el-icon-plus"
-            :disabled="KcDispatch.medicineList == null"
+            :disabled="KcDispatch.medicineList.length == 0"
             @click="getMedicineListDetail"
             style="float: left"
             >添加</el-button
@@ -372,127 +372,21 @@
       </el-form-item>
     </el-form>
     <el-dialog
-      title="采购申请单"
-      :visible.sync="cgsqdialog"
+      title="库存明细"
+      :visible.sync="kcmxdialog"
       width="1200px"
-      v-if="cgsqdialog"
+      v-if="kcmxdialog"
     >
-      <div class="container">
-        <!-- 表单部分 -->
-        <div>
-          <!-- 这里放你的表单内容 -->
-          <el-form :inline="true" :model="cgsqList" style="width: 1200px">
-            <el-form-item class="anniu" label="单据编号">
-              <el-input
-                v-model="vo.code"
-                placeholder="请输入单据编号"
-              ></el-input>
-            </el-form-item>
-            <el-form-item class="anniu" label="单据主题">
-              <el-input
-                v-model="vo.subject"
-                placeholder="请输入单据编号"
-              ></el-input>
-            </el-form-item>
-            <el-form-item class="anniu" label="采购类型">
-              <el-select v-model="vo.type" placeholder="请选择采购类型">
-                <el-option label="请选择" value="0"></el-option>
-                <el-option label="直接采购" value="1"></el-option>
-                <el-option label="紧急采购" value="2"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item class="anniu" label="作废状态">
-              <el-select v-model="vo.voidState" placeholder="请选择作废状态">
-                <el-option label="请选择" value="-1"></el-option>
-                <el-option label="已作废" value="0"></el-option>
-                <el-option label="未作废" value="1"></el-option>
-              </el-select>
-            </el-form-item>
-            <!-- <el-form-item label="日期">
-            <div class="block">
-              <el-date-picker
-                v-model="value2"
-                type="datetimerange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right"
-              >
-              </el-date-picker>
-            </div>
-          </el-form-item> -->
-            <el-form-item>
-              <el-button
-                class="anniu"
-                type="primary"
-                @click="initCgSqOrderList()"
-                >查询</el-button
-              >
-            </el-form-item>
-          </el-form>
-        </div>
-        <!-- 表格部分 -->
-        <div class="dataTable">
-          <!-- 这里放你的表格内容 -->
-          <el-table
-            :data="list.list"
-            border
-            style="width: 1200px"
-            @selection-change="handleCgsqSelectionChange"
-          >
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="code" label="订单编码" width="150" fixed>
-            </el-table-column>
-            <el-table-column prop="demandtime" label="单据日期" width="300">
-            </el-table-column>
-            <el-table-column prop="subject" label="单据主题" width="120">
-            </el-table-column>
-            <el-table-column prop="cgtype" label="采购类型" width="120">
-            </el-table-column>
-            <el-table-column prop="demanderUserName" label="需求人" width="120">
-            </el-table-column>
-            <el-table-column prop="demandTime" label="需求日期" width="120">
-            </el-table-column>
-            <el-table-column prop="count" label="数量" width="120">
-            </el-table-column>
-            <el-table-column prop="effectivetime" label="生效时间" width="120">
-            </el-table-column>
-            <el-table-column
-              prop="referenceamount"
-              label="参考金额"
-              width="120"
-            >
-            </el-table-column>
-          </el-table>
-          <div class="block">
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page.sync="list.pageNum"
-              :page-size="list.pageSize"
-              layout="prev, pager, next, jumper"
-              :total="list.total"
-            >
-            </el-pagination>
-            <el-row type="flex" justify="center">
-              <el-col :span="2">
-                <el-button type="primary" @click="getMedicineList()"
-                  >确认</el-button
-                >
-              </el-col>
-              <el-col :span="2">
-                <el-button @click="cgsqdialog = false">取消</el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-      </div>
+     <wareDetails
+        @handleKcmxSuccess="handleKcmxSuccess"
+        @kcmxdialog="kcmxdialog"
+     ></wareDetails>
     </el-dialog>
   </span>
 </template>
 
 <script>
-// import { addStoreHouse, checkName } from "@/api/storeHouse.js";
+import wareDetails from './wareDetails.vue'
 import { Message } from "element-ui";
 import { initCgSqOrderList } from "@/api/CgsdOrder";
 import { getMedicineListByCode } from "@/api/baseMedicine";
@@ -502,6 +396,9 @@ import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
   name: "addDispatch",
+  components:{
+    wareDetails
+  },
   data() {
     return {
       bcglXiangXiList: [],
@@ -530,9 +427,9 @@ export default {
       list: {},
       activeName: "first",
       adddialogVisible: false,
-      cgsqdialog: false,
-      cgsqListTemp: [],
-      cgsqList: [],
+      kcmxdialog: false,
+      kcmxListTemp: [],
+      kcmxList: [],
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
@@ -599,18 +496,18 @@ export default {
       this.multipleSelection = val;
     },
     handleCgsqSelectionChange(val) {
-      this.cgsqListTemp = val;
-      console.log("cgsqList", this.cgsqList.length);
+      this.kcmxListTemp = val;
+      console.log("kcmxList", this.kcmxList.length);
     },
     handleCgsqMedicineionChange(val) {
       this.dispatchMedicineionList = val;
     },
     handleCgsqChange(val) {
-      this.cgsqListTemp = val;
+      this.kcmxListTemp = val;
     },
     async getMedicineList() {
-      console.log(this.cgsqListTemp.length <= 0);
-      if (this.cgsqListTemp.length <= 0) {
+      console.log(this.kcmxListTemp.length <= 0);
+      if (this.kcmxListTemp.length <= 0) {
         Message({
           message: "请选择采购申请单",
           type: "error",
@@ -618,11 +515,11 @@ export default {
         });
         return;
       }
-      console.log(this.cgsqListTemp.length);
-      for (let index = 0; index < this.cgsqListTemp.length; index++) {
-        const cgsq = this.cgsqListTemp[index];
-        console.log("cgsq", cgsq.code);
-        var data = await getMedicineListByCode(cgsq.code);
+      console.log(this.kcmxListTemp.length);
+      for (let index = 0; index < this.kcmxListTemp.length; index++) {
+        const kcmx = this.kcmxListTemp[index];
+        console.log("kcmx", kcmx.code);
+        var data = await getMedicineListByCode(kcmx.code);
         console.log("data:", data);
         for (let i = 0; i < data.data.length; i++) {
           if (data.data[i].providerId == this.KcDispatch.providerId) {
@@ -631,9 +528,9 @@ export default {
         }
         console.log("medicineListTemp:", this.medicineListTemp);
       }
-      this.cgsqdialog = false;
-      this.cgsqList = this.cgsqListTemp;
-      this.cgsqListTemp = [];
+      this.kcmxdialog = false;
+      this.kcmxList = this.kcmxListTemp;
+      this.kcmxListTemp = [];
       this.initCgSqOrderList();
     },
     deleteMedicine() {
@@ -802,6 +699,17 @@ export default {
         }
         this.KcDispatch.medicineList = this.bcglXiangXiList;
       }
+    },
+    addDispatchMedicine(){
+
+    },
+    handleKcmxSuccess() {
+      this.kcmxdialog = false; // 关闭 el-dialog
+      // 如果需要，可以在这里执行其他操作
+      this.getOrderList(1, 5);
+    },
+    cancelKcmx() {
+      this.kcmxdialog = false; 
     },
   },
   computed: {

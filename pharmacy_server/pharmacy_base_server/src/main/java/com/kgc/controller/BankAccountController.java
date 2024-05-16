@@ -68,5 +68,11 @@ public class BankAccountController {
         Message message = bankAccountService.checkupdateBankAccount(belongBank,name,bandCount,id);
         return message;
     }
+
+    @RequestMapping("getAllBankCountList")
+    public Message getAllBankCountList() {
+        Message message = bankAccountService.getAllBankCountList();
+        return message;
+    }
 }
 

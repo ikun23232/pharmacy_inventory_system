@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -29,7 +30,7 @@ public class XsOrder implements Serializable {
     /**
      * 销售订单id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -43,7 +44,7 @@ public class XsOrder implements Serializable {
      */
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @TableField("orderDate")
-    private LocalDate orderDate;
+    private Date orderDate;
 
     /**
      * 创建人
@@ -88,8 +89,9 @@ public class XsOrder implements Serializable {
     /**
      * 修改时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @TableField("updateDate")
-    private LocalDate updateDate;
+    private Date updateDate;
 
     /**
      * 是否删除
@@ -133,14 +135,26 @@ public class XsOrder implements Serializable {
     @TableField(exist=false)
     private String bankAccountName;
     @TableField(exist=false)
+    private String name;
+    @TableField(exist=false)
+    private String belongBank;
+
+    @TableField(exist=false)
     private Integer currentPage;
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @TableField(exist=false)
     private Date orderDateBegin;
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @TableField(exist=false)
     private Date orderDateEnd;
 
+    @TableField(exist=false)
+    private List<BaseMedicine> baseMedicineList;
 
+    @TableField(exist=false)
+    private List<OrderMedicine> checkedDetail;
 
-
+    @TableField(exist=false)
+    private String refundTypeName;
 }

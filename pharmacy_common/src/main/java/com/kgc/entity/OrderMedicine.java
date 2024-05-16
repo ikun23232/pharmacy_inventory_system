@@ -54,6 +54,10 @@ public class OrderMedicine implements Serializable {
     @TableField("totalPrice")
     private Double totalprice;
 
+    private int isDel;
+
+    private int batchCode;
+
     @TableField("providerId")
     private Integer providerId;
 }

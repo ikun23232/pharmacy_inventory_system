@@ -31,4 +31,6 @@ public interface BankAccountService extends IService<BankAccount> {
 
     public Message checkupdateBankAccount(String belongBank,String name,String bandCount,int id);
 
+    public Message getAllBankCountList();
+
 }

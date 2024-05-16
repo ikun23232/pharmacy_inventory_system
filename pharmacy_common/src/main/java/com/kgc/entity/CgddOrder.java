@@ -1,6 +1,7 @@
 package com.kgc.entity;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.alibaba.excel.annotation.format.NumberFormat;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@ExcelIgnoreUnannotated
 public class CgddOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
