@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.KcReportedMapper;
 import com.kgc.entity.*;
+import com.kgc.service.KcMedicineService;
 import com.kgc.service.KcReportedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class KcReportedServiceImpl implements KcReportedService {
 
     @Autowired
     private KcReportedMapper kcReportedMapper;
+
+    @Autowired
+    private KcMedicineService kcMedicineService;
 
     /**
      * 分页获取库存报损列表
@@ -125,6 +130,8 @@ public class KcReportedServiceImpl implements KcReportedService {
         return Message.success(kcReportedMapper.getKcReportedByCode(code));
     }
 
+
+
     @Override
     public Message delKcReporteddetailByCode(String reportedCode) {
         int isDel = kcReportedMapper.delKcReporteddetailByCode(reportedCode);
@@ -142,9 +149,76 @@ public class KcReportedServiceImpl implements KcReportedService {
         }
         return Message.error();
     }
+    /**
+     * 添加库存报损和明细
+     * @param map
+     */
+    @Override
+    public Message addKcReportedAndDetail(Map map) {
+        Map a = (Map) map.get("theData");
+        KcReported kcReported = new KcReported();
+        kcReported.setCode((String) a.get("code"));
+        kcReported.setStorehouseId((Integer) a.get("storehouseId"));
+        kcReported.setReportedTypeId((Integer) a.get("reportedTypeId"));
+        kcReported.setDocumenterBy((Integer) a.get("documenterBy"));
+        List list = (List) a.get("list");
+        for (int i = 0; i < list.size(); i++){
+            KcReporteddetail kcReporteddetail = new KcReporteddetail();
+            kcReporteddetail.setReportedCode((String) a.get("code"));
+            kcReporteddetail.setMedicineId((Integer) ((Map)list.get(i)).get("medicineId"));
+            kcReporteddetail.setQuantity((Integer) ((Map)list.get(i)).get("reportedNum"));
+            kcReporteddetail.setBatchCode((String) ((Map)list.get(i)).get("batchCode"));
+            Message message = addKcReporteddetail(kcReporteddetail);
+            if (!message.getCode().equals("200")){
+                return message;
+            }
+        }
+
+        return addKcReported(kcReported);
+    }
+    /**
+     * 修改库存报损和明细
+     * @param map
+     */
+    @Override
+    public Message updateReportedAndDetail(Map map) {
+        Map theData=(Map)map.get("theData");
+        Map kcReportedMap=(Map)theData.get("kcReported");
+        KcReported kcReported = new KcReported();
+        kcReported.setCode((String) kcReportedMap.get("code"));
+        kcReported.setApprovalStatus(Integer.valueOf(kcReportedMap.get("approvalStatus").toString()));
+        kcReported.setReportedTypeId(Integer.valueOf(kcReportedMap.get("reportedTypeId").toString()));
+        kcReported.setApproverRemark((String) kcReportedMap.get("approverRemark"));
+        kcReported.setModificationBy(Integer.parseInt(kcReportedMap.get("modificationBy").toString()));
+        if (kcReported.getApprovalStatus()!=0){
+            kcReported.setApproverBy(kcReported.getModificationBy());
+        }
+        List list = (List) theData.get("kcMedicineList");
+
+        delKcReporteddetailByCode(kcReported.getCode());
+
+        for (int i = 0; i < list.size(); i++){
+//            this.kcMedicineService.updateQuantityById((KcMedicine) list.get(i));//修改库存数量
+            KcReporteddetail kcReporteddetail = new KcReporteddetail();
+            kcReporteddetail.setReportedCode((String) kcReportedMap.get("code"));
+            kcReporteddetail.setMedicineId((Integer) ((Map)list.get(i)).get("medicineId"));
+            kcReporteddetail.setQuantity((Integer) ((Map)list.get(i)).get("reportedNum"));
+            kcReporteddetail.setBatchCode((String) ((Map)list.get(i)).get("batchCode"));
+            Message message = addKcReporteddetail(kcReporteddetail);
+            if (!message.getCode().equals("200")){
+                return message;
+            }
+        }
+
+        Message message = updateReportedByCode(kcReported);
+        if (!message.getCode().equals("200")){
+            return message;
+        }
+        return message;
+    }
 
     /**
-     * 删除库存报损
+     * 删除库存报损和明细
      * @param code
      * @return
      */

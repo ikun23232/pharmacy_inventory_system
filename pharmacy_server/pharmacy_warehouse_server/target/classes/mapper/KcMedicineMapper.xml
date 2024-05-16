@@ -23,7 +23,13 @@
                 LEFT JOIN kc_reporteddetail d ON a.batchCode=d.batchCode
        WHERE a.storehouseId=#{storehouseId} AND d.reportedCode=#{reportedCode} AND d.isDel=0
    </select>
-
+    
+    <update id="updateQuantityById" parameterType="com.kgc.entity.KcMedicine">
+        UPDATE kc_medicine
+        SET quantity=#{quantity},
+            money=#{money}
+        WHERE id=#{id}
+    </update>
 
 
 

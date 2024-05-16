@@ -4,6 +4,7 @@ import com.kgc.entity.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface KcReportedService {
     //查询库存报损列表
@@ -22,10 +23,17 @@ public interface KcReportedService {
     Message updateReportedByCode(KcReported kcReported);
     //根据code查询库存报损
     Message getKcReportedByCode(String code);
+
+
     //删除库存报损详情
     Message delKcReporteddetailByCode(String reportedCode);
     //删除库存报损
     Message delKcReportedByCode(String code);
 
+    //添加库存报损和详情
+    Message addKcReportedAndDetail(Map map);
+    //修改库存报损和详情
+    Message updateReportedAndDetail(Map map);
+    //删除库存报损和详情
     Message delKcReportedAndDetailByCode(String code);
 }

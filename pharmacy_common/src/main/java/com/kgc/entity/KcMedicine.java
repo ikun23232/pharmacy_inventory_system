@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -61,12 +62,12 @@ public class KcMedicine implements Serializable {
     /**
      * 数量
      */
-    private String quantity;
+    private int quantity;
 
     /**
      * 库存价值
      */
-    private String money;
+    private BigDecimal money;
 
     /**
      * 药品名称
@@ -80,6 +81,6 @@ public class KcMedicine implements Serializable {
     @TableField("providerName")
     private String providerName;
 
-    private String reportedNum;
+    private int reportedNum;
 
 }

@@ -11,4 +11,6 @@ public interface KcMedicineMapper {
     List<KcMedicine> getKcMedicine(KcMedicine kcMedicine);
 
     List<KcMedicine> getKcMedicineByReportedCode(@Param("storehouseId") int storehouseId,@Param("reportedCode") String reportedCode);
+
+    int updateQuantityById(KcMedicine kcMedicine);
 }
