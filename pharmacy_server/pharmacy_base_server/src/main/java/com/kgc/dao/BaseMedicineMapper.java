@@ -36,5 +36,10 @@ public interface BaseMedicineMapper extends BaseMapper<BaseMedicine> {
      */
     public List<BaseMedicine> getAllBaseMedicine();
 
+    /**
+     * 根据药品Id查询本地仓库的所有批次号
+     * @param medicineId
+     * @return
+     */
     public List<KcMedicine> getAllBatchCodeByMedicineId(@Param("medicineId") int medicineId);
 }

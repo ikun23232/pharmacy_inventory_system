@@ -31,5 +31,35 @@ public interface SaleOrderMapper extends BaseMapper<XsOrder> {
      */
     public List<BaseMedicine> getSaleOrderDetailByOrderNo(@Param("orderNo") String orderNo);
 
+    //    public int addSaleOrder(XsOrder xsOrder);
 
+    public int addSaleOrderDetail(OrderMedicine orderMedicine);
+
+    /**
+     * 修改销售订单
+     * @param xsOrder
+     * @return
+     */
+//    public int updateSaleOrder(XsOrder xsOrder);
+
+    /**
+     * 修改订单详情
+     * @param orderMedicine
+     * @return
+     */
+    public int updateSaleOrderDetail(OrderMedicine orderMedicine);
+
+    /**
+     * 删除订单详情
+     * @param orderNo
+     * @return
+     */
+    public int deleteOrderDetailByOrderNo(@Param("orderNo") String orderNo);
+
+    /**
+     * 作废订单详情
+     * @param orderNo
+     * @return
+     */
+    public int cancelOrderDetailByOrderNo(@Param("orderNo") String orderNo);
 }

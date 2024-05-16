@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.StockDetailMapper">
+    <select id="getStockDetailListByPage" resultType="com.kgc.entity.BaseMedicine">
+        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,
+               kc.quantity as stock,kc.batchCode,kc.`code`,bs.name as storehouseName
+        from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs
+        where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`code`=bs.`code`
+          and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0
+    </select>
+
+<!--    <select id="getStockDetailList" parameterType="com.kgc.entity.BaseMedicine" resultType="com.kgc.entity.BaseMedicine">-->
+<!--        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,-->
+<!--               kc.quantity as stock,kc.batchCode,kc.`code`,bs.name as storehouseName-->
+<!--        from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs-->
+<!--        where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`code`=bs.`code`-->
+<!--          and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0-->
+<!--    </select>-->
+
+</mapper>

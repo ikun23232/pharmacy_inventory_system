@@ -30,7 +30,7 @@ public class XsOrder implements Serializable {
     /**
      * 销售订单id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -44,7 +44,7 @@ public class XsOrder implements Serializable {
      */
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @TableField("orderDate")
-    private LocalDate orderDate;
+    private Date orderDate;
 
     /**
      * 创建人
@@ -89,8 +89,9 @@ public class XsOrder implements Serializable {
     /**
      * 修改时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @TableField("updateDate")
-    private LocalDate updateDate;
+    private Date updateDate;
 
     /**
      * 是否删除
@@ -151,4 +152,9 @@ public class XsOrder implements Serializable {
     @TableField(exist=false)
     private List<BaseMedicine> baseMedicineList;
 
+    @TableField(exist=false)
+    private List<OrderMedicine> checkedDetail;
+
+    @TableField(exist=false)
+    private String refundTypeName;
 }

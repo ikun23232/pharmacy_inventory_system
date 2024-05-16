@@ -37,7 +37,7 @@ public class OrderMedicine implements Serializable {
      * 商品id
      */
     @TableField("medicineId")
-    private Integer medicineid;
+    private Integer medicineId;
 
     /**
      * 数量
@@ -48,7 +48,15 @@ public class OrderMedicine implements Serializable {
      * 商品总价
      */
     @TableField("totalPrice")
-    private Double totalprice;
+    private Double totalPrice;
+
+    private int isDel;
+
+    private int providerId;
+
+    private String sourceCode;
+
+    private int batchCode;
 
 
 }

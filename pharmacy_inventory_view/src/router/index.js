@@ -11,6 +11,13 @@ import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
 import PrintSaleOrder from "../views/sale/PrintSaleOrder.vue";
+import SaleOutWarehouse from "../views/kc/CKGL/SaleOutWarehouse.vue";
+import PrintSaleOutWarehouse from "../views/kc/CKGL/PrintSaleOutWarehouse.vue";
+import StockDetail from "../views/kc/KCMX/StockDetail.vue";
+import PrintStockDetail from "../views/kc/KCMX/PrintStockDetail.vue";
+import PrintRefundOrder from "../views/refund/PrintRefundOrder.vue";
+import RefundOrder from "../views/refund/RefundOrder.vue";
+
 
 Vue.use(VueRouter)
 
@@ -60,6 +67,36 @@ const routes = [
     path: '/procurementOrder',
     name: 'procurementOrder',
     component: procurementOrder
+  },
+  {
+    path: '/saleOutWarehouse',
+    name: 'saleOutWarehouse',
+    component: SaleOutWarehouse
+  },
+  {
+    path: '/printSaleOutWarehouse',
+    name: 'printSaleOutWarehouse',
+    component: PrintSaleOutWarehouse
+  },
+  {
+    path: '/stockDetail',
+    name: 'stockDetail',
+    component: StockDetail
+  },
+  {
+    path: '/printStockDetail',
+    name: 'printStockDetail',
+    component: PrintStockDetail
+  },
+  {
+    path: '/refundOrder',
+    name: 'refundOrder',
+    component: RefundOrder
+  },
+  {
+    path: '/printRefundOrder',
+    name: 'printRefundOrder',
+    component: PrintRefundOrder
   }
 ]
 

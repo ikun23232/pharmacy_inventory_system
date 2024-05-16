@@ -37,7 +37,7 @@ public class KcMedicine implements Serializable {
      * 批次编号
      */
     @TableField("batchCode")
-    private Integer batchcode;
+    private String batchCode;
 
     /**
      * 药品id

@@ -58,7 +58,7 @@
  
     <div class="drawer-bottom-bar">
       <el-button v-print="'#printView'" type="primary" size="small">打印</el-button>
-      <el-button @click="$parent.$parent.closePrintDialog()" size="small">取消</el-button>
+      <!-- <el-button @click="$parent.$parent.closePrintDialog()" size="small">取消</el-button> -->
     </div>
   </div>
 </div>
@@ -66,7 +66,6 @@
   
   <script>
   import {getSaleOrderByOrderNo} from "../../api/saleOrder.js";
-import SaleOrder from "./SaleOrder.vue";
   export default {
       name:"printView",
       data() {

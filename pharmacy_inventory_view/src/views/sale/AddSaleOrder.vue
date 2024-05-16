@@ -28,19 +28,8 @@
             </el-form-item></div>
         </el-col>
         <el-col :span="8"><div class="grid-content bg-purple">
-            <el-form-item label="制单人" prop="createBy">
-              <el-select
-                v-model="saleOrder.createBy"
-                placeholder="请选择"
-                clearable
-                filterable
-              >
-              <el-option v-for="item in userList"
-                  :key="item.index"
-                  :label="item.userName"
-                  :value="item.userId">
-              </el-option>
-            </el-select>
+            <el-form-item label="制单人" prop="createByName">
+              <el-input type="text" disabled v-model="saleOrder.createByName"></el-input>
             </el-form-item></div></el-col>
         <el-col :span="8"
           ><div class="grid-content bg-purple">
@@ -75,17 +64,16 @@
         <el-row>
           <el-col>
           <el-table
-         v-loading="loading"
+          v-loading="loading"
          :data="medicineDetailList"
          :row-class-name="rowClassName"
-         @selection-change="handleDetailSelectionChange"
+         @selection-change="handleSelectionChange"
          ref="tb"
          border
          style="width:900px"
        >
          <el-table-column type="selection" width="50" align="center" />
          <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
-
          <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
           <template slot-scope="scope">
              <el-select clearable filterable @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
@@ -162,7 +150,7 @@
         <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button size="mini" @click="cancelForm('saleOrderForm')">取消</el-button>
+        <el-button size="mini" @click="cancelForm">取消</el-button>
       </el-col>
     </el-row>
   </el-form>
@@ -172,7 +160,7 @@
 
 <script>
 import { Message } from "element-ui";
-import {addSaleOrder} from "../../api/saleOrder.js";
+import {addSaleOrder,saveSaleOrder} from "../../api/saleOrder.js";
 import {getAllBankCountList} from "../../api/BankAccount.js";
 import { getCurrentTime } from "../../api/util.js";
 import {getAllBaseMedicine,getBaseMedicineById,getAllBatchCodeByMedicineId} from "../../api/baseMedicine.js";
@@ -183,17 +171,17 @@ export default {
     return {
       medicineDetailList:[],
       bankAccountList:[],
-      userList:[],
       baseMedicineList:[],
       saleOrder:{
         orderNo:"",
         orderDate:new Date(),
-        createName:"张三",
+        createByName:"张三",
         bankAccountId:"",
         remark:'',
-      },
-      checkedDetail: [],
-      dialogFormVisible:false,
+        checkedDetail: [],
+        totalPrice:"",
+        totalNumber:""
+      },   
       rules:{
         orderNo:[
             { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -201,7 +189,7 @@ export default {
         orderDate:[
             { required: true, message: "请输入单据日期", trigger: "blur" },
         ],
-        createBy:[
+        createByName:[
             { required: true, message: "请选择创建人", trigger: "blur" },
         ],
         bankAccountId:[
@@ -211,9 +199,8 @@ export default {
     };
   },
   async mounted() {
-    this.getAllBankCountList();
-    this.getUserList();
     this.saleOrder.orderNo = await getCurrentTime("XXDD");
+    this.getAllBankCountList();
     this.getAllBaseMedicine();
   },
   methods: {
@@ -221,27 +208,19 @@ export default {
       let data = await getAllBankCountList();
       this.bankAccountList=data.data;
     },
-    async getUserList() {
-      // let data = await getUserList();
-      // this.userList=data.data;
-    },
     async getAllBaseMedicine() {
       let data = await getAllBaseMedicine();
       this.baseMedicineList=data.data;
     },
-    getMedicineList() {},
     rowClassName({ row, rowIndex }) {
       row.xh = rowIndex + 1;
     },
     async changeMedicine(obj){
      obj.batchCodeList=[]
-     console.log("111",obj.medicineId)  
      let data=await getAllBatchCodeByMedicineId(obj.medicineId);
      obj.batchCodeList=data.data;
-     console.log("123",data.data)
     },
     async changeBatchCode(obj){
-      console.log("1234",obj)
       let data=await getBaseMedicineById(obj.medicineId,obj.batchCode);
       obj.unitName=data.data.unitName
       obj.specification=data.data.specification
@@ -259,7 +238,6 @@ export default {
         this.medicineDetailList = new Array();
       }
       let obj = {
-        medicineList:"",
         batchCodeList:[],
         medicineId:'',
         batchCode:"",
@@ -269,46 +247,46 @@ export default {
         categoryId:"",
         categoryName:"",
         salePrice:'',
+        quantity:"",
         stock:"",
         totalPrice:'',
       };
       this.medicineDetailList.push(obj);
     },
-    handleDetailSelectionChange(selection) {
-      if (selection.length > 1) {
-        this.$refs.tb.clearSelection();
-        this.$refs.tb.toggleRowSelection(selection.pop());
-      } else {
-        this.checkedDetail = selection;
-      }
-    },
     handleDeleteDetails() {
-      if (this.checkedDetail.length == 0) {
+      if (this.saleOrder.checkedDetail.length == 0) {
         this.$alert("请先选择要删除的数据", "提示", {
           confirmButtonText: "确定",
         });
       } else {
-        this.medicineDetailList.splice(this.checkedDetail[0].xh - 1, 1);
+        this.medicineDetailList.splice(this.saleOrder.checkedDetail[0].xh - 1, 1);
       }
     },
     handleDeleteAllDetails() {
       this.medicineDetailList = undefined;
     },
+    handleSelectionChange(val) {
+      this.saleOrder.checkedDetail = val;
+      console.log("checkedDetail",this.saleOrder.checkedDetail)
+    },
+    
     submitForm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(checkedDetail!=null){
-            // addSaleOrder().then((resp) => {
-            //   console.log(resp);
-            //   if (resp.code == "200") {
-            //     Message({
-            //       message: "添加成功!",
-            //       type: "success",
-            //       center: "true",
-            //     });
-            //     this.$emit("handleDialogFormVisible",false);
-            //   }         
-            // });
+          console.log("length",this.medicineDetailList.length,this.saleOrder.checkedDetail.length)
+          if(this.medicineDetailList.length > 0&&this.saleOrder.checkedDetail!=null){
+            this.saleOrder.totalPrice=this.sumPrice
+            this.saleOrder.totalNumber=this.totalNumber
+            addSaleOrder(this.saleOrder).then((resp) => {
+              if (resp.code == "200") {
+                Message({
+                  message: "添加成功!",
+                  type: "success",
+                  center: "true",
+                });
+                this.$emit("handleDialogFormVisible",false);
+              }         
+            });
           }else{
             Message({
                 message: "请输入订单详情!",
@@ -325,35 +303,44 @@ export default {
     saveForm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(checkedDetail!=null){
-            this.$emit("handleDialogFormVisible",false);
-          }else{
-            Message({
-                message: "请输入订单详情!",
-                type: "error",
-                center: "true",
-              });
-          }
+          this.saleOrder.totalPrice=this.sumPrice
+          this.saleOrder.totalNumber=this.totalNumber
+          saveSaleOrder(this.saleOrder).then((resp) => {
+              if (resp.code == "200") {
+                Message({
+                  message: "保存成功!",
+                  type: "success",
+                  center: "true",
+                });
+                this.$emit("handleDialogFormVisible",false);
+              }         
+            });
+          this.$emit("handleDialogFormVisible",false);
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    cancelForm(formName){
+    cancelForm(){
       this.$emit("handleDialogFormVisible",false);
-      this.$refs[formName].resetFields();
-      this.$refs[formName].clearValidate();
     },
 
   },
   computed: {
     sumPrice() {
       // 使用 reduce 方法计算总价
-      if (this.medicineDetailList==undefined){
+      if (this.saleOrder.checkedDetail==undefined){
         return 0
       }
-      return this.medicineDetailList.reduce((total, item) => total + item.totalPrice, 0);
+      return this.saleOrder.checkedDetail.reduce((total, item) => total + item.totalPrice, 0);
+    },
+    totalNumber() {
+      // 使用 reduce 方法计算总数量
+      if (this.saleOrder.checkedDetail==undefined){
+        return 0
+      }
+      return this.saleOrder.checkedDetail.reduce((total, item) => total + item.quantity, 0);
     }
   }
 };

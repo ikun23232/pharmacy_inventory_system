@@ -1,8 +1,10 @@
 package com.kgc.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.SaleOrderMapper;
+import com.kgc.entity.CgddOrder;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
 import com.kgc.service.SaleOrderService;
@@ -32,8 +34,17 @@ public class SaleOrderController {
 
     @RequestMapping("/addSaleOrder")
     @ResponseBody
-    public Message addSaleOrder(@RequestBody Map<String, Object> map) {
-        Message message=saleOrderService.addSaleOrder(map);
+    public Message addSaleOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = saleOrderService.addSaleOrder(xsOrder);
+        return message;
+    }
+
+    @RequestMapping("/saveSaleOrder")
+    @ResponseBody
+    public Message saveSaleOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = saleOrderService.saveSaleOrder(xsOrder);
         return message;
     }
 
@@ -46,16 +57,31 @@ public class SaleOrderController {
 
     @RequestMapping("/updateSaleOrder")
     @ResponseBody
-    public Message updateSaleOrder(XsOrder xsOrder) {
-        Message message=saleOrderService.updateSaleOrder(xsOrder);
+    public Message updateSaleOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = saleOrderService.updateSaleOrder(xsOrder);
+        return message;
+    }
+
+    @RequestMapping("/saveUpdateSaleOrder")
+    @ResponseBody
+    public Message saveUpdateSaleOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = saleOrderService.saveUpdateSaleOrder(xsOrder);
         return message;
     }
 
     @RequestMapping("/deleteSaleOrder")
     @ResponseBody
-    public Message deleteSaleOrder(String orderNo) {
+    public Message deleteSaleOrder(@RequestParam("orderNo") String orderNo) {
         Message message=saleOrderService.deleteSaleOrder(orderNo);
         return message;
     }
 
+    @RequestMapping("/cancelSaleOrder")
+    @ResponseBody
+    public Message cancelSaleOrder(@RequestParam("orderNo") String orderNo) {
+        Message message=saleOrderService.cancelSaleOrder(orderNo);
+        return message;
+    }
 }

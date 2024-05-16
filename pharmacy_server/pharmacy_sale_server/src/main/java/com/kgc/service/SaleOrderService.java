@@ -14,11 +14,15 @@ public interface SaleOrderService extends IService<XsOrder> {
 
     public Message getSaleOrderListByPage(XsOrder xsOrder);
 
-    public Message addSaleOrder(Map<String, Object> map);
+    public Message addSaleOrder(XsOrder xsOrder);
+
+    public Message saveSaleOrder(XsOrder xsOrder);
 
     public Message getSaleOrderByOrderNo(String orderNo);
 
     public Message updateSaleOrder(XsOrder xsOrder);
+
+    public Message saveUpdateSaleOrder(XsOrder xsOrder);
 
     public Message deleteSaleOrder(String orderNo);
 
