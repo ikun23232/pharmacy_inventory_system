@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -90,5 +91,26 @@ public class ProcurementOrderController {
     public Message cgddExcel(@RequestBody CgddOrder procPage, HttpServletResponse response) {
         procurementOrderService.cgddExcel(procPage,response);
         return Message.success(null);
+    }
+
+
+    @RequestMapping("/getCgPayCom")
+    public Message getCgPayCom(@RequestParam("year") String year,@RequestParam("month") String month) {
+        logger.debug("ProcurementOrderController getCgPayCom year:" + year + ",month:" + month);
+        Message message = procurementOrderService.getCgPayCom(year, month);
+        return message;
+    }
+
+    @RequestMapping("/getCgPayNum")
+    public Message getCgPayNum(@RequestParam("year") String year) {
+        logger.debug("ProcurementOrderController getCgPayNum year:" + year);
+        Message message = procurementOrderService.getCgPayNum(year);
+        return message;
+    }
+    @RequestMapping("/getCgPayNumList")
+    public Message getCgPayNumList(@RequestParam("year") String year,@RequestParam("pageNum") int pageNum,@RequestParam("pageSize") int pageSize) {
+        logger.debug("ProcurementOrderController getCgPayNumList year:" + year + ",pageNum:" + pageNum + ",pageSize:" + pageSize);
+        Message message = procurementOrderService.getCgPayNumList(year,pageNum,pageSize);
+        return message;
     }
 }

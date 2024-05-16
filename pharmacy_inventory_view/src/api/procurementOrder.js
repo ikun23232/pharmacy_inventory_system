@@ -14,6 +14,34 @@ export function deleteById(id) {
     });
 }
 
+
+export function getCgPayCom(year,month) {
+    return request.get(baseUrl + "/getCgPayCom", {
+        params:{
+            year:year,
+            month:month
+        }
+    });
+}
+
+export function getCgPayNum(year) {
+    return request.get(baseUrl + "/getCgPayNum", {
+        params:{
+            year:year
+        }
+    });
+}
+
+export function getCgPayNumList(year,pageNum,pageSize) {
+    return request.get(baseUrl + "/getCgPayNumList", {
+        params:{
+            year:year,
+            pageNum:pageNum,
+            pageSize:pageSize
+        }
+    });
+}
+
 export function addCgddOrder(cgddOrder) {
     return request.post(baseUrl + "/addCgddOrder", {
         cgddOrder: cgddOrder

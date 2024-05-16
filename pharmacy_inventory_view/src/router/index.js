@@ -124,6 +124,16 @@ const routes = [
     path: '/dispatch',
     name: 'dispatch',
     component: dispatch
+  },
+  {
+    path:'/procurementTJ',
+    name: 'procurementTJ',
+    component: () => import('../views/procurement/ProcurementTJ.vue')
+  },
+  {
+    path:'/KcReported',
+    name: 'KcReported',
+    component: () => import('../views/warehouse/KCBC/KcReported.vue')
   }
 ]
 

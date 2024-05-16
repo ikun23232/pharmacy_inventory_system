@@ -29,4 +29,10 @@ public interface ProcurementOrderService extends IService<CgddOrder> {
     public Message auditingOrder(CgddOrder cgddOrder);
 
     public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response);
+
+    Message getCgPayCom(String year, String month);
+
+    Message getCgPayNum(String year);
+
+    Message getCgPayNumList(String year,int pageNum,int pageSize);
 }
