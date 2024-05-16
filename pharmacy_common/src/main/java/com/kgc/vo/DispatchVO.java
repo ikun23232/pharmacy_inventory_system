@@ -14,11 +14,12 @@ public class DispatchVO implements Serializable {
     private int currentPageNo;
     private int pageSize;
     private String code;
-    private int subject;
+    private String subject;
     private int AimWarehouseId;
     private int beforeWarehouseId;
     private String startTime;
     private String endTime;
     private int voidState;
     private int approvalStatus;
+    private int orderStatus;
 }

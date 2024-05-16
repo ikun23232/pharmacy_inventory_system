@@ -7,12 +7,15 @@ import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
+import com.kgc.utils.ExeclUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -163,5 +166,15 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             return Message.success();
         }
         return Message.error("审批失败");
+    }
+
+    @Override
+    public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response) {
+        List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
+        try {
+            ExeclUtil.writeExcel(order,response,"采购订单");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

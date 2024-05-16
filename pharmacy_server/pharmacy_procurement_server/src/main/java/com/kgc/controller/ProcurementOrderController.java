@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -82,5 +83,12 @@ public class ProcurementOrderController {
         CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
         Message message = procurementOrderService.auditingOrder(cgddOrder);
         return message;
+    }
+
+
+    @RequestMapping("/cgddExcel")
+    public Message cgddExcel(@RequestBody CgddOrder procPage, HttpServletResponse response) {
+        procurementOrderService.cgddExcel(procPage,response);
+        return Message.success(null);
     }
 }

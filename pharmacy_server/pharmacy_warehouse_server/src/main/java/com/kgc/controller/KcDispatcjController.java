@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.kgc.entity.KcDispatch;
 import com.kgc.entity.Message;
 import com.kgc.service.KcDispatchService;
 import com.kgc.vo.DispatchVO;

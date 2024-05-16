@@ -8,6 +8,7 @@ import BankAccountList from "../views/base/BankAccountList.vue"
 import CgsqManager from '../views/procurement/CGSQ/CGSQManager.vue';
 import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
 import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
+import dispatch from './../views/warehouse/dispatch.vue'
 
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
@@ -76,6 +77,11 @@ const routes = [
     path: '/procurementOrder',
     name: 'procurementOrder',
     component: procurementOrder
+  },
+  {
+    path: '/dispatch',
+    name: 'dispatch',
+    component: dispatch
   }
 ]
 

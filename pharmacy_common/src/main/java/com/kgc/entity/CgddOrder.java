@@ -45,7 +45,7 @@ public class CgddOrder implements Serializable {
     /**
      * 主题
      */
-    @ExcelProperty("采购编号")
+    @ExcelProperty("采购主题")
     private String subject;
 
     /**

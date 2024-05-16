@@ -33,7 +33,9 @@ instance.interceptors.response.use(
 
 		if (res.code === "200") {
 			return response.data
-		} else {
+		} else if(response.status===200){
+			return response.data
+		} else{
 			console.log(response+"111");
 			console.log(res);
 			Element.Message.error(!res.msg ? '系统异常' : res.msg)

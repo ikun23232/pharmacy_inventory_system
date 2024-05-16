@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ExeclUtil {
 
-    public static void writeExcel(List<List<Object>> data,HttpServletResponse response, String fileName) throws IOException {
+    public static void writeExcel(List data,HttpServletResponse response, String fileName) throws IOException {
         try {
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(  ".xlsx", "UTF-8"));

@@ -231,8 +231,7 @@
   </div>
 </template>
 <script>
-import { setExcel } from "./../../../api/public.js";
-import { getProcList, deleteById, setVoidState } from "@/api/procurementOrder";
+import { getProcList, deleteById, setVoidState,cgddExcel } from "@/api/procurementOrder";
 import addProcOrder from "../../../components/addProcOrder.vue";
 import updateProOrder from "./../../../components/updateProOrder.vue";
 import auditingProOrder from "./../../../components/auditingProOrder.vue";
@@ -389,7 +388,7 @@ export default {
       alert(val);
     },
     async printExcel() {
-      await setExcel(this.list.list, "采购订单");
+      await cgddExcel();
     },
     async setVoidState(row) {
       if (confirm("你确定要作废吗？")) {

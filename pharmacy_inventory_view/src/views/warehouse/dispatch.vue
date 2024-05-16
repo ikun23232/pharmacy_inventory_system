@@ -1,18 +1,18 @@
 <template>
   <div>
-    <h1>库存调度申请</h1>
+    <h1>库存调度</h1>
     <div>
-      <el-row :gutter="20">
-        <el-col :span="6"
+      <el-row :gutter="24" style="margin-bottom: 10px;">
+        <el-col :span="7"
           ><div class="grid-content bg-purple">
             单据编号：
             <el-input
-              v-model="procPage.code"
+              v-model="DispatchVO.code"
               style="width: 200px"
               placeholder="请输入单据编号"
             ></el-input></div
         ></el-col>
-        <el-col :span="8"
+        <el-col :span="10"
           ><div class="grid-content bg-purple">
             单据日期：
             <el-date-picker
@@ -28,37 +28,94 @@
             >
             </el-date-picker></div
         ></el-col>
-        <el-col :span="5"
+        <el-col :span="7"
           ><div class="grid-content bg-purple">
-            采购类型：
+            源仓库：
             <el-select
-              v-model="procPage.type"
-              placeholder="请选择采购类型"
+              v-model="DispatchVO.beforeWarehouseId"
+              placeholder="请选择原仓库"
               clearable
-              filterable>
-              <el-option
-                v-for="item in cgType"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select></div></el-col>
-        <el-col :span="5"
-          ><div class="grid-content bg-purple">
-            供应商：
-            <el-select
-              v-model="procPage.providerId"
               filterable
-              placeholder="请选择供应商"
             >
+              <el-option label="全部" :value="0"></el-option>
               <el-option
-                v-for="item in providerList"
+                v-for="item in storeHouseList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
               >
               </el-option>
+            </el-select></div
+        ></el-col>
+      </el-row>
+      <el-row :gutter="24"  style="margin-bottom: 10px;">
+         <el-col :span="8"
+          ><div class="grid-content bg-purple">
+           目标仓库：
+            <el-select
+              v-model="DispatchVO.AimWarehouseId"
+              filterable
+              placeholder="请选择目标仓库"
+            >            
+            <el-option label="全部" :value="0"></el-option>
+              <el-option
+                v-for="item in storeHouseList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select></div
+        ></el-col>
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            主题：
+            <el-input
+              v-model="DispatchVO.subject"
+              style="width: 200px"
+              placeholder="请输入主题"
+            ></el-input></div
+        ></el-col>
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            审批状态：
+            <el-select
+              v-model="DispatchVO.approvalStatus"
+              placeholder="请选择审批状态"
+              filterable
+            >
+            <el-option label="全部" :value="0"></el-option>
+            <el-option label="未通过" :value="1"></el-option>
+            <el-option label="通过" :value="2"></el-option>
+            </el-select></div
+        ></el-col>
+      </el-row>
+      <el-row :gutter="24"  style="margin-bottom: 10px;">
+           <el-col :span="8"
+          ><div class="grid-content bg-purple">
+           单据状态：
+            <el-select
+              v-model="DispatchVO.orderStatus"
+              filterable
+              placeholder=""
+            >
+            <el-option label="未编制" :value="1"></el-option>
+            <el-option label="编制完" :value="2"></el-option>
+            <el-option label="执行中" :value="3"></el-option>
+            <el-option label="执行完" :value="4"></el-option>
+            </el-select></div
+        ></el-col>
+            <el-col :span="8"
+          ><div class="grid-content bg-purple">
+           作废状态：
+            <el-select
+              v-model="DispatchVO.voidState"
+              filterable
+              placeholder="请选择作废状态"
+            >
+            <el-option label="全部" :value="-1"></el-option>
+            <el-option label="未作废" :value="0"></el-option>
+            <el-option label="已作废" :value="1"></el-option>
             </el-select></div
         ></el-col>
       </el-row>
@@ -69,82 +126,56 @@
       <el-button type="primary" @click="printExcel">导出</el-button>
     </div>
     <el-table :data="list.list" border style="width: 100%">
-      <el-table-column prop="id" label="订单序号" width="120">
+      <el-table-column prop="id" label="调度单序号" width="120">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="code" label="订单编码" width="150" fixed>
+      <el-table-column prop="code" label="调度单编号" width="150" fixed>
       </el-table-column>
-      <el-table-column prop="orderTypeName" label="采购类型" width="120">
+      <el-table-column prop="subject" label="调度主题" width="120">
       </el-table-column>
-      <el-table-column prop="createTime" label="单据日期" width="300">
+      <el-table-column prop="price" label="调度总价格" width="120">
       </el-table-column>
-      <el-table-column prop="subject" label="单据主题" width="120">
+      <el-table-column prop="beforeWareName" label="原仓库" width="120">
       </el-table-column>
       <el-table-column
-        prop="demanderName"
-        label="需求人"
+        prop="aimWareName"
+        label="目标仓库"
         width="120"
       ></el-table-column>
       <el-table-column
-        prop="providerName"
-        label="供应商名字"
+        prop="remark"
+        label="备注"
         width="120"
       ></el-table-column>
       <el-table-column
-        prop="contactperson"
-        label="联系人"
+        prop="approverName"
+        label="核批人"
         width="120"
       ></el-table-column>
-      <el-table-column prop="phone" label="电话" width="120"></el-table-column>
-      <el-table-column prop="fax" label="传真" width="120"></el-table-column>
-      <el-table-column prop="deliveryDate" label="交货日期" width="120">
-      </el-table-column>
-      <el-table-column prop="deliveryName" label="交货人名称" width="120">
-      </el-table-column>
-      <el-table-column prop="fax" label="传真" width="120"></el-table-column>
-      <el-table-column prop="count" label="数量" width="120"></el-table-column>
-      <el-table-column prop="effectiveTime" label="生效时间" width="120">
-      </el-table-column>
-      <el-table-column prop="referenceAmount" label="参考金额" width="120">
-      </el-table-column>
-      <el-table-column prop="orderStatus" label="单据状态" width="120">
-        <template slot-scope="scope">
-          {{ scope.row.orderStatus }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="payType" label="结算方式" width="120">
-        <template slot-scope="scope">
-          {{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="isPay" label="支付状态" width="120">
-        <template slot-scope="scope">
-          {{ scope.row.isPay == 0 ? "未支付" : "已支付" }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="approverRemark" label="审核意见" width="120">
-      </el-table-column>
       <el-table-column prop="approvalStatus" label="核批结果" width="120">
         <template slot-scope="scope">
-          {{ scope.row.approvalStatus == 0 ? "未通过" : "通过" }}
+          <div v-if="scope.row.approvalStatus == 0">未审批</div>
+          <div v-if="scope.row.approvalStatus == 1">未通过</div>
+          <div v-if="scope.row.approvalStatus == 2">通过</div>
         </template>
+      </el-table-column>
+      <el-table-column prop="approverRemark" label="核批备注" width="120"></el-table-column>
+      <el-table-column prop="createDate" label="制单时间" width="120">
+      </el-table-column>
+      <el-table-column prop="orderStatusResult" label="单据状态" width="120">
       </el-table-column>
       <el-table-column prop="voidState" label="作废状态" width="120">
         <template slot-scope="scope">
           {{ scope.row.voidState == 0 ? "未作废" : "已作废" }}
         </template>
       </el-table-column>
-      <el-table-column prop="payTime" label="结算日期" width="120">
-      </el-table-column>
-      <el-table-column prop="remark" label="备注" width="120">
-      </el-table-column>
-      <el-table-column prop="documenterName" label="制单人" width="120">
+      <el-table-column prop="createName" label="制单人" width="120">
       </el-table-column>
       <el-table-column prop="updateName" label="修改人" width="120">
       </el-table-column>
-      <el-table-column prop="updateTime" label="修改时间" width="120">
+      <el-table-column prop="updateDate" label="修改时间" width="120">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
@@ -187,18 +218,18 @@
       >
       </el-pagination>
     </div>
-    <el-dialog
+     <el-dialog
       title="采购订单添加"
       :visible.sync="adddialogVisible"
       width="1300px"
       v-if="adddialogVisible"
     >
-      <addProcOrder
+      <AddDispatch
         @handleAddSuccess="handleAddSuccess"
         @cancel="cancel"
-      ></addProcOrder>
+      ></AddDispatch>
     </el-dialog>
-    <el-dialog
+   <!-- <el-dialog
       title="采购订单修改"
       :visible.sync="updatedialogVisible"
       width="1300px"
@@ -224,25 +255,21 @@
         @cancelAuditing="cancelAuditing"
       >
       </auditingProOrder>
-    </el-dialog>
-  </div>
+    </el-dialog>-->
+  </div> 
 </template>
 <script>
-import { setExcel } from "./../../../api/public.js";
-import { getProcList, deleteById, setVoidState } from "@/api/procurementOrder";
-import addProcOrder from "../../../components/addProcOrder.vue";
-import updateProOrder from "./../../../components/updateProOrder.vue";
-import auditingProOrder from "./../../../components/auditingProOrder.vue";
+import { setExcel } from "@/api/public.js";
+import { deleteById, setVoidState } from "@/api/procurementOrder";
+import { getKcDispathList } from "@/api/WareHouse";
 import { Message } from "element-ui";
-import { getPayType } from "./../../../api/public.js";
-import { getAllBaseProvider } from "@/api/BaseProvider.js";
+import { getAllStoreHouseList } from "@/api/storeHouse.js";
+import AddDispatch from './../../components/AddDispatch.vue'
 export default {
-  name: "procOrder",
-  components: {
-    addProcOrder,
-    updateProOrder,
-    auditingProOrder,
-  },
+  name: "dispatch",
+    components: {
+      AddDispatch
+    },
   data() {
     return {
       pickerOptions: {
@@ -276,54 +303,51 @@ export default {
           },
         ],
       },
-      procPage: {
+      DispatchVO: {
         code: "",
-        beginTime: "",
+        startTime: "",
         endTime: "",
-        orderStatus: "",
-        providerId: 0,
-        type: 0,
-        pageNum: 0,
-        pageSize: 0,
-        type: "",
-        providerId: "",
+        orderStatus: 0,
+        AimWarehouseId: 0,
+        beforeWarehouseId: 0,
+        currentPageNo:"",
+        pageSize: "",
+        approvalStatus: 0,
+        subject: "",
+        voidState:-1
       },
       voidState: false,
       adddialogVisible: false,
       updatedialogVisible: false,
       auditingdialogVisible: false,
+      storeHouseList: [],
       time: {},
       list: {},
-      cgType: [],
       code: "",
       id: "",
-      providerList: [],
     };
   },
   async mounted() {
     this.getOrderList(1, 5);
-    let data = await getPayType();
-    console.log("data:", data.data);
-    this.cgType = data.data;
-    let providerList = await getAllBaseProvider();
-    console.log("providerList:", providerList);
-    this.providerList = providerList.data;
+    let data = await getAllStoreHouseList();
+    console.log("data:", data);
+    this.storeHouseList = data.data;
   },
   methods: {
     getOrderList(currentPageNo, pageSize) {
-      this.procPage.pageNum = currentPageNo;
-      this.procPage.pageSize = pageSize;
+      this.DispatchVO.currentPageNo = currentPageNo;
+      this.DispatchVO.pageSize = pageSize;
       if (this.time.length > 0) {
-        this.procPage.beginTime = this.time[0];
-        this.procPage.endTime = this.time[1];
+        this.DispatchVO.startTime = this.time[0];
+        this.DispatchVO.endTime = this.time[1];
       }
-      getProcList(this.procPage).then((resp) => {
+      getKcDispathList(this.DispatchVO).then((resp) => {
         console.log(resp);
         this.list = resp.data;
       });
     },
     handleCurrentChange(val) {
-      this.getOrderList(val, this.procPage.pageSize);
+      this.getOrderList(val, this.DispatchVO.pageSize);
     },
     handleAddSuccess() {
       this.adddialogVisible = false; // 关闭 el-dialog
@@ -386,7 +410,7 @@ export default {
       alert(val);
     },
     async printExcel() {
-      await setExcel(this.list.list, "采购订单");
+      await setExcel(this.list.list, "库存调度");
     },
     async setVoidState(row) {
       if (confirm("你确定要作废吗？")) {

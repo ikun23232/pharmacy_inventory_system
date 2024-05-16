@@ -20,8 +20,8 @@
         <if test="beforeWarehouseId > 0">
             and beforeWarehouseId = #{beforeWarehouseId}
         </if>
-        <if test="beginTime != null and beginTime != ''">
-            and documenterBy BETWEEN #{beginTime} and #{endTime}
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            and createDate BETWEEN #{startTime} and #{endTime}
         </if>
         <if test="orderStatus > 0">
             and orderStatus=#{orderStatus}
@@ -30,7 +30,7 @@
             and approvalStatus=#{approvalStatus}
         </if>
         <if test="subject != null and subject != '' ">
-            and code like concat("%",#{subject},"%")
+            and subject like concat("%",#{subject},"%")
         </if>
         </where>
     </select>

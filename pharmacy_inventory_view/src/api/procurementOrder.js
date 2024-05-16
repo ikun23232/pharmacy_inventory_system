@@ -48,3 +48,23 @@ export function auditingOrder(cgddOrder) {
         cgddOrder: cgddOrder
     });
 }
+
+export function cgddExcel(cgddOrder) {
+    return request.post(baseUrl + "/cgddExcel", {
+        cgddOrder: cgddOrder,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        console.log("111111111111");
+        console.log("resp:",resp)
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '采购订单.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
