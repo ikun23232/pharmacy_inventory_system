@@ -80,5 +80,11 @@ public class KcReporteddetail implements Serializable {
      */
     private String isDel;
 
+    /**
+     * 批号
+     */
+    @TableField("batchCode")
+    private String batchCode;
+
 
 }

@@ -27,4 +27,13 @@ public class KcMedicineServiceImpl implements KcMedicineService {
         }
         return Message.error();
     }
+
+    @Override
+    public Message getKcMedicineByReportedCode(int storehouseId, String reportedCode) {
+        List<KcMedicine> list = kcMedicineMapper.getKcMedicineByReportedCode(storehouseId, reportedCode);
+        if (list.size() > 0){
+            return Message.success(list);
+        }
+        return Message.error();
+    }
 }

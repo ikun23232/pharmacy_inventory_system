@@ -2,7 +2,9 @@ package com.kgc.dao;
 
 import com.kgc.entity.BaseStorehouse;
 import com.kgc.entity.KcReported;
+import com.kgc.entity.KcReporteddetail;
 import com.kgc.entity.KcReportedtype;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -39,5 +41,15 @@ public interface KcReportedMapper {
      * @return
      */
     int addKcReported(KcReported kcReported);
+
+    int addKcReporteddetail(KcReporteddetail kcReporteddetail);
+
+    KcReported getKcReportedByCode(String code);
+
+    int updateReportedByCode(KcReported kcReported);
+
+    int delKcReporteddetailByCode(@Param("reportedCode") String reportedCode);
+
+    int delKcReportedByCode(@Param("code") String code);
 
 }

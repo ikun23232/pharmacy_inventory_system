@@ -1,8 +1,10 @@
 <script>
-import {getStorehouseList,getReportedType,addKcReported,getKcMedicine,addKcReportedAll} from '@/api/KcReported';
-import { Message } from "element-ui";
+import {getKcMedicine, getReportedType, getStorehouseList,getKcMedicineByReportedCode,updateReportedByCode} from "@/api/KcReported";
+import {Message} from "element-ui";
+import kcReported from "@/views/warehouse/KCBC/KcReported.vue";
+
 export default {
-  name: "AddReported",
+  name: "UpdateReported",
   data() {
     return {
       // 登录用户
@@ -11,27 +13,14 @@ export default {
       storehouseList:[],
       // 报损类型列表
       reportedTypeList:[],
-      // 添加报损表单验证
-      rules: {
-        storehouseId: [
-          { required: true, message: "请选择仓库", trigger: "blur" },
-        ],
-        reportedTypeId: [
-          { required: true, message: "请选择类别", trigger: "blur" },
-        ],
-
-
-      },
-      // 添加报损数据
-      addReportedData:{
-        code:'',
-        storehouseId:'',
-        reportedTypeId:'',
-        documenterBy:1,
-        list:[]
-      },
+      // 报损修改数据
+      reportedData:{},
       // 添加报损详情
       addReportedDetail:false,
+      // 将要报损药品列表
+      wereAddList:[],
+      // 药品名称
+      medicineName:'',
       // 药品列表
       medicineList:{
         pageNum:1,
@@ -39,53 +28,71 @@ export default {
         total:0,
         list:[]
       },
-      // 药品名称
-      medicineName:'',
-      //报损单药品列表
-      reportedDetailList:[],
-      // 将要报损药品列表
-      wereAddList:[]
+      // 修改按键是否能点击
+      isDisabled:false,
+
+
+
     }
   },
+  props: {
+    // 定义一个名为 rowData 的 prop，并指定它应该是一个对象
+    rowData: {
+      type: Object,
+      required: true
+    }
+  },
+  // 使用 mounted 生命周期钩子来在组件挂载后打印 rowData
   mounted() {
-    // 初始化仓库列表
-    this.getStorehouseLists()
-    // 初始化报损类型列表
-    this.getReportedTypeLists()
-    // 初始化报损编号
-    this.getCode()
+    this.reportedData = this.rowData;
+    // console.log('Received row data:', this.reportedData);
+    getStorehouseList().then(resp=>{
+      if (resp.code!=200){
+        return
+      }
+      this.storehouseList=resp.data
+      // console.log(this.storehouseList)
+    })
+    getReportedType().then(resp=>{
+      if (resp.code!=200){
+        return
+      }
+      this.reportedTypeList=resp.data
+    })
+    this.getKcMedicineByReportedCodes()
+    console.log(this.reportedData)
+
+    if (this.reportedData.approvalStatus == 2){
+      console.log(this.reportedData.approvalStatus)
+      this.isDisabled=true
+    }
+  },
+  watch: {
+    // 观察 rowData 属性的变化
+    rowData: {
+      handler(newValue) {
+        // 当 rowData 更改时，更新 reportedData
+        this.reportedData = Object.assign({}, newValue);
+        this.wereAddList= []
+        this.getKcMedicineByReportedCodes()
+        if (this.reportedData.approvalStatus==2){
+          this.isDisabled=true
+        }else {
+          this.isDisabled=false
+        }
+
+      },
+      deep: true // 使用深度观察来检测嵌套数据的变化
+    }
   },
   methods: {
-    // 获取仓库列表
-    getStorehouseLists(){
-      getStorehouseList().then(resp=>{
-        if (resp.code!=200){
-          return
-        }
-        this.storehouseList=resp.data
-      })
-    },
-    // 获取报损类型列表
-    getReportedTypeLists(){
-      getReportedType().then(resp=>{
-        if (resp.code!=200){
-          return
-        }
-        this.reportedTypeList=resp.data
-      })
-    },
-    //随机生成报损编号
-    getCode(){
-      let code = "BX" + new Date().getTime() + Math.floor(Math.random() * 1000);
-      this.addReportedData.code = code;
-    },
     // 取消
     cancel() {
       this.$emit("cancel");
     },
     // 获取药品列表
     getKcMedicines(){
-      if (this.addReportedData.storehouseId==''){
+      if (this.reportedData.storehouseId==''){
         Message({
           message: '请选择仓库',
           type: 'error',
@@ -94,23 +101,16 @@ export default {
         return
       }
       const kcMedicine = {
-        storehouseId:this.addReportedData.storehouseId,
+        storehouseId:this.reportedData.storehouseId,
         medicineName:this.medicineName,
       }
       getKcMedicine(kcMedicine,this.medicineList.pageNum,this.medicineList.pageSize).then(resp=>{
-        console.log(resp.data)
+        // console.log(resp.data)
         if (resp.code==200){
 
           this.medicineList=resp.data
           this.addReportedDetail=true
-        }else {
-          Message({
-            message: '该仓库没有药品',
-            type: 'error',
-            duration: 5 * 1000
-          })
         }
-
       })
 
     },
@@ -119,7 +119,7 @@ export default {
       row.reportedNum=1
       row.onePrice=row.money/row.quantity
       row.allPrice=row.onePrice
-      console.log(row)
+      // console.log(row)
       if (this.wereAddList.length==0){
         this.wereAddList.push(row)
       }else if (this.wereAddList.length>4){
@@ -150,7 +150,7 @@ export default {
     },
     // 报损数量改变
     handleDamageChange(row) {
-      console.log(this.wereAddList)
+      // console.log(this.wereAddList)
       // 确保报损数量不大于库存数量
       row.reportedNum = Math.min(row.reportedNum, row.quantity);
       // 计算总价，这里假设row.onePrice是药品的单价
@@ -164,8 +164,24 @@ export default {
         }
       }
     },
-    // 提交报损
-    submitForm(addReported) {
+    // 获取报损药品
+    getKcMedicineByReportedCodes(){
+      getKcMedicineByReportedCode(this.reportedData.storehouseId,this.reportedData.code).then(resp=>{
+        if (resp.code!=200){
+          return
+        }
+        this.wereAddList=resp.data
+        this.getNumByReported()
+        // console.log(resp)
+      })
+    },
+    getNumByReported(){
+      for (let i=0;i<this.wereAddList.length;i++){
+        this.wereAddList[i].onePrice=this.wereAddList[i].money/this.wereAddList[i].quantity
+        this.wereAddList[i].allPrice=this.wereAddList[i].quantity*this.wereAddList[i].onePrice
+      }
+    },
+    updateReporteds(){
       if (this.wereAddList.length==0){
         Message({
           message: '请添加药品',
@@ -174,66 +190,46 @@ export default {
         })
         return
       }
-      this.$refs[addReported].validate((valid) => {
-        if (valid) {
-          this.addReportedData.list=this.wereAddList
-          addKcReportedAll(this.addReportedData).then(resp=>{
-            if (resp.code!=200){
-              Message({
-                message: resp.message,
-                type: 'error',
-                duration: 5 * 1000
-              })
-            }
-            Message({
-              message: '添加成功',
-              type: 'success',
-              duration: 5 * 1000
-            })
-            this.getCode()
-            this.wereAddList=[];
-            this.addReportedData.storehouseId = '';
-            this.addReportedData.reportedTypeId = '';
-            this.$emit("handleAddSuccess");
-
-          })
+      this.reportedData.modificationBy=this.loginUser;
+      const theData = {
+        kcReported:this.reportedData,
+        kcMedicineList:this.wereAddList
+      }
+      updateReportedByCode(theData).then(resp=>{
+        if (resp.code!=200){
+          return
         }
+        Message({
+          message: '修改成功',
+          type: 'success',
+          duration: 5 * 1000
+        })
+        this.$emit("handleAddSuccess");
       })
-    },
-  },
-  computed: {
-    // 计算属性，根据wereAddList的长度决定是否禁用仓库选择框
-    disabledStorehouse() {
-      return this.wereAddList.length > 0;
     }
-  }
+
+ },
+
 }
 </script>
 
 <template>
   <div>
-    <el-form :model="addReportedData" :rules="rules" ref="addReported" label-width="100px" class="demo-ruleForm">
+    <el-form :model="reportedData" ref="addReported" label-width="100px" class="demo-ruleForm">
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="报损编号" prop="code">
-            <el-input v-model="addReportedData.code" placeholder="请输入报损编号" disabled></el-input>
+            <el-input v-model="reportedData.code" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="报损仓库" prop="storehouseId">
-            <el-select v-model="addReportedData.storehouseId" placeholder="请选择报损仓库" name="storehouseId" :disabled="disabledStorehouse">
-              <el-option
-                  v-for="item in storehouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-              </el-option>
-            </el-select>
+          <el-form-item label="报损仓库" prop="storehouseName">
+            <el-input v-model="reportedData.storehouseName" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="报损类型" prop="reportedTypeId">
-            <el-select v-model="addReportedData.reportedTypeId" placeholder="请选择报损类型" name="reportedTypeId">
+            <el-select v-model="reportedData.reportedTypeId" placeholder="请选择报损类型" name="reportedTypeId">
               <el-option
                   v-for="item in reportedTypeList"
                   :key="item.id"
@@ -242,6 +238,32 @@ export default {
               </el-option>
             </el-select>
           </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="11">
+          <el-form-item label="报损审批">
+            <el-select v-model="reportedData.approvalStatus" placeholder="请选择审批状态" name="approvalStatus">
+              <el-option
+                  key="0"
+                  label="未审批"
+                  value=0>
+              </el-option>
+              <el-option
+                  key="1"
+                  label="未通过"
+                  value=1>
+              </el-option>
+              <el-option
+                  key="2"
+                  label="通过"
+                  value=2>
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span=11>
+          <el-input v-model="reportedData.approverRemark" placeholder="请输入审批理由" name="approvalReason"></el-input>
         </el-col>
       </el-row>
 
@@ -295,17 +317,17 @@ export default {
       <el-table-column prop="medicineName" label="药品名称" width="150">
       </el-table-column>
       <el-table-column prop="quantity" label="报损数量" width="110">
-      <template slot-scope="scope">
-        <el-input-number
-            v-model="scope.row.reportedNum"
-            :min="1"
-            :max="parseInt(scope.row.quantity)"
-            label="报损数量"
-            :controls="false"
-            @input="handleDamageChange(scope.row)"
-            style="width: 80px"
-        />
-      </template>
+        <template slot-scope="scope">
+          <el-input-number
+              v-model="scope.row.reportedNum"
+              :min="1"
+              :max="parseInt(scope.row.quantity)"
+              label="报损数量"
+              :controls="false"
+              @input="handleDamageChange(scope.row)"
+              style="width: 80px"
+          />
+        </template>
       </el-table-column>
       <el-table-column prop="allPrice" label="药品总价" width="90">
       </el-table-column>
@@ -318,9 +340,9 @@ export default {
       <el-table-column prop="money" label="库存价值" width="120">
       </el-table-column>
       <el-table-column align="center" label="操作" fixed="right" width="150" >
-         <template #default="{ row }">
-           <el-button type="danger" plain @click="removeReportedDetails(row)">移除该药品</el-button>
-         </template>
+        <template #default="{ row }">
+          <el-button type="danger" plain @click="removeReportedDetails(row)">移除该药品</el-button>
+        </template>
       </el-table-column>
 
     </el-table>
@@ -328,7 +350,7 @@ export default {
     <el-form>
       <br/><br/>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('addReported')">立即创建</el-button>
+        <el-button type="primary" :disabled="isDisabled" @click="updateReporteds()">保存</el-button>
         <el-button @click="cancel()">取消</el-button>
       </el-form-item>
     </el-form>

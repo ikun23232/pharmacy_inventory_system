@@ -3,12 +3,8 @@ package com.kgc.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.KcReportedMapper;
-import com.kgc.entity.BaseStorehouse;
-import com.kgc.entity.KcReported;
-import com.kgc.entity.KcReportedtype;
-import com.kgc.entity.Message;
+import com.kgc.entity.*;
 import com.kgc.service.KcReportedService;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +18,7 @@ public class KcReportedServiceImpl implements KcReportedService {
 
     @Autowired
     private KcReportedMapper kcReportedMapper;
+
     /**
      * 分页获取库存报损列表
      * @param kcReported
@@ -97,4 +94,73 @@ public class KcReportedServiceImpl implements KcReportedService {
         }
         return Message.error();
     }
+
+    /**
+     * 添加库存报损明细
+     * @param kcReporteddetail
+     */
+    @Override
+    public Message addKcReporteddetail(KcReporteddetail kcReporteddetail) {
+        int isAdd = kcReportedMapper.addKcReporteddetail(kcReporteddetail);
+        if (isAdd>0){
+            return Message.success();
+        }
+        return Message.error();
+    }
+    /**
+     * 修改库存报损
+     * @param kcReported
+     */
+    @Override
+    public Message updateReportedByCode(KcReported kcReported) {
+        int isUpdate = kcReportedMapper.updateReportedByCode(kcReported);
+        if (isUpdate>0){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+    @Override
+    public Message getKcReportedByCode(String code) {
+        return Message.success(kcReportedMapper.getKcReportedByCode(code));
+    }
+
+    @Override
+    public Message delKcReporteddetailByCode(String reportedCode) {
+        int isDel = kcReportedMapper.delKcReporteddetailByCode(reportedCode);
+        if (isDel>0){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+    @Override
+    public Message delKcReportedByCode(String code) {
+        int isDel = kcReportedMapper.delKcReportedByCode(code);
+        if (isDel>0){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+    /**
+     * 删除库存报损
+     * @param code
+     * @return
+     */
+    @Override
+    public Message delKcReportedAndDetailByCode(String code) {
+        KcReported kcReported = (KcReported) getKcReportedByCode(code).getData();
+        if (kcReported.getApprovalStatus()==1){
+            return Message.error("该报损单已审批，不能删除");
+        }
+        Message isDelReported = delKcReportedByCode(code);
+        Message isDelDetail = delKcReporteddetailByCode(code);
+        if (isDelReported.getCode().equals("200")&&isDelDetail.getCode().equals("200")){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+
 }

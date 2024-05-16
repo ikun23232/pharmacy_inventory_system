@@ -1,10 +1,11 @@
 <script>
-import {getKcReportedList,getStorehouseList,getReportedType} from '@/api/KcReported';
+import {getKcReportedList,getStorehouseList,getReportedType,delKcReportedAndDetailByCode} from '@/api/KcReported';
 import AddReported from "@/components/AddReported.vue";
 import { Message } from "element-ui";
+import UpdateReported from "@/components/UpdateReported.vue";
 export default {
   name: "KcReported",
-  components: {AddReported},
+  components: {UpdateReported, AddReported},
   data() {
     return {
       // 登录用户
@@ -74,18 +75,11 @@ export default {
         reportedReason:'',
         reportedUserId:0,
       },
-      updateReportedVisible:false,// 修改库存报损对话框
+      // 修改库存报损对话框
+      updateReportedVisible:false,
+      // 修改库存报损数据
       updateReported:{
-        id:0,
-        code:'',
-        storehouseId:0,
-        reportedTypeId:0,
-        reportedTime:'',
-        reportedNum:0,
-        reportedReason:'',
-        reportedUserId:0,
-        beginTime:'',
-        endTime:''
+
       },
     }
   },
@@ -103,11 +97,19 @@ export default {
       if (val){
         this.kcReportedPage.pageNum=val
       }
-      console.log(this.kcReportedPage.pageNum)
-        if (this.time.length>0){// 时间不为空
-          this.kcReportedSelect.beginTime=this.time[0]
-          this.kcReportedSelect.endTime=this.time[1]
-        }
+      // console.log(this.kcReportedPage.pageNum)
+
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        // time 是一个非空数组
+        this.kcReportedSelect.beginTime = this.time[0];
+        this.kcReportedSelect.endTime = this.time[1];
+      } else {
+        // time 是空数组、null 或 undefined
+        // 这里可以添加适当的处理逻辑，例如重置 beginTime 和 endTime
+        this.kcReportedSelect.beginTime = null;
+        this.kcReportedSelect.endTime = null;
+      }
+
         getKcReportedList(this.kcReportedSelect,this.kcReportedPage.pageNum,this.kcReportedPage.pageSize).then(resp=>{
           if (resp.code!=200){// 失败
             this.kcReportedPage.list=[]
@@ -116,7 +118,6 @@ export default {
             return
           }
           this.kcReportedPage=resp.data
-          // console.log(this.kcReportedPage)
         })
     },
     // 审批状态
@@ -142,6 +143,32 @@ export default {
           return
         }
         this.reportedTypeList=resp.data
+      })
+    },
+    updateReporteds(row) {
+      // console.log(row);
+      this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
+      this.updateReportedVisible = true;
+    },
+    deleteReported(row) {
+      if (row.approvalStatus==2){
+        Message({
+          message: '已审批的报损不能删除',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
+      delKcReportedAndDetailByCode(row.code).then(resp=>{
+        if (resp.code!=200){
+          return
+        }
+        Message({
+          message: '删除成功',
+          type: 'success',
+          duration: 5 * 1000
+        })
+        this.getKcReportedLists()
       })
     },
   }
@@ -236,14 +263,14 @@ export default {
         <!--      <el-table-column prop="documenterBy" label="制单人id" width="120"/>-->
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="getKcReportedLists">修改</el-button>&nbsp;
+            <el-button type="primary" plain @click="updateReporteds(row)">修改</el-button>&nbsp;
             <el-popconfirm
                 title="确定要删除吗？"
                 confirmButtonText="确定"
                 cancelButtonText="取消"
-                @confirm="getKcReportedLists">
+                @confirm="deleteReported(row)">
               <template #reference>
-                <el-button type="danger">删除</el-button>
+                <el-button type="danger" plain >删除</el-button>
               </template>
             </el-popconfirm>
           </template>
@@ -263,8 +290,14 @@ export default {
     </div>
     <div>
       <el-dialog title="添加报损" :visible.sync="addReportedVisible" width="1500px">
-        <AddReported @handleAddSuccess="getKcReportedLists ;addReportedVisible=false"
+        <AddReported @handleAddSuccess="addReportedVisible=false;getKcReportedLists(1)"
                      @cancel="addReportedVisible=false"/>
+      </el-dialog>
+    </div>
+    <div>
+      <el-dialog title="修改报损" :visible.sync="updateReportedVisible" width="1500px">
+        <UpdateReported :row-data="updateReported" @handleAddSuccess="updateReportedVisible=false;;getKcReportedLists(1)"
+                        @cancel="updateReportedVisible=false" />
       </el-dialog>
     </div>
   </div>

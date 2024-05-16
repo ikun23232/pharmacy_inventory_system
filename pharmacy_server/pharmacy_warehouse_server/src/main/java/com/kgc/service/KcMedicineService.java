@@ -9,4 +9,6 @@ public interface KcMedicineService {
 
     Message getKcMedicine(KcMedicine kcMedicine, int pageNum, int pageSize);
 
+    Message getKcMedicineByReportedCode(int storehouseId,String reportedCode);
+
 }

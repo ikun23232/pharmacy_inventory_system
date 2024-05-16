@@ -21,5 +21,10 @@ public class KcMedicineController {
     {
         return kcMedicineService.getKcMedicine(kcMedicine,pageNum,pageSize);
     }
+    @RequestMapping("/getKcMedicineByReportedCode")//根据报损单号查询库存药品
+    public Message getKcMedicineByReportedCode(@RequestParam("storehouseId") int storehouseId,@RequestParam("reportedCode") String reportedCode)
+    {
+        return kcMedicineService.getKcMedicineByReportedCode(storehouseId,reportedCode);
+    }
 
 }

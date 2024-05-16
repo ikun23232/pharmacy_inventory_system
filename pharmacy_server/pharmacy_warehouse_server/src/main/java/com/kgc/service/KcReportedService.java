@@ -1,9 +1,7 @@
 package com.kgc.service;
 
-import com.kgc.entity.BaseStorehouse;
-import com.kgc.entity.KcReported;
-import com.kgc.entity.KcReportedtype;
-import com.kgc.entity.Message;
+import com.kgc.entity.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,4 +16,16 @@ public interface KcReportedService {
     Message getReportedType();
     //添加库存报损
     Message addKcReported(KcReported kcReported);
+    //添加库存报损详情
+    Message addKcReporteddetail(KcReporteddetail kcReporteddetail);
+    //修改库存报损
+    Message updateReportedByCode(KcReported kcReported);
+    //根据code查询库存报损
+    Message getKcReportedByCode(String code);
+    //删除库存报损详情
+    Message delKcReporteddetailByCode(String reportedCode);
+    //删除库存报损
+    Message delKcReportedByCode(String code);
+
+    Message delKcReportedAndDetailByCode(String code);
 }
