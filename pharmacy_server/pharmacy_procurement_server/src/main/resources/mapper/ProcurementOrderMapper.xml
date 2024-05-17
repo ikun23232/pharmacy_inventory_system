@@ -3,34 +3,50 @@
 <mapper namespace="com.kgc.dao.ProcurementOrderMapper">
     <select id="getCgddOrder" parameterType="CgddOrder" resultType="CgddOrder">
         select id, code, subject, type,
-        (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS OrderTypeName,demanderBy,
-        (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS OrderTypeName,demandTime,
-        count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
-        (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
-        (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
-        createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
-        updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,
-        contactperson, phone, fax, email, deliveryDate, deliveryBy,
-        (SELECT `userName` FROM sys_user c WHERE a.deliveryBy = c.userId) AS deliveryName, payType, payTime, isPay
-        from cgdd_order AS a
-        <where>
-            a.isDel = 0
-            <if test="code != null and code != ''">
-                and code = #{code}
-            </if>
-            <if test="beginTime != null and beginTime != ''">
-                and demandTime BETWEEN #{beginTime} and #{endTime}
-            </if>
-            <if test="orderStatus > 0">
-                and orderStatus=#{orderStatus}
-            </if>
-            <if test="providerId > 0">
-                and providerId=#{providerId}
-            </if>
-            <if test="type > 0">
-                and type=#{type}
-            </if>
-        </where>
+                (select 'name' from cg_type ct where ct.id = a.type ) as cgType,
+               (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS OrderTypeName,demanderBy,
+               (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS OrderTypeName,demandTime,
+               count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
+               (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
+               (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
+               createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
+               updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,
+               contactperson, phone, fax, email, deliveryDate, deliveryBy,
+               (SELECT `userName` FROM sys_user c WHERE a.deliveryBy = c.userId) AS deliveryName, payType, payTime, isPay
+               from cgdd_order AS a
+                <where>
+                    a.isDel = 0
+               <if test="code != null and code != ''">
+                    and code like concat("%", #{code},"%")
+               </if>
+                <if test="beginTime != null and beginTime != ''">
+                   and demandTime BETWEEN #{beginTime} and #{endTime}
+                </if>
+                <if test="orderStatus > 0">
+                    and orderStatus=#{orderStatus}
+                </if>
+                 <if test="providerId > 0">
+                     and providerId=#{providerId}
+                 </if>
+                <if test="type > 0">
+                     and type=#{type}
+                </if>
+            </where>
+        order by  a.createTime desc
+    </select>
+
+    <select id="getCgddByCode" resultType="CgddOrder">
+        select id, code, subject, type,
+               (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS OrderTypeName,demanderBy,
+               (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS OrderTypeName,demandTime,
+               count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
+               (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
+               (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
+               createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
+               updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,
+               contactperson, phone, fax, email, deliveryDate, deliveryBy,
+               (SELECT `userName` FROM sys_user c WHERE a.deliveryBy = c.userId) AS deliveryName, payType, payTime, isPay
+        from cgdd_order AS a where a.isDel = 0 and code = #{code}
     </select>
 
     <select id="getCgPayCom"  resultType="CgPayCom">
@@ -46,10 +62,10 @@
     WHERE
       isDel = 0
       <if test="year!=null and year!=''">
-          AND YEAR(payTime) = #{year}
+          AND YEAR(createTime) = #{year}
       </if>
         <if test="month!=null and month!=''">
-            AND MONTH(payTime) = #{month}
+            AND MONTH(createTime) = #{month}
         </if>
     GROUP BY
       CASE
@@ -60,8 +76,8 @@
 
     <select id="getCgPayNum" resultType="CgPayNum">
         SELECT
-        YEAR(payTime) AS year,
-        MONTH(payTime) AS month,
+        YEAR(createTime) AS year,
+        MONTH(createTime) AS month,
         COUNT(*) AS allPayCount,
         SUM(CASE WHEN isPay = 1 THEN 1 ELSE 0 END) AS paidCount,
         SUM(CASE WHEN isPay = 0 THEN 1 ELSE 0 END) AS unpaidCount,
@@ -72,7 +88,7 @@
         WHERE
         isDel = 0
         <if test="year!=null and year!=''">
-            AND YEAR(payTime) = #{year}
+            AND YEAR(createTime) = #{year}
         </if>
         GROUP BY
         year,

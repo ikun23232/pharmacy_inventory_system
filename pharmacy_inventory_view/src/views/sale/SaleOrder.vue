@@ -16,13 +16,13 @@
                 <el-date-picker type="date" placeholder="请选择结束" v-model="object.orderDateEnd" style="width: 100%;"></el-date-picker>
               </el-col>
             </el-form-item>
-            <!-- <el-form-item label="创建人">
+            <el-form-item label="创建人">
                 <el-input placeholder="创建人" v-model="object.createByName"></el-input>
-            </el-form-item> -->
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
                 <el-button icon="el-icon-refresh-right" >重置</el-button>
-                 <el-button type="text" icon="el-icon-plus" @click="handleAdd('addSaleOrder')">添加</el-button>
+                 <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导出</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
             </el-form-item>
@@ -36,9 +36,12 @@
         {{ scope.$index +(pageInfo.pageNum - 1) * pageInfo.pageSize+ 1 }}
         </template>
       </el-table-column>
-    <el-table-column prop="orderNo" label="单据编号" width="120">
+    <el-table-column prop="orderNo" label="单据编号" width="150">
+      <template slot-scope="scope">
+        <el-link type="primary" :underline="false" @click.native="lookSaleOrderDetail(scope.row.orderNo)">{{ scope.row.orderNo }}</el-link>
+      </template>
     </el-table-column>
-    <el-table-column prop="orderDate" label="单据日期" width="150">
+    <el-table-column prop="orderDate" label="单据日期" width="120">
     </el-table-column>
     <el-table-column prop="totalNumber" label="总数量" width="120">
     </el-table-column>
@@ -48,6 +51,16 @@
     </el-table-column>
     <el-table-column prop="remark" label="备注" width="120">
     </el-table-column>
+    <el-table-column prop="editStatus" label="订单状态" width="120">
+      <template slot-scope="scope">
+        {{ scope.row.editStatus==0?"编制中":"已完成"}}
+      </template>
+    </el-table-column>
+    <el-table-column prop="cancelStatus" label="是否作废" width="120">
+      <template slot-scope="scope">
+        {{ scope.row.cancelStatus==0?"否":"是"}}
+      </template>
+    </el-table-column>
     <el-table-column prop="createByName" label="创建人" width="120">
     </el-table-column>
     <el-table-column prop="updateByName" label="修改人" width="120">
@@ -56,48 +69,91 @@
     </el-table-column>
     <el-table-column fixed="right" label="操作" width="120">
       <template slot-scope="scope">
-        <el-button @click="handleUpdate(scope.row.id)" type="text">编辑
+        <el-button @click="handleUpdate(scope.row.orderNo)" type="text" :disabled="scope.row.editStatus==1?true:false">
+          编辑
         </el-button>
         <el-dropdown>
-      <span class="el-dropdown-link">
-        更多<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>删除</el-dropdown-item>
-        <el-dropdown-item>作废</el-dropdown-item>
-        <el-dropdown-item @click.native="printSaleOrder">打印</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+          <span class="el-dropdown-link">
+            更多<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="handleDelete(scope.row.orderNo)">删除</el-dropdown-item>
+            <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)">作废</el-dropdown-item>
+            <el-dropdown-item @click.native="printSaleOrder(scope.row.orderNo)">打印</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </template>
     </el-table-column>
   </el-table>
   <div class="block">
     <p>
-      <el-pagination background layout="prev, pager, next" :total="pageInfo.total" :page-size=pageInfo.size @current-change="handleCurrentChange" style="float: right;"></el-pagination>
+      <el-pagination background layout="prev, pager, next" :total="pageInfo.total" page-size=5 @current-change="handleCurrentChange" style="float: right;"></el-pagination>
       <span style="color: gray;float: right;margin-top: 5px;">共{{ pageInfo.total }}条</span>
     </p>
 
+    <!-- 添加销售订单 -->
+    <el-dialog
+      title="销售订单-添加"
+      :visible.sync="addDialogFormVisible"
+      width="1000px"
+      v-if="addDialogFormVisible"
+    >
+      <AddSaleOrder @handleDialogFormVisible="changeDialogFormVisible"></AddSaleOrder>
+    </el-dialog>
+
+     <!-- 修改销售订单 -->
+     <el-dialog
+      title="销售订单-修改"
+      :visible.sync="updateDialogFormVisible"
+      width="1000px"
+      v-if="updateDialogFormVisible"
+    >
+    <UpdateSaleOrder @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></UpdateSaleOrder>
+  </el-dialog>
+     <!-- 查看销售订单详情 -->
+     <el-dialog
+      title="销售订单-详情"
+      :visible.sync="detailDialogFormVisible"
+      width="1000px"
+      v-if="detailDialogFormVisible"
+    >
+    <SaleOrderDetail @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></SaleOrderDetail>
+    </el-dialog>
+      
     
   </div>
 </div>
 </template>
 
 <script>
-import {initSaleOrder,addSaleOrder,getSaleOrderById,updateSaleOrder,deleteSaleOrder} from "../../api/saleOrder.js";
+import {initSaleOrder,deleteSaleOrder,cancelSaleOrder} from "../../api/saleOrder.js";
+import AddSaleOrder from "../sale/AddSaleOrder.vue";
+import UpdateSaleOrder from "../sale/UpdateSaleOrder.vue";
+import SaleOrderDetail from "../sale/SaleOrderDetail.vue";
+import { Message } from "element-ui";
+
 export default {
   name:"SaleOrder",
+  components: {
+    AddSaleOrder,
+    UpdateSaleOrder,
+    SaleOrderDetail
+  },
   data(){
     return{
+      orderNo:"",
       object:{
             orderNo:"",
             orderDateBegin:"",
             orderDateEnd:"",
             createByName:"",
-            currentPage:1,
-   
+            currentPage:1, 
         },
         pageInfo:"",
         list:"",
+        addDialogFormVisible:false,
+        updateDialogFormVisible:false,
+        detailDialogFormVisible:false,
     }
   },
   mounted() {
@@ -111,9 +167,89 @@ export default {
         this.list = data.data.list;
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
-      this.initMedicineListByPage(this.currentPage);
+      this.object.currentPage = val;
+      this.initSaleOrderByPage(this.object.currentPage);
     },
+    printSaleOrder(orderNo){
+      const newPage= this.$router.resolve({ 
+        path: "/printSaleOrder",
+        query:{ //要传的参数 可传多个
+        orderNo:orderNo
+      }})
+      window.open(newPage.href,'_blank')
+    },
+    handleAdd(){
+      this.addDialogFormVisible=true;
+    },
+    changeDialogFormVisible(val){
+        this.addDialogFormVisible=val;
+        this.updateDialogFormVisible=val;
+        this.detailDialogFormVisible=val;
+        this.initSaleOrderByPage(this.object.currentPage);
+    },
+    lookSaleOrderDetail(orderNo){
+      this.detailDialogFormVisible=true;
+      this.orderNo=orderNo;
+    },
+    handleUpdate(orderNo){
+      this.updateDialogFormVisible=true;
+      this.orderNo=orderNo;
+    },
+    //销售订单作废
+   async handleCancel(orderNo){
+    this.$messagebox
+        .confirm("此操作将作废该销售订单, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(async () => {
+          try {
+            let data = await cancelSaleOrder(orderNo);
+            if (data.code === "200") {
+              Message({type: 'success',message: '作废成功！'})
+              this.initSaleOrderByPage(this.object.currentPage);
+            } else {
+              Message({type: 'error',message: '作废失败！'})
+            }
+          } catch (error) {
+            Message({type: 'error',message: '作废失败！'})
+          }
+        })
+        .catch(() => {
+          Message({
+            type: 'success',
+            message: '取消删除成功！'
+          })
+        });
+    },
+    async handleDelete(orderNo){
+      this.$messagebox
+        .confirm("此操作将删除该文件, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(async () => {
+          try {
+            let data = await deleteSaleOrder(orderNo);
+            if (data.code === "200") {
+              Message({type: 'success',message: '删除成功！'})
+              this.initSaleOrderByPage(this.object.currentPage);
+            } else {
+              Message({type: 'error',message: '删除失败！'})
+            }
+          } catch (error) {
+            Message({type: 'error',message: '删除失败！'})
+          }
+        })
+        .catch(() => {
+          Message({
+            type: 'success',
+            message: '取消删除成功！'
+          })
+        });
+    }
   }
 }
 </script>

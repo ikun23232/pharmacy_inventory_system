@@ -17,4 +17,5 @@ public interface StoreHouseService extends IService<BaseStorehouse> {
     public Message addStoreHouse(BaseStorehouse storeHouse);
     public Message updateStoreHouse(BaseStorehouse storeHouse);
     public Message getStoreHouseById(int id);
+    public Message getAllStoreHouseList();
 }

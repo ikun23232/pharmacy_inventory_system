@@ -91,12 +91,12 @@
 
 
           <el-table
+
          v-loading="loading"
          :data="bcglXiangXiList"
          :row-class-name="rowClassName"
          @selection-change="chandleDetailSelectionChange"
-         ref="tb"
-       >
+         ref="tb">
          <el-table-column type="selection" width="30" align="center"/>
          <el-table-column label="序号" align="center" prop="xh" width="50"></el-table-column>
 
@@ -230,11 +230,11 @@
     placeholder="请输入内容"
     prefix-icon="el-icon-search"
     v-model="input2"
-    style="width: 1000px;">
+    style="width: 1000px;" disabled>
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择">
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择" disabled>
 
     <el-option
       label="未通过"
@@ -249,13 +249,17 @@
 </div>
 
       <el-form-item style="width: 500px">
-        <el-button class="anniu" type="primary" @click="resetForm('CgsqOrder')"
-          >取 消</el-button
-        >
-        <el-button class="anniu" s @click="submitForm('CgsqOrder')"
+
+         <el-button class="anniu" type="primary" @click="cancel()"
+         >取 消</el-button
+         >
+<!--        <el-button class="anniu" type="primary" @click="resetForm('CgsqOrder')"-->
+<!--          >取 消</el-button-->
+<!--        >-->
+        <el-button class="anniu"  @click="submitForm('CgsqOrder')"
           >保 存</el-button
         >
-        <el-button class="anniu" @click="cancel()">提 交</el-button>
+        <el-button class="anniu" @click="submitForm('CgsqOrder',1)">提 交</el-button>
       </el-form-item>
     </el-form>
     <el-dialog
@@ -357,12 +361,10 @@
           </el-pagination>
           <el-row type="flex" justify="center">
             <el-col :span="2">
-              <el-button type="primary" @click="getMedicineList()"
-                >确认</el-button
-              >
+              <el-button type="primary" @click="getMedicineList()">确认</el-button>
             </el-col>
             <el-col :span="2">
-              <el-button @click="cgsqdialog = false">取消</el-button>
+              <el-button @click="cancel">取消</el-button>
             </el-col>
           </el-row>
         </div>
@@ -467,7 +469,7 @@ export default {
       this.page.pageNum = val;
       this.getList(this.page);
     },
-    submitForm(formName) {
+    submitForm(formName,type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.bcglXiangXiList.length==0){
@@ -476,7 +478,7 @@ export default {
               type: "error",
               center: "true",
             });
-return
+           return
           }else {
           for (const obj of this.bcglXiangXiList) {
             if (obj.providerId==''||obj.providerId==undefined||obj.medicineId==''||obj.medicineId==undefined){
@@ -489,6 +491,10 @@ return
             }
           }
           }
+          if (type==1){
+            this.CgsqOrder.orderstatus=2
+
+          }
           this.CgsqOrder.medicineList=this.bcglXiangXiList
           addCgddOrder(this.CgsqOrder).then((resp) => {
             console.log(resp);
@@ -498,7 +504,13 @@ return
                 type: "success",
                 center: "true",
               });
-              this.$emit("handleAddSuccess");
+              this.$emit("addSuccess");
+            }else {
+              Message({
+                message: "添加失败!",
+                type: "error",
+                center: "true",
+              });
             }
           });
         } else {
@@ -511,7 +523,7 @@ return
       this.$refs[formName].resetFields();
     },
     cancel() {
-      this.$emit("cancel");
+      this.$emit("addSuccess");
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -634,29 +646,9 @@ return
         }
       }
 
-      // obj.medicineList=[]
-      // alert(obj.providerId)
-      // let resp=await getBaseMedicineListByProviderId(obj.providerId)
-      // // console.log(resp)
-      // obj.medicineList=resp.data.data
-      // console.log(obj.medicineList)
     },
     cacltotalPrice(row){
       alert(row)
-    },
-    checkProductList(){
-
-      // for (const obj of this.bcglXiangXiList) {
-      //   if (obj.providerId==''||obj.providerId==undefined||obj.medicineId==''||obj.medicineId==undefined){
-      //     Message({
-      //       message: "请输入对应采购商品",
-      //       type: "error",
-      //       center: "true",
-      //     });
-      //     return;
-      //   }
-      //
-      // }
     }
 
   },

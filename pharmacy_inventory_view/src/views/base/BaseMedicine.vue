@@ -268,7 +268,6 @@ export default {
             message: '取消删除成功！'
           })
         });
-      
     },
     
   }

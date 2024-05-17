@@ -1,15 +1,20 @@
 package com.kgc.service.impl;
 
+import ch.qos.logback.core.db.dialect.MsSQLDialect;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.entity.BaseMedicine;
+import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.BaseMedicineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +31,8 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Autowired
     private BaseMedicineMapper baseMedicineMapper;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Message getBaseMedicineListByPage(BaseMedicine baseMedicine) {
@@ -51,9 +58,9 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
     }
 
     @Override
-    public Message getBaseMedicineById(int id) {
+    public Message getBaseMedicineById(int id,int batchCode) {
         Message message=new Message();
-        BaseMedicine baseMedicine=baseMedicineMapper.selectById(id);
+        BaseMedicine baseMedicine=baseMedicineMapper.getBaseMedicineById(id,batchCode);
         if(baseMedicine!=null){
             message.setCode("200");
             message.setData(baseMedicine);
@@ -83,6 +90,7 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Override
     public Message getMedicineListByCode(String code) {
+        logger.debug("getMedicineListByCode code:"+code);
         List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
         return Message.success(medicineListByCode);
     }
@@ -91,5 +99,52 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
     public Message getBaseMedicineListByProviderId(int providerId) {
         List<BaseMedicine> baseMedicineList=baseMedicineMapper.getBaseMedicineListByProviderId(providerId);
         return Message.success(baseMedicineList);
+    }
+
+    @Override
+    public Message getMedicineListByCodeComblie(String code) {
+        List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
+        ArrayList<BaseMedicine> baseMedicines = new ArrayList<>();
+        if (medicineListByCode!=null){
+            boolean falg=true;
+            for (BaseMedicine baseMedicine : medicineListByCode) {
+               if (baseMedicines!=null&&baseMedicines.size()>0){
+                   for (int i = 0; i < baseMedicines.size(); i++) {
+                       if (baseMedicines.get(i).getId()==baseMedicine.getId()){
+                           baseMedicines.get(i).setQuantity(baseMedicines.get(i).getQuantity()+baseMedicine.getQuantity());
+                           System.out.println(baseMedicines.get(i).getQuantity());
+                           falg=false;
+                           break;
+                       }
+                   }
+               }
+               if (falg){
+                   baseMedicines.add(baseMedicine);
+               }
+            }
+        }
+
+
+        return Message.success(baseMedicines);
+    }
+
+    @Override
+    public Message getAllBaseMedicine() {
+        List<BaseMedicine> baseMedicineList=baseMedicineMapper.getAllBaseMedicine();
+        if(baseMedicineList!=null){
+           return Message.success(baseMedicineList);
+        }else{
+           return Message.error();
+        }
+    }
+
+    @Override
+    public Message getAllBatchCodeByMedicineId(int medicineId) {
+        List<KcMedicine> kcMedicineList=baseMedicineMapper.getAllBatchCodeByMedicineId(medicineId);
+        if(kcMedicineList!=null){
+            return Message.success(kcMedicineList);
+        }else{
+            return Message.error();
+        }
     }
 }

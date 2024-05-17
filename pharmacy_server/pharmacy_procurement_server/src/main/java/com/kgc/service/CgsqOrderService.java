@@ -60,14 +60,17 @@ public interface CgsqOrderService extends IService<CgsqOrder> {
      * @return
      */
     Message voidCgsqOrder(int id);
+    /**
+     * 审核订单
+     * @param id
+     * @return
+     */
+    Message approveCgsqOrder(int id,String approveRemark,int approveMent);
 
-
-
-
-
-
-
-
-
-
+    /**
+     * 通过code获取采购申请单
+     * @param cgsqOrder
+     * @return
+     */
+    public Message getCgsqOrderByCode(CgsqOrder cgsqOrder);
 }

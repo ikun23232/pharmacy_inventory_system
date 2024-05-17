@@ -75,6 +75,8 @@ public class KcMedicine implements Serializable {
     @TableField("medicineName")
     private String medicineName;
 
+    private int isDel;
+
     /**
      * 供应商名称
      */

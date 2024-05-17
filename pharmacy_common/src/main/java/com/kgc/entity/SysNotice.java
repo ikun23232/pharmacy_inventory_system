@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -51,7 +52,7 @@ public class SysNotice implements Serializable {
      * 创造时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createdate;
 
     /**
      * 创造人
@@ -63,7 +64,7 @@ public class SysNotice implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    private Date updatedate;
 
     /**
      * 修改人

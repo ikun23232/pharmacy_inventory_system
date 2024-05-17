@@ -69,6 +69,7 @@ public class BaseMedicine implements Serializable {
      * 库存预警值
      */
     private Integer warning;
+
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     private Date createTime;
 
@@ -80,16 +81,22 @@ public class BaseMedicine implements Serializable {
 
     @TableField(exist=false)
     private String createByName;
+
     @TableField(exist=false)
     private String updateByName;
+
     @TableField(exist=false)
     private String categoryName;
+
     @TableField(exist=false)
     private String unitName;
+
     @TableField(exist=false)
     private Integer currentPage;
+
     @TableField(exist=false)
     private Integer quantity;
+
     @TableField(exist=false)
     private double totalPrice;
 
@@ -97,15 +104,36 @@ public class BaseMedicine implements Serializable {
     private Integer providerId;
 
     @TableField(exist=false)
-    private double providerName;
+    private String providerName;
+
     @TableField(exist=false)
     private double purchasePrice;
 
+    @TableField(exist=false)
+    private String code;//单据编号
 
+    /**
+     * 原单号
+     */
+    private String  sourceCode;
 
+    /**
+     * 订单药品表id
+     */
+    private Integer medicineOrderId;
+
+    private Integer medicineId;
+
+    private int stock;
+
+    @TableField(exist=false)
+    private String batchCode;
 
 
     @TableField(exist=false)
-    private String code;//单据编号
+    private String storehouseName;
+
+    private Integer fowardWarHouseId;//目标仓库Id
+
 
 }

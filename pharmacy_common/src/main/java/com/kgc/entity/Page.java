@@ -1,17 +1,18 @@
 package com.kgc.entity;
 
-import lombok.*;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-/**
- * @author 15279
- * @description 功能描述
- * @create 2024/5/7 9:41
- */
 @Data
-@NoArgsConstructor
+@ToString
 @AllArgsConstructor
-public class Page implements Serializable {
-    private int pageNum;
-    private int pageSize;
+@NoArgsConstructor
+public class Page {
+    private Integer currentPageNo;
+    private Integer pageSize;
+
+
+
 }

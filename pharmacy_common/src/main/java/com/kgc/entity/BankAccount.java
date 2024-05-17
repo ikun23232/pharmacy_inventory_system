@@ -61,6 +61,7 @@ public class BankAccount implements Serializable {
     @TableField("createBy")
     private Integer createBy;
 
+    @TableField(exist=false)
     private String createMan;
 
     /**
@@ -75,7 +76,7 @@ public class BankAccount implements Serializable {
      */
     @TableField("updateBy")
     private Integer updateBy;
-
+    @TableField(exist=false)
     private String updateMan;
 
     /**

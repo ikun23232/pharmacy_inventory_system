@@ -14,11 +14,12 @@ export function addBaseMedicine(baseMedicine) {
 
     });
 }
-//修改回显
-export function getBaseMedicineById(id) {
+
+export function getBaseMedicineById(id,batchCode) {
     return request.get(baseUrl + "/getBaseMedicineById", {
         params: {
             id: id,
+            batchCode:batchCode
         }
 
     });
@@ -48,6 +49,25 @@ export function getBaseMedicineListByProviderId(id) {
 }
 export function getMedicineListByCode(code) {
     return request.get(baseUrl + "/getMedicineListByCode", {
+        params: {
+            code: code,
+        }
+
+    });
+}
+export function getAllBaseMedicine() {
+    return request.get(baseUrl + "/getAllBaseMedicine")
+}
+
+export function getAllBatchCodeByMedicineId(medicineId) {
+    return request.get(baseUrl + "/getAllBatchCodeByMedicineId",{
+        params: {
+            medicineId: medicineId,
+        }
+    })
+}
+export function getMedicineListByCodeComblie(code) {
+    return request.get(baseUrl + "/getMedicineListByCodeComblie", {
         params: {
             code: code,
         }

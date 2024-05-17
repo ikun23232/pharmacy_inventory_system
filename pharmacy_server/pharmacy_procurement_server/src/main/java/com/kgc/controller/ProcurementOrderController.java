@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -40,7 +41,7 @@ public class ProcurementOrderController {
         cgddOrder.setType(procPage.getType());
         cgddOrder.setEndTime(procPage.getEndTime());
         Page page = new Page();
-        page.setPageNum(procPage.getPageNum());
+        page.setCurrentPageNo(procPage.getPageNum());
         page.setPageSize(procPage.getPageSize());
         Message message = procurementOrderService.getCgddOrder(cgddOrder,page);
         return message;
@@ -57,6 +58,39 @@ public class ProcurementOrderController {
     public Message deleteById(int id) {
         Message message = procurementOrderService.deleteById(id);
         return message;
+    }
+
+    @RequestMapping("/setVoidState")
+    public Message setVoidState(CgddOrder cgddOrder) {
+        Message message = procurementOrderService.setVoidState(cgddOrder);
+        return message;
+    }
+
+    @RequestMapping("/getCgddByCode")
+    public Message getCgddByCode(CgddOrder cgddOrder) {
+        Message message = procurementOrderService.getCgddByCode(cgddOrder);
+        return message;
+    }
+
+    @RequestMapping("/updateCgddById")
+    public Message updateCgddById(@RequestBody Map map) {
+        CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
+        Message message = procurementOrderService.updateCgddById(cgddOrder);
+        return message;
+    }
+
+    @RequestMapping("/auditingOrder")
+    public Message auditingOrder(@RequestBody Map map) {
+        CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
+        Message message = procurementOrderService.auditingOrder(cgddOrder);
+        return message;
+    }
+
+
+    @RequestMapping("/cgddExcel")
+    public Message cgddExcel(@RequestBody CgddOrder procPage, HttpServletResponse response) {
+        procurementOrderService.cgddExcel(procPage,response);
+        return Message.success(null);
     }
 
 

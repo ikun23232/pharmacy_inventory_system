@@ -106,4 +106,10 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
             return Message.success();
         }
     }
+
+    @Override
+    public Message getAllBaseProvider() {
+        List<BaseProvider> baseProviderList = baseProviderMapper.getBaseProviderList(null, 0);
+        return Message.success(baseProviderList);
+    }
 }

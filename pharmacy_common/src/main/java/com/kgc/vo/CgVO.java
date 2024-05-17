@@ -14,10 +14,12 @@ public class CgVO implements Serializable {
     private int currentPageNo;
     private int pageSize;
     private String code;
-    private int subject;
+    private String subject;
     private int type;
     private String startTime;
     private String endTime;
     private int voidState;
     private int approvalStatus;
+    private int providerId;
+    private int isPay;
 }

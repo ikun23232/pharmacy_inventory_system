@@ -247,17 +247,17 @@ export default {
               <el-option
                   key="0"
                   label="未审批"
-                  value=0>
+                  :value=0>
               </el-option>
               <el-option
                   key="1"
                   label="未通过"
-                  value=1>
+                  :value=1>
               </el-option>
               <el-option
                   key="2"
                   label="通过"
-                  value=2>
+                  :value=2>
               </el-option>
             </el-select>
           </el-form-item>

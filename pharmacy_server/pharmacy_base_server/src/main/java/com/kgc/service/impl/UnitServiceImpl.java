@@ -10,12 +10,10 @@ import com.kgc.entity.BaseUnit;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.service.UnitService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implement
 
     @Override
     public Message getUnitListByPage(Page page) {
-        PageHelper.startPage(page.getPageNum(), page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(), page.getPageSize());
         List<BaseUnit> unitListByPage = unitMapper.getUnitListByPage();
         PageInfo<BaseUnit> pageInfo = new PageInfo<>(unitListByPage);
         return Message.success(pageInfo);

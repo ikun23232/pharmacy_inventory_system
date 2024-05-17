@@ -73,7 +73,6 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     @Override
     public Message addCgsqOrder(CgsqOrder cgsqOrder) {
 //          cgsqOrder.
-        cgsqOrder.setApproverby(1);
         cgsqOrder.setDemandtime(new Date());
         List<BaseMedicine> medicineList = cgsqOrder.getMedicineList();
         int count=0;
@@ -88,8 +87,12 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }
         cgsqOrder.setCount(count);
         cgsqOrder.setReferenceamount(referencCount.doubleValue());
-        cgsqOrder.setApprovalstatus(0);
-        cgsqOrder.setOrderstatus(1);
+        if (cgsqOrder.getOrderstatus()!=null){
+            cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
+
+        }else {
+            cgsqOrder.setOrderstatus(1);
+        }
         cgsqOrder.setDemanderby(1);
         cgsqOrder.setVoidstate(0);
         cgsqOrderMapper.insert(cgsqOrder);
@@ -102,20 +105,54 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMapper.insert(orderMedicine);
         }
-
-        return Message.error("添加订单失败");
-
-
+        return Message.success();
     }
 
     @Override
     public Message updateCgsqOrder(CgsqOrder cgsqOrder) {
-        return null;
+        //          cgsqOrder.
+
+        List<BaseMedicine> medicineList = cgsqOrder.getMedicineList();
+        int count=0;
+
+        BigDecimal referencCount = BigDecimal.ZERO;
+        for (BaseMedicine baseMedicine : medicineList) {
+            count += baseMedicine.getQuantity();
+            BigDecimal quantity = new BigDecimal(baseMedicine.getQuantity()); // 数量转为BigDecimal
+            BigDecimal purchasePrice = new BigDecimal(baseMedicine.getPurchasePrice()); // 单价转为BigDecimal
+            BigDecimal multiply = quantity.multiply(purchasePrice); // 使用BigDecimal的multiply方法进行精确乘法计算
+            referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
+        }
+        cgsqOrder.setCount(count);
+        cgsqOrder.setReferenceamount(referencCount.doubleValue());
+        if (cgsqOrder.getOrderstatus()!=null){
+            cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
+        }
+        cgsqOrder.setUpdatetime(new Date());
+        cgsqOrder.setUpdateby(1);
+        cgsqOrderMapper.updateById(cgsqOrder);
+
+
+        Map<String, Object> columnMap = new HashMap<>();
+        columnMap.put("code", cgsqOrder.getCode());
+        // 调用 deleteByMap 方法，传入 Map 对象删除满足条件的数据
+        orderMapper.deleteByMap(columnMap);
+        for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgsqOrder.getCode());
+            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setProviderId(baseMedicine.getProviderId());
+            orderMapper.insert(orderMedicine);
+        }
+            return Message.success();
     }
 
     @Override
     public Message getCgsqOrder(int id) {
-        return null;
+        CgsqOrder cgSqOrderById = cgsqOrderMapper.getCgSqOrderById(id);
+        return Message.success(cgSqOrderById);
     }
 
     @Override
@@ -130,5 +167,29 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         return Message.error("作废失败");
     }
 
+    @Override
+    public Message approveCgsqOrder(int id,String approveRemark,int approveMent) {
+        CgsqOrder cgsqOrder=new CgsqOrder();
+        cgsqOrder.setId(id);
+        cgsqOrder.setApprovalstatus(1);
+        cgsqOrder.setEffectivetime(new Date());
+        cgsqOrder.setApproverremark(approveRemark);
+        cgsqOrder.setOrderstatus(3);
 
+//批准人
+        int approverBy=1;
+        cgsqOrder.setApproverby(approverBy);
+        int updateRow = cgsqOrderMapper.updateById(cgsqOrder);
+
+        if (updateRow > 0) {
+            return Message.success();
+        }
+        return Message.error("审核失败");
+    }
+
+    @Override
+    public Message getCgsqOrderByCode(CgsqOrder cgsqOrder) {
+        CgsqOrder cgsqOrderByCode = cgsqOrderMapper.getCgsqOrderByCode(cgsqOrder);
+        return Message.success(cgsqOrderByCode);
+    }
 }
