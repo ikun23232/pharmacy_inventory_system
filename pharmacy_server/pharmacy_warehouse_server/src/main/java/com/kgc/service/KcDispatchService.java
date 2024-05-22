@@ -14,4 +14,5 @@ import java.util.List;
  */
 public interface KcDispatchService extends IService<KcDispatch> {
     public Message getKcDispathList(DispatchVO dispatchVO);
+
 }

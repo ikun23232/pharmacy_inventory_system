@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,7 +63,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     public Message addCgddOrder(CgddOrder cgddOrder) {
         int count1 = 0;
         int num = 0;
-        double price  =0.0;
+        BigDecimal price = BigDecimal.ZERO;
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
@@ -76,7 +77,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price += orderMedicine.getTotalprice();
+                price = orderMedicine.getTotalprice().add(orderMedicine.getTotalprice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -123,7 +124,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     public Message updateCgddById(CgddOrder cgddOrder) {
         int count1 = 0;
         int num = 0;
-        double price  =0.0;
+        BigDecimal price  =BigDecimal.ZERO;
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
@@ -137,7 +138,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price += orderMedicine.getTotalprice();
+                price = orderMedicine.getTotalprice().add(orderMedicine.getTotalprice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -174,7 +175,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response) {
         List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
         try {
-            ExeclUtil.writeExcel(order,response,"采购订单");
+            ExeclUtil.writeExcel(order,response,"采购订单",CgddOrder.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -26,8 +26,7 @@
               :picker-options="pickerOptions"
               @change="test"
             >
-            </el-date-picker></div
-        ></el-col>
+            </el-date-picker></div></el-col>
         <el-col :span="7"
           ><div class="grid-content bg-purple">
             源仓库：

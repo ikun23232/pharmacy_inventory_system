@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +96,7 @@ public class CgddOrder implements Serializable {
     @TableField("referenceAmount")
     @ExcelProperty("参考金额")
     @NumberFormat("#.##")
-    private Double referenceAmount;
+    private BigDecimal referenceAmount;
 
     /**
      * 单据阶段(0代表编制未完成 1代表编制完成)

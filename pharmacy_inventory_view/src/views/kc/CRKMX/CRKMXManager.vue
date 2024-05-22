@@ -1,28 +1,28 @@
 <template>
   <div id="storeHouse">
-    <h1>采购入库订单</h1>
+    <h1>出入库明细</h1>
     <p>
       <el-form :inline="true" :model="vo" class="demo-form-inline">
         <el-form-item label="单据编号">
           <el-input v-model="vo.code" placeholder="请输入单据编号"></el-input>
         </el-form-item>
-        <el-form-item label="单据主题">
-          <el-input v-model="vo.subject" placeholder="请输入单据编号"></el-input>
+
+        <el-form-item label="单据类型">
+          <el-select v-model="vo.type" placeholder="请选择单据类型">
+            <el-option label="请选择" value="0"></el-option>
+            <el-option v-for="item in KcTypeList" :label="item.type" :value="item.id"  :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="原仓库">
+          <el-select v-model="vo.beforeWarehouseId" placeholder="请选择原仓库">
+            <el-option label="请选择" value="0"></el-option>
+            <el-option v-for="item in warhouseList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="批次号">
+          <el-input v-model="vo.batchCode" placeholder="请输入批次号"></el-input>
         </el-form-item>
 
-        <el-form-item label="供应商">
-          <el-select v-model="vo.providerId" placeholder="请选择供应商">
-            <el-option label="请选择" value="0"></el-option>
-            <el-option v-for="item in providerList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="作废状态">
-          <el-select v-model="vo.voidState" placeholder="请选择作废类型">
-            <el-option label="请选择" value="-1"></el-option>
-            <el-option label="未作废" value="0"></el-option>
-            <el-option label="已作废" value="1"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="日期">
     <div class="block">
       <el-date-picker
@@ -39,7 +39,6 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="initCgSqOrderList();">查询</el-button>
-      <el-button type="primary" @click="addOrder">添加</el-button>
       <el-button type="success" @click="printExcel">导出</el-button>
 
     </el-form-item>
@@ -58,46 +57,39 @@
           <a href="#" @click="viewOrder(scope.row.id)">{{ scope.row.code }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="sourceCode" label="源单号" width="120">
+
+      <el-table-column prop="createdate" label="单据日期" width="200">
       </el-table-column>
-      <el-table-column prop="createTime" label="单据日期" width="200">
+      <el-table-column prop="type" label="单据类型" width="120">
       </el-table-column>
-      <el-table-column prop="subject" label="单据主题" width="120">
-      </el-table-column>
+
       <el-table-column prop="providerName" label="供应商" width="120">
       </el-table-column>
-      <el-table-column prop="demanderUserName" label="需求人" width="120">
-      </el-table-column>
-      <el-table-column prop="count" label="数量" width="120">
+      <el-table-column prop="medicineName" label="商品名称" width="120">
 
       </el-table-column>
 
-      <el-table-column prop="referenceAmount" label="参考金额" width="120">
+      <el-table-column prop="specification" label="规格型号" width="120">
       </el-table-column>
-      <el-table-column prop="effectiveTime" label="生效时间" width="120">
+      <el-table-column prop="unitName" label="单位" width="120">
       </el-table-column>
-      <el-table-column prop="orderStatueName" label="单据状态" width="120">
+      <el-table-column prop="batchCode" label="批次号" width="120">
       </el-table-column>
-      <el-table-column prop="approvalstatus
-" label="核批结果" width="120">
-        <template slot-scope="scope">
-          {{scope.row.approvalstatus === null ? "未审核" : (scope.row.approvalstatus === 0 ? "未通过" : "通过")}}
+      <el-table-column prop="warehouseName" label="仓库名称" width="120">
+      </el-table-column>
+      <el-table-column prop="tostockquantity" label="入库数量" width="120">
+      </el-table-column>
+      <el-table-column prop="tostockmoney" label="入库金额" width="120">
+      </el-table-column>
+      <el-table-column prop="fromstockquantity" label="出库数量" width="120">
+      </el-table-column>
+      <el-table-column prop="fromstockmoney" label="出库金额" width="120">
+      </el-table-column>
 
-        </template>
+      <el-table-column prop="price" label="单位金额" width="120">
       </el-table-column>
-      <el-table-column prop="voidState" label="作废状态" width="120">
-        <template slot-scope="scope">
-          {{ scope.row.voidstate == 0 ? "否" : "是" }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="remark" label="备注" width="120">
-      </el-table-column>
-      <el-table-column prop="demanderUserName" label="制单人" width="120">
-      </el-table-column>
-      <el-table-column prop="updateUserName" label="修改人" width="120">
-      </el-table-column>
-      <el-table-column prop="updateTime" label="修改时间" width="120">
-      </el-table-column>
+
+
 
 
       <el-table-column fixed="right" label="操作" width="200">
@@ -207,6 +199,9 @@ import CGRKUpdateOrder from "@/components/WarHouse/CGRKUpdateOrder";
 import CGRKApproveOrder from "@/components/WarHouse/CGRKApproveOrder";
 import CGRKViewOrder from "@/components/WarHouse/CGRKViewOrder";
 import {cgddExcel} from "@/api/procurementOrder";
+import {DdckExcel, delKcDisfromware, initKcDisfromwareList} from "@/api/DdckOrder";
+import {getStoreList} from "@/api/storeHouse";
+import {CRKMXExcel, getKcTypeList, initCRKMXDetailList} from "@/api/CRKMXOrder";
 // import AddUnit from "./AddUnit.vue";
 
 
@@ -234,7 +229,9 @@ export default {
         type: '0',
         startTime: '',
         endTime: '',
-        voidState: "-1"
+        voidState: "-1",
+        batchCode:'',
+        beforeWarehouseId:'0'
       },
       serialNumber: "",
       list: {},
@@ -274,12 +271,15 @@ export default {
       },
       value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       value2: '',
-      providerList:[]
+      providerList:[],
+      warhouseList:[],
+      KcTypeList:[]
     };
   },
   mounted() {
     this.initCgSqOrderList(1);
-    this.initProvider();
+    this.initWarHourseList();
+    this.initKcType()
   },
   methods: {
     async initCgSqOrderList(currentPageNo) {
@@ -290,18 +290,23 @@ export default {
         this.vo.startTime = this.value2[0];
         this.vo.endTime = this.value2[1];
       }
-      let data = await initCgrkOrderList(this.vo);
-      console.log(data);
+      let data = await initCRKMXDetailList(this.vo);
+      console.log(data.data)
       this.list = data.data;
 
     },
     async printExcel() {
-      await cgrkExcel();
+      await CRKMXExcel();
     },
-    async initProvider(){
-      let resp = await init('',0,1,10);
+    async initWarHourseList(){
+      let resp = await getStoreList(1,10,'');
       console.log(resp)
-      this.providerList=resp.data.list
+      this.warhouseList=resp.data.list
+    },
+    async initKcType(){
+      let resp=await getKcTypeList();
+      this.KcTypeList=resp.data
+      console.log(resp)
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
@@ -311,7 +316,7 @@ export default {
       if (!confirm("你确定要删除吗？")) {
         return;
       }
-      let resp = await delCgrqOrderById(row.id);
+      let resp = await delKcOutinTodetail(row.id);
       console.log(resp);
       if (resp.code == "200") {
         Message({
@@ -380,7 +385,7 @@ export default {
     },
     printSaleOrder(orderNo){
       const newPage= this.$router.resolve({
-        path: "/printCGRKOrder",
+        path: "/printDDCKOrder",
         query:{ //要传的参数 可传多个
           orderNo:orderNo
         }})

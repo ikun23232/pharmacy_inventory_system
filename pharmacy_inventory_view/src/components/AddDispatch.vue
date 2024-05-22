@@ -390,10 +390,10 @@ import wareDetails from './wareDetails.vue'
 import { Message } from "element-ui";
 import { initCgSqOrderList } from "@/api/CgsdOrder";
 import { getMedicineListByCode } from "@/api/baseMedicine";
-import { getCurrentTime } from "./../api/util.js";
-import { addKcDispatch } from "./../api/procurementOrder.js";
+import { getCurrentTime } from "@/api/util";
+import { addKcDispatch } from "@/api/procurementOrder";
 import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
-import { getAllStoreHouseList } from "@/api/storeHouse.js";
+import { getAllStoreHouseList } from "@/api/storeHouse";
 export default {
   name: "addDispatch",
   components:{

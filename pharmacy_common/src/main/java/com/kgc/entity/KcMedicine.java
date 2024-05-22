@@ -65,9 +65,13 @@ public class KcMedicine implements Serializable {
     private int quantity;
 
     /**
-     * 库存价值
+     * 单价
      */
     private BigDecimal money;
+    /**
+     * 库存价值
+     */
+    private BigDecimal totalPrice;
 
     /**
      * 药品名称
@@ -82,7 +86,7 @@ public class KcMedicine implements Serializable {
      */
     @TableField("providerName")
     private String providerName;
-
+    @TableField(exist = false)
     private int reportedNum;
 
 }

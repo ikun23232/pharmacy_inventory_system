@@ -80,8 +80,8 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         BigDecimal referencCount = BigDecimal.ZERO;
         for (BaseMedicine baseMedicine : medicineList) {
             count += baseMedicine.getQuantity();
-            BigDecimal quantity = new BigDecimal(baseMedicine.getQuantity()); // 数量转为BigDecimal
-            BigDecimal purchasePrice = new BigDecimal(baseMedicine.getPurchasePrice()); // 单价转为BigDecimal
+            BigDecimal quantity = BigDecimal.valueOf(baseMedicine.getQuantity()); // 数量转为BigDecimal
+            BigDecimal purchasePrice =baseMedicine.getPurchasePrice(); // 单价转为BigDecimal
             BigDecimal multiply = quantity.multiply(purchasePrice); // 使用BigDecimal的multiply方法进行精确乘法计算
             referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
         }
@@ -119,7 +119,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         for (BaseMedicine baseMedicine : medicineList) {
             count += baseMedicine.getQuantity();
             BigDecimal quantity = new BigDecimal(baseMedicine.getQuantity()); // 数量转为BigDecimal
-            BigDecimal purchasePrice = new BigDecimal(baseMedicine.getPurchasePrice()); // 单价转为BigDecimal
+            BigDecimal purchasePrice = baseMedicine.getPurchasePrice(); // 单价转为BigDecimal
             BigDecimal multiply = quantity.multiply(purchasePrice); // 使用BigDecimal的multiply方法进行精确乘法计算
             referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
         }

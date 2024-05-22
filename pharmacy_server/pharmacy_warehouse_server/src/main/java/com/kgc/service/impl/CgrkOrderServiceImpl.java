@@ -11,17 +11,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CgrkOrderMapper;
+import com.kgc.dao.KcMedicineMapper;
 import com.kgc.dao.PublicOMedicineMapper;
-import com.kgc.entity.BaseMedicine;
-import com.kgc.entity.CgrkOrder;
-import com.kgc.entity.Message;
-import com.kgc.entity.OrderMedicine;
+import com.kgc.entity.*;
 import com.kgc.service.CgrkOrderService;
+import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgVO;
+import com.sun.org.apache.bcel.internal.generic.I2D;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +37,8 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
     private CgrkOrderMapper cgrkOrderMapper;
     @Autowired
     private PublicOMedicineMapper orderMapper;
+    @Autowired
+    private KcMedicineMapper kcMedicineMapper;
     @Override
     public Message getCgrkOrderService(CgVO vo) {
         Map paramsMap = new HashMap<String, Object>();
@@ -71,7 +75,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         for (BaseMedicine baseMedicine : medicineList) {
             count += baseMedicine.getQuantity();
             BigDecimal quantity = new BigDecimal(baseMedicine.getQuantity()); // 数量转为BigDecimal
-            BigDecimal purchasePrice = new BigDecimal(baseMedicine.getPurchasePrice()); // 单价转为BigDecimal
+            BigDecimal purchasePrice = baseMedicine.getPurchasePrice(); // 单价转为BigDecimal
             BigDecimal multiply = quantity.multiply(purchasePrice); // 使用BigDecimal的multiply方法进行精确乘法计算
             referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
         }
@@ -89,8 +93,8 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         for (BaseMedicine baseMedicine : cgrqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgrqOrder.getCode());
-            orderMedicine.setSourceCode(cgrqOrder.getSourceCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setSourceCode(baseMedicine.getSourceCode());
+            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
@@ -105,13 +109,42 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
 
     @Override
     public Message updateCgrkOrder(CgrkOrder cgrqOrder) {
-        return null;
+        List<BaseMedicine> medicineList = cgrqOrder.getMedicineList();
+        int count=0;
+        cgrqOrder.setCount(count);
+        if (cgrqOrder.getOrderStatus()>1){
+            cgrqOrder.setOrderStatus(cgrqOrder.getOrderStatus());
+        }
+        cgrqOrder.setUpdateTime(new Date());
+        cgrqOrder.setUpdateby(1);
+        cgrkOrderMapper.updateById(cgrqOrder);
+
+
+        Map<String, Object> columnMap = new HashMap<>();
+        columnMap.put("code", cgrqOrder.getCode());
+        // 调用 deleteByMap 方法，传入 Map 对象删除满足条件的数据
+        orderMapper.deleteByMap(columnMap);
+        for (BaseMedicine baseMedicine : cgrqOrder.getMedicineList()) {
+
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgrqOrder.getCode());
+            orderMedicine.setSourceCode(baseMedicine.getSourceCode());
+            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setProviderId(baseMedicine.getProviderId());
+            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
+            Integer batchCode = orderMapper.selectMaxYourField();
+            orderMedicine.setBatchCode((batchCode+1)+"");
+            orderMapper.insert(orderMedicine);
+        }
+        return Message.success();
     }
 
     @Override
     public Message getCgrqOrder(int id) {
-
-        return null;
+        CgrkOrder cgrkOrder = cgrkOrderMapper.getCgrkOrder(id);
+        return Message.success(cgrkOrder);
     }
 
     @Override
@@ -128,21 +161,49 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
 
     @Override
     public Message approveCgrqOrder(int id, String approveRemark, int approveMent) {
-        CgrkOrder cgsqOrder=new CgrkOrder();
-        cgsqOrder.setId(id);
-        cgsqOrder.setApprovalstatus(1);
-        cgsqOrder.setEffectiveTime(new Date());
-        cgsqOrder.setApproverremark(approveRemark);
-//        cgsqOrder.setpprovalstatus(3);
+// 创建一个只包含需要更新字段的对象
+        CgrkOrder updateObj = new CgrkOrder();
+// 假设你想要更新的字段是这些
+        updateObj.setEffectiveTime(new Date());
+        updateObj.setApproverby(1);
+        updateObj.setApprovalstatus(approveMent);
+        if (approveMent==1){
+            updateObj.setOrderStatus(3);
+            updateObj.setIsaddwarehouse(1);
+        }else {
+            updateObj.setOrderStatus(2);
+        }
+        int updateRow = cgrkOrderMapper.approveOrder(id,updateObj.getEffectiveTime(),updateObj.getApproverby(),approveMent,updateObj.getOrderStatus(),updateObj.getIsaddwarehouse());
 
-//批准人
-        int approverBy=1;
-        cgsqOrder.setApproverby(approverBy);
-        int updateRow = cgrkOrderMapper.updateById(cgsqOrder);
+       //更新我的流水
+        CgrkOrder cgrkOrder = cgrkOrderMapper.getCgrkOrder(id);
+        List<BaseMedicine> medicineList = cgrkOrder.getMedicineList();
+        for (BaseMedicine baseMedicine : medicineList) {
+            KcMedicine kcMedicine=new KcMedicine();
+            kcMedicine.setBatchCode(baseMedicine.getBatchCode());
+            kcMedicine.setStorehouseId(baseMedicine.getFowardWarHouseId());
+            kcMedicine.setMedicineId(baseMedicine.getMedicineId());
+            kcMedicine.setProviderId(baseMedicine.getProviderId());
+            kcMedicine.setQuantity(baseMedicine.getQuantity());
+            kcMedicine.setMoney(baseMedicine.getPurchasePrice());
+            kcMedicine.setTotalPrice(baseMedicine.getTotalPrice());
+            kcMedicineMapper.insert(kcMedicine);
+        }
+
 
         if (updateRow > 0) {
             return Message.success();
         }
         return Message.error("审核失败");
+    }
+
+    @Override
+    public void cgrkExcel(CgrkOrder cgrkOrder, HttpServletResponse response) {
+        List<CgrkOrder> order = cgrkOrderMapper.getCgrqOrderList(new HashMap<String, Object>());
+        try {
+            ExeclUtil.writeExcel(order,response,"采购入库",CgrkOrder.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

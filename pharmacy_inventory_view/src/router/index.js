@@ -19,6 +19,7 @@ import StockDetail from "../views/kc/KCMX/StockDetail.vue";
 import PrintStockDetail from "../views/kc/KCMX/PrintStockDetail.vue";
 import PrintRefundOrder from "../views/refund/PrintRefundOrder.vue";
 import RefundOrder from "../views/refund/RefundOrder.vue";
+import PrintCGRKOrder from "@/views/procurement/CGRK/PrintCGRKOrder";
 
 import axios from "@/utils/request";
 import store from "@/store/index"
@@ -134,7 +135,25 @@ const routes = [
     path:'/KcReported',
     name: 'KcReported',
     component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  }
+  },{
+        path: '/printCGRKOrder',
+        name: 'PrintCGRKOrder',
+        component: PrintCGRKOrder
+
+    },
+    {
+        path:'/ddckManager',
+        name: 'DDCKManager',
+        component: () => import('@/views/kc/DDCK/DDCKManager')
+    },{
+        path:'/printDDCKOrder',
+        name: 'PrintDDCKOrder',
+        component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
+    },{
+        path:'/crkmxManager',
+        name: 'CRKMXManager',
+        component: () => import('@/views/kc/CRKMX/CRKMXManager')
+    }
 ]
 
 const router = new VueRouter({
