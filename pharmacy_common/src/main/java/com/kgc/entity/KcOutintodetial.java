@@ -1,14 +1,20 @@
 package com.kgc.entity;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -20,6 +26,7 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@ExcelIgnoreUnannotated
 public class KcOutintodetial implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,6 +40,7 @@ public class KcOutintodetial implements Serializable {
     /**
      * 明细编号
      */
+    @ExcelProperty("明细编号")
     private String code;
 
     /**
@@ -68,6 +76,7 @@ public class KcOutintodetial implements Serializable {
     /**
      * 删除id
      */
+    @TableLogic
     @TableField("isDel")
     private String isDel;
 
@@ -106,7 +115,6 @@ public class KcOutintodetial implements Serializable {
      * 出库金额
      */
     @TableField("fromStockMoney")
-
     private BigDecimal fromStockMoney;
     /**
      * 出库数量

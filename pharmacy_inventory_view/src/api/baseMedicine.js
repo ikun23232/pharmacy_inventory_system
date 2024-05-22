@@ -48,6 +48,7 @@ export function getMedicineListByCode(code) {
         params: {
             code: code,
         }
+
     });
 }
 export function getAllBaseMedicine() {
@@ -60,4 +61,12 @@ export function getAllBatchCodeByMedicineId(medicineId) {
             medicineId: medicineId,
         }
     })
+}
+export function getMedicineListByCodeComblie(code) {
+    return request.get(baseUrl + "/getMedicineListByCodeComblie", {
+        params: {
+            code: code,
+        }
+
+    });
 }

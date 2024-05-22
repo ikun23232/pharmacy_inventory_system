@@ -16,4 +16,5 @@ public interface KcMedicineMapper extends BaseMapper<KcMedicine> {
     int updateQuantityById(KcMedicine kcMedicine);
 
     KcMedicine getMedicineByBatchCode(@Param("batchCode") String batchCode,@Param("storehouseId") Integer storehouseId);
+
 }

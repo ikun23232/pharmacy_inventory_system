@@ -3,7 +3,6 @@ package com.kgc.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.KcDispatch;
 import com.kgc.entity.Message;
-import com.kgc.entity.Page;
 import com.kgc.vo.DispatchVO;
 
 import java.util.List;

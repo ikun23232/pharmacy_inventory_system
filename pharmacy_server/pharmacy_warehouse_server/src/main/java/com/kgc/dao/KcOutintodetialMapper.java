@@ -2,6 +2,11 @@ package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.KcOutintodetial;
+import com.kgc.entity.KcOutintodetial;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -13,4 +18,5 @@ import com.kgc.entity.KcOutintodetial;
  */
 public interface KcOutintodetialMapper extends BaseMapper<KcOutintodetial> {
 
+    List<KcOutintodetial> getKcDisfromwareList(Map paramsMap);
 }

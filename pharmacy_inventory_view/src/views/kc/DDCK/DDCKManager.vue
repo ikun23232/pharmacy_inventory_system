@@ -1,6 +1,6 @@
 <template>
   <div id="storeHouse">
-    <h1>采购入库订单</h1>
+    <h1>调度入库订单</h1>
     <p>
       <el-form :inline="true" :model="vo" class="demo-form-inline">
         <el-form-item label="单据编号">
@@ -10,10 +10,10 @@
           <el-input v-model="vo.subject" placeholder="请输入单据编号"></el-input>
         </el-form-item>
 
-        <el-form-item label="供应商">
-          <el-select v-model="vo.providerId" placeholder="请选择供应商">
+        <el-form-item label="原仓库">
+          <el-select v-model="vo.beforeWarehouseId" placeholder="请选择原仓库">
             <el-option label="请选择" value="0"></el-option>
-            <el-option v-for="item in providerList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
+            <el-option v-for="item in warhouseList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="作废状态">
@@ -39,7 +39,6 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="initCgSqOrderList();">查询</el-button>
-      <el-button type="primary" @click="addOrder">添加</el-button>
       <el-button type="success" @click="printExcel">导出</el-button>
 
     </el-form-item>
@@ -58,26 +57,22 @@
           <a href="#" @click="viewOrder(scope.row.id)">{{ scope.row.code }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="sourceCode" label="源单号" width="120">
+      <el-table-column prop="dispatchCode" label="源单号" width="120">
       </el-table-column>
-      <el-table-column prop="createTime" label="单据日期" width="200">
+      <el-table-column prop="dispatchTime" label="调度日期" width="200">
       </el-table-column>
       <el-table-column prop="subject" label="单据主题" width="120">
       </el-table-column>
-      <el-table-column prop="providerName" label="供应商" width="120">
+
+      <el-table-column prop="beforeWarehouseName" label="源仓库" width="120">
       </el-table-column>
-      <el-table-column prop="demanderUserName" label="需求人" width="120">
-      </el-table-column>
-      <el-table-column prop="count" label="数量" width="120">
+      <el-table-column prop="totalCount" label="调度数量" width="120">
 
       </el-table-column>
 
-      <el-table-column prop="referenceAmount" label="参考金额" width="120">
+      <el-table-column prop="totalPrice" label="参考金额" width="120">
       </el-table-column>
-      <el-table-column prop="effectiveTime" label="生效时间" width="120">
-      </el-table-column>
-      <el-table-column prop="orderStatueName" label="单据状态" width="120">
-      </el-table-column>
+
       <el-table-column prop="approvalstatus
 " label="核批结果" width="120">
         <template slot-scope="scope">
@@ -92,12 +87,7 @@
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="120">
       </el-table-column>
-      <el-table-column prop="demanderUserName" label="制单人" width="120">
-      </el-table-column>
-      <el-table-column prop="updateUserName" label="修改人" width="120">
-      </el-table-column>
-      <el-table-column prop="updateTime" label="修改时间" width="120">
-      </el-table-column>
+
 
 
       <el-table-column fixed="right" label="操作" width="200">
@@ -207,6 +197,8 @@ import CGRKUpdateOrder from "@/components/WarHouse/CGRKUpdateOrder";
 import CGRKApproveOrder from "@/components/WarHouse/CGRKApproveOrder";
 import CGRKViewOrder from "@/components/WarHouse/CGRKViewOrder";
 import {cgddExcel} from "@/api/procurementOrder";
+import {DdckExcel, delKcDisfromware, initKcDisfromwareList} from "@/api/DdckOrder";
+import {getStoreList} from "@/api/storeHouse";
 // import AddUnit from "./AddUnit.vue";
 
 
@@ -274,12 +266,13 @@ export default {
       },
       value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       value2: '',
-      providerList:[]
+      providerList:[],
+      warhouseList:[]
     };
   },
   mounted() {
     this.initCgSqOrderList(1);
-    this.initProvider();
+    this.initWarHourseList();
   },
   methods: {
     async initCgSqOrderList(currentPageNo) {
@@ -290,18 +283,18 @@ export default {
         this.vo.startTime = this.value2[0];
         this.vo.endTime = this.value2[1];
       }
-      let data = await initCgrkOrderList(this.vo);
-      console.log(data);
-      this.list = data.data;
+      let data = await initKcDisfromwareList(this.vo);
+      console.log(data.data)
+      this.list = data.data.data;
 
     },
     async printExcel() {
-      await cgrkExcel();
+      await DdckExcel();
     },
-    async initProvider(){
-      let resp = await init('',0,1,10);
+    async initWarHourseList(){
+      let resp = await getStoreList(1,10,'');
       console.log(resp)
-      this.providerList=resp.data.list
+      this.warhouseList=resp.data.list
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
@@ -311,7 +304,7 @@ export default {
       if (!confirm("你确定要删除吗？")) {
         return;
       }
-      let resp = await delCgrqOrderById(row.id);
+      let resp = await delKcDisfromware(row.id);
       console.log(resp);
       if (resp.code == "200") {
         Message({
@@ -380,7 +373,7 @@ export default {
     },
     printSaleOrder(orderNo){
       const newPage= this.$router.resolve({
-        path: "/printCGRKOrder",
+        path: "/printDDCKOrder",
         query:{ //要传的参数 可传多个
           orderNo:orderNo
         }})

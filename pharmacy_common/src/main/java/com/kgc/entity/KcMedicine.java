@@ -70,6 +70,10 @@ public class KcMedicine implements Serializable {
      * 库存价值
      */
     private BigDecimal money;
+    /**
+     * 库存价值
+     */
+    private BigDecimal totalPrice;
 
     /**
      * 药品名称
@@ -89,7 +93,4 @@ public class KcMedicine implements Serializable {
 
     @TableField(exist = false)
     private Integer reportedNum;
-
-    @TableField("totalPrice")
-    private BigDecimal totalPrice;
 }

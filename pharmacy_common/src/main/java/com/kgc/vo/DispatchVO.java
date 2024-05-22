@@ -22,4 +22,7 @@ public class DispatchVO implements Serializable {
     private int voidState;
     private int approvalStatus;
     private int orderStatus;
+    private int type;
+    private int batchCode;
+    private int providerId;
 }

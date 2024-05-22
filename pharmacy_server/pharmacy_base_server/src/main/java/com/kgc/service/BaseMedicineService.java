@@ -34,6 +34,7 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
 
     public Message getAllBaseMedicine();
 
+    Message getMedicineListByCodeComblie(String code);
     public Message getAllBatchCodeByMedicineId(int medicineId);
 
 

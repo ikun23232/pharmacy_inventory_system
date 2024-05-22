@@ -1,9 +1,12 @@
 package com.kgc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kgc.entity.CgddOrder;
 import com.kgc.entity.CgrkOrder;
 import com.kgc.entity.Message;
 import com.kgc.vo.CgVO;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -57,5 +60,12 @@ public interface CgrkOrderService extends IService<CgrkOrder> {
      * @return
      */
     Message approveCgrqOrder(int id,String approveRemark,int approveMent);
+
+    /**
+     * 导出
+     * @param cgrkOrder
+     * @param response
+     */
+    public void cgrkExcel(CgrkOrder cgrkOrder, HttpServletResponse response);
 
 }

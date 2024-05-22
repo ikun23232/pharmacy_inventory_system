@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.CgrkOrderMapper">
+    <resultMap id="BaseResultMap" type="com.kgc.entity.CgrkOrder" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="medicineList" ofType="com.kgc.entity.BaseMedicine" autoMapping="true">
+            <id column="TempId" property="id"/>
+            <result column="TempCode" property="code"/>
+        </collection>
+    </resultMap>
 
     <select id="getCgrqOrderList" resultType="com.kgc.entity.CgrkOrder">
         SELECT o.*,(SELECT userName FROM sys_user u WHERE o.createBy=u.userId)AS
@@ -29,7 +36,7 @@
             and o.createTime BETWEEN #{startTime} AND #{endTime}
         </if>
         AND o.isDel=0
-        <if test="voidState>-1">
+        <if test="voidState>0">
             AND o.voidState=#{voidState}
         </if>
         <if test="approvalStatus>0">
@@ -37,4 +44,26 @@
         </if>
         order by o.createTime Desc
     </select>
+    <select id="getCgrkOrder" resultMap="BaseResultMap">
+
+        SELECT o.id, o.code, o.medicinePrice, o.purchaseId, o.remark, o.effectiveTime, o.approverBy, o.approvalStatus, o.approverRemark, o.isAddWarehouse, o.documenterBy, o.voidState, o.createTime, o.createBy,(SELECT `nickName` FROM sys_user u WHERE userId=o.createBy) createByName, o.updateTime, o.updateBy, o.isDel, o.orderStatus, o.providerId, o.subject, o.warhouseUserId,
+               m.id AS 'TempId',m.`code` AS 'TempCode', m.code, m.medicineId,(SELECT name FROM base_medicine WHERE id=m.medicineId) medecineName, m.quantity, m.totalPrice, m.providerId, m.sourceCode, m.isDel, m.batchCode, m.isCancel, m.fowardWarHouseId,(SELECT `name` FROM base_storehouse WHERE id=m.fowardWarHouseId) fowardWarHouseName,
+               p.price AS 'purchasePrice',bm.*,bp.`name` AS providerName,bc.`name` AS categoryName,bu.name unitName
+        FROM cgrk_order o,order_medicine m,provider_medicine p,base_medicine bm,base_provider bp,base_medicine_category bc,base_unit bu
+        WHERE o.`code`=m.`code`
+          AND p.medicineId=m.medicineId
+          AND m.providerId=p.providerId
+          AND bm.id=m.medicineId
+          AND bp.id=m.providerId
+          AND bc.id=bm.categoryId
+          AND bu.id=bm.unitId
+          AND o.id=#{id}
+    </select>
+    <update id="approveOrder">
+        UPDATE cgrk_order
+        SET effectiveTime = #{effectiveTime},
+        approverBy = #{approverBy},
+        approvalStatus = #{approvalStatus},orderStatus=#{orderStatus},isAddWarehouse=#{isAddWarehouse}
+    WHERE id = #{id} AND isDel = 0
+    </update>
 </mapper>
