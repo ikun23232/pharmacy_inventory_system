@@ -4,7 +4,7 @@
     <select id="getCgddOrder" parameterType="CgddOrder" resultType="CgddOrder">
         select id, code, subject, type,
                 (select 'name' from cg_type ct where ct.id = a.type ) as cgType,
-               (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS OrderTypeName,demanderBy,
+               (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS orderTypeName,demanderBy,
                (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS OrderTypeName,demandTime,
                count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
                (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
@@ -38,9 +38,9 @@
     <select id="getCgddByCode" resultType="CgddOrder">
         select id, code, subject, type,
                (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS OrderTypeName,demanderBy,
-               (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS OrderTypeName,demandTime,
+               (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS demanderName,demandTime,
                count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
-               (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
+               (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId) as approverName,approverRemark, documenterBy,
                (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
                createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
                updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,

@@ -59,10 +59,12 @@
             <el-button
               icon="el-icon-plus"
               @click="addDispatchMedicine"
-              style="float: left">
-                添加
-              </el-button>
-          </div></el-col>
+              style="float: left"
+            >
+              添加
+            </el-button>
+          </div></el-col
+        >
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6"
@@ -73,20 +75,14 @@
         ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
-            <el-form-item label="目标仓库" prop="AimWarehouseId">
-              <el-select
-                v-model="KcDispatch.AimWarehouseId"
-                filterable
-                placeholder="请选择目标仓库"
+            <el-form-item label="调度时间" prop="dispatchTime">
+              <el-date-picker
+                v-model="KcDispatch.dispatchTime"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
               >
-                <el-option
-                  v-for="item in storeHouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
+              </el-date-picker>
             </el-form-item></div
         ></el-col>
       </el-row>
@@ -94,7 +90,7 @@
         <el-tab-pane label="采购申请单" name="first">
           <el-button
             icon="el-icon-plus"
-            :disabled="KcDispatch.medicineList.length == 0"
+            :disabled="medicineListTemp.length == 0"
             @click="getMedicineListDetail"
             style="float: left"
             >添加</el-button
@@ -108,13 +104,12 @@
           >
           <el-table
             :data="medicineListTemp"
-            show-summary
             border
             style="width: 1200px"
-            @selection-change="handleCgsqMedicineionChange"
+            @selection-change="handleKcmxMedicineionChange"
           >
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="code" label="源单据编号" width="150" fixed>
+            <el-table-column prop="batchCode" label="批次号" width="150" fixed>
             </el-table-column>
             <el-table-column prop="name" label="医药品名称" width="300">
             </el-table-column>
@@ -126,22 +121,18 @@
             </el-table-column>
             <el-table-column prop="unitName" label="单位" width="120">
             </el-table-column>
-            <el-table-column prop="quantity" label="数量" width="120">
+            <el-table-column prop="stock" label="剩余库存" width="120">
             </el-table-column>
-            <el-table-column prop="purchasePrice" label="采购价" width="120">
+            <el-table-column prop="purchasePrice" label="进价" width="120">
             </el-table-column>
-            <el-table-column prop="totalPrice" label="总价格" width="120">
+            <el-table-column label="总价格" width="120">
+              <template slot-scope="scope">
+                {{ scope.row.stock * scope.row.purchasePrice }}
+              </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="明细" name="second">
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAddDetails"
-            >添加</el-button
-          >
           <el-button
             type="success"
             icon="el-icon-delete"
@@ -171,23 +162,14 @@
               width="50"
             ></el-table-column>
 
-            <!-- <el-table-column label="供应商" width="250" prop="providerId">
+            <el-table-column label="批次号" width="250" prop="batchCode">
               <template slot-scope="scope">
-                <el-select
-                  clearable
-                  filterable
-                  v-model="bcglXiangXiList[scope.row.xh - 1].providerId"
-                >
-                  <el-option
-                    v-for="dict in providerList"
-                    :key="dict.id"
-                    :label="dict.name"
-                    :value="dict.id"
-                  />
-                </el-select>
+                <el-input
+                  disabled
+                  v-model="bcglXiangXiList[scope.row.xh - 1].batchCode"
+                ></el-input>
               </template>
-            </el-table-column> -->
-
+            </el-table-column>
             <el-table-column
               label="药品"
               align="center"
@@ -195,18 +177,10 @@
               width="150"
             >
               <template slot-scope="scope">
-                <el-select
-                  clearable
-                  @change="changeMedicine(scope.row)"
-                  v-model="bcglXiangXiList[scope.row.xh - 1].medicineId"
-                >
-                  <el-option
-                    v-for="dict in scope.row.medicineList"
-                    :key="dict.id"
-                    :label="dict.name"
-                    :value="dict.id"
-                  />
-                </el-select>
+                <el-input
+                  disabled
+                  v-model="bcglXiangXiList[scope.row.xh - 1].name"
+                ></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -252,51 +226,56 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="数量"
+              label="调度数量"
               align="center"
-              prop="totalPrice"
+              prop="stock"
               width="150"
             >
               <template slot-scope="scope">
                 <el-input-number
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
-                  @change="handleChange"
-                  :min="1"
-                  :max="10"
+                  @change="
+                    handleChange(
+                      bcglXiangXiList[scope.row.xh - 1].quti,
+                      bcglXiangXiList[scope.row.xh - 1].maxStock
+                    )
+                  "
                 ></el-input-number>
               </template>
             </el-table-column>
             <el-table-column
-              label="单价"
+              label="进价"
               align="center"
               prop="price"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input
+                  disabled
+                  v-model="bcglXiangXiList[scope.row.xh - 1].purchasePrice"
+                ></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="目标仓库"
+              align="center"
+              prop="aimStoreHouseId"
               width="150"
             >
               <template slot-scope="scope">
                 <el-select
                   clearable
                   @change="changezdts(scope.row)"
-                  v-model="bcglXiangXiList[scope.row.xh - 1].price"
-                  disabled
+                  v-model="bcglXiangXiList[scope.row.xh - 1].aimStoreHouseId"
                 >
                   <el-option
-                    v-for="dict in zdtsOptions"
-                    :key="dict.dictValue"
-                    :label="dict.dictLabel"
-                    :value="dict.dictValue"
+                    v-for="dict in storeHouseList"
+                    :key="dict.id"
+                    :label="dict.name"
+                    :value="dict.id"
                   />
                 </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="参考总价"
-              align="center"
-              prop="totalPrice"
-              width="150"
-            >
-              <template slot-scope="scope">
-                {{ calculatedTotalPrice(scope.row) }}
               </template>
             </el-table-column>
           </el-table>
@@ -353,14 +332,14 @@
         <el-row type="flex" justify="center">
           <el-col :span="6"
             ><div class="grid-content bg-purple">
-              <el-button type="primary" @click="submitForm('KcDispatch')"
-                >立即添加</el-button
+              <el-button type="primary" @click="commit('KcDispatch')"
+                >提交</el-button
               >
             </div></el-col
           >
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-button s @click="resetForm('KcDispatch')">重置</el-button>
+              <el-button s @click="save('KcDispatch')">保存</el-button>
             </div></el-col
           >
           <el-col :span="6">
@@ -377,27 +356,25 @@
       width="1200px"
       v-if="kcmxdialog"
     >
-     <wareDetails
+      <wareDetails
+        :wareHouseId="KcDispatch.beforeWarehouseId"
         @handleKcmxSuccess="handleKcmxSuccess"
-        @kcmxdialog="kcmxdialog"
-     ></wareDetails>
+        @cancelKcmx="cancelKcmx"
+      ></wareDetails>
     </el-dialog>
   </span>
 </template>
 
 <script>
-import wareDetails from './wareDetails.vue'
+import wareDetails from "./wareDetails.vue";
 import { Message } from "element-ui";
-import { initCgSqOrderList } from "@/api/CgsdOrder";
-import { getMedicineListByCode } from "@/api/baseMedicine";
 import { getCurrentTime } from "./../api/util.js";
-import { addKcDispatch } from "./../api/procurementOrder.js";
-import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
+import { addKcDispatch } from "./../api/KcDispatch";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
   name: "addDispatch",
-  components:{
-    wareDetails
+  components: {
+    wareDetails,
   },
   data() {
     return {
@@ -407,21 +384,11 @@ export default {
         orderStatus: "1",
         code: "",
         beforeWarehouseId: "",
-        AimWarehouseId: "",
-        createTime: new Date(),
+        createDate: new Date(),
         subject: "",
+        isCommit: "",
+        dispatchTime: new Date(),
         medicineList: [],
-      },
-      vo: {
-        currentPageNo: 1,
-        pageSize: 5,
-        code: "",
-        subject: "",
-        type: "0",
-        startTime: "",
-        endTime: "",
-        voidState: 0,
-        approvalStatus: 1,
       },
       storeHouseList: [],
       list: {},
@@ -433,7 +400,7 @@ export default {
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
-      dispatchMedicineionList: [],
+      medicineListTemp: [],
       dispatchRules: {
         beforeWarehouseId: [
           { required: true, message: "请输入源仓库", trigger: "change" },
@@ -448,25 +415,34 @@ export default {
     };
   },
   async mounted() {
-    // await this.initCgSqOrderList();
     this.KcDispatch.code = await getCurrentTime("KCDD");
     let data = await getAllStoreHouseList();
     console.log("data:", data);
     this.storeHouseList = data.data;
   },
   methods: {
-    async initCgSqOrderList() {
-      let data = await initCgSqOrderList(this.vo);
-      console.log(data);
-      this.list = data.data;
-      console.log(this.list);
+    commit(formName) {
+      this.KcDispatch.isCommit = 1;
+      this.submitForm(formName);
     },
-    handleCurrentChange(val) {
-      this.page.pageNum = val;
+    save(formName) {
+      this.KcDispatch.isCommit = 2;
+      this.submitForm(formName);
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          for (let index = 0; index < this.KcDispatch.medicineList.length; index++) {
+            const element = this.KcDispatch.medicineList[index];
+            if (element.aimStoreHouseId == "" || element.aimStoreHouseId == 0) {
+              Message({
+                message: "请添加目标仓库!",
+                type: "error",
+                center: "true",
+              });
+              return;
+            }
+          }
           addKcDispatch(this.KcDispatch).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
@@ -492,46 +468,8 @@ export default {
     cancel() {
       this.$emit("cancel");
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleCgsqSelectionChange(val) {
-      this.kcmxListTemp = val;
-      console.log("kcmxList", this.kcmxList.length);
-    },
-    handleCgsqMedicineionChange(val) {
-      this.dispatchMedicineionList = val;
-    },
-    handleCgsqChange(val) {
-      this.kcmxListTemp = val;
-    },
-    async getMedicineList() {
-      console.log(this.kcmxListTemp.length <= 0);
-      if (this.kcmxListTemp.length <= 0) {
-        Message({
-          message: "请选择采购申请单",
-          type: "error",
-          center: "true",
-        });
-        return;
-      }
-      console.log(this.kcmxListTemp.length);
-      for (let index = 0; index < this.kcmxListTemp.length; index++) {
-        const kcmx = this.kcmxListTemp[index];
-        console.log("kcmx", kcmx.code);
-        var data = await getMedicineListByCode(kcmx.code);
-        console.log("data:", data);
-        for (let i = 0; i < data.data.length; i++) {
-          if (data.data[i].providerId == this.KcDispatch.providerId) {
-            this.medicineListTemp.push(data.data[i]);
-          }
-        }
-        console.log("medicineListTemp:", this.medicineListTemp);
-      }
-      this.kcmxdialog = false;
-      this.kcmxList = this.kcmxListTemp;
-      this.kcmxListTemp = [];
-      this.initCgSqOrderList();
+    handleKcmxMedicineionChange(val) {
+      this.changeMedicineList = val;
     },
     deleteMedicine() {
       const newData = this.medicineListTemp.filter(
@@ -539,52 +477,6 @@ export default {
       );
       this.medicineListTemp = newData;
       this.changeMedicineList = [];
-    },
-    async handleAddDetails() {
-      if (this.KcDispatch.providerId == 0 || this.KcDispatch.providerId == "") {
-        Message({
-          message: "请先选择供应商",
-          type: "error",
-          center: "true",
-        });
-        return;
-      }
-      if (this.bcglXiangXiList == undefined) {
-        this.bcglXiangXiList = new Array();
-      }
-      if (this.bcglXiangXiList.length > 0) {
-        for (const objElement of this.bcglXiangXiList) {
-          if (objElement.medicineId == "") {
-            Message({
-              message: "请先填写完别的商品明细先!",
-              type: "error",
-              center: "true",
-            });
-            return;
-          }
-        }
-      }
-      let resp = await getBaseMedicineListByProviderId(
-        this.KcDispatch.providerId
-      );
-      let obj = {
-        // providerList: [],
-        medicineList: resp.data.data,
-        providerId: this.KcDispatch.providerId,
-        medicineId: "",
-        unitName: "",
-        specification: "",
-        price: "",
-        totalPrice: "",
-        quantity: "",
-      };
-      console.log(this.providerList);
-      // obj.providerList = this.providerList;
-      obj.dkdd = "1";
-      obj.sjfw = ["07:00", "07:30"];
-      obj.jxsjfw = ["06:00", "12:00"];
-      this.bcglXiangXiList.push(obj);
-      this.KcDispatch.medicineList = this.bcglXiangXiList;
     },
     handleDeleteDetails() {
       if (this.checkedDetail.length == 0) {
@@ -598,54 +490,6 @@ export default {
     handleDeleteAllDetails() {
       this.bcglXiangXiList = undefined;
     },
-    // async changeProvider() {
-    //   // if (obj.providerId == "") {
-    //   //   obj.medicineId = "";
-    //   //   obj.specification = "";
-    //   //   obj.price = "";
-    //   //   obj.totalPrice = "";
-    //   //   obj.unitName = "";
-    //   // }
-    //   // obj.medicineList = [];
-    //   // if (obj.providerId != "") {
-    //   let resp = await getBaseMedicineListByProviderId(
-    //     this.KcDispatch.providerId
-    //   );
-    //   this.bcglXiangXiList.medicineList = resp.data.data;
-    //   // }
-    //   console.log(obj.medicineList);
-    // },
-    async changeMedicine(obj) {
-      console.log(obj);
-      console.log(this.bcglXiangXiList);
-
-      for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
-        if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-          // alert(i)
-          // alert(this.bcglXiangXiList[i].providerId)
-          // alert(obj.providerId)
-          if (this.bcglXiangXiList[i].providerId != obj.providerId) {
-            break;
-          }
-          Message({
-            message: "您重复添加了商品!",
-            type: "error",
-            center: "true",
-          });
-          obj.medicineId = "";
-          return;
-        }
-      }
-      for (const objElement of obj.medicineList) {
-        if (obj.medicineId == objElement.id) {
-          obj.unitName = objElement.unitName;
-          obj.specification = objElement.specification;
-          obj.price = objElement.purchasePrice;
-          obj.id = obj.medicineId;
-          obj.purchasePrice = objElement.purchasePrice;
-        }
-      }
-    },
     rowClassName({ row, rowIndex }) {
       row.xh = rowIndex + 1;
     },
@@ -658,7 +502,7 @@ export default {
       }
     },
     async getMedicineListDetail() {
-      if (this.dispatchMedicineionList.length == 0) {
+      if (this.medicineListTemp.length == 0) {
         Message({
           message: "请选择药品！",
           type: "error",
@@ -666,31 +510,25 @@ export default {
         });
         return;
       }
-      if (this.dispatchMedicineionList.length > 0) {
-        for (
-          let index = 0;
-          index < this.dispatchMedicineionList.length;
-          index++
-        ) {
+      if (this.medicineListTemp.length > 0) {
+        for (let index = 0; index < this.medicineListTemp.length; index++) {
           if (this.bcglXiangXiList == undefined) {
             this.bcglXiangXiList = new Array();
           }
-          let resp = await getBaseMedicineListByProviderId(
-            this.KcDispatch.providerId
-          );
-          console.log(
-            "dispatchMedicineionList:" + this.dispatchMedicineionList[index]
-          );
           let obj = {
-            medicineList: resp.data.data,
-            providerId: this.KcDispatch.providerId,
-            medicineId: this.dispatchMedicineionList[index].id,
-            unitName: this.dispatchMedicineionList[index].unitName,
-            specification: this.dispatchMedicineionList[index].specification,
-            price: this.dispatchMedicineionList[index].purchasePrice,
-            totalPrice: this.dispatchMedicineionList[index].totalPrice,
-            quantity: this.dispatchMedicineionList[index].quantity,
-            sourceCode: this.dispatchMedicineionList[index].code,
+            aimStoreHouseList: this.storeHouseList,
+            batchCode: this.medicineListTemp[index].batchCode,
+            name: this.medicineListTemp[index].name,
+            medicineId: this.medicineListTemp[index].id,
+            unitId: this.medicineListTemp[index].unitId,
+            unitName: this.medicineListTemp[index].unitName,
+            specification: this.medicineListTemp[index].specification,
+            purchasePrice: this.medicineListTemp[index].purchasePrice,
+            aimStoreHouseId: "",
+            quantity: this.medicineListTemp[index].stock,
+            maxStock: this.medicineListTemp[index].stock,
+            providerId: this.medicineListTemp[index].providerId,
+            isRight: true,
           };
           obj.dkdd = "1";
           obj.sjfw = ["07:00", "07:30"];
@@ -700,16 +538,36 @@ export default {
         this.KcDispatch.medicineList = this.bcglXiangXiList;
       }
     },
-    addDispatchMedicine(){
-
+    addDispatchMedicine() {
+      if (
+        this.KcDispatch.beforeWarehouseId <= 0 ||
+        this.KcDispatch.beforeWarehouseId == ""
+      ) {
+        Message({
+          message: "请选择原仓库！",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      this.kcmxdialog = true;
     },
-    handleKcmxSuccess() {
+    handleKcmxSuccess(list) {
       this.kcmxdialog = false; // 关闭 el-dialog
       // 如果需要，可以在这里执行其他操作
-      this.getOrderList(1, 5);
+      // this.getOrderList(1, 5);
+      this.medicineListTemp = list;
     },
     cancelKcmx() {
-      this.kcmxdialog = false; 
+      this.kcmxdialog = false;
+    },
+    handleChange(val, maxVal) {
+      if (val > maxVal) {
+        this.$message({
+          message: "最大值不超过" + maxVal,
+          type: "error",
+        });
+      }
     },
   },
   computed: {
@@ -719,7 +577,7 @@ export default {
         return 0;
       }
       return this.bcglXiangXiList.reduce(
-        (total, item) => total + item.totalPrice * item.quantity,
+        (total, item) => total + item.totalPrice * item.stock,
         0
       );
     },

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcDispatchDetailMapper">
+    <select id="getKcDetailsList" resultType="KcDispatchdetails">
+        select kd.id, dispatchCode, aimStoreHouseId,(select base_storehouse.name from base_storehouse where aimStoreHouseId = base_storehouse.id) as aimStoreHouseName,
+            medicineId,(select base_medicine.name from base_medicine where base_medicine.id = medicineId) as medicineName,
+            (select base_medicine_category.name from base_medicine_category where base_medicine_category.id = bm.categoryId) as categoryName,
+            quantity as stock, price as purchasePrice, batchCode, kd.isDel,
+            bm.unitId,(select base_unit.name from base_unit where bm.unitId = base_unit.id) as unitName,
+            bm.name as name,specification,kd.providerId,(select base_provider.name from base_provider where kd.providerId = base_provider.id) as providerName
+        from kc_dispatchdetails kd,base_medicine bm
+        where kd.medicineId = bm.id and  dispatchCode = #{dispatchCode}
+    </select>
+
+    <delete id="deleteDispatchByCode">
+        delete from kc_dispatchdetails where dispatchCode = #{dispatchCode}
+    </delete>
+</mapper>

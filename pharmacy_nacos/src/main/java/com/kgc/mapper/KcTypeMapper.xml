@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.KcType">
+        <id column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="createDate" property="createdate" />
+        <result column="createBy" property="createby" />
+        <result column="updateDate" property="updatedate" />
+        <result column="updateBy" property="updateby" />
+        <result column="isDel" property="isdel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, type, createDate, createBy, updateDate, updateBy, isDel
+    </sql>
+
+</mapper>

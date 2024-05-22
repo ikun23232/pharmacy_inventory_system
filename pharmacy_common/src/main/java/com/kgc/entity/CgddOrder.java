@@ -9,10 +9,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.utils.BigDecimalUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +64,7 @@ public class CgddOrder implements Serializable {
 
     @TableField(exist = false)
     @ExcelProperty("采购编号")
-    private String OrderTypeName;//订单类型名字
+    private String orderTypeName;//订单类型名字
 
     /**
      * 需求人
@@ -71,7 +73,7 @@ public class CgddOrder implements Serializable {
     @ExcelIgnore
     private Integer demanderBy;
 
-    @ExcelProperty("采购编号")
+    @ExcelProperty("需求人")
     private String demanderName;//需求人名字
 
     /**
@@ -95,7 +97,7 @@ public class CgddOrder implements Serializable {
     @TableField("referenceAmount")
     @ExcelProperty("参考金额")
     @NumberFormat("#.##")
-    private Double referenceAmount;
+    private BigDecimal referenceAmount;
 
     /**
      * 单据阶段(0代表编制未完成 1代表编制完成)
@@ -104,7 +106,7 @@ public class CgddOrder implements Serializable {
     @ExcelIgnore
     private Integer orderStatus;
 
-    @ExcelProperty("参考金额")
+    @ExcelProperty("单据阶段")
     private String OrderStatueType;
 
     /**
@@ -276,5 +278,6 @@ public class CgddOrder implements Serializable {
     private int isDel;
 
     @TableField(exist = false)
+    @ExcelProperty("药品明细")
     private List<BaseMedicine> medicineList;
 }

@@ -1,8 +1,6 @@
 package com.kgc.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.kgc.dao.SysUserMapper;
-import com.kgc.dao.UnitMapper;
 import com.kgc.entity.BaseMedicineCategory;
 import com.kgc.dao.BaseMedicineCategoryMapper;
 import com.kgc.entity.Message;

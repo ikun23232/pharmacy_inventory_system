@@ -23,12 +23,6 @@
               ></el-date-picker>
             </el-col>
           </el-form-item>
-          <el-form-item label="仓库">
-            <el-input
-              placeholder="请选择"
-              v-model="object.storehouseName"
-            ></el-input>
-          </el-form-item>
           <el-form-item label="医用商品名称">
             <el-input placeholder="请选择" v-model="object.name"></el-input>
           </el-form-item>
@@ -57,8 +51,8 @@
       @selection-change="chandleDetailSelectionChange"
       style="width: 100%; text-align: center"
     >
-      <el-table-column type="selection" width="30" align="center" />
-      <el-table-column fixed prop="index" label="#" width="60">
+      <el-table-column type="selection" width="30" align="center" ></el-table-column>
+      <el-table-column fixed prop="index" label="序号" width="60">
         <template #default="scope">
           {{ scope.$index + (pageInfo.pageNum - 1) * pageInfo.pageSize + 1 }}
         </template>
@@ -78,21 +72,6 @@
       <el-table-column prop="batchCode" label="批次号" width="120">
       </el-table-column>
       <el-table-column prop="stock" label="库存" width="120"> </el-table-column>
-      <el-table-column prop="warning" label="库存预警值" width="120">
-      </el-table-column>
-      <el-table-column prop="isWarning" label="是否预警" width="120">
-        <template slot-scope="scope">
-          {{ scope.row.warning >= scope.row.stock ? "是" : "否" }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="createByName" label="创建人" width="120">
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="120">
-      </el-table-column>
-      <el-table-column prop="updateByName" label="修改人" width="120">
-      </el-table-column>
-      <el-table-column prop="updateTime" label="修改时间" width="120">
-      </el-table-column>
     </el-table>
     <div class="block">
       <p>
@@ -119,7 +98,7 @@
           >
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-button @click="cancel()">取 消</el-button>
+              <el-button @click="cancelKcmx()">取 消</el-button>
             </div>
           </el-col>
         </el-row>
@@ -131,12 +110,18 @@ import { initStockDetailListByPage } from "@/api/stockDetail.js";
 
 export default {
   name: "stockDetail",
+  props:{
+    wareHouseId: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       object: {
         orderDateBegin: "",
         orderDateEnd: "",
-        storehouseName: "",
+        storeHouseId: this.wareHouseId,
         name: "",
         categoryName: "",
         currentPage: 1,
@@ -165,7 +150,13 @@ export default {
       this.$emit("cancelKcmx");
     },
     submitForm(){
-
+      if(this.selectList.length == 0){
+        this.$message({
+          message: '请选择调度的药品！',
+          type: 'error',
+        })
+      }
+      this.$emit("handleKcmxSuccess",this.selectList)
     },
     chandleDetailSelectionChange(val){
       this.selectList = val

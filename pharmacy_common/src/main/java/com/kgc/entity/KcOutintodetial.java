@@ -7,7 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * <p>
@@ -26,7 +27,7 @@ public class KcOutintodetial implements Serializable {
     /**
      * 明细id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -38,43 +39,86 @@ public class KcOutintodetial implements Serializable {
      * 进出库类型
      */
     @TableField("typeId")
-    private Integer typeid;
+    private Integer typeId;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createDate;
 
     /**
      * 创造人
      */
     @TableField("createBy")
-    private String createby;
+    private Integer createBy;
 
     /**
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    private Date updateDate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private String updateby;
+    private Integer updateBy;
 
     /**
      * 删除id
      */
     @TableField("isDel")
-    private String isdel;
+    private String isDel;
 
     /**
      * 订单编号
      */
     @TableField("orderCode")
-    private String ordercode;
+    private String orderCode;
 
+    /**
+     * 药品id
+     */
+    @TableField("medicineId")
+    private Integer medicineId;
+    /**
+     * 供应商Id
+     */
+    @TableField("providerId")
+    private Integer providerId;
+    /**
+     * 入库金额
+     */
+    @TableField("toStockMoney")
+    private BigDecimal toStockMoney;
+    /**
+     * 批次编号
+     */
+    @TableField("batchCode")
+    private String batchCode;
+    /**
+     * 入库数量
+     */
+    @TableField("toStockQuantity")
+    private Integer toStockQuantity;
+    /**
+     * 出库金额
+     */
+    @TableField("fromStockMoney")
 
+    private BigDecimal fromStockMoney;
+    /**
+     * 出库数量
+     */
+    @TableField("fromStockQuantity")
+    private Integer fromStockQuantity;
+    /**
+     * 单价(当前)
+     */
+    @TableField("price")
+    private BigDecimal price;
+
+    @TableField("wareHouseId")
+    private Integer wareHouseId;
 }

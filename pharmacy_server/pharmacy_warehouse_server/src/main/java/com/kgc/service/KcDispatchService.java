@@ -3,6 +3,7 @@ package com.kgc.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.KcDispatch;
 import com.kgc.entity.Message;
+import com.kgc.entity.Page;
 import com.kgc.vo.DispatchVO;
 
 import java.util.List;
@@ -14,4 +15,21 @@ import java.util.List;
  */
 public interface KcDispatchService extends IService<KcDispatch> {
     public Message getKcDispathList(DispatchVO dispatchVO);
+
+    public Message addKcDispatch(KcDispatch kcDispatch);
+
+    public Message getKcDispatchById(KcDispatch kcDispatch);
+
+    public Message updateDispatchBy(KcDispatch kcDispatch);
+
+    public Message auditingDispatch(KcDispatch kcDispatch);
+
+    public Message deleteDispatch(Integer id);
+
+    /**
+     * 作废订单
+     * @param id
+     * @return
+     */
+    Message updateVoidStatus(int id);
 }
