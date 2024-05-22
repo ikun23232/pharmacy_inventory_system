@@ -7,7 +7,7 @@
         <id column="id" property="id" />
         <result column="path" property="path" />
         <result column="type" property="type" />
-        <result column="name" property="name" />
+        <result column="menuname" property="menuname" />
         <result column="statu" property="statu" />
         <result column="createDate" property="createdate" />
         <result column="createBy" property="createby" />
@@ -20,7 +20,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, path, type, name, statu, createDate, createBy, updateDate, updateBy, isDel, parentId, perms
+        id, path, type, menuname, statu, createDate, createBy, updateDate, updateBy, isDel, parentId, perms
     </sql>
     <select id="getNavMenuIds" resultType="java.lang.Integer">
         SELECT
@@ -31,10 +31,11 @@
         WHERE ur.userId = #{userId}
     </select>
     <select id="getMenuListByToken" resultType="com.kgc.entity.SysMenu">
-        select m.* ,name as title from sys_menu m,sys_rolemenu r,sys_userrole u WHERE m.id = r.menuId and r.roleId=u.roleId and m.isDel=0 and u.userId=#{userId} and m.type IN(0,1)
+        select m.* ,menuname as title,perms as name from sys_menu m,sys_rolemenu r,sys_userrole u WHERE m.id = r.menuId and r.roleId=u.roleId and m.isDel=0 and u.userId=#{userId} and m.type IN(0,1)
     </select>
     <select id="getAllMenuList" resultType="com.kgc.entity.SysMenu">
-        select m.* ,name as title from sys_menu m WHERE  m.isDel=0
+        select m.* ,menuname as title,perms as name from sys_menu m WHERE  m.isDel=0
     </select>
+
 
 </mapper>

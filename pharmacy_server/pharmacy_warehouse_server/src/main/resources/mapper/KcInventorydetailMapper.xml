@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcInventorydetailMapper">
+    <select id="getKcMedicineByMedicine" resultType="com.kgc.entity.KcInventorydetail">
+        SELECT * ,
+        (select name from base_storehouse s WHERE s.id=m.storehouseId) as warehouseName,
+        (select name from base_medicine c WHERE c.id=m.medicineId ) as medecineName,
+        (select name from base_provider b WHERE b.id=m.providerId ) as providername ,
+        (SELECT c.specification from base_medicine c WHERE m.medicineId =c.id) as unitName  from KcInventorydetail m
+        <where>
+            <if test="storehouseId>0">
+                and m.storehouseId=#{storehouseId}
+            </if>
+            <if test="medicineId>0">
+                and m.medicineId=#{medicineId}
+            </if>
+        </where>
+
+    </select>
+</mapper>

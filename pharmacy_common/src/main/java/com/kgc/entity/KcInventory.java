@@ -1,77 +1,155 @@
 package com.kgc.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * 盘点单
  * </p>
  *
- * @author lemon
- * @since 2024-04-30
+ * @author author
+ * @since 2024-05-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@TableName("kc_inventory")
 public class KcInventory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 盘点id
+     * ID
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 盘点日期
-     */
-    private LocalDateTime createdate;
-
-    /**
-     * 盘点人员
-     */
-    private Integer createby;
-
-    /**
-     * 仓库编号
+     * 单据编号
      */
     private String code;
 
     /**
-     * 药品id
+     * 单据日期
      */
-    private Integer medicineid;
+    private Date billDate;
 
     /**
-     * 药品名称
+     * 仓库
      */
-    private String medicinename;
+    private Integer warehouseId;
 
     /**
-     * 系统库存数量
+     * 物料分类
      */
-    private Integer originalcount;
+    private Integer materialCategoryId;
 
     /**
-     * 实际库存数量
+     * 盘点人
      */
-    private Integer nowcount;
+    private Integer checkerBy;
+    @TableField(exist = false)
+    private String checkerByName;
+
+
 
     /**
-     * 盘点结果 0：相符 1：盘亏 2 ：盘盈
+     * 附件
      */
-    private Integer result;
+    private String attachment;
 
     /**
-     * 盘点备注
+     * 备注
      */
     private String remark;
 
+    /**
+     * 单据阶段(0代表编制未完成 1代表编制完成 2代表执行中 3代表执行完)
+     */
+    private Integer orderStatus;
 
+    /**
+     * 审核人
+     */
+    private Integer approverBy;
+    @TableField(exist = false)
+    private String approverByName;
+
+    /**
+     * 是否通过
+     */
+    private Integer isApproved;
+
+    /**
+     * 是否作废
+     */
+    private Integer isVoided;
+
+    /**
+     * 创建人
+     */
+    private Integer createBy;
+    @TableField(exist = false)
+    private String createByName;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改人
+     */
+    private Integer updateBy;
+    @TableField(exist = false)
+    private String updateByName;
+
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
+
+    /**
+     * 生效时间
+     */
+    private Date effectiveTime;
+
+    /**
+     * 删除标识
+     */
+    @TableLogic
+    private Integer isdel;
+
+    /**
+     * 审核意见
+     */
+    private String approverRemark;
+
+    /**
+     * 主题
+     */
+    private String subject;
+
+    @TableField(exist = false)
+    private String warehouseName;
+
+
+    @TableField(exist = false)
+    private String materialCategoryName;
+
+    @TableField(exist = false)
+    private String orderStatusName;
+    /**
+     * 审批意见
+     */
+    private String approveComent;
 }

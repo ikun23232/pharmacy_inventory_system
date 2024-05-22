@@ -97,13 +97,11 @@ export default {
             
             if(res.data.code == "200"){
               this.$store.commit("SET_TOKEN", res.data.data.tokenValue);
-              
-              console.log(res.data.data.tokenValue);
+              console.log(res.data+"1yyyyy");
+              console.log(res.data);
               this.$router.push("/index");
             this.$message.success('登录成功')
-          
             }
-          
           });
         } else {
           console.log("error submit!!");

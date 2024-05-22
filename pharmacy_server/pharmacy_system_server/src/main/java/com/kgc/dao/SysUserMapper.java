@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
-     SysUser existUser(String username);
+     SysUser existUser(@Param("username") String username,@Param("id") Integer id);
      SysUser selectUser();
 
      SysUser login(SysUser user);

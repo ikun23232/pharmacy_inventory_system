@@ -3,6 +3,7 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,47 +28,64 @@ public class SysLogManage implements Serializable {
     /**
      * 日志主键id
      */
-      @TableId(value = "logId", type = IdType.AUTO)
-    private Integer logid;
+      @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 日志内容
      */
-    @TableField("logContent")
-    private String logcontent;
+    @TableField("user_id")
+    private Integer userId;
 
     /**
      * 操作名称
      */
+    @TableField("user_name")
     private String username;
 
     /**
      * 操作者的角色
      */
-    private Integer role;
+    private String title;
 
     /**
      * 登陆的地址ip
      */
+    @TableField("operation_ip")
     private String ip;
 
     /**
      * 创建日期
      */
-    @TableField("createDate")
-    private Date createdate;
+    @TableField("usage_time")
+    private long usageTime;
 
     /**
      * 日志类型
      */
-    @TableField("logType")
-    private Integer logtype;
+    @TableField("request_url")
+    private String requestUrl;
 
     /**
      * 用户id
      */
-    @TableField("userId")
-    private Integer userid;
+    @TableField("request_method")
+    private String requestMethod;
+
+
+    @TableField("request_params")
+    private String requestParams;
+
+    @TableField("operation_time")
+    private Date operationTime;
+
+
+    @TableField("response_result")
+    private String responseResult;
+    @TableLogic
+    private String isdel;
+
+
 
 
 }

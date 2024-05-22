@@ -7,7 +7,6 @@
         <id column="noticeId" property="noticeid" />
         <result column="noticeTitle" property="noticetitle" />
         <result column="noticeContent" property="noticecontent" />
-        <result column="userId" property="userid" />
         <result column="createDate" property="createdate" />
         <result column="createBy" property="createby" />
         <result column="updateDate" property="updatedate" />
@@ -17,7 +16,30 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        noticeId, noticeTitle, noticeContent, userId, createDate, createBy, updateDate, updateBy, isDel
+        noticeId, noticeTitle, noticeContent, createDate, createBy, updateDate, updateBy, isDel
     </sql>
+    <select id="getNoticeList" resultType="com.kgc.entity.SysNotice">
 
+        SELECT noticeId,noticeTitle,noticeContent,createDate,createBy, updateDate,updateBy, isDel FROM sys_notice
+
+        <where>
+            isDel = 0
+            <if test="noticetitle != null and noticetitle != ''">
+                and noticeTitle like concat("%",#{noticetitle},"%")
+            </if>
+            <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+                and createDate BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="existNotice"  resultType="com.kgc.entity.SysNotice">
+        select noticeId,noticeTitle,noticeContent, createDate,createBy,updateDate,updateBy,isDel   from sys_notice
+        where
+        noticeTitle = #{noticetitle}
+        <if test="id>0">
+            and noticeId NOT IN (#{id})
+        </if>
+        and isDel = 0
+    </select>
 </mapper>

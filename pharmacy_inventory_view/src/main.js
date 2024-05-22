@@ -9,14 +9,16 @@ import "ant-design-vue/dist/antd.css"
 import global from './globalFun'
 import axios from './utils/request'
 import { Message } from "element-ui";
+import {MessageBox} from "element-ui"
 
 
 Vue.prototype.$axios = axios //
 Vue.use(ElementUI);
 Vue.use(Antd)
-Vue.use(Message);
+// Vue.use(Message);
 Vue.config.productionTip = false
 Vue.prototype.$message = Message;
+Vue.prototype.$confirm = MessageBox.confirm
 
 new Vue({
   router,

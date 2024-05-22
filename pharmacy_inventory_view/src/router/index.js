@@ -30,11 +30,16 @@ const routes = [
 		name: 'Login',
 		component: () => import('../views/operate/Login.vue')
 	},
-	// {
-	// 	path: '/Rolelst',
-	// 	name: 'RoleList',
-	// 	component: () => import('../views/role/Role.vue')
-	// },
+	{
+		path: '/check',
+		name: 'Check',
+		component: () => import('../views/stocktake/1.vue')
+	},
+	{
+		path: '/check1',
+		name: 'Check1',
+		component: () => import('../views/stocktake/CheckList.vue')
+	},
 	// {
 	// 	path: '/Basecat',
 	// 	name: 'BaseCat',
@@ -50,7 +55,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-	let hasRoute = store.state.menus.hasRoutes
+let hasRoute = store.state.menus.hasRoutes
 
 let token = localStorage.getItem("token")
 
@@ -67,8 +72,8 @@ if (to.path == '/login') {
 			Authorization: localStorage.getItem("token")
 		}
 	}).then(res => {
-
 		console.log(res.data.data.nav)
+
 
 		// 拿到menuList
 		store.commit("setMenuList", res.data.data.nav)

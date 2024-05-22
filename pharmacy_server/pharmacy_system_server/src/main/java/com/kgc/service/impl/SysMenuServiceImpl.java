@@ -2,8 +2,6 @@ package com.kgc.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.kgc.dao.SysUserMapper;
-import com.kgc.dto.SysMenuDto;
-import com.kgc.entity.BaseMedicineCategory;
 import com.kgc.entity.Message;
 import com.kgc.entity.SysMenu;
 import com.kgc.dao.SysMenuMapper;
@@ -19,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -80,7 +79,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public Message getAuth() {
         String tokenValue = StpUtil.getTokenValue();
         String loginIdByToken = (String)StpUtil.getLoginIdByToken(tokenValue);
-        SysUser loginUser = sysUserMapper.existUser(loginIdByToken);
+        SysUser loginUser = sysUserMapper.existUser(loginIdByToken,null);
         String authorityInfo = sysUserService.getUserAuthorityInfo(loginUser.getUserid());// ROLE_admin,ROLE_normal,sys:user:list,....
         String[] authorityInfoArray = StringUtils.tokenizeToStringArray(authorityInfo, ",");
         Message menuListByToken = this.getMenuListByToken(loginUser.getUserid());
@@ -93,6 +92,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
 
     }
+
 
     private List<SysMenu> getChildrens(SysMenu root, List<SysMenu> all) {
         List<SysMenu> children = new ArrayList<>();

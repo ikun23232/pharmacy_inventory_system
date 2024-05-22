@@ -3,6 +3,7 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -45,8 +46,6 @@ public class SysNotice implements Serializable {
     /**
      * 发布人
      */
-    @TableField("userId")
-    private Integer userid;
 
     /**
      * 创造时间
@@ -75,6 +74,7 @@ public class SysNotice implements Serializable {
     /**
      * 删除标识
      */
+    @TableLogic
     @TableField("isDel")
     private Integer isdel;
 

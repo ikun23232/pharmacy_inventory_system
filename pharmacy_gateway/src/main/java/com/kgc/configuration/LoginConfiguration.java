@@ -35,10 +35,10 @@ public class LoginConfiguration {
                     // 登录校验 -- 拦截所有路由，并排除/user/doLogin 用于开放登录
                     SaRouter.match("/**", "/user/login", r -> StpUtil.checkLogin());
                     // 角色认证 -- 拦截以 admin 开头的路由，必须具备 admin 角色或者 super-admin 角色才可以通过认证
-                    SaRouter.match("/user/**", r -> StpUtil.checkRoleOr("admin","master"));
+                    SaRouter.match("/base/**", r -> StpUtil.checkRoleOr("admin","master"));
                     // 权限认证 -- 不同模块, 校验不同权限
-//                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("admin"));
-//                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("master"));
+                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("admin"));
+                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("admin"));
 //                    SaRouter.match("/base/**", r -> StpUtil.checkPermission("admin"));
 //                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("master"));
 //                    SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));

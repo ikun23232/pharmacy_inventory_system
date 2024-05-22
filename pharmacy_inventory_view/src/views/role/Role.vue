@@ -8,6 +8,15 @@
           clearable
         >
         </el-input>
+        <el-select
+          v-model="searchForm.isUse"
+          placeholder="请选择状态"
+          style="width: 300px"
+        >
+          <el-option label="全部" value="-1"></el-option>
+          <el-option label="禁用" value="2"></el-option>
+          <el-option label="正常" value="1"></el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item>
@@ -232,6 +241,7 @@ export default {
         .get("/user/role/list", {
           params: {
             rolename: this.searchForm.name,
+            isUse:this.searchForm.isUse,
             current: this.current,
           },
         })
@@ -324,7 +334,8 @@ export default {
           console.log("perm");
 
           console.log(res.data);
-          this.$message({
+		  if(res.code==="200"){
+			this.$message({
             showClose: true,
             message: "恭喜你，操作成功",
             type: "success",
@@ -334,6 +345,8 @@ export default {
           });
           this.permDialogVisible = false;
           this.resetForm(formName);
+		  }
+         
         });
     },
   },

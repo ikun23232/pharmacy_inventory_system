@@ -34,7 +34,7 @@
                 and roleName like concat("%",#{rolename},"%")
             </if>
 
-            <if test="isUse ==0 or isUse ==1">
+            <if test="isUse>0">
                 and isUse = #{isUse}
             </if>
         </where>

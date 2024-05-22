@@ -1,5 +1,6 @@
 import axios from "axios";
 import router from "@/router/index";
+import Element from "element-ui"
 const instance = axios.create({
     baseURL: '/',
     // timeout: 5000
@@ -26,30 +27,30 @@ instance.interceptors.request.use(async (request) => {
 instance.interceptors.response.use(
 	response => {
 
-		console.log("response ->" + response)
-
 		let res = response.data
-
+		console.log(res+"1111")
+		console.log(res)
 		if (res.code === "200") {
+			return response
+		} else if (res.code === "202") {
 			return response
 		} else {
 			console.log(response+"111");
 			console.log(res);
-			Element.Message.error(!res.msg ? '系统异常' : res.msg)
-			return Promise.reject(response.data.msg)
+			Element.Message.error(!res.message ? '系统异常' : res.message)
+			return Promise.reject(response)
 		}
 	},
 	error => {
 
-		console.log(error+"1111")
-		console.log(error.response)
+		
 
 		if (error.response.data) {
-			error.massage = error.response.data.msg
+			error.massage = error.response.data.message
 		}
 
 		if (error.response.status === 500) {
-			router.push("/login")
+			// router.push("/login")
 		}
 
 		Element.Message.error(error.response.data.massage, {duration: 3000})

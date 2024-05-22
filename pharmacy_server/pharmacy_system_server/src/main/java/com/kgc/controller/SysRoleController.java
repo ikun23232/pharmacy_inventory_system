@@ -73,12 +73,19 @@ public class SysRoleController {
         Message message = sysRoleService.getRoleListPage(rolename,isUse,page);
         return message;
     }
+    @RequestMapping("/role/AllList")
+    public Message AllList() {
+
+        Message message = sysRoleService.getAllList();
+        return message;
+    }
+
 
 
     @RequestMapping("/role/save")
     public Message save(@Validated @RequestBody SysRole sysRole) {
         String token = GetUser.getUser();
-        SysUser sysUser = sysUserMapper.existUser(token);
+        SysUser sysUser = sysUserMapper.existUser(token,null);
         sysRole.setCreateby(sysUser.getUserid());
         sysRole.setCreatetime(new Date());
         sysRoleService.save(sysRole);

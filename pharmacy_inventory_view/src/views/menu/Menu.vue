@@ -1,7 +1,7 @@
 <template>
 	<div>
 
-		<el-form :inline="true">
+		<el-form :inline="true" style="float:left">
 			<el-form-item>
 				<el-button type="primary" @click="dialogVisible = true">新增</el-button>
 			</el-form-item>
@@ -145,6 +145,7 @@
 
 <script>
 	export default {
+		inject:['reload'], 
 		name: "Menu",
 		data() {
 			return {
@@ -192,11 +193,9 @@
 									showClose: true,
 									message: '恭喜你，操作成功',
 									type: 'success',
-									onClose:() => {
-										this.getMenuTree()
-									}
 								});
-
+								this.getMenuTree()
+								this.reload()
 								this.dialogVisible = false
 						})
 					} else {
@@ -228,11 +227,9 @@
 						showClose: true,
 						message: '恭喜你，操作成功',
 						type: 'success',
-						onClose:() => {
-							this.getMenuTree()
-						}
 					});
-
+					this.getMenuTree()
+					this.reload()
 				})
 			}
 		}

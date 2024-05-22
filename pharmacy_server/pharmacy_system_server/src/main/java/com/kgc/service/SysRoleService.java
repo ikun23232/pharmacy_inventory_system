@@ -21,5 +21,7 @@ public interface SysRoleService extends IService<SysRole> {
     public List<SysRole> listRolesByUserId(Integer userId);
     public Message getRoleListPage(String rolename,Integer isUse,Page page);
 
+    public Message getAllList();
+
 
 }

@@ -46,4 +46,10 @@ private SysRoleMapper sysRoleMapper;
         }
         return Message.error("数据为空");
     }
+
+    @Override
+    public Message getAllList() {
+        List<SysRole> roles = sysRoleMapper.selectList(null);
+        return Message.success(roles);
+    }
 }

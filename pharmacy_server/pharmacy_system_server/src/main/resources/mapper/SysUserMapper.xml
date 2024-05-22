@@ -28,6 +28,9 @@
         select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
         where
             userName = #{username}
+          <if test="id>0">
+              and userId NOT IN (#{id})
+          </if>
           and isDel = 0
     </select>
 
@@ -49,10 +52,10 @@
             <if test="username != null and username != ''">
                 and userName like concat("%",#{username},"%")
             </if>
-            <if test="sex ==0 and sex ==1">
+            <if test="sex >0">
                 and sex = #{sex}
             </if>
-            <if test="isstate ==0 and isstate ==1">
+            <if test="isstate >0">
                 and isState = #{isstate}
             </if>
         </where>

@@ -69,7 +69,7 @@ public class SysUser implements Serializable {
      * 创造人
      */
     @TableField("createBy")
-    private String createby;
+    private Integer createby;
 
     /**
      * 修改时间

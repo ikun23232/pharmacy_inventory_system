@@ -12,10 +12,5 @@ import lombok.ToString;
 public class Page {
     private Integer currentPageNo;
     private Integer pageSize;
-    private Integer totalCount;
-    private Integer totalPageCount;
-    private Object data;
-
-
 
 }

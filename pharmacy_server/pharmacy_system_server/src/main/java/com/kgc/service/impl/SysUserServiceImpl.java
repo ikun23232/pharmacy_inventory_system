@@ -12,13 +12,19 @@ import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.*;
 import com.kgc.service.SysMenuService;
 import com.kgc.service.SysRoleService;
+import com.kgc.service.SysUserRoleService;
 import com.kgc.service.SysUserService;
 import com.kgc.utils.Md5Util;
 import com.kgc.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +42,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Autowired
     private SysUserMapper sysUserMapper;
     @Autowired
+    private SysRoleService sysRoleService;
+    @Autowired
     private SysMenuMapper sysMenuMapper;
     @Autowired
     SysMenuService sysMenuService;
@@ -43,13 +51,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private RedisUtil redisUtil;
     @Autowired
     SysRoleMapper sysRoleMapper;
+    @Autowired
+    SysUserRoleService sysUserRoleService;
 
 
     @Override
-    public Message existUser(String userName) {
-        SysUser sysUser = sysUserMapper.existUser(userName);
+    public Message existUser(String userName,Integer id) {
+        SysUser sysUser = sysUserMapper.existUser(userName,id);
         if (sysUser != null) {
-            return Message.error("用户不为空",sysUser);
+            return Message.error("202","用户不为空",sysUser);
         }
         return Message.success(sysUser);
     }
@@ -88,10 +98,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public Message delUserById(int userid) {
-        int updateRow = sysUserMapper.deleteById(userid);
-        if (updateRow > 0) {
-            return Message.success();
+    public Message delUserById( Integer[] ids) {
+        boolean flag = this.removeByIds(Arrays.asList(ids));
+
+        if (flag ) {
+            boolean flag1 = sysUserRoleService.remove(new QueryWrapper<SysUserrole>().in("userId", ids));
+            return Message.success(flag1);
         }
         return Message.error("删除失败");
     }
@@ -100,12 +112,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Message updateUser(SysUser sysUser) {
         String tokenValue = StpUtil.getTokenValue();
         String loginIdByToken = (String)StpUtil.getLoginIdByToken(tokenValue);
-        SysUser loginUser = sysUserMapper.existUser(loginIdByToken);
+        SysUser loginUser = sysUserMapper.existUser(loginIdByToken,null);
         sysUser.setUpdateby(loginUser.getUserid());
         sysUser.setUpdatedate(new Date());
-        int updateRow = sysUserMapper.updateById(sysUser);
-        if (updateRow > 0) {
-            return Message.success();
+        boolean flag = this.updateById(sysUser);
+        if (flag) {
+            return Message.success(flag);
         }
         return Message.error("修改失败");
     }
@@ -116,8 +128,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (tokenValue==null){
             return Message.error("token为空");
         }
-        String loginIdByToken = (String)StpUtil.getLoginIdByToken(tokenValue);
-        SysUser loginUser = sysUserMapper.existUser(loginIdByToken);
+        String username = (String)StpUtil.getLoginIdByToken(tokenValue);
+        SysUser loginUser = sysUserMapper.existUser(username,null);
         return Message.success(loginUser);
     }
 
@@ -151,6 +163,25 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    public Message rolePerm(Integer userId, Integer[] roleIds) {
+        List<SysUserrole> userRoles = new ArrayList<>();
+
+        Arrays.stream(roleIds).forEach(r -> {
+            SysUserrole sysUserRole = new SysUserrole();
+            sysUserRole.setRoleId(r);
+            sysUserRole.setUserId(userId);
+            userRoles.add(sysUserRole);
+        });
+        sysUserRoleService.remove(new QueryWrapper<SysUserrole>().eq("userId", userId));
+        sysUserRoleService.saveBatch(userRoles);
+        // 删除缓存
+        SysUser sysUser = this.getById(userId);
+        this.clearUserAuthorityInfo(sysUser.getUsername());
+
+        return Message.success("更改角色成功");
+    }
+
+    @Override
     public void clearUserAuthorityInfo(String username) {
         redisUtil.del("GrantedAuthority:" + username);
     }
@@ -174,6 +205,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUsers.forEach(u -> {
             this.clearUserAuthorityInfo(u.getUsername());
         });
+    }
+
+    @Override
+    public Message repass(Integer userId) {
+        SysUser sysUser = this.getById(userId);
+
+        sysUser.setPassword(Md5Util.getMD5String("123456"));
+        sysUser.setUpdatedate(new Date());
+
+        boolean flag = this.updateById(sysUser);
+        return Message.success(flag);
     }
 
 }

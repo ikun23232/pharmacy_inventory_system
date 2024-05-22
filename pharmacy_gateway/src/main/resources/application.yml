@@ -5,14 +5,57 @@ logging:
     root: debug
 spring:
   application:
-    name: pharmacyGateway
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: 121.43.152.126:8848
-#  redis:
-#    host: 121.43.152.126
-
+    name: gatewayServe
+  cloud:
+    #    nacos:
+    #      discovery:
+    #        server-addr: 121.43.152.126:8848
+    gateway:
+      routes:
+        - id: gateway
+          uri: http://localhost:8070
+          predicates:
+            - Path=/gateway/**
+          filters:
+            - StripPrefix=1
+        - id: base
+          uri: http://localhost:8081
+          predicates:
+            - Path=/base/**
+          filters:
+            - StripPrefix=1
+        - id: sale
+          uri: http://localhost:8086
+          predicates:
+            - Path=/sale/**
+          filters:
+            - StripPrefix=1
+        - id: warehouse
+          uri: http://localhost:8085
+          predicates:
+            - Path=/warehouse/**
+          filters:
+            - StripPrefix=1
+        - id: procurement
+          uri: http://localhost:8084
+          predicates:
+            - Path=/procurement/**
+          filters:
+            - StripPrefix=1
+        - id: system
+          uri: http://localhost:8088
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        - id: finance
+          uri: http://localhost:8088
+          predicates:
+            - Path=/finance/**
+          filters:
+            - StripPrefix=1
+  redis:
+    host: localhost
 # Sa-Token配置
 sa-token:
   # token名称 (同时也是cookie名称)
@@ -29,3 +72,6 @@ sa-token:
   is-log: false
   # 是否从cookie中读取token
   is-read-cookie: false
+gateway-config:
+  open-token: false
+  open-replay: false

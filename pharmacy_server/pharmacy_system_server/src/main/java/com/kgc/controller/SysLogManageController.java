@@ -1,10 +1,21 @@
 package com.kgc.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.date.DateUtil;
+import com.kgc.annotation.Log;
+import com.kgc.entity.Message;
+import com.kgc.entity.Page;
+import com.kgc.service.SysLogManageService;
+import com.kgc.vo.SysOperationLogVo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -15,8 +26,62 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("/sysLogManage")
+@RequestMapping("/user")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class SysLogManageController {
+    private final SysLogManageService sysOperationLogService;
 
+//    @SaCheckPermission("system:sysOperationLog:list")
+    @RequestMapping("/sysLogManage/list")
+    public Message queryList(@RequestBody SysOperationLogVo entity) {
+        int _currentPageNo = 1;
+        if (entity.getCurrent() != null && !"".equals(entity.getCurrent())) {
+            _currentPageNo = Integer.parseInt(entity.getCurrent());
+        }
+        Page page = new Page();
+        page.setPageSize(4);
+        page.setCurrentPageNo(_currentPageNo);
+        Message message = sysOperationLogService.queryList(entity, page);
+        return message;
+    }
+
+    @Log("操作日志根据主键查询")
+//    @SaCheckPermission("system:sysOperationLog:get")
+    @GetMapping("/sysLogManage/queryById/{id}")
+    public Message queryById(@PathVariable("id") Integer id) {
+        SysOperationLogVo sysOperationLogVo = sysOperationLogService.queryById(id);
+        return Message.success(sysOperationLogVo);
+    }
+
+//    @ApiOperation("操作日志导出")
+//    @Log("操作日志导出")
+//    @SaCheckPermission("system:sysOperationLog:export")
+//    @GetMapping("/exportExcel")
+//    public void exportExcel(SysOperationLogVo entity) {
+//        List<SysOperationLogVo> list = sysOperationLogService.queryList(getAllPage(), entity).getRecords();
+//        EasyPoiExcelUtils.exportExcel(list, "操作日志-" + DateUtil.format(DateUtil.date(), "yyyyMMddHHmmss"), SysOperationLogVo.class);
+//    }
+
+    @Log("操作日志根据主键删除")
+//    @SaCheckPermission("system:sysOperationLog:remove")
+    @GetMapping("/sysLogManage/removeById/{id}")
+    public Message removeById(@PathVariable("id") Integer id) {
+        boolean b = sysOperationLogService.removeById(id);
+        if (b){
+            return Message.success(b);
+        }
+        return Message.error("删除失败");
+    }
+
+    @Log("操作日志根据主键批量删除")
+//    @SaCheckPermission("system:sysOperationLog:removeBatch")
+    @RequestMapping("/sysLogManage/removeBatchByIds")
+    public Message removeBatchByIds(@RequestBody Integer[] ids) {
+        boolean b = sysOperationLogService.removeByIds(Arrays.asList(ids));
+        if (b){
+            return Message.success(b);
+        }
+        return Message.error("删除失败");
+    }
 }
 

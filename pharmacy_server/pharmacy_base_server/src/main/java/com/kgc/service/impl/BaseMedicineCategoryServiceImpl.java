@@ -72,7 +72,7 @@ public class BaseMedicineCategoryServiceImpl extends ServiceImpl<BaseMedicineCat
     @Override
     public Message updateCat(BaseMedicineCategory baseMedicineCategory) {
         String token = GetUser.getUser();
-        SysUser loginUser = sysUserMapper.existUser(token);
+        SysUser loginUser = sysUserMapper.existUser(token,null);
         baseMedicineCategory.setUpdateby(loginUser.getUserid());
         baseMedicineCategory.setUpdatedate(new Date());
         int updateRow = baseMedicineCategoryMapper.updateById(baseMedicineCategory);
