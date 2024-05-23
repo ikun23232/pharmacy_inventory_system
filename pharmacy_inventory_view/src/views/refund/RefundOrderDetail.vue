@@ -31,9 +31,25 @@
                <el-form-item label="制单人" prop="createByName">
                  <el-input type="text" disabled v-model="saleOrder.createByName"></el-input>
                </el-form-item></div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple">
+        <el-form-item label="退款原因" prop="refundTypeId">
+            <el-select
+                v-model="saleOrder.refundTypeId"
+                placeholder="请选择"
+                clearable
+                filterable
+                >
+                <el-option v-for="item in refundTypeList"
+                    :key="item.index"
+                    :label="item.type"
+                    :value="item.id">
+                </el-option>
+                </el-select>
+        </el-form-item></div></el-col>   
+
            <el-col :span="8"
              ><div class="grid-content bg-purple">
-                <el-form-item label="银行账户" prop="bankAccountId">
+               <el-form-item label="银行账户" prop="bankAccountId">
                  <el-select
                    v-model="saleOrder.bankAccountId"
                    placeholder="请选择"
@@ -59,31 +75,18 @@
             @selection-change="handleSelectionChange"
             ref="tb"
             border
-            style="width:900px"
+            style="width:960px"
           >
-            <el-table-column type="selection" width="50" align="center" />
             <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
-             <!-- <template slot-scope="scope">
-                <el-select clearable filterable @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
-                  <el-option
-                    v-for="dict in baseMedicineList"
-                    :key="dict.id"
-                    :label="dict.name"
-                    :value="dict.id"/>
-                </el-select>
-              </template> -->
+              <template slot-scope="scope">
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].name"></el-input>
+              </template>
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
-             <!-- <template slot-scope="scope">
-                <el-select clearable filterable @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
-                  <el-option
-                    v-for="dict in scope.row.batchCodeList"
-                    :key="dict.batchcode"
-                    :label="dict.batchcode"
-                    :value="dict.batchcode"/>
-                </el-select>
-              </template> -->
+              <template slot-scope="scope">
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].batchCode"></el-input>
+              </template>
             </el-table-column>
             <el-table-column label="规格型号" align="center" prop="specification" width="120">
               <template slot-scope="scope">
@@ -123,14 +126,44 @@
           </el-table>
            </el-col>
            </el-row>
-           <div style="text-align: left;">
-             <span style=" margin-bottom:25px;">合计: {{saleOrder.totalPrice}} 元</span> 
-           </div>   
+           <el-row type="flex" justify="start" style="margin-top: 10px;">
+          <el-col :span="2"><span>合计: {{saleOrder.totalPrice}} 元</span></el-col>
+          </el-row>
           <el-divider></el-divider>
-         <div style="text-align: left;">
-          <span>备注: </span><el-input size="small" v-model="saleOrder.remark" placeholder="请输入备注" style="width: 860px;"></el-input>
-        </div>
-   
+          <el-row>
+            <el-col :span="24"><div>
+              <el-form-item label-width="80px" size="small">
+                <label slot="label" v-html="'备&#8195;&#8195;注:'"></label>
+                <el-input
+                type="textarea"
+                autosize
+                placeholder="请输入内容"
+                v-model="saleOrder.remark">
+              </el-input>
+              </el-form-item>
+            </div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12"><div>
+              <el-form-item label="核批意见:" label-width="80px" size="small">
+                <el-input
+                type="textarea"
+                autosize
+                placeholder="请输入内容"
+                v-model="saleOrder.opinion">
+              </el-input>
+              </el-form-item>
+            </div></el-col>
+            <el-col :span="12"><div>
+              <el-form-item label="核批结果:" label-width="80px" size="small">
+                <el-select v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
+                  <el-option label="同意" :value="1"></el-option>
+                  <el-option label="拒绝" :value="2"></el-option>
+                </el-select>
+              </el-form-item>
+            </div></el-col>
+          </el-row>
+          <el-divider></el-divider>
        <el-row type="flex" justify="end" style="margin-top: 20px;">
          <el-col :span="2" >
            <el-button type="primary" size="mini" @click="printForm">打印</el-button>
@@ -146,7 +179,8 @@
    
    <script>
    import {getSaleOrderByOrderNo} from "../../api/saleOrder.js";
-
+   import {getAllRefundTypeList} from "../../api/refundOrder.js";
+   import {getAllBankCountList} from "../../api/BankAccount.js";
    export default {
      name: "SaleOrderDetail",
      props:{
@@ -155,16 +189,7 @@
      data() {
        return {
          medicineDetailList:[],
-         saleOrder:{
-           orderNo:"",
-           orderDate:new Date(),
-           createByName:"",
-           bankAccountId:"",
-           remark:'',
-           checkedDetail: [],
-           totalPrice:"",
-           totalNumber:""
-         },   
+         saleOrder:[],   
          rules:{
            orderNo:[
                { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -182,9 +207,19 @@
        };
      },
      async mounted() {
-       this.getSaleOrderByOrderNo();
+       this.getAllBankCountList();
+       this.getAllRefundTypeList();
      },
      methods: {
+      async getAllBankCountList() {
+         let data = await getAllBankCountList();
+         this.bankAccountList=data.data;
+       },
+       async getAllRefundTypeList() {
+         let data = await getAllRefundTypeList();
+         this.refundTypeList=data.data;
+         this.getSaleOrderByOrderNo();
+       },
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
           this.saleOrder=data.data;

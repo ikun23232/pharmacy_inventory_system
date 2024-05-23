@@ -17,11 +17,22 @@ import StockDetail from "../views/kc/KCMX/StockDetail.vue";
 import PrintStockDetail from "../views/kc/KCMX/PrintStockDetail.vue";
 import PrintRefundOrder from "../views/refund/PrintRefundOrder.vue";
 import RefundOrder from "../views/refund/RefundOrder.vue";
-
+import RefundInWarehouse from "../views/kc/TKRK/RefundInWarehouse.vue";
+import SaleOrderStatistics from "../views/saleStatistics/SaleOrderStatistics.vue";
+import RefundOrderStatistics from "../views/saleStatistics/RefundOrderStatistics.vue";
+import SaleStatistics from "../views/saleStatistics/SaleStatistics.vue";
+import SaleOrderDetailStatistics from "../views/saleStatistics/SaleOrderDetailStatistics.vue";
+import RefundOrderDetailStatistics from "../views/saleStatistics/RefundOrderDetailStatistics.vue";
+import IndexHome from "../views/index/IndexHome.vue";
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/indexHome',
+    name: 'indexHome',
+    component: IndexHome
+  },
   {
     path: '/storeHouse',
     name: 'storeHouse',
@@ -97,7 +108,37 @@ const routes = [
     path: '/printRefundOrder',
     name: 'printRefundOrder',
     component: PrintRefundOrder
-  }
+  },
+  {
+    path: '/refundInWarehouse',
+    name: 'refundInWarehouse',
+    component: RefundInWarehouse
+  },
+  {
+    path: '/saleOrderStatistics',
+    name: 'saleOrderStatistics',
+    component: SaleOrderStatistics
+  },
+  {
+    path: '/saleOrderDetailStatistics',
+    name: 'saleOrderDetailStatistics',
+    component: SaleOrderDetailStatistics
+  },
+  {
+    path: '/refundOrderStatistics',
+    name: 'refundOrderStatistics',
+    component: RefundOrderStatistics
+  },
+  {
+    path: '/refundOrderDetailStatistics',
+    name: 'refundOrderDetailStatistics',
+    component: RefundOrderDetailStatistics
+  },
+  {
+    path: '/saleStatistics',
+    name: 'saleStatistics',
+    component: SaleStatistics
+  },
 ]
 
 const router = new VueRouter({

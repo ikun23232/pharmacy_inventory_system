@@ -7,7 +7,6 @@ import com.github.pagehelper.PageInfo;
 import com.kgc.dao.SaleOutWarehouseMapper;
 import com.kgc.entity.KcSalefromware;
 import com.kgc.entity.Message;
-import com.kgc.entity.XsOrder;
 import com.kgc.service.SaleOutWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SaleOutWarehouseServiceImpl  extends ServiceImpl<SaleOutWarehouseMapper, KcSalefromware> implements SaleOutWarehouseService {
+public class SaleOutWarehouseServiceImpl extends ServiceImpl<SaleOutWarehouseMapper, KcSalefromware> implements SaleOutWarehouseService {
 
     @Autowired
     private SaleOutWarehouseMapper saleOutWarehouseMapper;

@@ -35,6 +35,9 @@
                totalPrice,
                bankAccountId,
                remark,
+               refundTypeId,
+               isCheck,
+               opinion,
                o.createBy,
                o.updateBy,
                o.updateDate,
@@ -48,7 +51,7 @@
     </select>
 
     <select id="getSaleOrderDetailByOrderNo" resultType="BaseMedicine">
-        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,
+        select b.id,b.name,b.categoryId,b.unitId,b.salePrice,b.specification,b.warning,
                un.name as unitName,mc.name as categoryName,om.medicineId,om.quantity,om.totalPrice,om.batchCode,kc.quantity as stock
         from base_medicine b,base_unit un,base_medicine_category mc,order_medicine om,kc_medicine kc
         where b.categoryId=mc.id and b.unitId=un.id and b.id=om.medicineId and kc.batchCode=om.batchCode and kc.medicineId=om.medicineId

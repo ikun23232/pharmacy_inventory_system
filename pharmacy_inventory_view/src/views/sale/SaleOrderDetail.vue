@@ -64,26 +64,8 @@
             <el-table-column type="selection" width="50" align="center" />
             <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
-             <!-- <template slot-scope="scope">
-                <el-select clearable filterable @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
-                  <el-option
-                    v-for="dict in baseMedicineList"
-                    :key="dict.id"
-                    :label="dict.name"
-                    :value="dict.id"/>
-                </el-select>
-              </template> -->
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
-             <!-- <template slot-scope="scope">
-                <el-select clearable filterable @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
-                  <el-option
-                    v-for="dict in scope.row.batchCodeList"
-                    :key="dict.batchcode"
-                    :label="dict.batchcode"
-                    :value="dict.batchcode"/>
-                </el-select>
-              </template> -->
             </el-table-column>
             <el-table-column label="规格型号" align="center" prop="specification" width="120">
               <template slot-scope="scope">
@@ -146,6 +128,7 @@
    
    <script>
    import {getSaleOrderByOrderNo} from "../../api/saleOrder.js";
+   import {getAllBankCountList} from "../../api/BankAccount.js";
 
    export default {
      name: "SaleOrderDetail",
@@ -154,6 +137,7 @@
      },
      data() {
        return {
+        bankAccountList:[],
          medicineDetailList:[],
          saleOrder:{
            orderNo:"",
@@ -183,8 +167,13 @@
      },
      async mounted() {
        this.getSaleOrderByOrderNo();
+       this.getAllBankCountList();
      },
      methods: {
+        async getAllBankCountList() {
+          let data = await getAllBankCountList();
+          this.bankAccountList=data.data;
+        },
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
           this.saleOrder=data.data;

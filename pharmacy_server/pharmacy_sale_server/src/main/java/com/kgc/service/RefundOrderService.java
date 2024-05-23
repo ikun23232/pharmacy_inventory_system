@@ -7,4 +7,8 @@ import com.kgc.entity.XsOrder;
 public interface RefundOrderService extends IService<XsOrder> {
 
     public Message getRefundOrderListByPage(XsOrder xsOrder);
+
+    public Message addRefundOrder(XsOrder xsOrder);
+
+    public Message checkedRefundOrder(XsOrder xsOrder);
 }

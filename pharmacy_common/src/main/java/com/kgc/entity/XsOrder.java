@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +62,7 @@ public class XsOrder implements Serializable {
      * 销售订单总价格
      */
     @TableField("totalPrice")
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     /**
      * 销售订单总数量
@@ -127,6 +128,7 @@ public class XsOrder implements Serializable {
      */
     private Integer cancelStatus;
 
+    private String opinion;
 
     @TableField(exist=false)
     private String createByName;
@@ -157,4 +159,5 @@ public class XsOrder implements Serializable {
 
     @TableField(exist=false)
     private String refundTypeName;
+
 }

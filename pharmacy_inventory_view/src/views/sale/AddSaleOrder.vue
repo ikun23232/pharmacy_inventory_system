@@ -201,7 +201,7 @@ export default {
   async mounted() {
     this.saleOrder.orderNo = await getCurrentTime("XXDD");
     this.getAllBankCountList();
-    this.getAllBaseMedicine();
+
   },
   methods: {
     async getAllBankCountList() {

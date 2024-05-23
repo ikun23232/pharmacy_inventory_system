@@ -20,7 +20,7 @@
                   <el-input placeholder="创建人" v-model="object.createByName"></el-input>
               </el-form-item>
               <el-form-item>
-                  <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
+                  <el-button type="primary" icon="el-icon-search" @click="initRefundOrderByPage(1)">查询</el-button>
                   <el-button icon="el-icon-refresh-right" >重置</el-button>
                    <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
               <el-button type="text" icon="el-icon-upload2" style="margin-left:18px">导出</el-button>
@@ -30,7 +30,7 @@
           </div>
   
     </div>
-    <el-table stripe="true" :data="list" border style="width: 100%;text-align: center;">
+    <el-table :stripe=true :data="list" border style="width: 100%;text-align: center;">
       <el-table-column fixed prop="index" label="#" width="60">
           <template #default="scope">
           {{ scope.$index +(pageInfo.pageNum - 1) * pageInfo.pageSize+ 1 }}
@@ -55,7 +55,9 @@
       </el-table-column>
       <el-table-column prop="editStatus" label="订单状态" width="120">
         <template slot-scope="scope">
-          {{ scope.row.editStatus==0?"编制中":"已完成"}}
+          <span v-if="scope.row.editStatus==0">编制中</span>
+          <span v-if="scope.row.editStatus==1">编制完</span>
+          <span v-if="scope.row.editStatus==2">已完成</span>
         </template>
       </el-table-column>
       <el-table-column prop="isCheck" label="审批状态" width="120">
@@ -78,7 +80,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button @click="handleUpdate(scope.row.orderNo)" type="text" :disabled="scope.row.editStatus==1?true:false">
+          <el-button @click="handleUpdate(scope.row.orderNo)" type="text" :disabled="scope.row.editStatus==2?true:false">
             编辑
           </el-button>
           <el-dropdown>
@@ -86,9 +88,9 @@
               更多<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="handleCheck(scope.row.orderNo)" :disabled="scope.row.isCheck==0&&scope.row.editStatus==0?true:false">审核</el-dropdown-item>
+              <el-dropdown-item @click.native="handleCheck(scope.row.orderNo)" :disabled="scope.row.isCheck!=0||scope.row.editStatus==0||scope.row.cancelStatus==1?true:false">审核</el-dropdown-item>
               <el-dropdown-item @click.native="handleDelete(scope.row.orderNo)">删除</el-dropdown-item>
-              <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)">作废</el-dropdown-item>
+              <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)" :disabled="scope.row.cancelStatus==1?true:false">作废</el-dropdown-item>
               <el-dropdown-item @click.native="printRefundOrder(scope.row.orderNo)">打印</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -120,7 +122,7 @@
       >
       <UpdateRefundOrder @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></UpdateRefundOrder>
     </el-dialog>
-       <!-- 查看销售订单详情 -->
+       <!-- 查看退款订单详情 -->
        <el-dialog
         title="退款订单-详情"
         :visible.sync="detailDialogFormVisible"
@@ -128,6 +130,16 @@
         v-if="detailDialogFormVisible"
       >
       <RefundOrderDetail @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></RefundOrderDetail>
+      </el-dialog>
+
+      <!-- 审核退款订单-->
+      <el-dialog
+        title="退款订单-审核"
+        :visible.sync="checkDialogFormVisible"
+        width="1000px"
+        v-if="checkDialogFormVisible"
+      >
+      <CheckRefundOrder @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></CheckRefundOrder>
       </el-dialog>
     </div>
   </div>
@@ -138,6 +150,8 @@
   import AddRefundOrder from "../refund/AddRefundOrder.vue";
   import UpdateRefundOrder from "../refund/UpdateRefundOrder.vue";
   import RefundOrderDetail from "../refund/RefundOrderDetail.vue";
+  import CheckRefundOrder from "../refund/CheckRefundOrder.vue";
+  import {deleteSaleOrder,cancelSaleOrder} from "../../api/saleOrder.js";
   import { Message } from "element-ui";
   
   export default {
@@ -145,7 +159,8 @@
     components: {
       AddRefundOrder,
       UpdateRefundOrder,
-      RefundOrderDetail
+      RefundOrderDetail,
+      CheckRefundOrder
     },
     data(){
       return{
@@ -157,11 +172,12 @@
               createByName:"",
               currentPage:1, 
           },
-          pageInfo:"",
-          list:"",
+          pageInfo:[],
+          list:[],
           addDialogFormVisible:false,
           updateDialogFormVisible:false,
           detailDialogFormVisible:false,
+          checkDialogFormVisible:false,
       }
     },
     mounted() {
@@ -193,6 +209,7 @@
           this.addDialogFormVisible=val;
           this.updateDialogFormVisible=val;
           this.detailDialogFormVisible=val;
+          this.checkDialogFormVisible=val;
           this.initRefundOrderByPage(this.object.currentPage);
       },
       lookSaleOrderDetail(orderNo){
@@ -201,6 +218,10 @@
       },
       handleUpdate(orderNo){
         this.updateDialogFormVisible=true;
+        this.orderNo=orderNo;
+      },
+      handleCheck(orderNo){
+        this.checkDialogFormVisible=true;
         this.orderNo=orderNo;
       },
       //退货订单作废
@@ -213,7 +234,7 @@
           })
           .then(async () => {
             try {
-              let data = await cancelRefundOrder(orderNo);
+              let data = await cancelSaleOrder(orderNo);
               if (data.code === "200") {
                 Message({type: 'success',message: '作废成功！'})
                 this.initRefundOrderByPage(this.object.currentPage);
@@ -240,7 +261,7 @@
           })
           .then(async () => {
             try {
-              let data = await deleteRefundOrder(orderNo);
+              let data = await deleteSaleOrder(orderNo);
               if (data.code === "200") {
                 Message({type: 'success',message: '删除成功！'})
                 this.initRefundOrderByPage(this.object.currentPage);
