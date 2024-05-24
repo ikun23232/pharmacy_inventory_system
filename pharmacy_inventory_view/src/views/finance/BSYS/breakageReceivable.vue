@@ -14,6 +14,7 @@ export default {
         code: '',
         originalOrder: ''
       },
+      time:{}
     }
   },
   mounted() {
@@ -21,8 +22,14 @@ export default {
   },
   methods: {
     getCwbsysLists() {
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        this.cwBsys.beginTime = this.time[0];
+        this.cwBsys.endTime = this.time[1];
+      } else {
+        this.cwBsys.beginTime = null;
+        this.cwBsys.endTime = null;
+      }
       getCwbsysList(this.cwBsys, this.cwBsysPage.pageNum, this.cwBsysPage.pageSize).then(resp => {
-        console.log(resp)
         if (resp.code != 200) {// 失败
           this.cwBsysPage.list = []
           this.cwBsysPage.total = 0
@@ -34,6 +41,7 @@ export default {
     clean() {
       this.cwBsys.code = ''
       this.cwBsys.originalOrder = ''
+      this.time = {};
       this.getCwbsysLists()
     },
   }
@@ -42,6 +50,7 @@ export default {
 
 <template>
   <div>
+    <h1>报损应收</h1>
     <div>
       <el-row :gutter="20">
         <el-col :span="6"
@@ -62,11 +71,22 @@ export default {
               placeholder="请输入原单据编号"
           ></el-input></div
         ></el-col>
-
+        <el-col :span="10">
+          单号日期：
+          <el-date-picker
+              v-model="time"
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+          />
+        </el-col>
 
       </el-row>
       <el-button type="primary" @click="getCwbsysLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="clean()">清空</el-button><br/><br>
     </div>
     <div class="table">
       <el-table :data="cwBsysPage.list" border style="width: 100%">

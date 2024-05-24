@@ -21,6 +21,9 @@ export default {
         year:'',
         month:''
       },
+      timeTo:{
+
+      },
       CwNumByYear:[],
       monthListNum: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       monthListNum2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -37,6 +40,16 @@ export default {
   },
   methods: {
     getCwAccountsLists() {
+      if (Array.isArray(this.timeTo) && this.timeTo.length > 0) {
+        // time 是一个非空数组
+        this.cwAccounts.beginTime = this.timeTo[0];
+        this.cwAccounts.endTime = this.timeTo[1];
+      } else {
+        // time 是空数组、null 或 undefined
+        // 这里可以添加适当的处理逻辑，例如重置 beginTime 和 endTime
+        this.cwAccounts.beginTime = null;
+        this.cwAccounts.endTime = null;
+      }
       getCwAccountsList(this.cwAccounts, this.cwAccountsPage.pageNum, this.cwAccountsPage.pageSize).then(resp => {
         if (resp.code != 200){
           this.cwAccountsPage.list = []
@@ -252,7 +265,7 @@ export default {
    <div>
 
      <el-row :gutter="20">
-       <el-col :span="6"
+       <el-col :span="8"
        ><div class="grid-content bg-purple">
          流水编号：
          <el-input
@@ -261,7 +274,7 @@ export default {
              placeholder="请输入单据编号"
          ></el-input></div
        ></el-col>
-       <el-col :span="6"
+       <el-col :span="8"
        ><div class="grid-content bg-purple">
          订单编号：
          <el-input
@@ -270,7 +283,7 @@ export default {
              placeholder="请输入原单据编号"
          ></el-input></div
        ></el-col>
-       <el-col :span="6"
+       <el-col :span="8"
        ><div class="grid-content bg-purple">
          银行账户：
          <el-input
@@ -279,9 +292,17 @@ export default {
              placeholder="请输入银行账户"
          ></el-input></div
        ></el-col>
-
-
      </el-row>
+     流水日期：
+     <el-date-picker
+         v-model="timeTo"
+         type="daterange"
+         align="right"
+         unlink-panels
+         range-separator="至"
+         start-placeholder="开始日期"
+         end-placeholder="结束日期"
+     />&nbsp;&nbsp;&nbsp;&nbsp;
      <el-button type="primary" @click="getCwAccountsLists()">查询</el-button>
      <el-button type="primary" @click="clean()">清空</el-button>
      <br/><br/>
@@ -303,14 +324,13 @@ export default {
    </div>
    <div>
      <br/>
-      <el-pagination
-          @current-change="getCwAccountsLists()"
-          :current-page.sync="cwAccountsPage.pageNum"
-          :page-size="cwAccountsPage.pageSize"
-          background
-          layout="prev, pager, next"
-          :total="cwAccountsPage.total">
-      </el-pagination>
+     <el-pagination
+         @current-change="getCwAccountsLists()"
+         :current-page.sync="cwAccountsPage.pageNum"
+         :page-size="cwAccountsPage.pageSize"
+         layout="prev, pager, next, jumper"
+         :total="cwAccountsPage.total"
+     />
      <br/>
    </div>
    <div>

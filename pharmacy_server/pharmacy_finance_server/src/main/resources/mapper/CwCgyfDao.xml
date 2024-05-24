@@ -16,6 +16,13 @@
         <if test="isPay>0">
             and a.isPay=#{isPay}
         </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+    </select>
+
+    <select id="getProviderList" resultType="com.kgc.entity.BaseProvider">
+        select id,`name` from base_provider where isDel=0
     </select>
 
     <select id="getCgddByCode" resultType="CgddOrder">

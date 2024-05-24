@@ -13,7 +13,8 @@ export default {
       cwXstk: {
         code: '',
         originalOrder: ''
-      }
+      },
+      time:{}
     }
   },
   mounted() {
@@ -21,6 +22,13 @@ export default {
   },
   methods: {
     getXstkLists() {
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        this.cwXstk.beginTime = this.time[0];
+        this.cwXstk.endTime = this.time[1];
+      } else {
+        this.cwXstk.beginTime = null;
+        this.cwXstk.endTime = null;
+      }
       getXstkList(this.cwXstk, this.cwXstkPage.pageNum, this.cwXstkPage.pageSize).then(resp => {
         if (resp.code != 200){
           this.cwXstkPage.list = []
@@ -33,8 +41,9 @@ export default {
       })
     },
     clean() {
-      this.cwXstk.code = ''
-      this.cwXstk.originalOrder = ''
+      this.cwXstk.code = '';
+      this.cwXstk.originalOrder = '';
+      this.time = {};
       this.getXstkLists()
     },
   }
@@ -43,6 +52,7 @@ export default {
 
 <template>
   <div>
+    <h1>销售退款</h1>
     <div>
       <el-row :gutter="20">
         <el-col :span="6"
@@ -63,11 +73,22 @@ export default {
               placeholder="请输入原单据编号"
           ></el-input></div
         ></el-col>
-
+        <el-col :span="10">
+          单号日期：
+          <el-date-picker
+              v-model="time"
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+          />
+        </el-col>
 
       </el-row>
       <el-button type="primary" @click="getXstkLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwXstkPage.list" border style="width: 100%">

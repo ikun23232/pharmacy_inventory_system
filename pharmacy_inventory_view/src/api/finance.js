@@ -84,3 +84,7 @@ export function getCwNumByMonth(year,month){
         }
     });
 }
+
+export function getProviderList(){
+    return request.get(baseUrl + "/getProviderList");
+}

@@ -30,6 +30,12 @@ public class CwCgyfController {
         return message;
     }
 
+    @RequestMapping("/getProviderList")
+    public Message getProviderList(){
+        Message message = cwCgyfService.getProviderList();
+        return message;
+    }
+
     @RequestMapping("/getCgddByCode")
     public Message getCgddByCode(CgddOrder cgddOrder) {
         Message message = cwCgyfService.getCgddByCode(cgddOrder);

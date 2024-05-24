@@ -9,8 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 采购应付
  *
+ * 采购应付表(CwCgyf)实体类
+ * 完整版(1.0)
  * @author lemon
  * @since 2024-05-20
  */
@@ -58,11 +59,20 @@ public class CwCgyf implements Serializable {
      */
     @TableField("payment_time")
     private LocalDateTime paymentTime;
-
     /**
      * 供应商名称
      */
     @TableField(exist = false)
     private String providerName;
+    /**
+     * 开始时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String beginTime;
+    /**
+     * 结束时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String endTime;
 
 }

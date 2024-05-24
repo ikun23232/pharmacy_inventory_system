@@ -11,84 +11,70 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
  *
+ * 流水表(CwAccounts)实体类
+ * 完整版(1.0)
  * @author lemon
  * @since 2024-04-30
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CwAccounts implements Serializable {
-
     private static final long serialVersionUID = 1L;
-
     /**
      * 流水Id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 流水编号
      */
     @TableField("code")
     private String code;
-
     /**
      * 流水类别Id
      */
     @TableField("categoryId")
     private Integer categoryId;
-
     /**
      * 流水类别名称
      */
     @TableField("accountsCategoryName")
     private String accountsCategoryName;
-
     /**
      * 流水总价
      */
     private BigDecimal cost;
-
     /**
      * 订单Id
      */
     @TableField("orderCode")
     private String orderCode;
-
     /**
      * 创建时间
      */
     @TableField("createTime")
     private LocalDateTime createTime;
-
     /**
      * 修改时间
      */
     @TableField("modificationTime")
     private LocalDateTime modificationTime;
-
     /**
      * 创建人
      */
     @TableField("createBy")
     private Integer createBy;
-
     /**
      * 创建人姓名
      */
     @TableField("createName")
     private String createName;
-
     /**
      * 修改人
      */
     @TableField("modificationBy")
     private Integer modificationBy;
-
     /**
      * 修改人姓名
      */
@@ -99,7 +85,6 @@ public class CwAccounts implements Serializable {
      */
     @TableField("isDel")
     private String isDel;
-
     /**
      * 银行卡Id
      */
@@ -110,12 +95,21 @@ public class CwAccounts implements Serializable {
      */
     @TableField("bandCount")
     private String bandCount;
-
     /**
      * 描述
      */
     @TableField("description")
     private String description;
+    /**
+     * 开始时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String beginTime;
+    /**
+     * 结束时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String endTime;
 
 
 }

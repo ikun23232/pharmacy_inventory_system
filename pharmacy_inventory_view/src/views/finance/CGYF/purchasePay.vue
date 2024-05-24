@@ -1,5 +1,5 @@
 <script>
-import {getCwCgyfList,getCgddByCode} from '@/api/finance';
+import {getCwCgyfList,getCgddByCode,getProviderList} from '@/api/finance';
 export default {
   name: "purchasePay",
   data() {
@@ -47,13 +47,26 @@ export default {
 
       },
       cgddVisible:false,
+      providerList:[],
+      time:{}
     }
   },
   mounted() {
     this.getCwCgyfLists();
+    this.getProviderLists();
   },
   methods: {
     getCwCgyfLists(){
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        // time 是一个非空数组
+        this.cwCgyf.beginTime = this.time[0];
+        this.cwCgyf.endTime = this.time[1];
+      } else {
+        // time 是空数组、null 或 undefined
+        // 这里可以添加适当的处理逻辑，例如重置 beginTime 和 endTime
+        this.cwCgyf.beginTime = null;
+        this.cwCgyf.endTime = null;
+      }
       getCwCgyfList(this.cwCgyf,this.cwCgyfPage.pageNum,this.cwCgyfPage.pageSize).then(resp=>{
         console.log(resp)
         if (resp.code!=200){// 失败
@@ -63,6 +76,14 @@ export default {
           return
         }
         this.cwCgyfPage=resp.data
+      })
+    },
+    getProviderLists(){
+      getProviderList().then(resp=>{
+        if (resp.code!=200){
+          return
+        }
+        this.providerList=resp.data
       })
     },
     formatPayStatus(row, column) {
@@ -91,6 +112,7 @@ export default {
     clean() {
       this.cwCgyf.code = "";
       this.cwCgyf.cgddCode = "";
+      this.time = {};
       this.getCwCgyfLists();
     }
   }
@@ -99,9 +121,10 @@ export default {
 
 <template>
   <div>
+    <h1>采购应付</h1>
     <div>
       <el-row :gutter="20">
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -110,7 +133,7 @@ export default {
               placeholder="请输入单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -119,11 +142,33 @@ export default {
               placeholder="请输入原单据编号"
           ></el-input></div
         ></el-col>
-
-
+        <el-col :span="8"
+        ><div class="grid-content bg-purple">
+          供应商：
+          <el-select v-model="cwCgyf.providerId" placeholder="请选择供应商">
+            <el-option label="全部" value="0"></el-option>
+            <el-option
+                v-for="item in providerList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+            ></el-option>
+          </el-select>
+          </div
+        ></el-col>
       </el-row>
+      应付单生成日期：
+      <el-date-picker
+          v-model="time"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+      />&nbsp;&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getCwCgyfLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwCgyfPage.list" border style="width: 100%">

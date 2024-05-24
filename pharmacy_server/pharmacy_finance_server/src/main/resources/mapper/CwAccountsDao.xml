@@ -28,6 +28,9 @@
         <if test="orderCode!=null and orderCode!=''">
             and a.orderCode like concat('%',#{orderCode},'%')
         </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
 
     </select>
     

@@ -24,8 +24,11 @@
         <if test="orderNumber!=null and orderNumber!=''">
             and a.orderNumber like concat('%',#{orderNumber},'%')
         </if>
-        <if test="categoryId>0">
+        <if test="categoryId>2">
             and a.categoryId=#{categoryId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
         </if>
     </select>
 

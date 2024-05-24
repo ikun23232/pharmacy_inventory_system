@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,51 +13,44 @@ import java.time.LocalDateTime;
 
 /**
  *
- *
+ * 发票表(CwInvoice)实体类
+ * 完整版(1.0)
  * @author lemon
  * @since 2024-04-30
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CwInvoice implements Serializable {
-
     private static final long serialVersionUID = 1L;
-
     /**
      * 发票id
      */
       @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
      * 发票单据
      */
     private String code;
-
     /**
      * 发票编号
      */
     @TableField("InvoiceNumber")
     private Integer InvoiceNumber;
-
     /**
      * 类型
      */
     @TableField("categoryId")
     private Integer categoryId;
-
     /**
      * 类型名称
      */
     @TableField(exist = false)
     private String categoryName;
-
     /**
      * 订单号
      */
     @TableField("orderNumber")
     private String orderNumber;
-
     /**
      * 创建人
      */
@@ -67,40 +61,40 @@ public class CwInvoice implements Serializable {
      */
     @TableField("createName")
     private String createName;
-
     /**
      * 创建时间
      */
     @TableField("createTime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
-
     /**
      * 修改时间
      */
     @TableField("modificationTime")
     private LocalDateTime modificationTime;
-
     /**
      * 修改人
      */
     @TableField("modificationBy")
     private Integer modificationBy;
-
     /**
      * 修改人名称
      */
     @TableField("modificationName")
     private String modificationName;
-
-    /**
-     * 逻辑删除
-     */
-    private String isDel;
-
     /**
      * 发票总金额
      */
     private BigDecimal cost;
-
+    /**
+     * 开始时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String beginTime;
+    /**
+     * 结束时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String endTime;
 
 }

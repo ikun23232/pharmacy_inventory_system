@@ -1,5 +1,6 @@
 package com.kgc.dao;
 
+import com.kgc.entity.BaseProvider;
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.CwCgyf;
 import org.apache.ibatis.annotations.Param;
@@ -15,6 +16,8 @@ import java.util.List;
 public interface CwCgyfDao {
 
     List<CwCgyf> getCwCgyfList(CwCgyf cwCgyf);
+
+    List<BaseProvider> getProviderList();
 
     CgddOrder getCgddByCode(CgddOrder cgddOrder);
 

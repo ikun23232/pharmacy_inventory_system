@@ -15,7 +15,8 @@ export default {
         orderNumber: '',
         categoryId:0,
       },
-      category:[]
+      category:[],
+      time:{}
     }
   },
   mounted() {
@@ -25,6 +26,16 @@ export default {
   },
   methods: {
     getCwInvoices() {
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        // time 是一个非空数组
+        this.cwInvoice.beginTime = this.time[0];
+        this.cwInvoice.endTime = this.time[1];
+      } else {
+        // time 是空数组、null 或 undefined
+        // 这里可以添加适当的处理逻辑，例如重置 beginTime 和 endTime
+        this.cwInvoice.beginTime = null;
+        this.cwInvoice.endTime = null;
+      }
       getCwInvoice(this.cwInvoice, this.cwInvoicePage.pageNum, this.cwInvoicePage.pageSize).then(resp => {
         if (resp.code != 200){
           this.cwInvoicePage.list = []
@@ -44,6 +55,7 @@ export default {
       this.cwInvoice.code = ''
       this.cwInvoice.orderNumber = ''
       this.cwInvoice.categoryId=0
+      this.time = {};
       this.getCwInvoices()
     },
   }
@@ -52,9 +64,10 @@ export default {
 
 <template>
   <div>
+    <h1>发票详情</h1>
     <div>
       <el-row :gutter="20">
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -63,7 +76,7 @@ export default {
               placeholder="请输入单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -72,7 +85,7 @@ export default {
               placeholder="请输入原单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           类型：
           <el-select v-model="cwInvoice.categoryId" placeholder="请选择类型">
@@ -85,23 +98,32 @@ export default {
             ></el-option>
           </el-select></div
         ></el-col>
-
       </el-row>
+        发票日期：
+        <el-date-picker
+            v-model="time"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+        />&nbsp;&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getCwInvoices()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwInvoicePage.list" border style="width: 100%">
-        <el-table-column prop="categoryId" label="发票id" width="120"/>
-        <el-table-column prop="code" label="发票单据" width="150" fixed/>
-        <el-table-column prop="categoryName" label="类型" width="150" />
-        <el-table-column prop="orderNumber" label="订单编号" width="120"/>
-        <el-table-column prop="createName" label="创建人" width="120"/>
-        <el-table-column prop="createTime" label="创建时间" width="120"/>
-        <el-table-column prop="modificationName" label="修改人" width="120"/>
-        <el-table-column prop="modificationTime" label="修改时间" width="120"/>
+        <el-table-column prop="categoryId" label="发票id" />
+        <el-table-column prop="code" label="发票单据"  fixed/>
+        <el-table-column prop="categoryName" label="类型" />
+        <el-table-column prop="orderNumber" label="订单编号" />
+        <el-table-column prop="createName" label="创建人" />
+        <el-table-column prop="createTime" label="创建时间" />
+        <el-table-column prop="modificationName" label="修改人" />
+        <el-table-column prop="modificationTime" label="修改时间" />
         <el-table-column prop="cost" label="发票总金额" width="120"/>
-        <el-table-column align="center" label="操作" fixed="right" width="200">
+        <el-table-column align="center" label="操作" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" plain>详情</el-button>&nbsp;
           </template>
@@ -115,8 +137,7 @@ export default {
           :page-size="cwInvoicePage.pageSize"
           layout="prev, pager, next, jumper"
           :total="cwInvoicePage.total"
-      >
-      </el-pagination>
+      />
     </div>
   </div>
 </template>

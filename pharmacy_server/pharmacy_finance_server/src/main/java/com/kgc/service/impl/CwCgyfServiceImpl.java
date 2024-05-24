@@ -2,6 +2,7 @@ package com.kgc.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.entity.BaseProvider;
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.CwCgyf;
 import com.kgc.dao.CwCgyfDao;
@@ -32,10 +33,20 @@ public class CwCgyfServiceImpl implements CwCgyfService {
         PageHelper.startPage(pageNum,pageSize);
         List<CwCgyf> list = cwCgyfDao.getCwCgyfList(cwCgyf);
         PageInfo<CwCgyf> pageInfo = new PageInfo<>(list);
-        if (list.size()>0){
+        if (!list.isEmpty()){
             return Message.success(pageInfo);
         }
         return Message.error();
+    }
+
+    @Override
+    public Message getProviderList() {
+        List<BaseProvider> list = cwCgyfDao.getProviderList();
+        if (!list.isEmpty()){
+            return Message.success(list);
+        }
+        return Message.error();
+
     }
 
     @Override

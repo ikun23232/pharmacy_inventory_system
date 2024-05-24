@@ -10,6 +10,9 @@
         <if test="originalOrder!=null and originalOrder!=''">
             AND a.originalOrder LIKE concat('%',#{originalOrder},'%')
         </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
 
     </select>
 
