@@ -31,7 +31,7 @@
         <div class="scroll-container" v-seamless-scroll>
           <div v-for="item in CheckHintList" class="text item" :key="item.id">
             <el-tag size="small" type="danger" style="margin-right: 10px;margin-bottom: 5px;">审批</el-tag>
-            <router-link :to="{ name: item.path , query: {code: item.code}}">{{item.documenterName}}的{{item.tableName}}审批</router-link>
+            <router-link :to="{ path: item.path , query: {code: item.code}}">{{item.documenterName}}的{{item.tableName}}审批</router-link>
           </div>
         </div>
       </div>
