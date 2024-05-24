@@ -6,6 +6,7 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.vo.CgVO;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -73,4 +74,9 @@ public interface CgsqOrderService extends IService<CgsqOrder> {
      * @return
      */
     public Message getCgsqOrderByCode(CgsqOrder cgsqOrder);
+
+
+    public Message getCgsqOrderListByExcel();
+
+    void cgsqExcel(CgsqOrder cgsqOrder, HttpServletResponse response);
 }

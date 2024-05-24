@@ -719,6 +719,7 @@ export default {
       if (type==2){
         this.CgddOrder.orderStatus=2
       }
+      console.log("cgdd",this.CgddOrder)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           addCgrkOrder(this.CgddOrder).then((resp) => {
@@ -887,6 +888,7 @@ export default {
         price: "",
         totalPrice: "",
         quantity: "",
+        purchasePrice:''
       };
       console.log(this.providerList);
       // obj.providerList = this.providerList;
@@ -993,7 +995,8 @@ export default {
             totalPrice: this.cgddMedicineionList[index].totalPrice,
             quantity: this.cgddMedicineionList[index].quantity,
             sourceCode: this.cgddMedicineionList[index].code,
-            fowardWarHouseId:''
+            fowardWarHouseId:'',
+            purchasePrice:this.cgddMedicineionList[index].purchasePrice
           };
           let falg = true;
           for (let i = 0; i < this.bcglXiangXiList.length; i++) {

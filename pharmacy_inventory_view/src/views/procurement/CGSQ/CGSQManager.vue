@@ -43,7 +43,7 @@
     <el-form-item>
       <el-button type="primary" @click="initCgSqOrderList();">查询</el-button>
       <el-button type="primary" @click="addOrder">添加</el-button>
-      <el-button type="success">导出</el-button>
+      <el-button type="success" @click="printExcel">导出</el-button>
 
     </el-form-item>
     </el-form>
@@ -196,13 +196,14 @@
 
 <script>
 // import { delUnit, initUnit } from "@/api/BaseUnit";
-import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/CgsdOrder'
+import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById, cgsqExcel} from '@/api/CgsdOrder'
 import {Message} from "element-ui";
 import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
 import CGSQupdateOrder from "@/components/CGSQupdateOrder";
 import CGSQapproveOrder from "@/components/CGSQapproveOrder";
 import CGSQviewOrder from "@/components/CGSQviewOrder";
 import {getPayType} from "@/api/public";
+import {cgddExcel} from "@/api/procurementOrder";
 
 // import AddUnit from "./AddUnit.vue";
 
@@ -357,6 +358,9 @@ export default {
       this.$router.push({
         name: path,
       });
+    },
+    async printExcel() {
+      await cgsqExcel();
     },
     async voidOrder(row) {
       if (!confirm("你确定要作废吗？")) {

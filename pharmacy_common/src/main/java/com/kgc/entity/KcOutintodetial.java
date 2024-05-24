@@ -1,20 +1,20 @@
 package com.kgc.entity;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+
+
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ExcelIgnoreUnannotated
+
 public class KcOutintodetial implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,25 +34,27 @@ public class KcOutintodetial implements Serializable {
     /**
      * 明细id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+      @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
      * 明细编号
      */
-    @ExcelProperty("明细编号")
+    @ExcelFiled("明细编号")
     private String code;
 
     /**
      * 进出库类型
      */
     @TableField("typeId")
+
     private Integer typeId;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
+    @ExcelFiled("执行时间")
     private Date createDate;
 
     /**
@@ -71,7 +73,7 @@ public class KcOutintodetial implements Serializable {
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateBy;
+    private String updateBy;
 
     /**
      * 删除id
@@ -84,49 +86,84 @@ public class KcOutintodetial implements Serializable {
      * 订单编号
      */
     @TableField("orderCode")
+
     private String orderCode;
 
-    /**
-     * 药品id
-     */
-    @TableField("medicineId")
+
     private Integer medicineId;
+    @TableField(exist = false)
+    @ExcelFiled("药品名称")
+    private String medicineName;
     /**
      * 供应商Id
      */
-    @TableField("providerId")
     private Integer providerId;
+
+    @TableField(exist = false)
+    @ExcelFiled("供应商")
+
+    private String providerName;
     /**
      * 入库金额
      */
-    @TableField("toStockMoney")
+    @ExcelFiled("入库金额")
+
     private BigDecimal toStockMoney;
     /**
      * 批次编号
-     */
-    @TableField("batchCode")
-    private String batchCode;
+
     /**
      * 入库数量
      */
-    @TableField("toStockQuantity")
+    @ExcelFiled("入库数量")
+
     private Integer toStockQuantity;
     /**
      * 出库金额
      */
-    @TableField("fromStockMoney")
+    @ExcelFiled("出库金额")
+
     private BigDecimal fromStockMoney;
     /**
      * 出库数量
      */
-    @TableField("fromStockQuantity")
+    @ExcelFiled("出库数量")
+
     private Integer fromStockQuantity;
     /**
      * 单价(当前)
      */
-    @TableField("price")
-    private BigDecimal price;
+    @ExcelFiled("单价")
 
-    @TableField("wareHouseId")
+    private BigDecimal price;
+    /**
+     * 删除id
+    private String isdel;
+
+     * 进出库仓库
+     */
     private Integer wareHouseId;
+    @TableField(exist = false)
+    @ExcelFiled("出入库仓库")
+
+    private String warehouseName;
+    @TableField(exist = false)
+    @ExcelFiled("产品规格")
+
+    private String specification;
+    @TableField(exist = false)
+    @ExcelFiled("计量单位")
+
+    private String unitName;
+    @TableField(exist = false)
+    @ExcelFiled("库存类型")
+    private String type;
+    @ExcelFiled("批次号")
+    private String batchCode;
+
+
+
+
+
+
 }

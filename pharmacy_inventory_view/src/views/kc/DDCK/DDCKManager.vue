@@ -1,6 +1,6 @@
 <template>
   <div id="storeHouse">
-    <h1>调度入库订单</h1>
+    <h1>调度出库订单</h1>
     <p>
       <el-form :inline="true" :model="vo" class="demo-form-inline">
         <el-form-item label="单据编号">
@@ -133,7 +133,7 @@
     </div>
     <!-- 修改订单状态 -->
     <el-dialog
-        title="查看采购申请单"
+        title="查看采购出库单"
         :visible.sync="viewdialogVisible"
         width="85%"
 

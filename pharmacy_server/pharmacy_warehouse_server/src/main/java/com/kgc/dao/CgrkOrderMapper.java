@@ -23,4 +23,5 @@ public interface CgrkOrderMapper extends BaseMapper<CgrkOrder> {
                    @Param("approvalStatus") Integer approvalStatus,
                    @Param("orderStatus") Integer orderStatus,
                     @Param("isAddWarehouse") Integer isAddWarehouse);
+    List<CgrkOrder> getCgrkOrderByExcel(Map map);
 }

@@ -58,7 +58,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="createdate" label="单据日期" width="200">
+      <el-table-column prop="createDate" label="单据日期" width="200">
       </el-table-column>
       <el-table-column prop="type" label="单据类型" width="120">
       </el-table-column>
@@ -77,13 +77,13 @@
       </el-table-column>
       <el-table-column prop="warehouseName" label="仓库名称" width="120">
       </el-table-column>
-      <el-table-column prop="tostockquantity" label="入库数量" width="120">
+      <el-table-column prop="toStockQuantity" label="入库数量" width="120">
       </el-table-column>
-      <el-table-column prop="tostockmoney" label="入库金额" width="120">
+      <el-table-column prop="toStockMoney" label="入库金额" width="120">
       </el-table-column>
-      <el-table-column prop="fromstockquantity" label="出库数量" width="120">
+      <el-table-column prop="fromStockQuantity" label="出库数量" width="120">
       </el-table-column>
-      <el-table-column prop="fromstockmoney" label="出库金额" width="120">
+      <el-table-column prop="fromStockMoney" label="出库金额" width="120">
       </el-table-column>
 
       <el-table-column prop="price" label="单位金额" width="120">

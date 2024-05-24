@@ -96,12 +96,13 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setMedicineid(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-//            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
-//            orderMedicine.setProviderId(baseMedicine.getProviderId());
-//            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
-//            Integer batchCode = orderMapper.selectMaxYourField();
-//            orderMedicine.setBatchCode((batchCode+1)+"");
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
+            orderMedicine.setProviderId(baseMedicine.getProviderId());
+            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
+            Integer batchCode = orderMapper.selectMaxYourField();
+            orderMedicine.setBatchCode(batchCode+1);
             orderMapper.insert(orderMedicine);
+
         }
         return Message.success();
 
@@ -199,11 +200,11 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
 
     @Override
     public void cgrkExcel(CgrkOrder cgrkOrder, HttpServletResponse response) {
-//        List<CgrkOrder> order = cgrkOrderMapper.getCgrqOrderList(new HashMap<String, Object>());
-//        try {
-//            ExeclUtil.writeExcel(order,response,"采购入库",CgrkOrder.class);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<CgrkOrder> order = cgrkOrderMapper.getCgrkOrderByExcel(new HashMap<String, Object>());
+        try {
+            ExeclUtil.write(order,CgrkOrder.class,response,"采购入库");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

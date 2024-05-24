@@ -10,11 +10,15 @@ import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.CgsqOrderService;
 import com.kgc.utils.BigDecimalUtils;
+import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgVO;
+import com.kgc.vo.CgddVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -110,7 +114,6 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
 
     @Override
     public Message updateCgsqOrder(CgsqOrder cgsqOrder) {
-        //          cgsqOrder.
 
         List<BaseMedicine> medicineList = cgsqOrder.getMedicineList();
         int count=0;
@@ -171,12 +174,11 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     public Message approveCgsqOrder(int id,String approveRemark,int approveMent) {
         CgsqOrder cgsqOrder=new CgsqOrder();
         cgsqOrder.setId(id);
-        cgsqOrder.setApprovalstatus(1);
+        cgsqOrder.setApprovalstatus(approveMent);
         cgsqOrder.setEffectivetime(new Date());
         cgsqOrder.setApproverremark(approveRemark);
         cgsqOrder.setOrderstatus(3);
 
-//批准人
         int approverBy=1;
         cgsqOrder.setApproverby(approverBy);
         int updateRow = cgsqOrderMapper.updateById(cgsqOrder);
@@ -191,5 +193,21 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     public Message getCgsqOrderByCode(CgsqOrder cgsqOrder) {
         CgsqOrder cgsqOrderByCode = cgsqOrderMapper.getCgsqOrderByCode(cgsqOrder);
         return Message.success(cgsqOrderByCode);
+    }
+
+    @Override
+    public Message getCgsqOrderListByExcel() {
+        List<CgsqOrder> cgsqOrderListByExcel = cgsqOrderMapper.getCgsqOrderListByExcel(new HashMap<>());
+        return Message.success(cgsqOrderListByExcel);
+    }
+
+    @Override
+    public void cgsqExcel(CgsqOrder cgsqOrder, HttpServletResponse response) {
+        List<CgsqOrder> cgsqOrderListByExcel = cgsqOrderMapper.getCgsqOrderListByExcel(new HashMap<>());
+        try {
+            ExeclUtil.write(cgsqOrderListByExcel, CgsqOrder.class,response,"采购申请订单");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
