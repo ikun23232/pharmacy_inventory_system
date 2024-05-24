@@ -65,9 +65,9 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
 
     @Override
     public void ddckExcel(KcDisfromware kcDisfromware, HttpServletResponse response) {
-        List<KcDisfromware> kcDisfromwareList = kcDisfromwareMapper.getKcDisfromwareList(new HashMap<>());
+        List<KcDisfromware> kcDisfromwareList = kcDisfromwareMapper.getKcDisfromwareListByExcel();
         try {
-            ExeclUtil.writeExcel(kcDisfromwareList,response,"调度出库",KcDisfromware.class);
+            ExeclUtil.write(kcDisfromwareList,KcDisfromware.class,response,"调度出库");
         } catch (IOException e) {
             e.printStackTrace();
 

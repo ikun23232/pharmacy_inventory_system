@@ -38,7 +38,7 @@ public class KcDistowareController {
         Message message = kcDistowareService.delKcDistoware(id);
         return message;
     }
-    @RequestMapping("/ddckExcel")
+    @RequestMapping("/ddrkExcel")
     public Message ddckExcel(@RequestBody KcDistoware kcDistoware, HttpServletResponse response) {
         kcDistowareService.ddrkExcel(kcDistoware,response);
         return Message.success(null);

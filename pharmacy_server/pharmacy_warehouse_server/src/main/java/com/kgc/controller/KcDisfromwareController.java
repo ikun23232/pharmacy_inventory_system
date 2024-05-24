@@ -42,11 +42,11 @@ public class KcDisfromwareController {
 
         return message;
     }
-//    @RequestMapping("/ddckExcel")
-//    public Message ddckExcel(@RequestBody KcDisfromware kcDisfromware, HttpServletResponse response) {
-//        kcDisfromwareService.ddckExcel(kcDisfromware,response);
-//        return Message.success(null);
-//    }
+    @RequestMapping("/ddckExcel")
+    public Message ddckExcel(@RequestBody KcDisfromware kcDisfromware, HttpServletResponse response) {
+        kcDisfromwareService.ddckExcel(kcDisfromware,response);
+        return Message.success(null);
+    }
     @RequestMapping("/getKcDisfromwareOrder")
     public Message getKcDisfromwareOrder(int id) {
         Message kcDisfromwareOrder = kcDisfromwareService.getKcDisfromwareOrder(id);

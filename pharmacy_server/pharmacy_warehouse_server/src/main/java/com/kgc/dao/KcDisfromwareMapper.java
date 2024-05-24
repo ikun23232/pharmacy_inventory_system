@@ -21,4 +21,6 @@ public interface KcDisfromwareMapper extends BaseMapper<KcDisfromware> {
     List<KcDisfromware> getKcDisfromwareList(Map map);
 
     KcDisfromware getKcDisfromwareOrder(int id);
+
+    List<KcDisfromware>  getKcDisfromwareListByExcel();
 }

@@ -178,20 +178,7 @@ const routes = [
     name: 'CRKMXManager',
     component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
-    },
-    {
-        path:'/ddckManager',
-        name: 'DDCKManager',
-        component: () => import('@/views/kc/DDCK/DDCKManager')
-    },{
-        path:'/printDDCKOrder',
-        name: 'PrintDDCKOrder',
-        component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
-    },{
-        path:'/crkmxManager',
-        name: 'CRKMXManager',
-        component: () => import('@/views/kc/CRKMX/CRKMXManager')
-    },{
+  {
         path:'/printCGSQOrder',
         name: 'PrintCGSQOrder',
         component: () => import('@/views/procurement/CGSQ/PrintCGSQOrder')
