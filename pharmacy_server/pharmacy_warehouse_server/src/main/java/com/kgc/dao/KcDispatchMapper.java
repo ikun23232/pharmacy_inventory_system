@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.KcDispatch;
 import com.kgc.vo.DispatchVO;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,4 +14,7 @@ import java.util.List;
  */
 public interface KcDispatchMapper extends BaseMapper<KcDispatch> {
     public List<KcDispatch> getKcDispathList(DispatchVO dispatchVO);
+
+    @Override
+    KcDispatch selectById(Serializable id);
 }

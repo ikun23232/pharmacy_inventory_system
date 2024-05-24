@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CwXstkMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.CwXstk">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="createTime" property="createtime" />
+        <result column="originalOrder" property="originalorder" />
+        <result column="backReson" property="backreson" />
+        <result column="cost" property="cost" />
+        <result column="isdel" property="isdel" />
+        <result column="createBy" property="createby" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, code, createTime, originalOrder, backReson, cost, isdel, createBy
+    </sql>
+
+</mapper>

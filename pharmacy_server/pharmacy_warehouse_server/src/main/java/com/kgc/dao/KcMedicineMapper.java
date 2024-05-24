@@ -1,7 +1,6 @@
 package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.kgc.entity.CgrkOrder;
 import com.kgc.entity.KcMedicine;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,5 +14,7 @@ public interface KcMedicineMapper extends BaseMapper<KcMedicine> {
     List<KcMedicine> getKcMedicineByReportedCode(@Param("storehouseId") int storehouseId,@Param("reportedCode") String reportedCode);
 
     int updateQuantityById(KcMedicine kcMedicine);
+
+    KcMedicine getMedicineByBatchCode(@Param("batchCode") String batchCode,@Param("storehouseId") Integer storehouseId);
 
 }

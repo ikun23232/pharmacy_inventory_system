@@ -9,55 +9,61 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
-* 
-* @TableName kc_dispatchdetails
-*/
+ * @author 15279
+ * @description 功能描述
+ * @create 2024/5/20 14:39
+ */
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class KcDispatchdetails implements Serializable {
-
-    /**
-    * 调度详情id
-    */
-
     private Integer id;
-    /**
-    * 调度单编号
-    */
 
-    private String dispatchcode;
-    /**
-    * 调度的目标仓库
-    */
+    @TableField("aimStoreHouseId")
+    private Integer aimStoreHouseId;
 
-    private Integer aimstorehouseid;
-    /**
-    * 调度的药品id
-    */
+    private String aimStoreHouseName;
 
-    private Integer medicineid;
+    @TableField("medicineId")
+    private Integer medicineId;
+
+    private String medicineName;
+
+    private String categoryName;
+
+    @TableField("quantity")
+    private Integer quantity;
 
     @TableField(exist = false)
-    private String medicineName;
-    /**
-    * 调度的数量
-    */
+    private BigDecimal purchasePrice;//采购价
 
-    private Integer quantity;
-    /**
-    * 调度药品的进价
-    */
+    @TableField(exist = false)
+    private Integer stock;//剩余库存
+
+    @TableField("price")
     private BigDecimal price;
-    /**
-    * 批次号
-    */
-    private String batchcode;
-    /**
-    * 删除id
-    */
-    private Integer isdel;
 
+    @TableField("batchCode")
+    private String batchCode;
 
+    @TableField("isDel")
+    private Integer isDel;
 
+    @TableField("dispatchCode")
+    private String dispatchCode;
 
+    @TableField(exist = false)
+    private Integer unitId;
+
+    @TableField(exist = false)
+    private String unitName;
+
+    @TableField(exist = false)
+    private String name;
+
+    @TableField(exist = false)
+    private String specification;
+
+    @TableField("providerId")
+    private Integer providerId;
+
+    private String providerName;
 }

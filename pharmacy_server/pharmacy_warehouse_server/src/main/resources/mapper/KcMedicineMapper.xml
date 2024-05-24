@@ -31,7 +31,10 @@
         WHERE id=#{id}
     </update>
 
-
-
+    <select id="getMedicineByBatchCode" resultType="KcMedicine">
+        select id, batchCode, storehouseId, medicineId, providerId, quantity, money, isDel, totalPrice
+        from kc_medicine
+        where batchCode = #{batchCode} and storehouseId = #{storehouseId}
+    </select>
 
 </mapper>

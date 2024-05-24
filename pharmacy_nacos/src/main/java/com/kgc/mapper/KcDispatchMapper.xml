@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcDispatchMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.KcDispatch">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="subject" property="subject" />
+        <result column="price" property="price" />
+        <result column="beforeWarehouseId" property="beforewarehouseid" />
+        <result column="AimWarehouseId" property="aimwarehouseid" />
+        <result column="remark" property="remark" />
+        <result column="approverBy" property="approverby" />
+        <result column="approvalStatus" property="approvalstatus" />
+        <result column="approverRemark" property="approverremark" />
+        <result column="documenterBy" property="documenterby" />
+        <result column="voidState" property="voidstate" />
+        <result column="createDate" property="createdate" />
+        <result column="createBy" property="createby" />
+        <result column="updateDate" property="updatedate" />
+        <result column="updateBy" property="updateby" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, code, subject, price, beforeWarehouseId, AimWarehouseId, remark, approverBy, approvalStatus, approverRemark, documenterBy, voidState, createDate, createBy, updateDate, updateBy
+    </sql>
+
+</mapper>

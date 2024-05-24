@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.CgPayCom;
 import com.kgc.entity.CgPayNum;
 import com.kgc.entity.CgddOrder;
+import com.kgc.vo.CgddVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +24,5 @@ public interface ProcurementOrderMapper extends BaseMapper<CgddOrder> {
     List<CgPayNum> getCgPayNum(@Param("year") String year);
 
     public CgddOrder getCgddByCode(CgddOrder cgddOrder);
+    public List<CgddVO> imExcel();
 }
