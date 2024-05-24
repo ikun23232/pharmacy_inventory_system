@@ -1,7 +1,11 @@
 package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kgc.entity.KcDisfromware;
 import com.kgc.entity.KcDistoware;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -12,5 +16,7 @@ import com.kgc.entity.KcDistoware;
  * @since 2024-04-30
  */
 public interface KcDistowareMapper extends BaseMapper<KcDistoware> {
+    List<KcDisfromware> getKcDistowareList(Map map);
 
+    KcDisfromware getKcDistowareOrder(int id);
 }

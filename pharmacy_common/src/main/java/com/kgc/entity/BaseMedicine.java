@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,7 +39,7 @@ public class BaseMedicine implements Serializable {
     /**
      * 医用商品名称
      */
-    @ExcelProperty("医用商品名称")
+    @ExcelFiled("医用商品名称")
     private String name;
 
     /**
@@ -66,13 +67,13 @@ public class BaseMedicine implements Serializable {
     /**
      * 零售价
      */
-    @ExcelProperty("零售价")
+    @ExcelFiled("零售价")
     private BigDecimal salePrice;
 
     /**
      * 医用商品规格
      */
-    @ExcelProperty("医用商品规格")
+    @ExcelFiled("医用商品规格")
     private String specification;
 
     /**
@@ -82,32 +83,32 @@ public class BaseMedicine implements Serializable {
     private Integer warning;
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    @ExcelProperty("创造时间")
+    @ExcelFiled("创造时间")
     private Date createTime;
 
     @ExcelIgnore
     private Integer createBy;
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    @ExcelProperty("修改时间")
+    @ExcelFiled("修改时间")
     private Date updateTime;
 
     @ExcelIgnore
     private Integer updateBy;
 
     @TableField(exist=false)
-    @ExcelProperty("创造人名称")
+    @ExcelFiled("创造人名称")
     private String createByName;
 
     @TableField(exist=false)
-    @ExcelProperty("修改人名称")
+    @ExcelFiled("修改人名称")
     private String updateByName;
 
     @TableField(exist=false)
-    @ExcelProperty("医药品分类名")
+    @ExcelFiled("医药品分类名")
     private String categoryName;
 
     @TableField(exist=false)
-    @ExcelProperty("计量单位")
+    @ExcelFiled("计量单位")
     private String unitName;
 
     @TableField(exist=false)
@@ -115,7 +116,7 @@ public class BaseMedicine implements Serializable {
     private Integer currentPage;
 
     @TableField(exist=false)
-    @ExcelProperty("数量")
+    @ExcelFiled("数量")
     private Integer quantity;
 
     @TableField(exist=false)
@@ -127,11 +128,11 @@ public class BaseMedicine implements Serializable {
     private Integer providerId;
 
     @TableField(exist=false)
-    @ExcelProperty("供应商名称")
+    @ExcelFiled("供应商名称")
     private String providerName;
 
     @TableField(exist=false)
-    @ExcelProperty("采购价")
+    @ExcelFiled("采购价")
     private BigDecimal purchasePrice;
 
     @TableField(exist=false)
@@ -152,7 +153,7 @@ public class BaseMedicine implements Serializable {
     @ExcelIgnore
     private Integer medicineId;
     @ExcelIgnore
-    private int stock;
+    private Integer stock;
 
     @TableField(exist=false)
     @ExcelIgnore
@@ -163,11 +164,13 @@ public class BaseMedicine implements Serializable {
     @ExcelIgnore
     private String storehouseName;
     @ExcelIgnore
-    private int storeHouseId;
+    private Integer storeHouseId;
 
     @ExcelIgnore
-    private int aimStoreHouseId;
+    private Integer aimStoreHouseId;
 
     @ExcelIgnore
-    private int kcMedicineId;//库存明细id
+    private Integer kcMedicineId;//库存明细id
+
+    private Integer totalWarning;//全部仓库预警值
 }

@@ -1,7 +1,6 @@
 package com.kgc.service.impl;
 
 import com.kgc.entity.KcDistoware;
-import com.kgc.dao.KcDistowareMapper;
 import com.kgc.service.KcDistowareService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;

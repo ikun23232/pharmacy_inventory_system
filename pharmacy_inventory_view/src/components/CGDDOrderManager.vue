@@ -205,7 +205,6 @@ import { setExcel } from "@/api/public.js";
 import { getProcList, deleteById, setVoidState } from "@/api/procurementOrder";
 import addProcOrder from "@/components/addProcOrder.vue";
 import updateProOrder from "@/components/updateProOrder.vue";
-import auditingProOrder from "@/components/auditingProOrder.vue";
 import { Message } from "element-ui";
 import { getPayType } from "@/api/public.js";
 import { getAllBaseProvider } from "@/api/BaseProvider.js";
@@ -221,7 +220,6 @@ export default {
   components: {
     addProcOrder,
     updateProOrder,
-    auditingProOrder,
   },
   data() {
     return {

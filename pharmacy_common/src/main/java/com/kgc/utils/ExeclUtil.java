@@ -5,13 +5,9 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import cn.hutool.poi.excel.StyleSet;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.support.ExcelTypeEnum;
-import com.alibaba.excel.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.kgc.annotation.ExcelFiled;
-import com.kgc.entity.CgddOrder;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 
@@ -31,7 +27,7 @@ import java.util.List;
  */
 public class ExeclUtil {
 
-    public static void write(List<T> excelDataBody, Class clazz, HttpServletResponse response, String fileName) throws IOException {
+    public static <T> void write(List<T> excelDataBody, Class clazz, HttpServletResponse response, String fileName) throws IOException {
         try {
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(  ".xlsx", "UTF-8"));
@@ -129,8 +125,13 @@ public class ExeclUtil {
                             row.add(ReflectUtil.invoke(t, method).toString());
                         }
                     } else {
-                        parseList(rows, row, parNum + fieldNum, ReflectUtil.invoke(t, method), annotation.type());
-                        isAdd = false;
+                        List<Object> objectList = ReflectUtil.invoke(t, method);
+                        if (objectList != null && !objectList.isEmpty()) {
+                            parseList(rows, row, parNum + row.size(), objectList, annotation.type());
+                            isAdd = false;
+                        } else {
+                            nullToEmpty(row, annotation.type());
+                        }
                     }
                     fieldNum++;
                 }
@@ -141,6 +142,24 @@ public class ExeclUtil {
             isAdd = true;
         }
     }
+
+    /**
+     * null转空
+     *
+     * @param row   数据行
+     * @param clazz 数据对象
+     */
+    public static void nullToEmpty(List<String> row, Class clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.isAnnotationPresent(ExcelFiled.class)) {
+                ExcelFiled annotation = field.getAnnotation(ExcelFiled.class);
+                if (annotation.type() == String.class) {
+                    row.add("");
+                }
+            }
+        }
+    }
+
 
     /**
      * 写入别名
@@ -157,7 +176,7 @@ public class ExeclUtil {
                 ExcelFiled annotation = field.getAnnotation(ExcelFiled.class);
                 if (annotation.type() == String.class) {
                     if (firstRow != firstRow + mergeTotalRowNum - 1) {
-                        writer.merge(firstRow, firstRow + mergeTotalRowNum - 1, firstColumn + excelFiledNum, firstColumn + excelFiledNum, annotation.value(), null);
+                        writer.merge(firstRow, firstRow + mergeTotalRowNum - 1, firstColumn + excelFiledNum, firstColumn + excelFiledNum, annotation.value(), writer.getCellStyle());
                     } else {
                         writer.writeCellValue(firstColumn + excelFiledNum, firstRow, annotation.value());
                     }
@@ -165,7 +184,7 @@ public class ExeclUtil {
                     int mergeFirstColumn = excelFiledNum;
                     excelFiledNum += writerAlias(writer, annotation.type(), firstRow + 1, firstColumn + excelFiledNum, mergeTotalRowNum - 1);
                     excelFiledNum--;
-                    writer.merge(firstRow, firstRow, mergeFirstColumn, excelFiledNum, annotation.value(), null);
+                    writer.merge(firstRow, firstRow, mergeFirstColumn, excelFiledNum, annotation.value(), writer.getCellStyle());
                 }
                 excelFiledNum++;
             }

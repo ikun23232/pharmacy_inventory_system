@@ -19,6 +19,8 @@ import PrintRefundOrder from "../views/refund/PrintRefundOrder.vue";
 import RefundOrder from "../views/refund/RefundOrder.vue";
 import PrintCGRKOrder from "@/views/procurement/CGRK/PrintCGRKOrder";
 import printDispatchOrder from './../views/kc/KCDD/printDispatchOrder.vue'
+import DDRKManager from './../views/kc/DDRK/DDRKManager.vue'
+import PrintDDRKOrder from './../views/kc/DDRK/PrintDDRKOrder.vue'
 
 import axios from "@/utils/request";
 import store from "@/store/index"
@@ -55,11 +57,11 @@ const routes = [
     name: 'storeHouse',
     component: storeHouse
   }
-  ,{
-        path: '/baseProviderList',
-        name: 'baseProviderList',
-        component: BaseProviderList
-    },
+  , {
+    path: '/baseProviderList',
+    name: 'baseProviderList',
+    component: BaseProviderList
+  },
   {
     path: '/cgrkManager',
     name: 'CGRKManager',
@@ -126,12 +128,12 @@ const routes = [
     component: dispatch
   },
   {
-    path:'/procurementTJ',
+    path: '/procurementTJ',
     name: 'procurementTJ',
     component: () => import('../views/procurement/ProcurementTJ.vue')
   },
   {
-    path:'/KcReported',
+    path: '/KcReported',
     name: 'KcReported',
     component: () => import('../views/warehouse/KCBC/KcReported.vue')
   },
@@ -140,25 +142,42 @@ const routes = [
     name: 'printDispatchOrder',
     component: printDispatchOrder
   },
-    {
-        path: '/printCGRKOrder',
-        name: 'PrintCGRKOrder',
-        component: PrintCGRKOrder
+  {
+    path: '/printCGRKOrder',
+    name: 'PrintCGRKOrder',
+    component: PrintCGRKOrder
 
-    },
-    {
-        path:'/ddckManager',
-        name: 'DDCKManager',
-        component: () => import('@/views/kc/DDCK/DDCKManager')
-    },{
-        path:'/printDDCKOrder',
-        name: 'PrintDDCKOrder',
-        component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
-    },{
-        path:'/crkmxManager',
-        name: 'CRKMXManager',
-        component: () => import('@/views/kc/CRKMX/CRKMXManager')
-    }
+  },
+  {
+    path: '/DDRKManager',
+    name: 'DDRKManager',
+    component: DDRKManager
+
+  },
+  {
+    path: '/PrintDDRKOrder',
+    name: 'PrintDDRKOrder',
+    component: PrintDDRKOrder
+
+  },
+  {
+    path: '/KCGJManager',
+    name: 'KCGJManager',
+    component: () => import('@/views/kc/KCGJ/KCGJManager')
+  },
+  {
+    path: '/ddckManager',
+    name: 'DDCKManager',
+    component: () => import('@/views/kc/DDCK/DDCKManager')
+  }, {
+    path: '/printDDCKOrder',
+    name: 'PrintDDCKOrder',
+    component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
+  }, {
+    path: '/crkmxManager',
+    name: 'CRKMXManager',
+    component: () => import('@/views/kc/CRKMX/CRKMXManager')
+  },
 ]
 
 const router = new VueRouter({
@@ -167,90 +186,90 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-	let hasRoute = store.state.menus.hasRoutes
+  let hasRoute = store.state.menus.hasRoutes
 
-let token = localStorage.getItem("token")
+  let token = localStorage.getItem("token")
 
-if (to.path == '/login') {
-	next()
+  if (to.path == '/login') {
+    next()
 
-} else if (!token) {
-	next({path: '/login'})
+  } else if (!token) {
+    next({ path: '/login' })
 
 
-} else if(token && !hasRoute) {
-	axios.get("/user/menu/nav", {
-		headers: {
-			Authorization: localStorage.getItem("token")
-		}
-	}).then(res => {
+  } else if (token && !hasRoute) {
+    axios.get("/user/menu/nav", {
+      headers: {
+        Authorization: localStorage.getItem("token")
+      }
+    }).then(res => {
 
-		console.log(res.data.nav)
+      console.log(res.data.nav)
 
-		// 拿到menuList
-		store.commit("setMenuList", res.data.nav)
+      // 拿到menuList
+      store.commit("setMenuList", res.data.nav)
 
-		// 拿到用户权限
-		store.commit("setPermList", res.data.authoritys)
+      // 拿到用户权限
+      store.commit("setPermList", res.data.authoritys)
 
-		console.log(store.state.menus.menuList)
+      console.log(store.state.menus.menuList)
 
-		// 动态绑定路由
-		let newRoutes = router.options.routes
+      // 动态绑定路由
+      let newRoutes = router.options.routes
 
-		res.data.nav.forEach(menu => {
-			if (menu.children && menu.children.length > 0) {
-				menu.children.forEach(e => {
+      res.data.nav.forEach(menu => {
+        if (menu.children && menu.children.length > 0) {
+          menu.children.forEach(e => {
 
-					if (e.children && e.children.length > 0) {
-						e.children.forEach(child => {
-							// 转成路由
-							let route = menuToRoute(child)
+            if (e.children && e.children.length > 0) {
+              e.children.forEach(child => {
+                // 转成路由
+                let route = menuToRoute(child)
 
-							// 吧路由添加到路由管理中
-							if (route) {
-								newRoutes[0].children.push(route)
-							}
-						})
-					} else {
-						// 转成路由
-						let route = menuToRoute(e)
+                // 吧路由添加到路由管理中
+                if (route) {
+                  newRoutes[0].children.push(route)
+                }
+              })
+            } else {
+              // 转成路由
+              let route = menuToRoute(e)
 
-						// 吧路由添加到路由管理中
-						if (route) {
-							newRoutes[0].children.push(route)
-						}
-					}
+              // 吧路由添加到路由管理中
+              if (route) {
+                newRoutes[0].children.push(route)
+              }
+            }
 
-				})
-			}
+          })
+        }
 
-		})
-		router.addRoutes(newRoutes)
+      })
+      router.addRoutes(newRoutes)
 
-		hasRoute = true
-		store.commit("changeRouteStatus", hasRoute)
-	})
-}
-next()
+      hasRoute = true
+      store.commit("changeRouteStatus", hasRoute)
+    })
+  }
+  next()
 })
 
 
 // 导航转成路由
 const menuToRoute = (menu) => {
 
-	if (!menu.component) {
-		return null
-	}
+  if (!menu.component) {
+    return null
+  }
 
-	let route = {
-		name: menu.perms,
-		path: menu.path,
-		meta: {
-			title: menu.title
-		}
-	}
-	route.component = () => import('../views/' + menu.component +'.vue')
+  let route = {
+    name: menu.perms,
+    path: menu.path,
+    meta: {
+      title: menu.title
+    }
+  }
+  route.component = () => import('../views/' + menu.component + '.vue')
 
   return route
 }

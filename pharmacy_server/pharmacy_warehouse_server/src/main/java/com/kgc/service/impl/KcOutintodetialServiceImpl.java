@@ -62,12 +62,12 @@ public class KcOutintodetialServiceImpl extends ServiceImpl<KcOutintodetialMappe
 
     @Override
     public void crkmxExcel(DispatchVO vo, HttpServletResponse response) {
-        List<KcOutintodetial> kcOutintodetials = kcOutintodetialMapper.getKcDisfromwareList(new HashMap<>());
-        try {
-            ExeclUtil.writeExcel(kcOutintodetials,response,"出入库明细",KcOutintodetial.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        List<KcOutintodetial> kcOutintodetials = kcOutintodetialMapper.getKcDisfromwareList(new HashMap<>());
+//        try {
+//            ExeclUtil.writeExcel(kcOutintodetials,response,"出入库明细",KcOutintodetial.class);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 }

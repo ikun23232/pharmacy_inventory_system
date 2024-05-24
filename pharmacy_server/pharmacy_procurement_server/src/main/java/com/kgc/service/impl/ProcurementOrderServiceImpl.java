@@ -9,6 +9,8 @@ import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
 import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.CgddVO;
+import com.kgc.vo.MedicineVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -172,18 +175,18 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response) {
-//        List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
-//        List<CgddOrder> temp = new ArrayList<>();
-//        for (CgddOrder cgddOrder1 :order) {
-//            List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(cgddOrder1.getCode());
-//            cgddOrder1.setMedicineList(medicineListByCode);
-//            temp.add(cgddOrder1);
-//        }
-//        try {
-//            ExeclUtil.write(temp,CgddOrder.class,response,"采购订单");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<CgddVO> order = mapper.imExcel();
+        List<CgddVO> temp = new ArrayList<>();
+        for (CgddVO cgddVO :order) {
+            List<MedicineVO> medicineListByCode = baseMedicineMapper.getMedicineVOListByCode(cgddVO.getCode());
+            cgddVO.setMedicineList(medicineListByCode);
+            temp.add(cgddVO);
+        }
+        try {
+            ExeclUtil.write(temp, CgddVO.class,response,"采购订单");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

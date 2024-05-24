@@ -1,15 +1,18 @@
 package com.kgc.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kgc.entity.CgrkOrder;
-import com.kgc.entity.KcDisfromware;
 import com.kgc.dao.KcDisfromwareMapper;
+import com.kgc.dao.KcDistowareMapper;
+import com.kgc.entity.KcDisfromware;
+import com.kgc.entity.KcDistoware;
 import com.kgc.entity.Message;
-import com.kgc.service.KcDisfromwareService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kgc.service.KcDistowareService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.DispatchVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +31,14 @@ import java.util.Map;
  * @since 2024-04-30
  */
 @Service
-public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, KcDisfromware> implements KcDisfromwareService {
+public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDistoware> implements KcDistowareService {
     @Autowired
-    private KcDisfromwareMapper kcDisfromwareMapper;
+    private KcDistowareMapper kcDistowareMapper;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Message getKcDisfromwareList(DispatchVO vo) {
+    public Message getKcDistowareList(DispatchVO vo) {
         Map paramsMap = new HashMap<String, Object>();
         paramsMap.put("code", vo.getCode());
         paramsMap.put("subject", vo.getSubject());
@@ -42,22 +47,22 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
 //        paramsMap.put("approvalStatus", vo.getApprovalStatus());
         paramsMap.put("fowardWarhouseId", vo.getAimWarehouseId());
         paramsMap.put("beforeWarhouseId", vo.getBeforeWarehouseId());
+        logger.debug("KcDistowareServiceImpl getKcDistowareList paramsMap:"+paramsMap);
         PageHelper.startPage(vo.getCurrentPageNo(), vo.getPageSize());
-        List<KcDisfromware> kcDisfromwareList1 = kcDisfromwareMapper.getKcDisfromwareList(paramsMap);
+        List<KcDisfromware> kcDisfromwareList1 = kcDistowareMapper.getKcDistowareList(paramsMap);
         PageInfo<KcDisfromware> kcDisfromwarePageInfo = new PageInfo<>(kcDisfromwareList1);
         return Message.success(kcDisfromwarePageInfo);
-
     }
 
     @Override
-    public Message getKcDisfromwareOrder(int id) {
-        KcDisfromware kcDisfromwareOrder = kcDisfromwareMapper.getKcDisfromwareOrder(id);
+    public Message getKcDistowareOrder(int id) {
+        KcDisfromware kcDisfromwareOrder = kcDistowareMapper.getKcDistowareOrder(id);
         return Message.success(kcDisfromwareOrder);
     }
 
     @Override
-    public Message delKcDisfromware(int id) {
-        int updateRow = kcDisfromwareMapper.deleteById(id);
+    public Message delKcDistoware(int id) {
+        int updateRow = kcDistowareMapper.deleteById(id);
         if (updateRow>0){
             return Message.success();
         }
@@ -65,7 +70,7 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
     }
 
     @Override
-    public void ddckExcel(KcDisfromware kcDisfromware, HttpServletResponse response) {
+    public void ddrkExcel(KcDistoware kcDistoware, HttpServletResponse response) {
 //        List<KcDisfromware> kcDisfromwareList = kcDisfromwareMapper.getKcDisfromwareList(new HashMap<>());
 //        try {
 //            ExeclUtil.writeExcel(kcDisfromwareList,response,"调度出库",KcDisfromware.class);
@@ -73,4 +78,5 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
 //            e.printStackTrace();
 //        }
     }
+
 }
