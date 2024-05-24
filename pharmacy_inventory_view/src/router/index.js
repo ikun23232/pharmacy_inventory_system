@@ -7,7 +7,6 @@ import BankAccountList from "../views/base/BankAccountList.vue"
 import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
 import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
 import dispatch from '../views/kc/KCDD/dispatch.vue'
-
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
 import PrintSaleOrder from "../views/sale/PrintSaleOrder.vue";
