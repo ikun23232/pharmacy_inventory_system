@@ -39,7 +39,6 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
         paramsMap.put("subject", vo.getSubject());
         paramsMap.put("startTime", vo.getStartTime());
         paramsMap.put("endTime", vo.getEndTime());
-//        paramsMap.put("approvalStatus", vo.getApprovalStatus());
         paramsMap.put("fowardWarhouseId", vo.getAimWarehouseId());
         paramsMap.put("beforeWarhouseId", vo.getBeforeWarehouseId());
         PageHelper.startPage(vo.getCurrentPageNo(), vo.getPageSize());
@@ -71,6 +70,7 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
             ExeclUtil.writeExcel(kcDisfromwareList,response,"调度出库",KcDisfromware.class);
         } catch (IOException e) {
             e.printStackTrace();
+
         }
     }
 }

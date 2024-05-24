@@ -122,7 +122,7 @@
 
               <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderstatus==2" type="success" size="small">审核
               </el-button></el-dropdown-item>
-              <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="primary" size="small">打印
+              <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
 
             </el-dropdown-menu>
@@ -292,6 +292,14 @@ export default {
       console.log(data);
       this.list = data.data;
 
+    },
+    printSaleOrder(orderNo){
+      const newPage= this.$router.resolve({
+        path: "/printCGSQOrder",
+        query:{ //要传的参数 可传多个
+          orderNo:orderNo
+        }})
+      window.open(newPage.href,'_blank')
     },
     async initCgType(){
       let resp = await getPayType();

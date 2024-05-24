@@ -7,6 +7,7 @@
         <id column="id" property="id"/>
         <collection property="medicineList" ofType="com.kgc.entity.BaseMedicine" autoMapping="true">
             <result column="medicineIdTemp" property="id"/>
+            <result column="providerId" property="providerId"/>
         </collection>
     </resultMap>
 
@@ -47,11 +48,15 @@
                (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
                (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
                (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName',
-               m.medicineId AS medicineIdTemp,m.*,(SELECT price  FROM provider_medicine u WHERE m.medicineId=u.medicineId AND m.providerId=u.providerId) AS 'purchasePrice'
-        FROM cgsq_order o,cg_type t,order_statue s,order_medicine m
+               m.medicineId AS medicineIdTemp,m.*,(SELECT price  FROM provider_medicine u WHERE m.medicineId=u.medicineId AND m.providerId=u.providerId) AS 'purchasePrice',bp.`name` providerName,bm.`name`,bu.`name` unitName,bu.sign,bc.`name` AS categoryName,bm.specification
+        FROM cgsq_order o,cg_type t,order_statue s,order_medicine m,base_provider bp,base_unit bu,base_medicine bm,base_medicine_category bc
         WHERE o.type=t.id
           AND s.id=o.orderStatus
           AND o.`code`=m.`code`
+          AND bp.id=m.providerId
+          AND bu.id=bm.unitId
+          AND bm.id=m.medicineId
+          AND bc.id=bm.categoryId
           AND o.id=#{id}
     </select>
 

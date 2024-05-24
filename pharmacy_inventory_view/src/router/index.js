@@ -153,6 +153,10 @@ const routes = [
         path:'/crkmxManager',
         name: 'CRKMXManager',
         component: () => import('@/views/kc/CRKMX/CRKMXManager')
+    },{
+        path:'/printCGSQOrder',
+        name: 'PrintCGSQOrder',
+        component: () => import('@/views/procurement/CGSQ/PrintCGSQOrder')
     }
 ]
 
