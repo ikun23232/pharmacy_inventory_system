@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -58,7 +59,7 @@ public class BaseMedicine implements Serializable {
     /**
      * 零售价
      */
-    private Double salePrice;
+    private BigDecimal salePrice;
 
     /**
      * 医用商品规格
@@ -98,7 +99,7 @@ public class BaseMedicine implements Serializable {
     private Integer quantity;
 
     @TableField(exist=false)
-    private double totalPrice;
+    private BigDecimal totalPrice;
 
     @TableField(exist=false)
     private Integer providerId;
@@ -107,7 +108,7 @@ public class BaseMedicine implements Serializable {
     private String providerName;
 
     @TableField(exist=false)
-    private double purchasePrice;
+    private BigDecimal purchasePrice;
 
     @TableField(exist=false)
     private String code;//单据编号
@@ -133,7 +134,7 @@ public class BaseMedicine implements Serializable {
     @TableField(exist=false)
     private String storehouseName;
 
-    private Integer fowardWarHouseId;//目标仓库Id
+    private int storeHouseId;
 
-
+    private int aimStoreHouseId;
 }

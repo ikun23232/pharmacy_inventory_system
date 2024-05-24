@@ -9,11 +9,13 @@ import com.kgc.service.KcReportedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class KcReportedServiceImpl implements KcReportedService {
@@ -53,6 +55,19 @@ public class KcReportedServiceImpl implements KcReportedService {
         }
         return Message.error();
     }
+    /**
+     * 根据id获取库存报损
+     * @param id
+     */
+    @Override
+    public Message getKcReportedListById(Integer id) {
+        KcReported kcReported = kcReportedMapper.getKcReportedListById(id);
+        if (kcReported!=null){
+            return Message.success(kcReported);
+        }
+        return Message.error();
+    }
+
     /**
      * 根据code获取code
      * @param code
@@ -185,6 +200,7 @@ public class KcReportedServiceImpl implements KcReportedService {
         Map theData=(Map)map.get("theData");
         Map kcReportedMap=(Map)theData.get("kcReported");
         KcReported kcReported = new KcReported();
+        kcReported.setId((Integer) kcReportedMap.get("id"));
         kcReported.setCode((String) kcReportedMap.get("code"));
         kcReported.setApprovalStatus(Integer.valueOf(kcReportedMap.get("approvalStatus").toString()));
         kcReported.setReportedTypeId(Integer.valueOf(kcReportedMap.get("reportedTypeId").toString()));
@@ -194,12 +210,19 @@ public class KcReportedServiceImpl implements KcReportedService {
             kcReported.setApproverBy(kcReported.getModificationBy());
         }
         List list = (List) theData.get("kcMedicineList");
-
-        delKcReporteddetailByCode(kcReported.getCode());
-
+        if (kcReported.getApprovalStatus()==2){
+            this.addKcReportedfromwareByReported(kcReported.getId());
+        }
+        Message messageDel = delKcReporteddetailByCode(kcReported.getCode());
+        if (!messageDel.getCode().equals("200")){
+            return messageDel;
+        }
         for (int i = 0; i < list.size(); i++){
             if (kcReported.getApprovalStatus()==2){
-                KcMedicine kcMedicine = (KcMedicine) list.get(i);
+                KcMedicine kcMedicine = new KcMedicine();
+                kcMedicine.setId(Integer.valueOf(((Map)list.get(i)).get("id").toString()));
+                kcMedicine.setQuantity(Integer.valueOf(((Map)list.get(i)).get("quantity").toString()));
+                kcMedicine.setReportedNum(Integer.valueOf(((Map)list.get(i)).get("reportedNum").toString()));
                 this.kcMedicineService.updateQuantityById(kcMedicine);
             }
 //            this.kcMedicineService.updateQuantityById((KcMedicine) list.get(i));//修改库存数量
@@ -239,6 +262,38 @@ public class KcReportedServiceImpl implements KcReportedService {
         }
         return Message.error();
     }
+
+    @Override
+    public Message addKcReportedfromwareByReported(int reportedId) {
+        KcReportedfromware kcReportedfromware = new KcReportedfromware();
+        kcReportedfromware.setReportedId(reportedId);
+        String code = UUID.randomUUID().toString().replace("-", "");
+        kcReportedfromware.setCode(code);
+        int isAdd=kcReportedMapper.addKcReportedfromwareByReported(kcReportedfromware);
+        if (isAdd>0){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
+    @Override
+    public Message getKcReportedfromware(KcReportedfromware kcReportedfromware,int pageNum,int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<KcReportedfromware> list = kcReportedMapper.getKcReportedfromware(kcReportedfromware);
+        PageInfo<KcReportedfromware> pageInfo = new PageInfo<>(list);
+        if (list.size()>0){
+            return Message.success(pageInfo);
+        }
+        return Message.error();
+
+    }
+
+    @Override
+    public List<KcReported> getAllKcReported() {
+        return kcReportedMapper.getKcReportedList(null);
+    }
+
+
 
 
 }

@@ -33,7 +33,7 @@ public class CwCategory implements Serializable {
      * 流水类别名
      */
     @TableField("accountsCategoryName")
-    private String accountscategoryname;
+    private String accountsCategoryName;
 
     /**
      * 流水级别
@@ -44,19 +44,19 @@ public class CwCategory implements Serializable {
      * 流水类别父级Id
      */
     @TableField("parentId")
-    private String parentid;
+    private String parentId;
 
     /**
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private LocalDateTime createTime;
 
     /**
      * 逻辑删除
      */
     @TableField("isDel")
-    private String isdel;
+    private String isDel;
 
 
 }

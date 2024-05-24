@@ -27,14 +27,26 @@ public class CwAccounts implements Serializable {
     /**
      * 流水Id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
+    /**
+     * 流水编号
+     */
+    @TableField("code")
+    private String code;
 
     /**
      * 流水类别Id
      */
-    @TableField("accountsCategoryId")
-    private Integer accountscategoryid;
+    @TableField("categoryId")
+    private Integer categoryId;
+
+    /**
+     * 流水类别名称
+     */
+    @TableField("accountsCategoryName")
+    private String accountsCategoryName;
 
     /**
      * 流水总价
@@ -44,48 +56,65 @@ public class CwAccounts implements Serializable {
     /**
      * 订单Id
      */
-    @TableField("orderId")
-    private Integer orderid;
+    @TableField("orderCode")
+    private String orderCode;
 
     /**
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private LocalDateTime createTime;
 
     /**
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationtime;
+    private LocalDateTime modificationTime;
 
     /**
      * 创建人
      */
     @TableField("createBy")
-    private Integer createby;
+    private Integer createBy;
+
+    /**
+     * 创建人姓名
+     */
+    @TableField("createName")
+    private String createName;
 
     /**
      * 修改人
      */
     @TableField("modificationBy")
-    private Integer modificationby;
+    private Integer modificationBy;
 
+    /**
+     * 修改人姓名
+     */
+    @TableField("modificationName")
+    private String modificationName;
     /**
      * 逻辑删除
      */
     @TableField("isDel")
-    private String isdel;
+    private String isDel;
 
     /**
-     * 银行Id
+     * 银行卡Id
      */
     @TableField("bankAcountId")
-    private Integer bankacountid;
+    private Integer bankAcountId;
+    /**
+     * 银行卡号
+     */
+    @TableField("bandCount")
+    private String bandCount;
 
     /**
      * 描述
      */
+    @TableField("description")
     private String description;
 
 

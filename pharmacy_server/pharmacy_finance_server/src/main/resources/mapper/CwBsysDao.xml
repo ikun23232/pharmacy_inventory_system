@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CwBsysDao">
+    <select id="getCwbsysList" resultType="com.kgc.entity.CwBsys">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost
+        FROM cw_bsys a WHERE a.isDel=0
+        <if test="code!=null and code!=''">
+            AND a.code LIKE concat('%',#{code},'%')
+        </if>
+        <if test="originalOrder!=null and originalOrder!=''">
+            AND a.originalOrder LIKE concat('%',#{originalOrder},'%')
+        </if>
+
+    </select>
+
+</mapper>
+

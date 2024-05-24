@@ -18,6 +18,7 @@
     "vue-mini-weather": "^0.3.8",
     "vue-print-nb": "^1.7.5",
     "vue-router": "^3.5.1",
+    "vue-seamless-scroll": "^1.1.23",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

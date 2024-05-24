@@ -1,9 +1,6 @@
 package com.kgc.dao;
 
-import com.kgc.entity.BaseStorehouse;
-import com.kgc.entity.KcReported;
-import com.kgc.entity.KcReporteddetail;
-import com.kgc.entity.KcReportedtype;
+import com.kgc.entity.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,6 +12,13 @@ public interface KcReportedMapper {
      * @return
      */
     List<KcReported> getKcReportedList(KcReported kcReported);
+
+    /**
+     * 根据id获取报损单
+     * @param id
+     * @return
+     */
+    KcReported getKcReportedListById(@Param("id") Integer id);
 
     /**
      * 根据code获取报损单号
@@ -51,5 +55,9 @@ public interface KcReportedMapper {
     int delKcReporteddetailByCode(@Param("reportedCode") String reportedCode);
 
     int delKcReportedByCode(@Param("code") String code);
+
+    int addKcReportedfromwareByReported(KcReportedfromware kcReportedfromware);
+
+    List<KcReportedfromware> getKcReportedfromware(KcReportedfromware kcReportedfromware);
 
 }

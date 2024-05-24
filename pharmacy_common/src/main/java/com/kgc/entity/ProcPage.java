@@ -23,4 +23,5 @@ public class ProcPage {
     private int type;
     private int pageNum;
     private int pageSize;
+    private int approvalStatus;
 }

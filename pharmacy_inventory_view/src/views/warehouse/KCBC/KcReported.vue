@@ -3,9 +3,10 @@ import {getKcReportedList,getStorehouseList,getReportedType,delKcReportedAndDeta
 import AddReported from "@/components/AddReported.vue";
 import { Message } from "element-ui";
 import UpdateReported from "@/components/UpdateReported.vue";
+import DetailsReported from "@/components/DetailsReported.vue";
 export default {
   name: "KcReported",
-  components: {UpdateReported, AddReported},
+  components: {DetailsReported, UpdateReported, AddReported},
   data() {
     return {
       // 登录用户
@@ -81,6 +82,9 @@ export default {
       updateReported:{
 
       },
+      // 详情库存报损对话框
+      detailsReportedVisible:false,
+
     }
   },
   mounted() {
@@ -97,8 +101,6 @@ export default {
       if (val){
         this.kcReportedPage.pageNum=val
       }
-      // console.log(this.kcReportedPage.pageNum)
-
       if (Array.isArray(this.time) && this.time.length > 0) {
         // time 是一个非空数组
         this.kcReportedSelect.beginTime = this.time[0];
@@ -146,9 +148,12 @@ export default {
       })
     },
     updateReporteds(row) {
-      // console.log(row);
       this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
       this.updateReportedVisible = true;
+    },
+    detailsReporteds(row) {
+      this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
+      this.detailsReportedVisible = true;
     },
     deleteReported(row) {
       if (row.approvalStatus==2){
@@ -263,7 +268,8 @@ export default {
         <!--      <el-table-column prop="documenterBy" label="制单人id" width="120"/>-->
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="updateReporteds(row)">修改</el-button>&nbsp;
+            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus!=2">修改</el-button>&nbsp;
+            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus==2">详情</el-button>&nbsp;
             <el-popconfirm
                 title="确定要删除吗？"
                 confirmButtonText="确定"
@@ -298,6 +304,12 @@ export default {
       <el-dialog title="修改报损" :visible.sync="updateReportedVisible" width="1500px">
         <UpdateReported :row-data="updateReported" @handleAddSuccess="updateReportedVisible=false;;getKcReportedLists(1)"
                         @cancel="updateReportedVisible=false" />
+      </el-dialog>
+    </div>
+    <div>
+      <el-dialog title="详情报损" :visible.sync="detailsReportedVisible" width="1500px">
+        <DetailsReported :row-data="updateReported"
+                         @cancel="detailsReportedVisible=false"/>
       </el-dialog>
     </div>
   </div>

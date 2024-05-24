@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CwCgyfDao">
+    <select id="getCwCgyfList" resultType="com.kgc.entity.CwCgyf">
+        select a.id,a.`code`,a.cgddCode,a.providerId,a.isPay,a.cost,a.createTime,a.paymentTime,b.`name` providerName from cw_cgyf a
+        LEFT JOIN base_provider b ON a.providerId=b.id where a.isDel=0
+        <if test="code!=null and code!=''">
+            and a.code like concat('%',#{code},'%')
+        </if>
+        <if test="cgddCode!=null and cgddCode!=''">
+            and a.cgddCode like concat('%',#{cgddCode},'%')
+        </if>
+        <if test="providerId>0">
+           and a.providerId=#{providerId}
+        </if>
+        <if test="isPay>0">
+            and a.isPay=#{isPay}
+        </if>
+    </select>
+
+    <select id="getCgddByCode" resultType="CgddOrder">
+        select id, code, subject, type,
+               (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS orderTypeName,demanderBy,
+               (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS demanderName,demandTime,
+               count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
+               (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId) as approverName,approverRemark, documenterBy,
+               (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
+               createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
+               updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,
+               contactperson, phone, fax, email, deliveryDate, deliveryBy,
+               (SELECT `userName` FROM sys_user c WHERE a.deliveryBy = c.userId) AS deliveryName, payType, payTime, isPay
+        from cgdd_order AS a where a.isDel = 0 and code = #{code}
+    </select>
+
+</mapper>
+

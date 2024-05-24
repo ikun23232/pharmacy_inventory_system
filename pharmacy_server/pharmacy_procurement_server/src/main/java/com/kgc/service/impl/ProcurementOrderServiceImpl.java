@@ -16,12 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * @author 15279
@@ -44,8 +42,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         try {
             Date beginDate = inputSdf.parse(cgddOrder.getBeginTime());
             Date endDate = inputSdf.parse(cgddOrder.getEndTime());
-           cgddOrder.setBeginTime(outputSdf.format(beginDate));
-           cgddOrder.setEndTime(outputSdf.format(endDate));
+            cgddOrder.setBeginTime(outputSdf.format(beginDate));
+            cgddOrder.setEndTime(outputSdf.format(endDate));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -62,13 +60,13 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     public Message addCgddOrder(CgddOrder cgddOrder) {
         int count1 = 0;
         int num = 0;
-        double price  =0.0;
+        BigDecimal price = BigDecimal.ZERO;
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setMedicineid(baseMedicine.getMedicineId());
@@ -76,7 +74,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price += orderMedicine.getTotalprice();
+                price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -123,13 +121,13 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     public Message updateCgddById(CgddOrder cgddOrder) {
         int count1 = 0;
         int num = 0;
-        double price  =0.0;
+        BigDecimal price  =BigDecimal.ZERO;
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setSourceCode(baseMedicine.getCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setId(baseMedicine.getMedicineOrderId());
@@ -137,7 +135,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price += orderMedicine.getTotalprice();
+                price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -207,5 +205,40 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             return Message.success(pageInfo);
         }
         return Message.error("没有数据");
+    }
+
+    @Override
+    public BigDecimal getReferenceAmountByCode(String code) {
+        BigDecimal referenceAmountById = mapper.getReferenceAmountByCode(code);
+        return referenceAmountById;
+    }
+
+    @Override
+    public int updateCgddIsPayByCode(String code) {
+        int isPay= mapper.updateCgddIsPayByCode(code);
+        return isPay;
+    }
+
+    @Override
+    public Message addcgyf(CwCgyf cwCgyf) {
+        String originalOrder = "";
+//                cwCgyf.getOriginalOrder();
+        BigDecimal referenceAmountByCode = mapper.getReferenceAmountByCode(originalOrder);
+        if (referenceAmountByCode == null){
+            return Message.error("该订单编号没有订单");
+        }
+        cwCgyf.setCost(referenceAmountByCode);
+        String code = UUID.randomUUID().toString().replace("-", "");
+        cwCgyf.setCode(code);
+        int isAdd = mapper.addcgyf(cwCgyf);
+        int isPay=this.updateCgddIsPayByCode(originalOrder);
+        if (isPay <= 0){
+            return Message.error("付款失败");
+        }
+        if (isAdd > 0){
+            return Message.success();
+        }
+
+        return  Message.error("付款失败");
     }
 }

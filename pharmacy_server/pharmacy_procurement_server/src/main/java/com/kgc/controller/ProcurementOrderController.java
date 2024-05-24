@@ -1,10 +1,7 @@
 package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.kgc.entity.CgddOrder;
-import com.kgc.entity.Message;
-import com.kgc.entity.Page;
-import com.kgc.entity.ProcPage;
+import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +37,7 @@ public class ProcurementOrderController {
         cgddOrder.setProviderId(procPage.getProviderId());
         cgddOrder.setType(procPage.getType());
         cgddOrder.setEndTime(procPage.getEndTime());
+        cgddOrder.setApprovalStatus(procPage.getApprovalStatus());
         Page page = new Page();
         page.setCurrentPageNo(procPage.getPageNum());
         page.setPageSize(procPage.getPageSize());
@@ -112,5 +110,10 @@ public class ProcurementOrderController {
         logger.debug("ProcurementOrderController getCgPayNumList year:" + year + ",pageNum:" + pageNum + ",pageSize:" + pageSize);
         Message message = procurementOrderService.getCgPayNumList(year,pageNum,pageSize);
         return message;
+    }
+
+    @RequestMapping("/addcgyf")
+    public Message addcgyf(@RequestBody CwCgyf cwCgyf) {
+        return procurementOrderService.addcgyf(cwCgyf);
     }
 }

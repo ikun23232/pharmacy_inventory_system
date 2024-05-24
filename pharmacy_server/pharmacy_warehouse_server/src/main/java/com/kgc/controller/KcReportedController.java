@@ -1,15 +1,20 @@
 package com.kgc.controller;
 
 import com.kgc.entity.KcReported;
-import com.kgc.entity.KcReporteddetail;
+import com.kgc.entity.KcReportedfromware;
 import com.kgc.entity.Message;
 import com.kgc.service.KcReportedService;
+import com.kgc.utils.ExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +29,11 @@ public class KcReportedController {
     public Message getKcReportedList(@RequestParam("pageNum")int pageNum,@RequestParam("pageSize")int pageSize,@RequestBody KcReported kcReported)
     {
         return kcReportedService.getKcReportedList(kcReported,pageNum,pageSize);
+    }
+    @RequestMapping("/getKcReportedListById")//库存报损列根据id
+    public Message getKcReportedListById(@RequestParam("id")int id)
+    {
+        return kcReportedService.getKcReportedListById(id);
     }
     @RequestMapping("/getCodeByCode")//根据code查询code
     public Message getKcReportedListByCode(String code)
@@ -60,6 +70,21 @@ public class KcReportedController {
         return kcReportedService.delKcReportedAndDetailByCode(code);
     }
 
+    @RequestMapping("/getKcReportedfromware")//获取库存报损入库列表
+    public Message getKcReportedfromware(@RequestParam("pageNum")int pageNum,@RequestParam("pageSize")int pageSize,@RequestBody KcReportedfromware kcReportedfromware){
+        return kcReportedService.getKcReportedfromware(kcReportedfromware,pageNum,pageSize);
+    }
+
+//    @RequestMapping("/getAllKcReported")//导出所有报损信息
+//    public List<KcReported> getAllKcReported(){
+//        return kcReportedService.getAllKcReported();
+//    }
+
+    @RequestMapping("/getAllKcReported")
+    public void getAllKcReported(HttpServletResponse response) throws IOException {
+        List<KcReported> data = kcReportedService.getAllKcReported();
+        ExcelUtils.exportToExcel(response, data, "reported_data");
+    }
 
 
 }

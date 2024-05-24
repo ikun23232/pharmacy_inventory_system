@@ -31,6 +31,9 @@
                 <if test="type > 0">
                      and type=#{type}
                 </if>
+               <if test="approvalStatus == 1">
+                    and approvalStatus=1
+                </if>
             </where>
         order by  a.createTime desc
     </select>
@@ -96,4 +99,20 @@
         ORDER BY
         month
     </select>
+    
+    <select id="getReferenceAmountByCode" resultType="BigDecimal">
+        SELECT referenceAmount FROM cgdd_order WHERE code = #{code}
+    </select>
+    
+    
+    <insert id="addcgyf" parameterType="CwCgyf">
+        INSERT INTO cw_cgyf(code,cost,originalOrder,createTime)
+        VALUES(#{code},#{cost},#{originalOrder},now())
+    </insert>
+
+    <update id="updateCgddIsPayByCode">
+            UPDATE cgdd_order SET isPay = 1 WHERE code = #{code}
+    </update>
+
+
 </mapper>

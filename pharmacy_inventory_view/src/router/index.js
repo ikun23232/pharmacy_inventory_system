@@ -134,7 +134,52 @@ const routes = [
     path:'/KcReported',
     name: 'KcReported',
     component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  }
+  },
+    {
+      path:'/KcReportedfromware',
+      name: 'KcReportedfromware',
+      component: () => import('../views/warehouse/BSCK/KcReportedfromware.vue')
+    },
+    {
+      path:'/procurementPay',
+      name: 'procurementPay',
+      component: () => import('../views/procurement/CGDD/procurementPay.vue')
+    },
+    {
+      path:'/purchasePay',
+      name: 'purchasePay',
+      component: () => import('../views/finance/CGYF/purchasePay.vue')
+    },
+    {
+      path:'/breakageReceivable',
+      name: 'breakageReceivable',
+      component: () => import('../views/finance/BSYS/breakageReceivable.vue')
+    },
+    {
+      path:'/salesReceivable',
+      name: 'salesReceivable',
+      component: () => import('../views/finance/XS/salesReceivable.vue')
+    },
+    {
+      path:'/salesRefund',
+      name: 'salesRefund',
+      component: () => import('../views/finance/XS/salesRefund.vue')
+    },
+    {
+      path:'/invoice',
+      name: 'invoice',
+      component: () => import('../views/finance/invoice.vue')
+    },
+    {
+        path:'/runningWater',
+        name: 'runningWater',
+        component: () => import('../views/finance/runningWater.vue')
+    },
+    {
+        path:'/Index2',
+        name: 'Index2',
+        component: () => import('../views/index/Index.vue')
+    },
 ]
 
 const router = new VueRouter({

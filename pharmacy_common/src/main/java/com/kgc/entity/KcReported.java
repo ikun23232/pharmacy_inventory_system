@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -150,5 +151,6 @@ public class KcReported implements Serializable {
     @TableField(exist = false)
     private Date endDate;
 
+    private List<KcReporteddetail> kcReporteddetailList;
 
 }

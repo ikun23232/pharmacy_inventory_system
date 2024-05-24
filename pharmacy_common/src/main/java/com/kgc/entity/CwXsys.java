@@ -39,13 +39,13 @@ public class CwXsys implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private LocalDateTime createTime;
 
     /**
      * 原单号
      */
     @TableField("originalOrder")
-    private String originalorder;
+    private String originalOrder;
 
     /**
      * 药	品名
@@ -60,13 +60,18 @@ public class CwXsys implements Serializable {
     /**
      * 是否删除
      */
-    private String isdel;
+    private String isDel;
 
     /**
      * 销售员
      */
     @TableField("createBy")
-    private String createby;
+    private String createBy;
+    /**
+     * 销售员名称
+     */
+    @TableField(exist = false)
+    private String createName;
 
 
 }

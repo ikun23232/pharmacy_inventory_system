@@ -39,19 +39,19 @@ public class CwXstk implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private LocalDateTime createTime;
 
     /**
      * 原单号
      */
     @TableField("originalOrder")
-    private String originalorder;
+    private String originalOrder;
 
     /**
      * 退货原因
      */
     @TableField("backReson")
-    private String backreson;
+    private String backReson;
 
     /**
      * 金额
@@ -61,13 +61,18 @@ public class CwXstk implements Serializable {
     /**
      * 是否删除
      */
-    private String isdel;
+    private String isDel;
 
     /**
      * 销售员
      */
     @TableField("createBy")
-    private String createby;
+    private String createBy;
 
+    /**
+     * 销售员名称
+     */
+    @TableField(exist = false)
+    private String createName;
 
 }

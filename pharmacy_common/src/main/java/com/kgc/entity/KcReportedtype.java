@@ -32,7 +32,7 @@ public class KcReportedtype implements Serializable {
      * 报损类型
      */
     @TableField("reportedName")
-    private String reportedname;
+    private String reportedName;
 
 
 }

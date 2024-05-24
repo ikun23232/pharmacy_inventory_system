@@ -26,8 +26,7 @@
     
     <update id="updateQuantityById" parameterType="com.kgc.entity.KcMedicine">
         UPDATE kc_medicine
-        SET quantity=#{quantity},
-            money=#{money}
+        SET quantity=#{quantity}
         WHERE id=#{id}
     </update>
 

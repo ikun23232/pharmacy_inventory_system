@@ -71,7 +71,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         for (BaseMedicine baseMedicine : medicineList) {
             count += baseMedicine.getQuantity();
             BigDecimal quantity = new BigDecimal(baseMedicine.getQuantity()); // 数量转为BigDecimal
-            BigDecimal purchasePrice = new BigDecimal(baseMedicine.getPurchasePrice()); // 单价转为BigDecimal
+            BigDecimal purchasePrice = new BigDecimal(String.valueOf(baseMedicine.getPurchasePrice())); // 单价转为BigDecimal
             BigDecimal multiply = quantity.multiply(purchasePrice); // 使用BigDecimal的multiply方法进行精确乘法计算
             referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
         }
@@ -92,11 +92,11 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setSourceCode(cgrqOrder.getSourceCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
-            orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
+//            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+//            orderMedicine.setProviderId(baseMedicine.getProviderId());
+//            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
             Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode((batchCode+1)+"");
+//            orderMedicine.setBatchCode((batchCode+1)+"");
             orderMapper.insert(orderMedicine);
         }
         return Message.success();
