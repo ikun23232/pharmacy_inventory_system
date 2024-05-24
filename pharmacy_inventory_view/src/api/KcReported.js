@@ -62,3 +62,21 @@ export function delKcReportedAndDetailByCode(code) {
         }
     });
 }
+
+export function getKcReportedfromware(kcReportedfromware,pageNum,pageSize) {
+    return request.post(baseUrl + "/getKcReportedfromware",kcReportedfromware,{
+        params:{
+            pageNum:pageNum,
+            pageSize:pageSize
+        }
+    });
+}
+
+export function getKcReportedListById(id) {
+    return request.get(baseUrl + "/getKcReportedListById",{
+        params:{
+            id:id
+        }
+    });
+
+}

@@ -172,7 +172,7 @@
                 >打印</el-dropdown-item
               >
               <el-dropdown-item @click.native="handleAuditing(scope.row)"
-              :disabled="scope.row.orderStatus != 2"
+
                 >审核</el-dropdown-item
               >
             </el-dropdown-menu>
@@ -301,6 +301,10 @@ export default {
     };
   },
   async mounted() {
+    if (this.$route.query.code){
+      this.procPage.code=this.$route.query.code
+    }
+
     this.getOrderList(1, 5);
     let data = await getPayType();
     console.log("data:", data.data);

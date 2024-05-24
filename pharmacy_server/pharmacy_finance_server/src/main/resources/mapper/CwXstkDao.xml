@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CwXstkDao">
+    <select id="getXstkList" resultType="com.kgc.entity.CwXstk">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.backReson,a.cost,a.createBy,b.userName createName
+        FROM cw_xstk a LEFT JOIN sys_user b ON a.createBy=b.userId WHERE a.isDel=0
+        <if test="code!=null and code!=''">
+            AND a.code LIKE concat('%',#{code},'%')
+        </if>
+        <if test="originalOrder!=null and originalOrder!=''">
+            AND a.originalOrder LIKE concat('%',#{originalOrder},'%')
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+    </select>
+
+    <select id="getXsysList" resultType="com.kgc.entity.CwXsys">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,a.createBy,b.userName createName
+        FROM cw_xsys a LEFT JOIN sys_user b ON a.createBy=b.userId WHERE a.isDel=0
+        <if test="code!=null and code!=''">
+            AND a.code LIKE concat('%',#{code},'%')
+        </if>
+        <if test="originalOrder!=null and originalOrder!=''">
+            AND a.originalOrder LIKE concat('%',#{originalOrder},'%')
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+    </select>
+
+</mapper>
+

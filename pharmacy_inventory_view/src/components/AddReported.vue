@@ -71,6 +71,7 @@ export default {
         if (resp.code!=200){
           return
         }
+        console.log(resp.data)
         this.reportedTypeList=resp.data
       })
     },
@@ -116,10 +117,16 @@ export default {
     },
     // 添加报损详情到待添加列表
     addReportedDetails(row){
+      if (row.quantity<=0){
+        Message({
+          message: '该药品库存不足',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
       row.reportedNum=1
-      row.onePrice=row.money/row.quantity
-      row.allPrice=row.onePrice
-      console.log(row)
+      row.allPrice=row.money * row.reportedNum
       if (this.wereAddList.length==0){
         this.wereAddList.push(row)
       }else if (this.wereAddList.length>4){
@@ -150,11 +157,11 @@ export default {
     },
     // 报损数量改变
     handleDamageChange(row) {
-      console.log(this.wereAddList)
+      // console.log(this.wereAddList)
       // 确保报损数量不大于库存数量
       row.reportedNum = Math.min(row.reportedNum, row.quantity);
       // 计算总价，这里假设row.onePrice是药品的单价
-      row.allPrice = row.reportedNum * row.onePrice;
+      row.allPrice=row.money*row.reportedNum;
     },
     // 删除报损详情
     removeReportedDetails(row){
@@ -237,7 +244,7 @@ export default {
               <el-option
                   v-for="item in reportedTypeList"
                   :key="item.id"
-                  :label="item.reportedname"
+                  :label="item.reportedName"
                   :value="item.id">
               </el-option>
             </el-select>
@@ -266,7 +273,7 @@ export default {
           </el-table-column>
           <el-table-column prop="quantity" label="药品库存" width="120">
           </el-table-column>
-          <el-table-column prop="money" label="药品金额" width="120">
+          <el-table-column prop="money" label="药品单价" width="120">
           </el-table-column>
           <el-table-column align="center" label="操作" fixed="right" width="200">
             <template #default="{ row }">
@@ -294,6 +301,8 @@ export default {
       </el-table-column>
       <el-table-column prop="medicineName" label="药品名称" width="150">
       </el-table-column>
+      <el-table-column prop="batchCode" label="批次编号" width="150">
+      </el-table-column>
       <el-table-column prop="quantity" label="报损数量" width="110">
       <template slot-scope="scope">
         <el-input-number
@@ -307,16 +316,13 @@ export default {
         />
       </template>
       </el-table-column>
-      <el-table-column prop="allPrice" label="药品总价" width="90">
+      <el-table-column prop="allPrice" label="药品总价" width="120">
       </el-table-column>
-      <el-table-column prop="onePrice" label="药品单价" width="90">
+      <el-table-column prop="money" label="药品单价" width="90">
       </el-table-column>
       <el-table-column prop="quantity" label="药品库存" width="90">
       </el-table-column>
-      <el-table-column prop="money" label="库存价值" width="120">
-      </el-table-column>
-      <el-table-column prop="money" label="库存价值" width="120">
-      </el-table-column>
+
       <el-table-column align="center" label="操作" fixed="right" width="150" >
          <template #default="{ row }">
            <el-button type="danger" plain @click="removeReportedDetails(row)">移除该药品</el-button>

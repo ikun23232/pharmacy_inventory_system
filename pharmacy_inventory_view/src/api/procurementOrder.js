@@ -94,3 +94,11 @@ export function cgddExcel(cgddOrder) {
         console.log("error:",error)
     })
 }
+
+export function addcgyf(cwCgyf) {
+    return request.post(baseUrl + "/addcgyf", cwCgyf );
+}
+
+export function getCheckHintList() {
+    return request.get(baseUrl + "/getCheckHintList");
+}

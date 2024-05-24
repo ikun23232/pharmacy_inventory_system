@@ -26,7 +26,7 @@ public class OrderMedicine implements Serializable {
     /**
      * 订单-商品主键id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**

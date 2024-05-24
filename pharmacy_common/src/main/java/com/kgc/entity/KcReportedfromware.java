@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -37,13 +38,51 @@ public class KcReportedfromware implements Serializable {
      * 报损id
      */
     @TableField("reportedId")
-    private Integer reportedid;
+    private Integer reportedId;
 
     /**
      * 删除id
      */
     @TableField("isDel")
-    private Integer isdel;
+    private Integer isDel;
 
+    /**
+     * 报损编号
+     */
+    @TableField("reportedCode")
+    private String reportedCode;
+    /**
+     * 仓库id
+     */
+    @TableField("storehouseId")
+    private Integer storehouseId;
+    /**
+     * 仓库名称
+     */
+    @TableField("storehouseName")
+    private String storehouseName;
+
+    /**
+     * 报损类型id
+     */
+    @TableField("reportedTypeId")
+    private Integer reportedTypeId;
+    /**
+     * 报损类型
+     */
+    @TableField("reportedTypeName")
+    private String reportedTypeName;
+
+    /**
+     * 出库时间
+     */
+    @TableField("modificationBy")
+    private LocalDateTime modificationTime;
+
+    /**
+     * 出库人
+     */
+    @TableField("modificationName")
+    private String modificationName;
 
 }
