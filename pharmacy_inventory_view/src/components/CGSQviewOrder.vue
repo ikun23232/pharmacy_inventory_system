@@ -380,6 +380,7 @@ export default {
       cgsqList: [],
       providerList:[],
       cgTypeList:[],
+      loading: true,
       rules: {
         subject: [
           { required: true, message: "请输入主题名称", trigger: "blur" },
@@ -403,9 +404,10 @@ export default {
   },
   async mounted() {
 
-    this.initCgSqOrder(this.id)
+   await this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
+    this.loading=false;
   },
   methods: {
     async initCgSqOrder(id){
@@ -577,27 +579,27 @@ export default {
     },
     async changeMedicine(obj){
 
-      if (this.checkFalg) {
-        for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
-          if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-            // alert(i)
-            // alert(this.bcglXiangXiList[i].providerId)
-            // alert(obj.providerId)
-            if (this.bcglXiangXiList[i].providerId != obj.providerId) {
-              break;
-            }
-
-            Message({
-              message: "您重复添加了商品!",
-              type: "error",
-              center: "true",
-            });
-            obj.medicineId = ''
-            this.index=2;
-            return
-          }
-        }
-      }
+      // if (this.checkFalg) {
+      //   for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
+      //     if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
+      //       // alert(i)
+      //       // alert(this.bcglXiangXiList[i].providerId)
+      //       // alert(obj.providerId)
+      //       if (this.bcglXiangXiList[i].providerId != obj.providerId) {
+      //         break;
+      //       }
+      //
+      //       Message({
+      //         message: "您重复添加了商品!",
+      //         type: "error",
+      //         center: "true",
+      //       });
+      //       obj.medicineId = ''
+      //       this.index=2;
+      //       return
+      //     }
+      //   }
+      // }
       this.checkFalg=true
 
       for (const objElement of obj.medicineList) {

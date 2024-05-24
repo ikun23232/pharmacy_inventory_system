@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcOutintodetialMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.KcOutintodetial">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="typeId" property="typeid" />
+        <result column="createDate" property="createdate" />
+        <result column="createBy" property="createby" />
+        <result column="updateDate" property="updatedate" />
+        <result column="updateBy" property="updateby" />
+        <result column="isDel" property="isdel" />
+        <result column="orderCode" property="ordercode" />
+    </resultMap>
+
+
+    <select id="getKcDisfromwareList" resultType="com.kgc.entity.KcOutintodetial">
+        SELECT ko.*,bm.`name`'medicineName',bp.`name` 'providerName',kt.type AS 'type',bs.`name` AS wareHouseName,specification,bu.name unitName
+        FROM kc_outintodetial ko,base_medicine bm,base_provider bp,kc_type kt,base_storehouse bs,base_unit bu
+        WHERE ko.typeId=kt.id
+          AND ko.medicineId=bm.id
+          AND ko.providerId=bp.id
+          AND ko.wareHouseId=bs.id
+          AND bu.id=bm.unitId
+        <if test="code!=null and code!=''">
+            and ko.code like concat('%',#{code},'%')
+        </if>
+        <if test="batchCode!=null and batchCode!=''">
+            and ko.batchCode like concat('%',#{batchCode},'%')
+        </if>
+        <if test="beforeWarhouseId>0">
+            and ko.wareHouseId=#{beforeWarhouseId}
+        </if>
+        <if test="type>0">
+            and ko.typeId=#{type}
+        </if>
+        <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+            and ko.createDate BETWEEN #{startTime} AND #{endTime}
+        </if>
+        AND ko.isDel=0
+        order by ko.createDate Desc
+
+    </select>
+
+</mapper>

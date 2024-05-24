@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import com.kgc.utils.BigDecimalUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,7 @@ import java.util.List;
 
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author lemon
@@ -29,7 +30,6 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ExcelIgnoreUnannotated
 public class CgddOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,13 +43,13 @@ public class CgddOrder implements Serializable {
     /**
      * 采购编号
      */
-    @ExcelProperty("采购编号")
+    @ExcelFiled("采购编号")
     private String code;
 
     /**
      * 主题
      */
-    @ExcelProperty("采购主题")
+    @ExcelFiled("采购主题")
     private String subject;
 
     /**
@@ -62,39 +62,32 @@ public class CgddOrder implements Serializable {
      */
     private String cgType;
 
-    /**
-     * 采购类型名
-     */
     @TableField(exist = false)
-    @ExcelProperty("采购编号")
-    private String orderTypeName;
+    @ExcelFiled("订单类型")
+    private String orderTypeName;//订单类型名字
 
     /**
-     * 需求人
      * 需求人
      */
     @TableField("demanderBy")
     @ExcelIgnore
     private Integer demanderBy;
 
-    /**
-     * 需求人姓名
-     */
-    @ExcelProperty("需求人")
+    @ExcelFiled("需求人")
     private String demanderName;//需求人名字
 
     /**
      * 需求日期
      */
     @TableField("demandTime")
-    @ExcelProperty("需求日期")
+    @ExcelFiled("需求日期")
     @DateTimeFormat("yyyy-MM-dd")
     private Date demandTime;
 
     /**
      * 数量
      */
-    @ExcelProperty("数量")
+    @ExcelFiled("数量")
     @NumberFormat("#")
     private Integer count;
 
@@ -102,7 +95,7 @@ public class CgddOrder implements Serializable {
      * 参考金额
      */
     @TableField("referenceAmount")
-    @ExcelProperty("参考金额")
+    @ExcelFiled("参考金额")
     @NumberFormat("#.##")
     private BigDecimal referenceAmount;
 
@@ -113,27 +106,27 @@ public class CgddOrder implements Serializable {
     @ExcelIgnore
     private Integer orderStatus;
 
-    @ExcelProperty("单据阶段")
+    @ExcelFiled("单据阶段")
     private String OrderStatueType;
 
     /**
      * 审批状态(0代表审批未通过,1代表审批通过)
      */
-    @TableField("approvalStatus")
+    @ExcelFiled("approvalStatus")
     @ExcelIgnore
     private Integer approvalStatus;
 
     /**
      * 备注
      */
-    @ExcelProperty("备注")
+    @ExcelFiled("备注")
     private String remark;
 
     /**
      * 生效时间
      */
     @TableField("effectiveTime")
-    @ExcelProperty("需求日期")
+    @ExcelFiled("需求日期")
     @DateTimeFormat("yyyy-MM-dd")
     private Date effectiveTime;
 
@@ -143,17 +136,15 @@ public class CgddOrder implements Serializable {
     @TableField("approverBy")
     @ExcelIgnore
     private Integer approverBy;
-    /**
-     * 核批人名字
-     */
-    @ExcelProperty("核批人")
+
+    @ExcelFiled("核批人")
     private String approverName;//核批人名字
 
     /**
      * 核批意见
      */
     @TableField("approverRemark")
-    @ExcelProperty("核批意见")
+    @ExcelFiled("核批意见")
     private String approverRemark;
 
     /**
@@ -163,11 +154,8 @@ public class CgddOrder implements Serializable {
     @ExcelIgnore
     private Integer documenterBy;
 
-    /**
-     * 制单人名字
-     */
     @TableField(exist = false)
-    @ExcelProperty("制单人")
+    @ExcelFiled("制单人")
     private String documenterName;
     /**
      * 作废状态
@@ -190,12 +178,9 @@ public class CgddOrder implements Serializable {
     @ExcelIgnore
     private Integer updateBy;
 
-    /**
-     * 修改人名字
-     */
     @TableField(exist = false)
-    @ExcelProperty("修改人")
-    private String updateName;
+    @ExcelFiled("修改人")
+    private String updateName;//修改人名字
 
     /**
      * 修改时间
@@ -211,41 +196,38 @@ public class CgddOrder implements Serializable {
     @ExcelIgnore
     private Integer providerId;
 
-    /**
-     * 供应商名称
-     */
     @TableField(exist = false)
-    @ExcelProperty("供应商名称")
+    @ExcelFiled("供应商名称")
     private String providerName;//供应商名字
     /**
      * 联系人
      */
-    @ExcelProperty("联系人")
+    @ExcelFiled("联系人")
     private String contactperson;
 
     /**
      * 联系电话
      */
-    @ExcelProperty("联系电话")
+    @ExcelFiled("联系电话")
     private String phone;
 
     /**
      * 传真
      */
-    @ExcelProperty("传真")
+    @ExcelFiled("传真")
     private String fax;
 
     /**
      * 邮件
      */
-    @ExcelProperty("邮件")
+    @ExcelFiled("邮件")
     private String email;
 
     /**
      * 交货日期
      */
     @TableField("deliveryDate")
-    @ExcelProperty("交货日期")
+    @ExcelFiled("交货日期")
     @DateTimeFormat("yyyy-MM-dd")
     private Date deliveryDate;
 
@@ -255,11 +237,8 @@ public class CgddOrder implements Serializable {
     @TableField("deliveryBy")
     private Integer deliveryBy;
 
-    /**
-     * 交货人名字
-     */
     @TableField(exist = false)
-    @ExcelProperty("交货人")
+    @ExcelFiled("交货人")
     private String deliveryName;//交货人名字
 
 
@@ -282,40 +261,23 @@ public class CgddOrder implements Serializable {
     @TableField("isPay")
     private int isPay;
 
-    /**
-     * 开始时间
-     */
     @TableField(exist = false)
     private String beginTime;
 
-    /**
-     * 结束时间
-     */
     @TableField(exist = false)
     private Date beginDate;
 
-    /**
-     * 结束时间
-     */
     @TableField(exist = false)
     private String endTime;
 
-    /**
-     * 结束时间
-     */
     @TableField(exist = false)
     private Date endDate;
 
-    /**
-     * 删除状态(0-未删除 1-已删除)
-     */
     @TableLogic
     @TableField("isDel")
     private int isDel;
 
-    /**
-     * 药品信息
-     */
     @TableField(exist = false)
+    @ExcelFiled(value = "药品明细",type = BaseMedicine.class)
     private List<BaseMedicine> medicineList;
 }

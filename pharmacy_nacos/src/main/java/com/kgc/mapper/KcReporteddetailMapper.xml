@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcReporteddetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.KcReporteddetail">
+        <id column="id" property="id" />
+        <result column="medicineId" property="medicineid" />
+        <result column="reportedId" property="reportedid" />
+        <result column="createdBy" property="createdby" />
+        <result column="createTime" property="createtime" />
+        <result column="modificationTime" property="modificationtime" />
+        <result column="modificationBy" property="modificationby" />
+        <result column="idel" property="idel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, medicineId, reportedId, createdBy, createTime, modificationTime, modificationBy, idel
+    </sql>
+
+</mapper>

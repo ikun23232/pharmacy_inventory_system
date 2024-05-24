@@ -45,8 +45,24 @@ export function approveCgrkOrder(id,approveRemark,approveMent) {
             id:id,
             approveRemark:approveRemark,
             approveMent:approveMent
-
-
         }
     });
+}
+
+export function cgrkExcel(cgrkOrder) {
+    return request.post(baseUrl + "/cgrkExcel", {
+        cgrkOrder: cgrkOrder,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '采购入库订单.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
 }

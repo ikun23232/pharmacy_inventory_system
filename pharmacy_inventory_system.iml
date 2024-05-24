@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$" dumb="true">
       <sourceFolder url="file://$MODULE_DIR$/pharmacy_base_server/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/pharmacy_base_server/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pharmacy_nacos/src/main/java" isTestSource="false" />
     </content>
   </component>
 </module>

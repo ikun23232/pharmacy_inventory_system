@@ -1,10 +1,13 @@
 package com.kgc.entity;
 
+import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,23 +33,27 @@ public class BaseMedicine implements Serializable {
      * 药品id
      */
     @TableId(value = "id", type = IdType.AUTO)
+    @ExcelIgnore
     private Integer id;
 
     /**
      * 医用商品名称
      */
+    @ExcelFiled("医用商品名称")
     private String name;
 
     /**
      * 医用商品类型
      */
     @TableField("categoryId")
+    @ExcelIgnore
     private Integer categoryId;
 
     /**
      * 计量单位
      */
     @TableField("unitId")
+    @ExcelIgnore
     private Integer unitId;
 
     /**
@@ -54,87 +61,116 @@ public class BaseMedicine implements Serializable {
      */
     @TableLogic
     @TableField("isDel")
+    @ExcelIgnore
     private Integer isDel;
 
     /**
      * 零售价
      */
+    @ExcelFiled("零售价")
     private BigDecimal salePrice;
 
     /**
      * 医用商品规格
      */
+    @ExcelFiled("医用商品规格")
     private String specification;
 
     /**
      * 库存预警值
      */
+    @ExcelIgnore
     private Integer warning;
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @ExcelFiled("创造时间")
     private Date createTime;
 
+    @ExcelIgnore
     private Integer createBy;
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @ExcelFiled("修改时间")
     private Date updateTime;
 
+    @ExcelIgnore
     private Integer updateBy;
 
     @TableField(exist=false)
+    @ExcelFiled("创造人名称")
     private String createByName;
 
     @TableField(exist=false)
+    @ExcelFiled("修改人名称")
     private String updateByName;
 
     @TableField(exist=false)
+    @ExcelFiled("医药品分类名")
     private String categoryName;
 
     @TableField(exist=false)
+    @ExcelFiled("计量单位")
     private String unitName;
 
     @TableField(exist=false)
+    @ExcelIgnore
     private Integer currentPage;
 
     @TableField(exist=false)
+    @ExcelFiled("数量")
     private Integer quantity;
 
     @TableField(exist=false)
+    @ExcelIgnore
     private BigDecimal totalPrice;
 
     @TableField(exist=false)
+    @ExcelIgnore
     private Integer providerId;
 
     @TableField(exist=false)
+    @ExcelFiled("供应商名称")
     private String providerName;
 
     @TableField(exist=false)
+    @ExcelFiled("采购价")
     private BigDecimal purchasePrice;
 
     @TableField(exist=false)
+    @ExcelIgnore
     private String code;//单据编号
 
     /**
      * 原单号
      */
+    @ExcelIgnore
     private String  sourceCode;
 
     /**
      * 订单药品表id
      */
+    @ExcelIgnore
     private Integer medicineOrderId;
-
+    @ExcelIgnore
     private Integer medicineId;
-
-    private int stock;
+    @ExcelIgnore
+    private Integer stock;
 
     @TableField(exist=false)
+    @ExcelIgnore
     private String batchCode;
 
 
     @TableField(exist=false)
+    @ExcelIgnore
     private String storehouseName;
+    @ExcelIgnore
+    private Integer storeHouseId;
 
-    private int storeHouseId;
+    @ExcelIgnore
+    private Integer aimStoreHouseId;
 
-    private int aimStoreHouseId;
+    @ExcelIgnore
+    private Integer kcMedicineId;//库存明细id
+
+    private Integer totalWarning;//全部仓库预警值
 }

@@ -40,7 +40,7 @@
     <el-form-item>
       <el-button type="primary" @click="initCgSqOrderList();">查询</el-button>
       <el-button type="primary" @click="addOrder">添加</el-button>
-      <el-button type="success">导出</el-button>
+      <el-button type="success" @click="printExcel">导出</el-button>
 
     </el-form-item>
     </el-form>
@@ -122,7 +122,7 @@
 
               <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderStatus==2" type="success" size="small">审核
               </el-button></el-dropdown-item>
-              <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="primary" size="small">打印
+              <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
 
             </el-dropdown-menu>
@@ -149,22 +149,22 @@
 
         v-if="viewdialogVisible"
     >
-      <CGSQviewOrder
+      <CGRKViewOrder
           :id="this.id"
           @closeviewOrder="closeviewOrder"
-      ></CGSQviewOrder>
+      ></CGRKViewOrder>
     </el-dialog>
 
     <el-dialog
-        title="修改采购申请单"
+        title="修改采购入库单"
         :visible.sync="updatedialogVisible"
         width="85%"
         v-if="updatedialogVisible"
     >
-      <CGSQupdateOrder
+      <CGRKUpdateOrder
           :id="this.id"
           @closeUpdateDiago="closeUpdateDiago"
-      ></CGSQupdateOrder>
+      ></CGRKUpdateOrder>
     </el-dialog>
     <el-dialog
         title="审核采购申请单"
@@ -172,10 +172,10 @@
         width="85%"
         v-if="approvedialogVisible"
     >
-      <CGSQapproveOrder
+      <CGRKApproveOrder
           :id="this.id"
           @closeapproveDiago="closeapproveDiago"
-      ></CGSQapproveOrder>
+      ></CGRKApproveOrder>
     </el-dialog>
 
     <el-dialog
@@ -196,14 +196,17 @@
 
 <script>
 // import { delUnit, initUnit } from "@/api/BaseUnit";
-import {initCgrkOrderList,delCgrqOrderById,voidCgrkOrderById} from '@/api/CgrkOrder'
+import {initCgrkOrderList, delCgrqOrderById, voidCgrkOrderById, cgrkExcel} from '@/api/CgrkOrder'
 import {init} from '@/api/BaseProvider'
 import {Message} from "element-ui";
-import AddCGRKOrder from "../../../components/AddCGRKOrder.vue";
-import CGSQupdateOrder from "@/components/CGSQupdateOrder";
-import CGSQapproveOrder from "@/components/CGSQapproveOrder";
-import CGSQviewOrder from "@/components/CGSQviewOrder";
+import AddCGRKOrder from "@/components/AddCGRKOrder.vue";
+
+
 import {getPayType} from "@/api/public";
+import CGRKUpdateOrder from "@/components/WarHouse/CGRKUpdateOrder";
+import CGRKApproveOrder from "@/components/WarHouse/CGRKApproveOrder";
+import CGRKViewOrder from "@/components/WarHouse/CGRKViewOrder";
+import {cgddExcel} from "@/api/procurementOrder";
 // import AddUnit from "./AddUnit.vue";
 
 
@@ -212,11 +215,9 @@ export default {
   name: "storeHouse",
   components: {
     AddCGRKOrder,
-    CGSQupdateOrder,
-    CGSQapproveOrder,
-    CGSQviewOrder,
-    // CGSQaddOrder
-    // AddUnit
+    CGRKUpdateOrder,
+    CGRKApproveOrder,
+    CGRKViewOrder
   },
   data() {
     return {
@@ -293,6 +294,9 @@ export default {
       console.log(data);
       this.list = data.data;
 
+    },
+    async printExcel() {
+      await cgrkExcel();
     },
     async initProvider(){
       let resp = await init('',0,1,10);
@@ -374,8 +378,13 @@ export default {
         },
       });
     },
-    async approveRemark(id){
-
+    printSaleOrder(orderNo){
+      const newPage= this.$router.resolve({
+        path: "/printCGRKOrder",
+        query:{ //要传的参数 可传多个
+          orderNo:orderNo
+        }})
+      window.open(newPage.href,'_blank')
     }
 
   }

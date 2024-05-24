@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CgddOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.CgddOrder">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="subject" property="subject" />
+        <result column="type" property="type" />
+        <result column="demanderBy" property="demanderby" />
+        <result column="demandTime" property="demandtime" />
+        <result column="count" property="count" />
+        <result column="referenceAmount" property="referenceamount" />
+        <result column="orderStatus" property="orderstatus" />
+        <result column="approvalStatus" property="approvalstatus" />
+        <result column="remark" property="remark" />
+        <result column="effectiveTime" property="effectivetime" />
+        <result column="approverBy" property="approverby" />
+        <result column="approverRemark" property="approverremark" />
+        <result column="documenterBy" property="documenterby" />
+        <result column="voidState" property="voidstate" />
+        <result column="createTime" property="createtime" />
+        <result column="updateBy" property="updateby" />
+        <result column="updateTime" property="updatetime" />
+        <result column="providerId" property="providerid" />
+        <result column="contactperson" property="contactperson" />
+        <result column="phone" property="phone" />
+        <result column="fax" property="fax" />
+        <result column="email" property="email" />
+        <result column="deliveryDate" property="deliverydate" />
+        <result column="deliveryBy" property="deliveryby" />
+        <result column="payType" property="paytype" />
+        <result column="payTime" property="paytime" />
+        <result column="isPay" property="ispay" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, code, subject, type, demanderBy, demandTime, count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy, approverRemark, documenterBy, voidState, createTime, updateBy, updateTime, providerId, contactperson, phone, fax, email, deliveryDate, deliveryBy, payType, payTime, isPay
+    </sql>
+
+</mapper>

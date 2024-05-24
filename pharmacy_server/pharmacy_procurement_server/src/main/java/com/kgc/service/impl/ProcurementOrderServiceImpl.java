@@ -3,11 +3,14 @@ package com.kgc.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
 import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.CgddVO;
+import com.kgc.vo.MedicineVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     private ProcurementOrderMapper mapper;
     @Autowired
     private PublicOMedicineMapper orderMapper;
+    @Autowired
+    private BaseMedicineMapper baseMedicineMapper;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {
@@ -170,9 +175,15 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response) {
-        List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
+        List<CgddVO> order = mapper.imExcel();
+        List<CgddVO> temp = new ArrayList<>();
+        for (CgddVO cgddVO :order) {
+            List<MedicineVO> medicineListByCode = baseMedicineMapper.getMedicineVOListByCode(cgddVO.getCode());
+            cgddVO.setMedicineList(medicineListByCode);
+            temp.add(cgddVO);
+        }
         try {
-            ExeclUtil.writeExcel(order,response,"采购订单");
+            ExeclUtil.write(temp, CgddVO.class,response,"采购订单");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcDisfromwareMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.KcDisfromware" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="medicineList" ofType="com.kgc.entity.KcDispatchdetails" autoMapping="true">
+         <id column="TempId" property="id"/>
+        </collection>
+    </resultMap>
+
+
+
+
+    <select id="getKcDisfromwareList" resultType="com.kgc.entity.KcDisfromware">
+        SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
+        (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
+        d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price, d.batchCode, d.isDel,
+        kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus
+        , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
+        FROM kc_disfromware k,kc_dispatchdetails d,kc_dispatch kd
+        WHERE kd.`code`=d.dispatchCode
+        AND kd.id=k.dispatchId
+        <if test="code!=null and code!=''">
+            and kd.code like concat('%',#{code},'%')
+        </if>
+        <if test="subject!=null and subject!=''">
+            and kd.subject like concat('%',#{subject},'%')
+        </if>
+        <if test="fowardWarhouseId>0">
+            and d.aimStoreHouseId=#{fowardWarhouseId}
+        </if>
+        <if test="beforeWarhouseId>0">
+            and kd.beforeWarehouseId=#{beforeWarhouseId}
+        </if>
+        <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+            and kd.dispatchTime BETWEEN #{startTime} AND #{endTime}
+        </if>
+        AND k.isDel=0
+        order by kd.dispatchTime Desc
+    </select>
+    <select id="getKcDisfromwareOrder" resultMap="BaseResultMap">
+        SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
+               (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
+               d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price, d.batchCode, d.isDel,
+               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus,(SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) documenterName
+                , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
+        FROM kc_disfromware k,kc_dispatchdetails d,kc_dispatch kd
+        WHERE kd.`code`=d.dispatchCode
+          AND kd.id=k.dispatchId
+          AND k.isDel=0
+          AND K.id=#{id}
+    </select>
+    <select id="getKcDisfromwareListByExcel" resultMap="BaseResultMap" >
+        SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
+               (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
+               d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price, d.batchCode, d.isDel,
+               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus,(SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) documenterName
+                , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
+        FROM kc_disfromware k,kc_dispatchdetails d,kc_dispatch kd
+        WHERE kd.`code`=d.dispatchCode
+          AND kd.id=k.dispatchId
+          AND k.isDel=0
+    </select>
+
+</mapper>

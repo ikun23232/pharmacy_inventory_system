@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author lemon
@@ -55,10 +55,14 @@ public class OrderMedicine implements Serializable {
     @TableField("totalPrice")
     private BigDecimal totalPrice;
 
-    private int isDel;
+    private Integer isDel;
 
-    private int batchCode;
+    private Integer batchCode;
 
     @TableField("providerId")
     private Integer providerId;
+    @TableField("fowardWarHouseId")
+    private Integer fowardWarHouseId;
+    @TableField(exist = false)
+    private String fowardWarHouseName;
 }
