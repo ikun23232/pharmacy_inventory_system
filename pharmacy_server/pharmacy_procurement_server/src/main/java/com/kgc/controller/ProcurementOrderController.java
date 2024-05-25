@@ -88,9 +88,8 @@ public class ProcurementOrderController {
 
 
     @RequestMapping("/cgddExcel")
-    public Message cgddExcel(@RequestBody CgddOrder procPage, HttpServletResponse response) {
+    public void cgddExcel(@RequestBody CgddOrder procPage, HttpServletResponse response) {
         procurementOrderService.cgddExcel(procPage,response);
-        return Message.success(null);
     }
 
 

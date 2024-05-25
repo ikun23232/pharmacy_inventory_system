@@ -17,6 +17,11 @@
             <artifactId>pharmacy_system_server</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.kgc</groupId>
+            <artifactId>pharmacy_base_server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <properties>

@@ -665,9 +665,9 @@ import { Message } from "element-ui";
 import { initCgSqOrderList, getCgsqOrderByCode } from "@/api/CgsdOrder";
 import { init } from "../api/BaseProvider.js";
 import { getMedicineListByCode } from "@/api/baseMedicine";
-import { getCgddByCode, auditingOrder } from "./../api/procurementOrder.js";
+import { getCgddByCode, auditingOrder } from "../api/procurementOrder.js";
 import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
-import { getPayType } from "./../api/public.js";
+import { getPayType } from "../api/public.js";
 export default {
   name: "AuditingProcOrder",
   props: {

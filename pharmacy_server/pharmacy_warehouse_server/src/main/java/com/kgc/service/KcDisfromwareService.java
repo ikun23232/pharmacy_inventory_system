@@ -28,5 +28,4 @@ public interface KcDisfromwareService extends IService<KcDisfromware> {
     * @param response
     */
    public void ddckExcel(KcDisfromware kcDisfromware, HttpServletResponse response);
-
 }

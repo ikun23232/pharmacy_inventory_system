@@ -199,11 +199,11 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
 
     @Override
     public void cgrkExcel(CgrkOrder cgrkOrder, HttpServletResponse response) {
-        List<CgrkOrder> order = cgrkOrderMapper.getCgrqOrderList(new HashMap<String, Object>());
-        try {
-            ExeclUtil.writeExcel(order,response,"采购入库",CgrkOrder.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        List<CgrkOrder> order = cgrkOrderMapper.getCgrqOrderList(new HashMap<String, Object>());
+//        try {
+//            ExeclUtil.writeExcel(order,response,"采购入库",CgrkOrder.class);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

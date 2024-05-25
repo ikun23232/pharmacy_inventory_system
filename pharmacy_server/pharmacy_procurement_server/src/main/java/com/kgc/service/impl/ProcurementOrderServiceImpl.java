@@ -3,11 +3,14 @@ package com.kgc.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
 import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.CgddVO;
+import com.kgc.vo.MedicineVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * @author 15279
@@ -36,6 +36,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     private ProcurementOrderMapper mapper;
     @Autowired
     private PublicOMedicineMapper orderMapper;
+    @Autowired
+    private BaseMedicineMapper baseMedicineMapper;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {
@@ -69,7 +71,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             orderMedicine.setCode(cgddOrder.getCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setMedicineid(baseMedicine.getMedicineId());
@@ -77,7 +79,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price = orderMedicine.getTotalprice().add(orderMedicine.getTotalprice());
+                price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -130,7 +132,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             orderMedicine.setCode(cgddOrder.getCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setSourceCode(baseMedicine.getCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setId(baseMedicine.getMedicineOrderId());
@@ -138,7 +140,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price = orderMedicine.getTotalprice().add(orderMedicine.getTotalprice());
+                price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -173,9 +175,15 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response) {
-        List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
+        List<CgddVO> order = mapper.imExcel();
+        List<CgddVO> temp = new ArrayList<>();
+        for (CgddVO cgddVO :order) {
+            List<MedicineVO> medicineListByCode = baseMedicineMapper.getMedicineVOListByCode(cgddVO.getCode());
+            cgddVO.setMedicineList(medicineListByCode);
+            temp.add(cgddVO);
+        }
         try {
-            ExeclUtil.writeExcel(order,response,"采购订单",CgddOrder.class);
+            ExeclUtil.write(temp, CgddVO.class,response,"采购订单");
         } catch (IOException e) {
             e.printStackTrace();
         }

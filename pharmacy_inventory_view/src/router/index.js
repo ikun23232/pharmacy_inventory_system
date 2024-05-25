@@ -2,10 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import storeHouse from '../views/storeHouse.vue'
-import BaseUnit from "../views/BaseUnit";
 import BaseProviderList from "../views/base/BaseProviderList.vue"
 import BankAccountList from "../views/base/BankAccountList.vue"
-import CgsqManager from '../views/procurement/CGSQ/CGSQManager.vue';
 import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
 import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
 import dispatch from '../views/kc/KCDD/dispatch.vue'
@@ -20,6 +18,9 @@ import PrintStockDetail from "../views/kc/KCMX/PrintStockDetail.vue";
 import PrintRefundOrder from "../views/refund/PrintRefundOrder.vue";
 import RefundOrder from "../views/refund/RefundOrder.vue";
 import PrintCGRKOrder from "@/views/procurement/CGRK/PrintCGRKOrder";
+import printDispatchOrder from './../views/kc/KCDD/printDispatchOrder.vue'
+import DDRKManager from './../views/kc/DDRK/DDRKManager.vue'
+import PrintDDRKOrder from './../views/kc/DDRK/PrintDDRKOrder.vue'
 
 import axios from "@/utils/request";
 import store from "@/store/index"
@@ -68,11 +69,11 @@ const routes = [
     name: 'storeHouse',
     component: storeHouse
   }
-  ,{
-        path: '/baseProviderList',
-        name: 'baseProviderList',
-        component: BaseProviderList
-    },
+  , {
+    path: '/baseProviderList',
+    name: 'baseProviderList',
+    component: BaseProviderList
+  },
   {
     path: '/cgrkManager',
     name: 'CGRKManager',
@@ -92,7 +93,6 @@ const routes = [
     path: '/saleOrder',
     name: 'SaleOrder',
     component: SaleOrder,
-    
   },
   {
     path: '/printSaleOrder',
@@ -148,10 +148,16 @@ const routes = [
     path:'/KcReported',
     name: 'KcReported',
     component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  },{
-        path: '/printCGRKOrder',
-        name: 'PrintCGRKOrder',
-        component: PrintCGRKOrder
+  },
+  {
+    path: '/printDispatchOrder',
+    name: 'printDispatchOrder',
+    component: printDispatchOrder
+  },
+  {
+    path: '/printCGRKOrder',
+    name: 'PrintCGRKOrder',
+    component: PrintCGRKOrder
 
     },
     {
@@ -197,6 +203,35 @@ const routes = [
     name: 'saleStatistics',
     component: SaleStatistics
   },
+  {
+    path: '/DDRKManager',
+    name: 'DDRKManager',
+    component: DDRKManager
+
+  },
+  {
+    path: '/PrintDDRKOrder',
+    name: 'PrintDDRKOrder',
+    component: PrintDDRKOrder
+  },
+  {
+    path: '/KCGJManager',
+    name: 'KCGJManager',
+    component: () => import('@/views/kc/KCGJ/KCGJManager')
+  },
+  {
+    path: '/ddckManager',
+    name: 'DDCKManager',
+    component: () => import('@/views/kc/DDCK/DDCKManager')
+  }, {
+    path: '/printDDCKOrder',
+    name: 'PrintDDCKOrder',
+    component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
+  }, {
+    path: '/crkmxManager',
+    name: 'CRKMXManager',
+    component: () => import('@/views/kc/CRKMX/CRKMXManager')
+  },
 ]
 
 const router = new VueRouter({
@@ -205,7 +240,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-	let hasRoute = store.state.menus.hasRoutes
+  let hasRoute = store.state.menus.hasRoutes
 
 let token = localStorage.getItem("token")
 

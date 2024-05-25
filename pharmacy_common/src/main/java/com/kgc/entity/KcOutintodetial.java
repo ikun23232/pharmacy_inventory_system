@@ -12,9 +12,9 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
-
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 /**
  * <p>
  * 
@@ -33,8 +33,7 @@ public class KcOutintodetial implements Serializable {
     /**
      * 明细id
      */
-      @TableId(value = "id", type = IdType.AUTO)
-      @ExcelIgnore
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -47,103 +46,92 @@ public class KcOutintodetial implements Serializable {
      * 进出库类型
      */
     @TableField("typeId")
-    @ExcelIgnore
-
-    private Integer typeid;
+    private Integer typeId;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
-    @ExcelProperty("执行时间")
-    private Date createdate;
+    private Date createDate;
 
     /**
      * 创造人
      */
     @TableField("createBy")
-    @ExcelIgnore
-    private Integer createby;
+    private Integer createBy;
 
     /**
      * 修改时间
      */
     @TableField("updateDate")
-    @ExcelIgnore
-    private Date updatedate;
+    private Date updateDate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    @ExcelIgnore
-    private Integer updateby;
+    private Integer updateBy;
 
     /**
      * 删除id
      */
     @TableLogic
     @TableField("isDel")
-    @ExcelIgnore
-    private String isdel;
+    private String isDel;
 
     /**
      * 订单编号
      */
     @TableField("orderCode")
-    @ExcelIgnore
-    private String ordercode;
+    private String orderCode;
 
-    @ExcelIgnore
-    private Integer medicineid;
+    /**
+     * 药品id
+     */
+    @TableField("medicineId")
+    private Integer medicineId;
+
     @TableField(exist = false)
-    @ExcelProperty("药品名称")
     private String medicineName;
     /**
      * 供应商Id
      */
-    @ExcelIgnore
-
+    @TableField("providerId")
     private Integer providerid;
 
     @TableField(exist = false)
-    @ExcelProperty("供应商名称")
     private String providerName;
     /**
      * 入库金额
      */
-    @ExcelProperty("入库金额")
-    private BigDecimal tostockmoney;
+    @TableField("toStockMoney")
+    private BigDecimal toStockMoney;
     /**
      * 批次编号
-//     */
-//    private String batchCode;
+     */
+    @TableField("batchCode")
+    private String batchCode;
     /**
      * 入库数量
      */
-    @ExcelProperty("入库数量")
-    private Integer tostockquantity;
+    @TableField("toStockQuantity")
+    private Integer toStockQuantity;
     /**
      * 出库金额
      */
-    @ExcelProperty("出库金额")
-    private BigDecimal fromstockmoney;
+    @TableField("fromStockMoney")
+    private BigDecimal fromStockMoney;
     /**
      * 出库数量
      */
-    @ExcelProperty("出库数量")
-    private Integer fromstockquantity;
+    @TableField("fromStockQuantity")
+    private Integer fromStockQuantity;
     /**
      * 单价(当前)
      */
-    @ExcelProperty("单价")
+    @TableField("price")
     private BigDecimal price;
-    /**
-     * 删除id
-    private String isdel;
 
-     * 进出库仓库
-     */
     @ExcelIgnore
     private Integer warehouseid;
     @TableField(exist = false)
@@ -158,12 +146,7 @@ public class KcOutintodetial implements Serializable {
     @TableField(exist = false)
     @ExcelProperty("类型")
     private String type;
-    @ExcelProperty("批次号")
-    private String batchCode;
 
-
-
-
-
-
+    @TableField("wareHouseId")
+    private Integer wareHouseId;
 }

@@ -13,5 +13,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface BaseMedicineMapper extends BaseMapper<BaseMedicine> {
 
-
 }

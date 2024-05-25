@@ -1,14 +1,18 @@
 package com.kgc.entity;
 
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -27,7 +31,7 @@ public class KcDispatch implements Serializable {
     /**
      * 调度申请id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -43,7 +47,7 @@ public class KcDispatch implements Serializable {
     /**
      * 调度的总价格
      */
-    private Double price;
+    private BigDecimal price;
 
     /**
      * 原仓库Id
@@ -53,14 +57,7 @@ public class KcDispatch implements Serializable {
 
     @TableField(exist = false)
     private String beforeWareName;
-    /**
-     * 目标仓库Id
-     */
-    @TableField("AimWarehouseId")
-    private Integer AimWarehouseId;
 
-    @TableField(exist = false)
-    private String AimWareName;
     /**
      * 备注
      */
@@ -97,6 +94,7 @@ public class KcDispatch implements Serializable {
      * 作废状态
      */
     @TableField("voidState")
+    @DateTimeFormat("yyyy-MM-dd")
     private Integer voidState;
 
     /**
@@ -113,6 +111,7 @@ public class KcDispatch implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
+    @DateTimeFormat("yyyy-MM-dd")
     private Date updateDate;
 
     /**
@@ -124,9 +123,25 @@ public class KcDispatch implements Serializable {
     @TableField(exist = false)
     private String updateName;
 
+    @TableField("orderStatus")
     private Integer orderStatus;
 
+    @TableField(exist = false)
     private String orderStatusResult;
 
+
+    @TableLogic
     private Integer isDel;//删除id
+
+    @TableField(exist = false)
+    private List<BaseMedicine> medicineList;
+
+    @TableField(exist = false)
+    private Integer isCommit;
+
+    @TableField("dispatchTime")
+    private Date dispatchTime;//调度时间
+
+    @TableField("totalCount")
+    private Integer totalCount;
 }

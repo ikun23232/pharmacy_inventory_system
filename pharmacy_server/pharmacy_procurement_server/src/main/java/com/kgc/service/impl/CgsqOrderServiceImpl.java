@@ -101,7 +101,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setCode(cgsqOrder.getCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMapper.insert(orderMedicine);
         }
@@ -142,11 +142,11 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setCode(cgsqOrder.getCode());
             orderMedicine.setMedicineid(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMapper.insert(orderMedicine);
         }
-            return Message.success();
+        return Message.success();
     }
 
     @Override

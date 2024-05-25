@@ -48,24 +48,6 @@
         ></el-col>
       </el-row>
       <el-row :gutter="24"  style="margin-bottom: 10px;">
-         <el-col :span="8"
-          ><div class="grid-content bg-purple">
-           目标仓库：
-            <el-select
-              v-model="DispatchVO.AimWarehouseId"
-              filterable
-              placeholder="请选择目标仓库"
-            >            
-            <el-option label="全部" :value="0"></el-option>
-              <el-option
-                v-for="item in storeHouseList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select></div
-        ></el-col>
         <el-col :span="8"
           ><div class="grid-content bg-purple">
             主题：
@@ -139,11 +121,6 @@
       <el-table-column prop="beforeWareName" label="原仓库" width="120">
       </el-table-column>
       <el-table-column
-        prop="aimWareName"
-        label="目标仓库"
-        width="120"
-      ></el-table-column>
-      <el-table-column
         prop="remark"
         label="备注"
         width="120"
@@ -180,7 +157,7 @@
         <template slot-scope="scope">
           <el-button
             @click="updateOrder(scope.row)"
-            :disabled="scope.row.voidState == 1"
+            :disabled="scope.row.orderStatus != 1 && scope.row.orderStatus != 2"
             type="text"
             >编辑
           </el-button>
@@ -195,7 +172,7 @@
               <el-dropdown-item @click.native="setVoidState(scope.row)"
                 >作废</el-dropdown-item
               >
-              <el-dropdown-item @click.native="printExcel"
+              <el-dropdown-item @click.native="printDispatch(scope.row)"
                 >打印</el-dropdown-item
               >
               <el-dropdown-item @click.native="handleAuditing(scope.row)"
@@ -218,7 +195,7 @@
       </el-pagination>
     </div>
      <el-dialog
-      title="采购订单添加"
+      title="调度单添加"
       :visible.sync="adddialogVisible"
       width="1300px"
       v-if="adddialogVisible"
@@ -228,46 +205,46 @@
         @cancel="cancel"
       ></AddDispatch>
     </el-dialog>
-   <!-- <el-dialog
-      title="采购订单修改"
+    <el-dialog
+      title="调度单修改"
       :visible.sync="updatedialogVisible"
       width="1300px"
-      v-if="updatedialogVisible"
-    >
-      <updateProOrder
+      v-if="updatedialogVisible">
+      <updateDispatch
         :code="this.code"
         :id="this.id"
         @handleUpdateSuccess="handleUpdateSuccess"
-        @cancelUpdate="cancelUpdate"
-      ></updateProOrder>
+        @cancelUpdate="cancelUpdate"></updateDispatch>
     </el-dialog>
     <el-dialog
-      title="采购订单审核"
+      title="调度单审核"
       :visible.sync="auditingdialogVisible"
       width="1300px"
       v-if="auditingdialogVisible"
     >
-      <auditingProOrder
+      <AuditingDispatch
         :code="this.code"
         :id="this.id"
         @handleAuditingSuccess="handleAuditingSuccess"
         @cancelAuditing="cancelAuditing"
       >
-      </auditingProOrder>
-    </el-dialog>-->
+      </AuditingDispatch>
+    </el-dialog>
   </div> 
 </template>
 <script>
 import { setExcel } from "@/api/public.js";
 import { deleteById, setVoidState } from "@/api/procurementOrder";
-import { getKcDispathList } from "@/api/WareHouse";
+import { getKcDispathList,deleteDispatch,updateVoidStatus } from "@/api/KcDispatch";
 import { Message } from "element-ui";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 import AddDispatch from '../../../components/AddDispatch.vue'
+import updateDispatch from './../../../components/updateDispatch.vue'
+import AuditingDispatch from './../../../components/AuditingDispatch.vue'
 export default {
   name: "dispatch",
     components: {
-      AddDispatch
+      AddDispatch,updateDispatch,AuditingDispatch
     },
   data() {
     return {
@@ -307,7 +284,6 @@ export default {
         startTime: "",
         endTime: "",
         orderStatus: 0,
-        AimWarehouseId: 0,
         beforeWarehouseId: 0,
         currentPageNo:"",
         pageSize: "",
@@ -366,15 +342,15 @@ export default {
       this.updatedialogVisible = false; // 关闭 el-
       this.getOrderList(1, 5);
     },
-    handleUpdateSuccess() {
-      this.updatedialogVisible = false; // 关闭 el-dialog
-      // 如果需要，可以在这里执行其他操作
-      this.getOrderList(1, 5);
-    },
-    cancelUpdate() {
-      this.updatedialogVisible = false; // 关闭 el-
-      this.getOrderList(1, 5);
-    },
+    // handleUpdateSuccess() {
+    //   this.updatedialogVisible = false; // 关闭 el-dialog
+    //   // 如果需要，可以在这里执行其他操作
+    //   this.getOrderList(1, 5);
+    // },
+    // cancelUpdate() {
+    //   this.updatedialogVisible = false; // 关闭 el-
+    //   this.getOrderList(1, 5);
+    // },
     handleAuditingSuccess() {
       this.auditingdialogVisible = false; // 关闭 el-dialog
       // 如果需要，可以在这里执行其他操作
@@ -386,7 +362,7 @@ export default {
     },
     handleDelete(row) {
       if (confirm("你确定要删除吗？")) {
-        deleteById(row.id).then((resp) => {
+        deleteDispatch(row.id).then((resp) => {
           console.log(resp);
           if (resp.code == 200) {
             Message({
@@ -413,7 +389,7 @@ export default {
     },
     async setVoidState(row) {
       if (confirm("你确定要作废吗？")) {
-        let data = await setVoidState(row.id, 1);
+        let data = await updateVoidStatus(row.id, 1);
         if (data.code == 200) {
           Message({
             message: "成功作废!",
@@ -434,6 +410,14 @@ export default {
       this.id = row.id;
       this.auditingdialogVisible = true;
     },
+    printDispatch(row){
+      const newPage= this.$router.resolve({ 
+        path: "/printDispatchOrder",
+        query:{ //要传的参数 可传多个
+        id:row.id
+      }})
+      window.open(newPage.href,'_blank')
+    }
   },
 };
 </script>
