@@ -17,13 +17,19 @@ public interface BankAccountService extends IService<BankAccount> {
 
     public Message getBankAccount(String belongBank,String name,String bandCount,int currentPageNo,int pageSize);
 
-    public Message getBankAccountBybandCount(String bandCount);
+    public Message getBankAccountBybandCount(String belongBank,String name,String bandCount);
 
     public Message delBankAccountBybandCount(String bandCount);
+
+    public Message getBankAccountById(int id);
 
     public Message addBankAccount(BankAccount bankAccount);
 
     public Message updateBankAccount(BankAccount bankAccount);
+
+    public Message checkaddBankAccount(String belongBank,String name,String bandCount);
+
+    public Message checkupdateBankAccount(String belongBank,String name,String bandCount,int id);
 
     public Message getAllBankCountList();
 

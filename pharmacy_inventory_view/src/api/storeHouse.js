@@ -44,3 +44,7 @@ export function getStoreHouseById(id) {
 export function updateStoreHouse(BaseStorehouse) {
     return request.post(baseUrl + "/updateStoreHouse",BaseStorehouse);
 }
+
+export function getAllStoreHouseList() {
+    return request.post(baseUrl + "/getAllStoreHouseList");
+}

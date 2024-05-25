@@ -28,6 +28,7 @@
             and a.name like CONCAT("%", #{name}, "%")
         </if>
     </select>
+
     <select id="getBankAccountBybandCount" resultType="com.kgc.entity.BankAccount">
         select id,
                bandCount,
@@ -43,7 +44,44 @@
         from pharmacy.bank_account
         where isDel = 0
           and bandCount = #{bandCount}
+          and name = #{name}
+          and belongBank = #{belongBank}
+    </select>
 
+    <select id="checkaddBankAccount" resultType="com.kgc.entity.BankAccount">
+        select id,
+               bandCount,
+               balance,
+               name,
+               createTime,
+               createBy,
+               updateTime,
+               updateBy,
+               tip,
+               isDel,
+               belongBank
+        from pharmacy.bank_account
+        where isDel = 0
+        and bandCount = #{bandCount}
+        and name = #{name}
+        and belongBank = #{belongBank}
+    </select>
+
+    <select id="getBankAccountById" resultType="com.kgc.entity.BankAccount">
+        select id,
+               bandCount,
+               balance,
+               name,
+               createTime,
+               createBy,
+               updateTime,
+               updateBy,
+               tip,
+               isDel,
+               belongBank
+        from pharmacy.bank_account
+        where isDel = 0
+          and id = #{id}
     </select>
 
     <update id="delBankAccount">

@@ -12,13 +12,14 @@
          <el-col :span="8">
            <div class="grid-content bg-purple">
                <el-form-item label="单据编号" prop="orderNo">
-                 <el-input type="text" disabled v-model="saleOrder.orderNo"></el-input>
+                 <el-input type="text" disabled v-model="saleOrder.orderNo" size="small"></el-input>
                </el-form-item></div>
          </el-col>
            <el-col :span="8">
              <div class="grid-content bg-purple">
                <el-form-item label="单据日期" prop="orderDate">
                  <el-date-picker
+                   size="small"
                    v-model="saleOrder.orderDate"
                    disabled
                    type="date"
@@ -29,12 +30,13 @@
            </el-col>
            <el-col :span="8"><div class="grid-content bg-purple">
                <el-form-item label="制单人" prop="createByName">
-                 <el-input type="text" disabled v-model="saleOrder.createByName"></el-input>
+                 <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
                </el-form-item></div></el-col>
            <el-col :span="8"
              ><div class="grid-content bg-purple">
                <el-form-item label="银行账户" prop="bankAccountId">
                  <el-select
+                   size="small"
                    v-model="saleOrder.bankAccountId"
                    placeholder="请选择"
                    clearable
@@ -55,10 +57,10 @@
                <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddDetails">添加</el-button>
              </el-col>
              <el-col :span="2">
-               <el-button type="success" icon="el-icon-delete" size="mini" @click="handleDeleteDetails">删除</el-button>
+               <el-button icon="el-icon-minus" size="mini" @click="handleDeleteDetails">删除</el-button>
              </el-col>
              <el-col :span="2">
-               <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteAllDetails">清空</el-button>
+               <el-button icon="el-icon-delete" size="mini" @click="handleDeleteAllDetails">清空</el-button>
              </el-col>
            </el-row>
            <el-row>
@@ -76,7 +78,7 @@
             <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
              <template slot-scope="scope">
-                <el-select clearable filterable @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
+                <el-select @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
                   <el-option
                     v-for="dict in baseMedicineList"
                     :key="dict.id"
@@ -87,12 +89,12 @@
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
              <template slot-scope="scope">
-                <el-select clearable filterable @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
+                <el-select @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
                   <el-option
                     v-for="dict in scope.row.batchCodeList"
-                    :key="dict.batchcode"
-                    :label="dict.batchcode"
-                    :value="dict.batchcode"/>
+                    :key="dict.batchCode"
+                    :label="dict.batchCode"
+                    :value="dict.batchCode"/>
                 </el-select>
               </template>
             </el-table-column>
@@ -181,7 +183,7 @@
            createByName:"",
            bankAccountId:"",
            remark:'',
-           checkedDetail: [],
+           medicineDetailList:[],
            totalPrice:"",
            totalNumber:""
          },   
@@ -208,15 +210,18 @@
        this.getSaleOrderByOrderNo();
      },
      methods: {
+        //根据订单号查询订单详情
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
           this.saleOrder=data.data;
           this.medicineDetailList = this.saleOrder.baseMedicineList;
         },
+        //查询银行
        async getAllBankCountList() {
          let data = await getAllBankCountList();
          this.bankAccountList=data.data;
        },
+       //查询本地仓库所有药品
        async getAllBaseMedicine() {
          let data = await getAllBaseMedicine();
          this.baseMedicineList=data.data;
@@ -224,11 +229,13 @@
        rowClassName({ row, rowIndex }) {
          row.xh = rowIndex + 1;
        },
+       //药品变化
        async changeMedicine(obj){
         obj.batchCodeList=[]
         let data=await getAllBatchCodeByMedicineId(obj.medicineId);
         obj.batchCodeList=data.data;
        },
+       //批次号变化
        async changeBatchCode(obj){
          let data=await getBaseMedicineById(obj.medicineId,obj.batchCode);
          obj.unitName=data.data.unitName
@@ -238,31 +245,33 @@
          obj.quantity=data.data.quantity
          obj.salePrice=data.data.salePrice
          obj.totalPrice=data.data.salePrice
+         this.saleOrder.totalPrice=this.sumPrice
        },
+       //改变数量
        async changeQuantity(obj){
          obj.totalPrice=parseFloat((obj.salePrice*obj.quantity).toFixed(2))
          this.saleOrder.totalPrice=this.sumPrice
        },
+       //点击添加
        async handleAddDetails() {
          if (this.medicineDetailList == undefined) {
            this.medicineDetailList = new Array();
          }
          let obj = {
-           batchCodeList:[],
-           medicineId:'',
-           batchCode:"",
-           unitId:"",
-           unitName:'',
-           specification:'',
-           categoryId:"",
-           categoryName:"",
-           salePrice:'',
-           quantity:"",
-           stock:"",
-           totalPrice:'',
+          batchCodeList:[],
+          medicineId:'',
+          batchCode:"",
+          unitId:"",
+          specification:'',
+          categoryId:"",
+          salePrice:'',
+          quantity:"",
+          stock:"",
+          totalPrice:'',
          };
          this.medicineDetailList.push(obj);
        },
+       //删除选中的订单明细
        handleDeleteDetails() {
          if (this.saleOrder.checkedDetail.length == 0) {
            this.$alert("请先选择要删除的数据", "提示", {
@@ -272,6 +281,7 @@
            this.medicineDetailList.splice(this.saleOrder.checkedDetail[0].xh - 1, 1);
          }
        },
+       //清空
        handleDeleteAllDetails() {
          this.medicineDetailList = undefined;
        },
@@ -283,28 +293,38 @@
        submitForm(formName){
          this.$refs[formName].validate((valid) => {
            if (valid) {
-             if(this.medicineDetailList.length > 0&&this.saleOrder.checkedDetail!=null){
-               this.saleOrder.totalPrice=this.sumPrice
-               this.saleOrder.totalNumber=this.totalNumber
-               console.log("saleOrder",this.saleOrder)
-               updateSaleOrder(this.saleOrder).then((resp) => {
-                 console.log(resp);
-                 if (resp.code == "200") {
-                   Message({
-                     message: "修改成功!",
-                     type: "success",
-                     center: "true",
-                   });
-                   this.$emit("handleDialogFormVisible",false);
-                 }         
-               });
-             }else{
-               Message({
-                   message: "请输入订单详情!",
-                   type: "error",
-                   center: "true",
-                 });
-             }         
+            if (this.medicineDetailList.length==0){
+            Message({
+              message: "请输入订单详情",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }else{
+            for (const obj of this.medicineDetailList) {
+            if (obj.medicineId==''||obj.medicineId==undefined||obj.batchCode==''||obj.batchCode==undefined){
+              Message({
+                message: "请输入商品明细",
+                type: "error",
+                center: "true",
+              });
+              return;
+            }
+          }
+          }
+          this.saleOrder.medicineDetailList=this.medicineDetailList
+          this.saleOrder.totalPrice=this.sumPrice
+          this.saleOrder.totalNumber=this.totalNumber
+          updateSaleOrder(this.saleOrder).then((resp) => {
+            if (resp.code == "200") {
+              Message({
+                message: "修改成功!",
+                type: "success",
+                center: "true",
+              });
+              this.$emit("handleDialogFormVisible",false);
+            }         
+          });   
            } else {
              console.log("error submit!!");
              return false;
@@ -314,6 +334,9 @@
        saveForm(formName){
          this.$refs[formName].validate((valid) => {
            if (valid) {
+            this.saleOrder.medicineDetailList=this.medicineDetailList
+            this.saleOrder.totalPrice=this.sumPrice
+            this.saleOrder.totalNumber=this.totalNumber
             saveUpdateSaleOrder(this.saleOrder).then((resp) => {
                  console.log(resp);
                  if (resp.code == "200") {
@@ -337,20 +360,20 @@
    
      },
      computed: {
-       sumPrice() {
-         // 使用 reduce 方法计算总价
-         if (this.saleOrder.checkedDetail==undefined){
-           return 0
-         }
-         return this.saleOrder.checkedDetail.reduce((total, item) => total + item.totalPrice, 0);
-       },
-       totalNumber() {
-         // 使用 reduce 方法计算总数量
-         if (this.saleOrder.checkedDetail==undefined){
-           return 0
-         }
-         return this.saleOrder.checkedDetail.reduce((total, item) => total + item.quantity, 0);
-       }
+        sumPrice() {
+        // 使用 reduce 方法计算总价
+        if (this.medicineDetailList==undefined){
+          return 0
+        }
+        return this.medicineDetailList.reduce((total, item) => total + item.totalPrice, 0);
+      },
+      totalNumber() {
+        // 使用 reduce 方法计算总数量
+        if (this.medicineDetailList==undefined){
+          return 0
+        }
+        return this.medicineDetailList.reduce((total, item) => total + item.quantity, 0);
+      }
      }
    };
    </script>

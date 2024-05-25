@@ -14,10 +14,8 @@
               <el-input
                 type="text"
                 disabled
-                v-model="CgddOrder.code"
-              ></el-input>
-            </el-form-item></div
-        ></el-col>
+                v-model="CgddOrder.code"></el-input>
+            </el-form-item></div></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据日期" prop="createTime">
@@ -45,15 +43,16 @@
                 clearable
                 filterable
               >
-                <el-option v-for="item in cgType"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
+                <el-option
+                  v-for="item in cgType"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
                 </el-option>
               </el-select>
-            </el-form-item>
-          </div></el-col
-        >
+            </el-form-item></div
+        ></el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6"
@@ -70,18 +69,11 @@
                     :label="item.label"
                     :value="item.value">
                 </el-option> -->
-                <el-option 
-                    label="货到付款"
-                    value="0">
-                </el-option>
-                <el-option 
-                    label="全款后发货"
-                    value="1">
-                </el-option>
+                <el-option label="货到付款" :value="0"> </el-option>
+                <el-option label="全款后发货" :value="1"> </el-option>
               </el-select>
-            </el-form-item>
-          </div></el-col
-        >
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="交货日期" prop="deliveryDate">
@@ -98,40 +90,92 @@
           ><div class="grid-content bg-purple">
             <el-form-item label="联系电话" prop="phone">
               <el-input type="text" v-model="CgddOrder.phone"></el-input>
-            </el-form-item></div></el-col>
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="供应商" prop="providerId">
               <el-select
                 v-model="CgddOrder.providerId"
-                placeholder="请选择采购类型"
+                placeholder="请选择供应商"
                 clearable
                 filterable
               >
-              <el-option v-for="item in cgType"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
+                <el-option
+                  v-for="item in providerList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
                 </el-option>
               </el-select>
-            </el-form-item>
-          </div></el-col
-        >
+            </el-form-item></div
+        ></el-col>
       </el-row>
-      <el-form-item label="联系人" style="width: 290px" prop="contactperson">
-        <el-input
-          type="text"
-          placeholder="请输入联系人"
-          v-model.number="CgddOrder.contactperson"
-        ></el-input>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="6"
+          ><div class="grid-content bg-purple">
+            <el-form-item
+              label="联系人"
+              style="width: 290px"
+              prop="contactperson"
+            >
+              <el-input
+                type="text"
+                placeholder="请输入联系人"
+                v-model.number="CgddOrder.contactperson"
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+        <el-col :span="6"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="传真" prop="fax">
+              <el-input
+                type="text"
+                placeholder="请输入传真"
+                v-model.number="CgddOrder.fax"
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+        <el-col :span="6"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="邮件" prop="email">
+              <el-input type="text" v-model="CgddOrder.email"></el-input>
+            </el-form-item></div
+        ></el-col>
+        <el-col :span="6"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="单据状态" prop="orderStatus">
+              <el-select
+                disabled
+                v-model="CgddOrder.orderStatus"
+                placeholder=""
+                clearable
+                filterable
+              >
+                <!-- <el-option
+                  v-for="item in cgType"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option> -->
+                <el-option label="未编制" value="1"></el-option>
+                <el-option label="编制完" value="2"></el-option>
+                <el-option label="执行中" value="3"></el-option>
+                <el-option label="执行完" value="4"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
       <el-tabs v-model="activeName">
         <el-tab-pane label="采购申请单" name="first">
           <el-form>
             <el-form-item>
               <el-button
                 icon="el-icon-plus"
-                @click="cgsqdialog = true"
+                @click="getCgsqlist"
                 style="float: left"
                 >申请单</el-button
               >
@@ -180,26 +224,28 @@
             </el-table>
             <el-divider></el-divider>
             <el-button
-                icon="el-icon-plus"
-                :disabled="CgddOrder.medicineList == null"
-                style="float: left"
-                >添加</el-button
-              >
-              <el-button
-                icon="el-icon-delete"
-                type="danger"
-                style="float: left"
-                >删除</el-button
-              >
+              icon="el-icon-plus"
+              :disabled="CgddOrder.medicineList == null"
+              @click="getMedicineListDetail"
+              style="float: left"
+              >添加</el-button
+            >
+            <el-button
+              icon="el-icon-delete"
+              type="danger"
+              style="float: left"
+              @click="deleteMedicine"
+              >删除</el-button
+            >
             <el-table
-              :data="CgddOrder.medicineList"
+              :data="medicineListTemp"
               show-summary
               border
               style="width: 1200px"
               @selection-change="handleCgsqMedicineionChange"
             >
               <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column prop="code" label="单据编号" width="150" fixed>
+              <el-table-column prop="code" label="源单据编号" width="150" fixed>
               </el-table-column>
               <el-table-column prop="name" label="医药品名称" width="300">
               </el-table-column>
@@ -213,7 +259,7 @@
               </el-table-column>
               <el-table-column prop="quantity" label="数量" width="120">
               </el-table-column>
-              <el-table-column prop="salePrice" label="售价" width="120">
+              <el-table-column prop="purchasePrice" label="采购价" width="120">
               </el-table-column>
               <el-table-column prop="totalPrice" label="总价格" width="120">
               </el-table-column>
@@ -222,11 +268,201 @@
         </el-tab-pane>
         <el-tab-pane label="明细" name="second">
           <el-button
+            type="primary"
             icon="el-icon-plus"
-            @click="cgsqdialog = true"
-            style="float: left">新增</el-button>
+            size="mini"
+            @click="handleAddDetails"
+            >添加</el-button
+          >
+          <el-button
+            type="success"
+            icon="el-icon-delete"
+            size="mini"
+            @click="handleDeleteDetails"
+            >删除</el-button
+          >
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="handleDeleteAllDetails"
+            >清空</el-button
+          >
+          <el-table
+            v-loading="loading"
+            :data="bcglXiangXiList"
+            :row-class-name="rowClassName"
+            @selection-change="chandleDetailSelectionChange"
+            ref="tb"
+          >
+            <el-table-column type="selection" width="30" align="center" />
+            <el-table-column
+              label="序号"
+              align="center"
+              prop="xh"
+              width="50"
+            ></el-table-column>
+            <el-table-column
+              label="药品"
+              align="center"
+              prop="medicineId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changeMedicine(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].medicineId"
+                >
+                  <el-option
+                    v-for="dict in scope.row.medicineList"
+                    :key="dict.id"
+                    :label="dict.name"
+                    :value="dict.id"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="规格型号"
+              align="center"
+              prop="measureId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changezdts(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].specification"
+                  disabled
+                >
+                  <el-option
+                    :label="scope.row.specification"
+                    :value="scope.row.specification"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="单位"
+              align="center"
+              prop="unitId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changezdts(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].unitName"
+                  disabled
+                >
+                  <el-option
+                    v-for="dict in zdtsOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="数量"
+              align="center"
+              prop="totalPrice"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input-number
+                  v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
+                  controls-position="right"
+                  @change="handleChange"
+                  :min="1"
+                  :max="10"
+                ></el-input-number>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="单价"
+              align="center"
+              prop="price"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  clearable
+                  @change="changezdts(scope.row)"
+                  v-model="bcglXiangXiList[scope.row.xh - 1].price"
+                  disabled
+                >
+                  <el-option
+                    v-for="dict in zdtsOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="参考总价"
+              align="center"
+              prop="totalPrice"
+              width="150"
+            >
+              <template slot-scope="scope">
+                {{ calculatedTotalPrice(scope.row) }}
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+          <div style="text-align: left">
+            <div style="margin-bottom: 25px">合计{{ totalPrice }}元</div>
+          </div>
         </el-tab-pane>
       </el-tabs>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="备注 " style="margin-top: 10px" prop="remark">
+            <el-input
+              style="width: 300px"
+              type="text"
+              v-model="CgddOrder.remark"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item
+            label="核批意见"
+            style="margin-top: 10px"
+            prop="approverRemark"
+          >
+            <el-input
+              disabled
+              style="width: 300px"
+              type="text"
+              v-model="CgddOrder.approverRemark"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item
+            label="核批结果"
+            style="margin-top: 10px"
+            prop="approvalStatus"
+          >
+            <el-select
+              disabled
+              v-model="CgddOrder.approvalStatus"
+              placeholder="请选择审批结果"
+              clearable
+              filterable
+            >
+              <el-option label="通过" value="0"></el-option>
+              <el-option label="不通过" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item style="width: 500px">
         <el-row type="flex" justify="center">
           <el-col :span="6"
@@ -244,7 +480,8 @@
           <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-button @click="cancel()">取 消</el-button>
-            </div></el-col>
+            </div></el-col
+          >
         </el-row>
       </el-form-item>
     </el-form>
@@ -372,17 +609,25 @@
 // import { addStoreHouse, checkName } from "@/api/storeHouse.js";
 import { Message } from "element-ui";
 import { initCgSqOrderList } from "@/api/CgsdOrder";
+import { init } from "../api/BaseProvider.js";
 import { getMedicineListByCode } from "@/api/baseMedicine";
 import { getCurrentTime } from "./../api/util.js";
-import {addCgddOrder} from './../api/procurementOrder.js'
-import {getPayType} from './../api/public.js'
+import { addCgddOrder } from "./../api/procurementOrder.js";
+import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
+import { getPayType } from "./../api/public.js";
 export default {
   name: "addProcOrder",
   data() {
     return {
+      bcglXiangXiList: [],
       CgddOrder: {
+        approvalStatus: "",
+        approverRemark: "",
+        remark: "",
+        orderStatus: "1",
+        email: "",
+        fax: "",
         code: "",
-        createTime: new Date(),
         phone: "",
         contactperson: "",
         providerId: "",
@@ -390,6 +635,8 @@ export default {
         payType: "",
         type: "",
         subject: "",
+        createTime: new Date(),
+        documenterBy: 1,
         medicineList: [],
       },
       vo: {
@@ -404,34 +651,63 @@ export default {
         approvalStatus: 1,
       },
       list: {},
-      cgType:{},
+      cgType: {},
       activeName: "first",
       adddialogVisible: false,
       cgsqdialog: false,
       cgsqListTemp: [],
       cgsqList: [],
+      medicineListTemp: [],
+      changeMedicineList: [],
+      providerList: [],
+      cgddMedicineionList: [],
       cgddRules: {
-            type: [
-              { required: true, message: "请输入采购类型", trigger: "change" },
-            ],
-            providerId: [
-              { required: true, message: "请输入供应商", trigger: "change" },
-            ],
-            deliveryDate: [
-              { required: true, message: "交货日期不能为空",trigger: "change" },
-            ],
-            payType:[
-              { required: true, message: "付款方式不能为空",trigger: "change" },
-            ]
+        type: [
+          { required: true, message: "请输入采购类型", trigger: "change" },
+        ],
+        providerId: [
+          { required: true, message: "请输入供应商", trigger: "change" },
+        ],
+        deliveryDate: [
+          { required: true, message: "交货日期不能为空", trigger: "change" },
+        ],
+        payType: [
+          { required: true, message: "付款方式不能为空", trigger: "change" },
+        ],
+        contactperson: [
+          { required: true, message: "联系人不能为空", trigger: "blur" },
+          { min: 2, max: 10, message: "联系人为2-10个字符", trigger: "blur" },
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          {
+            pattern: /\w+@qq.com/,
+            message: "请输入——@qq.com的邮箱格式",
+            trigger: "blur",
+          },
+        ],
+        phone: [
+          { required: true, message: "请输入电话", trigger: "blur" },
+          {
+            pattern: /^[1][3,5,7,8][0-9]{9}$/,
+            message: "请输入1至3、5、7、8开头的电话格式",
+            trigger: "blur",
+          },
+        ],
+        // fax: [
+        //   { required: true, message: "传真不能为空", trigger: "blur" },
+        //   { min: 2, max: 10, message: "传真限制为为2-10个字符", trigger: "blur" },
+        // ],
       },
     };
   },
   async mounted() {
     await this.initCgSqOrderList();
     this.CgddOrder.code = await getCurrentTime("CGDD");
+    this.initProvider();
     let data = await getPayType();
-    this.cgType = data.data
-    console.log(this.cgType)
+    this.cgType = data.data;
+    console.log(this.cgType);
   },
   methods: {
     async initCgSqOrderList() {
@@ -439,6 +715,10 @@ export default {
       console.log(data);
       this.list = data.data;
       console.log(this.list);
+    },
+    async initProvider() {
+      let resp = await init("", 0, 1, 5);
+      this.providerList = resp.data.list;
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
@@ -466,7 +746,7 @@ export default {
     resetForm(formName) {
       var data = this.CgddOrder.code;
       this.$refs[formName].resetFields();
-      this.CgddOrder.code = data
+      this.CgddOrder.code = data;
     },
     cancel() {
       this.$emit("cancel");
@@ -479,7 +759,7 @@ export default {
       console.log("cgsqList", this.cgsqList.length);
     },
     handleCgsqMedicineionChange(val) {
-      
+      this.cgddMedicineionList = val;
     },
     handleCgsqChange(val) {
       this.cgsqListTemp = val;
@@ -501,32 +781,223 @@ export default {
         var data = await getMedicineListByCode(cgsq.code);
         console.log("data:", data);
         for (let i = 0; i < data.data.length; i++) {
-          this.CgddOrder.medicineList.push(data.data[i]);
+          if (data.data[i].providerId == this.CgddOrder.providerId) {
+            this.medicineListTemp.push(data.data[i]);
+          }
         }
-        console.log("medicineList:", this.CgddOrder.medicineList);
+        console.log("medicineListTemp:", this.medicineListTemp);
       }
       this.cgsqdialog = false;
       this.cgsqList = this.cgsqListTemp;
-      this.cgsqListTemp = []
-      // this.page.pageNum = 1;
+      this.cgsqListTemp = [];
       this.initCgSqOrderList();
     },
     async deleteCgsq() {
-      for (let index = 0; index < this.cgsqList.length; index++) {
-        const element = this.cgsqList[index];
-        for (let i = 0; i < this.cgsqListTemp.length; i++) {
-          const temp = this.cgsqListTemp[i];
+      if (this.cgsqListTemp.length >= 0) {
+        var data = [];
+        for (let index = 0; index < this.cgsqListTemp.length; index++) {
+          for (let i = 0; i < this.medicineListTemp.length; i++) {
+            var temp = [];
+            temp.push(this.medicineListTemp[i]);
+            alert(
+              this.cgsqListTemp[index].code == this.medicineListTemp[i].code
+            );
+            console.log("medicineListTemp:", this.medicineListTemp);
+            console.log("temp:", temp);
+            if (
+              this.cgsqListTemp[index].code == this.medicineListTemp[i].code
+            ) {
+              const medicineData = this.medicineListTemp.filter(
+                (item) => !temp.includes(item)
+              );
+              data = medicineData;
+            }
+            temp = [];
+          }
+          // var data = await getMedicineListByCode(cgsq.code);
+          // console.log("data:", data);
+        }
+        if (this.medicineListTemp.length == 1) {
+          this.medicineListTemp = [];
+        } else {
+          if (data.length != 0) {
+            this.medicineListTemp = data;
+          }
         }
       }
-      this.cgsqList = this.cgsqListTemp;
-      console.log(this.cgsqList);
-      for (let index = 0; index < this.cgsqListTemp.length; index++) {
-        const cgsq = this.cgsqListTemp[index];
-        console.log("cgsq", cgsq.code);
-        var data = await getMedicineListByCode(cgsq.code);
-        console.log("data:", data);
-        this.CgddOrder.medicineList = data.data;
+      const newData = this.cgsqList.filter(
+        (item) => !this.cgsqListTemp.includes(item)
+      );
+      console.log("newData", newData);
+      this.cgsqList = newData;
+    },
+    deleteMedicine() {
+      const newData = this.medicineListTemp.filter(
+        (item) => !this.changeMedicineList.includes(item)
+      );
+      this.medicineListTemp = newData;
+      this.changeMedicineList = [];
+    },
+    getCgsqlist() {
+      if (this.CgddOrder.providerId == 0 || this.CgddOrder.providerId == "") {
+        Message({
+          message: "请先选择供应商",
+          type: "error",
+          center: "true",
+        });
+        return;
       }
+      this.cgsqdialog = true;
+    },
+    async handleAddDetails() {
+      if (this.CgddOrder.providerId == 0 || this.CgddOrder.providerId == "") {
+        Message({
+          message: "请先选择供应商",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      if (this.bcglXiangXiList == undefined) {
+        this.bcglXiangXiList = new Array();
+      }
+      if (this.bcglXiangXiList.length > 0) {
+        for (const objElement of this.bcglXiangXiList) {
+          if (objElement.medicineId == "") {
+            Message({
+              message: "请先填写完别的商品明细先!",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }
+        }
+      }
+      let resp = await getBaseMedicineListByProviderId(
+        this.CgddOrder.providerId
+      );
+      let obj = {
+        medicineList: resp.data.data,
+        providerId: this.CgddOrder.providerId,
+        medicineId: "",
+        unitName: "",
+        specification: "",
+        price: "",
+        totalPrice: "",
+        quantity: "",
+      };
+      console.log(this.providerList);
+      obj.dkdd = "1";
+      obj.sjfw = ["07:00", "07:30"];
+      obj.jxsjfw = ["06:00", "12:00"];
+      this.bcglXiangXiList.push(obj);
+      this.CgddOrder.medicineList = this.bcglXiangXiList;
+    },
+    handleDeleteDetails() {
+      if (this.checkedDetail.length == 0) {
+        this.$alert("请先选择要删除的数据", "提示", {
+          confirmButtonText: "确定",
+        });
+      } else {
+        this.bcglXiangXiList.splice(this.checkedDetail[0].xh - 1, 1);
+      }
+    },
+    handleDeleteAllDetails() {
+      this.bcglXiangXiList = undefined;
+    },
+    async changeMedicine(obj) {
+      console.log(obj);
+      console.log(this.bcglXiangXiList);
+
+      for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
+        if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
+          if (this.bcglXiangXiList[i].providerId != obj.providerId) {
+            break;
+          }
+          Message({
+            message: "您重复添加了商品!",
+            type: "error",
+            center: "true",
+          });
+          obj.medicineId = "";
+          return;
+        }
+      }
+      for (const objElement of obj.medicineList) {
+        if (obj.medicineId == objElement.id) {
+          obj.unitName = objElement.unitName;
+          obj.specification = objElement.specification;
+          obj.price = objElement.purchasePrice;
+          obj.id = obj.medicineId;
+          obj.purchasePrice = objElement.purchasePrice;
+        }
+      }
+    },
+    rowClassName({ row, rowIndex }) {
+      row.xh = rowIndex + 1;
+    },
+    chandleDetailSelectionChange(selection) {
+      if (selection.length > 1) {
+        this.$refs.tb.clearSelection();
+        this.$refs.tb.toggleRowSelection(selection.pop());
+      } else {
+        this.checkedDetail = selection;
+      }
+    },
+    async getMedicineListDetail() {
+      if (this.cgddMedicineionList.length == 0) {
+        Message({
+          message: "请选择药品！",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      if (this.cgddMedicineionList.length > 0) {
+        for (let index = 0; index < this.cgddMedicineionList.length; index++) {
+          if (this.bcglXiangXiList == undefined) {
+            this.bcglXiangXiList = new Array();
+          }
+          let resp = await getBaseMedicineListByProviderId(
+            this.CgddOrder.providerId
+          );
+          console.log("cgddMedicineionList:" + this.cgddMedicineionList[index]);
+          let obj = {
+            medicineList: resp.data.data,
+            providerId: this.CgddOrder.providerId,
+            medicineId: this.cgddMedicineionList[index].id,
+            unitName: this.cgddMedicineionList[index].unitName,
+            specification: this.cgddMedicineionList[index].specification,
+            price: this.cgddMedicineionList[index].purchasePrice,
+            totalPrice: this.cgddMedicineionList[index].totalPrice,
+            quantity: this.cgddMedicineionList[index].quantity,
+            sourceCode:this.cgddMedicineionList[index].code
+          };
+          obj.dkdd = "1";
+          obj.sjfw = ["07:00", "07:30"];
+          obj.jxsjfw = ["06:00", "12:00"];
+          this.bcglXiangXiList.push(obj);
+        }
+        this.CgddOrder.medicineList = this.bcglXiangXiList;
+      }
+    },
+  },
+  computed: {
+    totalPrice() {
+      // 使用 reduce 方法计算总价
+      if (this.bcglXiangXiList == undefined) {
+        return 0;
+      }
+      return this.bcglXiangXiList.reduce(
+        (total, item) => total + item.totalPrice * item.quantity,
+        0
+      );
+    },
+    calculatedTotalPrice() {
+      return (row) => {
+        row.totalPrice = row.quantity * row.price;
+        return row.quantity * row.price;
+      };
     },
   },
 };

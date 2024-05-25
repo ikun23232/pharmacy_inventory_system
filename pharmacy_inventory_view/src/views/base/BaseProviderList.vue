@@ -60,18 +60,18 @@
     </el-table>
     <!-- 添加弹窗 -->
     <el-dialog title="添加供应商" :visible.sync="dialogVisible" width="30%" v-if="dialogVisible">
-      <addProvider @updateSuccess="handleUpdateSuccess"></addProvider>
+      <addProvider @updateSuccess="handleUpdateSuccess" @close="close"></addProvider>
     </el-dialog>
 
     <!-- 修改弹窗 -->
     <el-dialog title="修改供应商信息" :visible.sync="updatedialogVisible" width="30%" v-if="updatedialogVisible">
-      <updateProvider :id="id" @updateSuccess="handleUpdateSuccess"></updateProvider>
+      <updateProvider :id="id" @updateSuccess="handleUpdateSuccess" @close="close"></updateProvider>
     </el-dialog>
 
     <div style="width: 100%; height: 30px"></div>
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handlegetproviderList" :current-page="page.pageNum"
-        :page-sizes="[5, 8]" :page-size="page.pageSize" :page-count="page.pages"
+      <el-pagination @size-change="handleSizeChange" @current-change="handlegetproviderList"
+        :current-page="page.pageNum" :page-sizes="[5, 8]" :page-size="page.pageSize" :page-count="page.pages"
         layout="total, sizes, prev, pager, next, jumper" :total="page.total">
       </el-pagination>
     </div>
@@ -122,7 +122,13 @@ export default {
       this.optionTypeList = data.data;
     },
     clearsearch() {
-
+      this.type = 0
+      this.input = ''
+      this.handlegetproviderList(1)
+    },
+    close() {
+      this.dialogVisible = false
+      this.updatedialogVisible = false
     },
     addProvider() {
       this.dialogVisible = true

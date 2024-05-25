@@ -17,20 +17,25 @@
               </el-col>
             </el-form-item>
             <el-form-item label="创建人">
-                <el-input placeholder="创建人" v-model="object.createByName"></el-input>
+                <el-select v-model="object.createBy" >
+                  <el-option
+                    v-for="dict in userList"
+                    :key="dict.id"
+                    :label="dict.username"
+                    :value="dict.userid"/>
+                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
-                <el-button icon="el-icon-refresh-right" >重置</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="initSaleOrderByPage(1)">查询</el-button>
+                <el-button icon="el-icon-refresh-right" @click="resetForm">重置</el-button>
                  <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
-            <el-button type="text" icon="el-icon-download" style="margin-left:18px">导出</el-button>
+            <el-button type="text" icon="el-icon-upload2" style="margin-left:18px">导出</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
             </el-form-item>
         </el-form>
         </div>
-
   </div>
-  <el-table stripe="true" :data="list" border style="width: 100%;text-align: center;">
+  <el-table :stripe="true" :data="list" border style="width: 100%;text-align: center;">
     <el-table-column fixed prop="index" label="#" width="60">
         <template #default="scope">
         {{ scope.$index +(pageInfo.pageNum - 1) * pageInfo.pageSize+ 1 }}
@@ -87,7 +92,7 @@
   </el-table>
   <div class="block">
     <p>
-      <el-pagination background layout="prev, pager, next" :total="pageInfo.total" page-size=5 @current-change="handleCurrentChange" style="float: right;"></el-pagination>
+      <el-pagination background layout="prev, pager, next" :total="pageInfo.total" :page-size=5 @current-change="handleCurrentChange" style="float: right;"></el-pagination>
       <span style="color: gray;float: right;margin-top: 5px;">共{{ pageInfo.total }}条</span>
     </p>
 
@@ -127,6 +132,7 @@
 
 <script>
 import {initSaleOrder,deleteSaleOrder,cancelSaleOrder} from "../../api/saleOrder.js";
+import {getAllUser} from "../../api/sysUser.js";
 import AddSaleOrder from "../sale/AddSaleOrder.vue";
 import UpdateSaleOrder from "../sale/UpdateSaleOrder.vue";
 import SaleOrderDetail from "../sale/SaleOrderDetail.vue";
@@ -142,15 +148,16 @@ export default {
   data(){
     return{
       orderNo:"",
+      userList:[],
       object:{
             orderNo:"",
             orderDateBegin:"",
             orderDateEnd:"",
-            createByName:"",
+            createBy:"",
             currentPage:1, 
         },
-        pageInfo:"",
-        list:"",
+        pageInfo:[],
+        list:[],
         addDialogFormVisible:false,
         updateDialogFormVisible:false,
         detailDialogFormVisible:false,
@@ -158,8 +165,14 @@ export default {
   },
   mounted() {
     this.initSaleOrderByPage(1);
+    this.initAllUser();
   },
   methods: {
+    async initAllUser() {
+        let data = await getAllUser();
+        console.log("12345",data.data)
+        this.userList=data.data;
+    },
     async initSaleOrderByPage(currentPage) {
         this.object.currentPage=currentPage;
         let data = await initSaleOrder(this.object);
@@ -249,6 +262,9 @@ export default {
             message: '取消删除成功！'
           })
         });
+    },
+    resetForm(){
+      
     }
   }
 }

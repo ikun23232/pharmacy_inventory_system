@@ -9,9 +9,12 @@ import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.BaseMedicineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,6 +31,8 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Autowired
     private BaseMedicineMapper baseMedicineMapper;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public Message getBaseMedicineListByPage(BaseMedicine baseMedicine) {
@@ -85,8 +90,42 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     @Override
     public Message getMedicineListByCode(String code) {
+        logger.debug("getMedicineListByCode code:"+code);
         List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
         return Message.success(medicineListByCode);
+    }
+
+    @Override
+    public Message getBaseMedicineListByProviderId(int providerId) {
+        List<BaseMedicine> baseMedicineList=baseMedicineMapper.getBaseMedicineListByProviderId(providerId);
+        return Message.success(baseMedicineList);
+    }
+
+    @Override
+    public Message getMedicineListByCodeComblie(String code) {
+        List<BaseMedicine> medicineListByCode = baseMedicineMapper.getMedicineListByCode(code);
+        ArrayList<BaseMedicine> baseMedicines = new ArrayList<>();
+        if (medicineListByCode!=null){
+            boolean falg=true;
+            for (BaseMedicine baseMedicine : medicineListByCode) {
+               if (baseMedicines!=null&&baseMedicines.size()>0){
+                   for (int i = 0; i < baseMedicines.size(); i++) {
+                       if (baseMedicines.get(i).getId()==baseMedicine.getId()){
+                           baseMedicines.get(i).setQuantity(baseMedicines.get(i).getQuantity()+baseMedicine.getQuantity());
+                           System.out.println(baseMedicines.get(i).getQuantity());
+                           falg=false;
+                           break;
+                       }
+                   }
+               }
+               if (falg){
+                   baseMedicines.add(baseMedicine);
+               }
+            }
+        }
+
+
+        return Message.success(baseMedicines);
     }
 
     @Override

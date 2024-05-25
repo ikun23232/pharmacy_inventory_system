@@ -3,27 +3,11 @@
 <mapper namespace="com.kgc.dao.CgsqOrderMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kgc.entity.CgsqOrder">
+    <resultMap id="BaseResultMap" type="com.kgc.entity.CgsqOrder" autoMapping="true">
         <id column="id" property="id"/>
-        <result column="code" property="code"/>
-        <result column="subject" property="subject"/>
-        <result column="sourceId" property="sourceid"/>
-        <result column="type" property="type"/>
-        <result column="demanderBy" property="demanderby"/>
-        <result column="demandTime" property="demandtime"/>
-        <result column="count" property="count"/>
-        <result column="referenceAmount" property="referenceamount"/>
-        <result column="orderStatus" property="orderstatus"/>
-        <result column="approvalStatus" property="approvalstatus"/>
-        <result column="remark" property="remark"/>
-        <result column="effectiveTime" property="effectivetime"/>
-        <result column="approverBy" property="approverby"/>
-        <result column="approverRemark" property="approverremark"/>
-        <result column="documenterBy" property="documenterby"/>
-        <result column="voidState" property="voidstate"/>
-        <result column="createTime" property="createtime"/>
-        <result column="updateBy" property="updateby"/>
-        <result column="updateTime" property="updatetime"/>
+        <collection property="medicineList" ofType="com.kgc.entity.BaseMedicine" autoMapping="true">
+            <result column="medicineIdTemp" property="id"/>
+        </collection>
     </resultMap>
 
     <select id="getCgsqOrderList" resultType="com.kgc.entity.CgsqOrder">
@@ -31,7 +15,8 @@
         'demanderUserName',
         (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
         (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
-        (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName'
+        (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName',
+        s.type AS 'orderStatueName'
         FROM cgsq_order o,cg_type t,order_statue s
         WHERE o.type=t.id
         AND s.id=o.orderStatus
@@ -45,17 +30,42 @@
             and o.type=#{type}
         </if>
         <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
-            and o.demandTime BETWEEN #{startTime} AND #{endTime}
+            and o.createTime BETWEEN #{startTime} AND #{endTime}
         </if>
            AND o.isDel=0
         <if test="voidState>-1">
             AND o.voidState=#{voidState}
         </if>
-        <if test="approvalStatus>-1">
+        <if test="approvalStatus>0">
             AND o.approvalStatus=#{approvalStatus}
         </if>
+         order by o.createTime Desc
+    </select>
+    <select id="getCgSqOrderById" resultMap="BaseResultMap">
+        SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
+                             'demanderUserName',
+               (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
+               (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
+               (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName',
+               m.medicineId AS medicineIdTemp,m.*,(SELECT price  FROM provider_medicine u WHERE m.medicineId=u.medicineId AND m.providerId=u.providerId) AS 'purchasePrice'
+        FROM cgsq_order o,cg_type t,order_statue s,order_medicine m
+        WHERE o.type=t.id
+          AND s.id=o.orderStatus
+          AND o.`code`=m.`code`
+          AND o.id=#{id}
     </select>
 
+    <select id="getCgsqOrderByCode" resultType="CgsqOrder">
+        SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
+                             'demanderUserName',
+               (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
+               (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
+               (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName'
+        FROM cgsq_order o,cg_type t,order_statue s
+        WHERE o.type=t.id
+          AND s.id=o.orderStatus
+          AND o.code=#{code}
+    </select>
 
 
 </mapper>

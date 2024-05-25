@@ -37,11 +37,19 @@ export function deleteBaseMedicine(id) {
     });
 }
 
+export function getBaseMedicineListByProviderId(id) {
+    return request.get(baseUrl + "/getBaseMedicineListByProviderId", {
+        params: {
+            providerId: id,
+        }
+    });
+}
 export function getMedicineListByCode(code) {
     return request.get(baseUrl + "/getMedicineListByCode", {
         params: {
             code: code,
         }
+
     });
 }
 export function getAllBaseMedicine() {
@@ -54,4 +62,12 @@ export function getAllBatchCodeByMedicineId(medicineId) {
             medicineId: medicineId,
         }
     })
+}
+export function getMedicineListByCodeComblie(code) {
+    return request.get(baseUrl + "/getMedicineListByCodeComblie", {
+        params: {
+            code: code,
+        }
+
+    });
 }

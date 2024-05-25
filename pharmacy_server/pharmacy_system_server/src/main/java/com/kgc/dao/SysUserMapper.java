@@ -3,6 +3,10 @@ package com.kgc.dao;
 import com.kgc.entity.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,7 +18,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
-     SysUser existUser(String userName);
+     SysUser existUser(String username);
+     SysUser selectUser();
+
      SysUser login(SysUser user);
+     List<SysUser> getUsersListByPage(@Param("username") String username, @Param("sex")Integer sex, @Param("isstate")Integer isstate);
+     List<SysUser> listByMenuId(Integer menuId);
+
+//     List<SysUser> getAllUser();
 
 }

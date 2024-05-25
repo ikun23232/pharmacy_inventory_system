@@ -7,13 +7,16 @@ import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
-import com.kgc.service.PublicOMedicineService;
+import com.kgc.utils.ExeclUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,7 +50,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        PageHelper.startPage(page.getPageNum(),page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(),page.getPageSize());
         List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
         PageInfo pageInfo = new PageInfo(order);
         if (order != null){
@@ -58,22 +61,36 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public Message addCgddOrder(CgddOrder cgddOrder) {
-        int count = mapper.insert(cgddOrder);
         int count1 = 0;
-        if (count > 0){
-            for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
-                OrderMedicine orderMedicine = new OrderMedicine();
-                orderMedicine.setCode(cgddOrder.getCode());
-                orderMedicine.setMedicineId(baseMedicine.getId());
-                orderMedicine.setQuantity(baseMedicine.getQuantity());
-                orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
-                int temp = orderMapper.insert(orderMedicine);
-                if (temp > 0){
-                    count1++;
-                }
+        int num = 0;
+        BigDecimal price = BigDecimal.ZERO;
+        for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgddOrder.getCode());
+            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setSourceCode(baseMedicine.getSourceCode());
+            orderMedicine.setProviderId(cgddOrder.getProviderId());
+            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            int temp = orderMapper.insert(orderMedicine);
+            if (temp > 0){
+                count1++;
+                num += orderMedicine.getQuantity();
+                price = orderMedicine.getTotalprice().add(orderMedicine.getTotalprice());
             }
         }
-        return Message.error("添加订单失败");
+        if (cgddOrder.getMedicineList().size() != count1){
+            return Message.error("添加失败");
+        }
+        cgddOrder.setCount(num);
+        cgddOrder.setReferenceAmount(price);
+        cgddOrder.setOrderStatus(2);
+        int count = mapper.insert(cgddOrder);
+        if (count > 0){
+            return Message.success();
+        }
+        throw new RuntimeException("添加药品详细失败");
     }
 
     @Override
@@ -83,5 +100,113 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             return Message.success();
         }
         return Message.error("删除失败！");
+    }
+
+    @Override
+    public Message setVoidState(CgddOrder cgddOrder) {
+        int count = mapper.updateById(cgddOrder);
+        if (count >0){
+            return Message.success();
+        }
+        return Message.error("作废失败！");
+    }
+
+    @Override
+    public Message getCgddByCode(CgddOrder cgddOrder) {
+        CgddOrder cgddByCode = mapper.getCgddByCode(cgddOrder);
+        if (cgddByCode != null){
+            return Message.success(cgddByCode);
+        }
+        return Message.error("该订单编号没有订单");
+    }
+
+    @Override
+    public Message updateCgddById(CgddOrder cgddOrder) {
+        int count1 = 0;
+        int num = 0;
+        BigDecimal price  =BigDecimal.ZERO;
+        for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
+            OrderMedicine orderMedicine = new OrderMedicine();
+            orderMedicine.setCode(cgddOrder.getCode());
+            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setQuantity(baseMedicine.getQuantity());
+            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
+            orderMedicine.setSourceCode(baseMedicine.getCode());
+            orderMedicine.setProviderId(cgddOrder.getProviderId());
+            orderMedicine.setId(baseMedicine.getMedicineOrderId());
+            int temp = orderMapper.updateById(orderMedicine);
+            if (temp > 0){
+                count1++;
+                num += orderMedicine.getQuantity();
+                price = orderMedicine.getTotalprice().add(orderMedicine.getTotalprice());
+            }
+        }
+        if (cgddOrder.getMedicineList().size() != count1){
+            return Message.error("修改失败");
+        }
+        cgddOrder.setCount(num);
+        cgddOrder.setReferenceAmount(price);
+        cgddOrder.setUpdateBy(1);
+        cgddOrder.setUpdateTime(new Date());
+        int count = mapper.updateById(cgddOrder);
+        if (count > 0){
+            return Message.success();
+        }
+        throw new RuntimeException("修改订单失败");
+    }
+
+    @Override
+    public Message auditingOrder(CgddOrder cgddOrder) {
+        if (cgddOrder.getApprovalStatus() == 1){
+            cgddOrder.setEffectiveTime(new Date());
+            cgddOrder.setIsPay(1);
+            cgddOrder.setPayTime(new Date());
+            cgddOrder.setOrderStatus(3);
+        }
+        cgddOrder.setApproverBy(1);
+        int count = mapper.updateById(cgddOrder);
+        if (count > 0){
+            return Message.success();
+        }
+        return Message.error("审批失败");
+    }
+
+    @Override
+    public void cgddExcel(CgddOrder cgddOrder, HttpServletResponse response) {
+        List<CgddOrder> order = mapper.getCgddOrder(cgddOrder);
+        try {
+            ExeclUtil.writeExcel(order,response,"采购订单",CgddOrder.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Message getCgPayCom(String year, String month) {
+        List<CgPayCom> cgPayCom = mapper.getCgPayCom(year, month);
+        if (cgPayCom != null){
+            return Message.success(cgPayCom);
+        }
+        return Message.error("没有数据");
+    }
+
+    @Override
+    public Message getCgPayNum(String year) {
+        List<CgPayNum> cgPayNum = mapper.getCgPayNum(year);
+        if (cgPayNum != null){
+            return Message.success(cgPayNum);
+        }
+        return Message.error("没有数据");
+    }
+
+    @Override
+    public Message getCgPayNumList(String year,int pageNum,int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<CgPayNum> cgPayNum = mapper.getCgPayNum(year);
+        PageInfo pageInfo = new PageInfo(cgPayNum);
+        if (cgPayNum != null){
+            return Message.success(pageInfo);
+        }
+        return Message.error("没有数据");
     }
 }

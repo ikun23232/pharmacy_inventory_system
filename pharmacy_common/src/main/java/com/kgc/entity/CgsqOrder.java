@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -120,7 +121,7 @@ public class CgsqOrder implements Serializable {
      * 作废状态
      */
     @TableField("voidState")
-    private String voidstate;
+    private Integer voidstate;
 
     /**
      * 制单时间
@@ -158,6 +159,13 @@ public class CgsqOrder implements Serializable {
     private String updateUserName;
     @TableField(exist = false)
     private String cgtype;
+
+    @TableField(exist = false)
+    private List<BaseMedicine> MedicineList;
+
+    @TableField(exist = false)
+    private String orderStatueName;
+
 
 
 

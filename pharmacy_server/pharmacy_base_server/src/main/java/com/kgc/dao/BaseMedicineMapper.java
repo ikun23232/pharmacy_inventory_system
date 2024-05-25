@@ -2,6 +2,7 @@ package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.BaseMedicine;
+import com.kgc.entity.Message;
 import com.kgc.entity.KcMedicine;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,8 @@ public interface BaseMedicineMapper extends BaseMapper<BaseMedicine> {
      */
     public List<BaseMedicine> getBaseMedicineListByPage(BaseMedicine baseMedicine);
 
-    List<BaseMedicine> getMedicineListByCode(@Param("code") String code);
+    List<BaseMedicine> getMedicineListByCode(String code);
+    List<BaseMedicine> getBaseMedicineListByProviderId(int providerId);
 
     public BaseMedicine getBaseMedicineById(@Param("id") int id,@Param("batchCode")int batchCode);
 

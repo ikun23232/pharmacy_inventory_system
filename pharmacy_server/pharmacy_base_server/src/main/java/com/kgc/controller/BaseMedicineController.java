@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,6 +69,12 @@ public class BaseMedicineController {
         Message medicineListByCode = baseMedicineService.getMedicineListByCode(code);
         return medicineListByCode;
     }
+    @RequestMapping("/getBaseMedicineListByProviderId")
+    @ResponseBody
+    public Message getBaseMedicineListByProviderId(int providerId) {
+        Message baseMedicineList=baseMedicineService.getBaseMedicineListByProviderId(providerId);
+        return Message.success(baseMedicineList);
+    }
 
     @RequestMapping("/getAllBaseMedicine")
     @ResponseBody
@@ -81,6 +88,12 @@ public class BaseMedicineController {
     public Message getAllBatchCodeByMedicineId(@RequestParam("medicineId") int medicineId){
         Message message = baseMedicineService.getAllBatchCodeByMedicineId(medicineId);
         return message;
+    }
+    @RequestMapping("/getMedicineListByCodeComblie")
+    @ResponseBody
+    public Message getMedicineListByCodeComblie(String code){
+        Message medicineListByCode = baseMedicineService.getMedicineListByCodeComblie(code);
+        return medicineListByCode;
     }
 }
 

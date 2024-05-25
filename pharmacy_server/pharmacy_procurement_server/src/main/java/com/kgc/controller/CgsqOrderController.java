@@ -1,6 +1,9 @@
 package com.kgc.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.kgc.entity.CgsqOrder;
 import com.kgc.entity.Message;
 import com.kgc.service.CgsqOrderService;
 import com.kgc.vo.CgVO;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +44,35 @@ public class CgsqOrderController {
         Message message = cgsqOrderService.voidCgsqOrder(id);
         return  message;
     }
+    @RequestMapping("/addCgsqOrder")
+    public Message addCgsqOrder(@RequestBody Map map){
+        CgsqOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgsqOrder")), CgsqOrder.class);
+        Message message = cgsqOrderService.addCgsqOrder(cgsqOrder1);
+        return  message;
+    }
 
+    @RequestMapping("/updateCgsqOrder")
+    public Message updateCgsqOrder(@RequestBody Map map){
+        CgsqOrder cgsqOrder1 = JSONObject.parseObject(JSON.toJSONString(map.get("cgsqOrder")), CgsqOrder.class);
+        Message message = cgsqOrderService.updateCgsqOrder(cgsqOrder1);
+        return  message;
+    }
+    @RequestMapping("/getCgsqOrderById")
+    public Message getCgsqOrder(int id){
+        Message message = cgsqOrderService.getCgsqOrder(id);
+        return  message;
+    }
 
+    @RequestMapping("/approveCgsqOrder")
+    public Message approveCgsqOrder(int id,String approveRemark,int approveMent){
+        Message message = cgsqOrderService.approveCgsqOrder(id,approveRemark,approveMent);
+        return  message;
+    }
+
+    @RequestMapping("getCgsqOrderByCode")
+    public Message getCgsqOrderByCode(CgsqOrder cgsqOrder) {
+        Message message = cgsqOrderService.getCgsqOrderByCode(cgsqOrder);
+        return message;
+    }
 }
 

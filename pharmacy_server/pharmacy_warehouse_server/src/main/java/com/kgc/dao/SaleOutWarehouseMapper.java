@@ -9,4 +9,6 @@ import java.util.List;
 public interface SaleOutWarehouseMapper extends BaseMapper<KcSalefromware> {
 
     public List<KcSalefromware> getSaleOutWarehouseListByPage(KcSalefromware kcSalefromware);
+
+
 }
