@@ -94,7 +94,7 @@ export default {
     async getList() {
       let data = await initCat();
       console.log(data);
-      this.list = data.data;
+      this.list = data;
     },
     async handleDelete(row) {
       if (!confirm("你确定要删除吗？")) {
@@ -102,7 +102,7 @@ export default {
       }
       let resp = await delCat(row.id);
       console.log(resp);
-      if (resp.data.code == "200") {
+      if (resp.code == "200") {
         Message({
           type: "success",
           message: "删除成功",

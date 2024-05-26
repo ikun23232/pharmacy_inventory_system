@@ -12,7 +12,14 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>pharmacy_common</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.0</version>
+        </dependency>
 
+    </dependencies>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

@@ -31,9 +31,11 @@ instance.interceptors.response.use(
 		console.log(res+"1111")
 		console.log(res)
 		if (res.code === "200") {
-			return response
+			return response.data
 		} else if (res.code === "202") {
-			return response
+			return response.data
+		}else if(response.status===200){
+			return response.data
 		} else {
 			console.log(response+"111");
 			console.log(res);

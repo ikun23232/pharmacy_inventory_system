@@ -98,6 +98,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    public Message getAllUser() {
+        List<SysUser> allUser = sysUserMapper.getAllUser();
+        return Message.success(allUser);
+    }
+
+    @Override
     public Message delUserById( Integer[] ids) {
         boolean flag = this.removeByIds(Arrays.asList(ids));
 

@@ -20,6 +20,7 @@ import java.util.List;
 public interface SysUserMapper extends BaseMapper<SysUser> {
      SysUser existUser(@Param("username") String username,@Param("id") Integer id);
      SysUser selectUser();
+     List<SysUser> getAllUser();
 
      SysUser login(SysUser user);
      List<SysUser> getUsersListByPage(@Param("username") String username, @Param("sex")Integer sex, @Param("isstate")Integer isstate);

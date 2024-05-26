@@ -1,9 +1,7 @@
 package com.kgc.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -65,4 +63,12 @@ public class KcInventorydetail implements Serializable {
     private String unitName;
     @TableField(exist = false)
     private Integer quantity;
+    @TableField(exist = false)
+    private Integer totalQuantity;
+
+    private String mark;
+    private Integer isOther;
+    @TableLogic
+    private Integer isdel;
+
 }

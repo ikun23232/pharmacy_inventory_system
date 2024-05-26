@@ -1,0 +1,868 @@
+<template>
+  <span slot="footer" class="dialog-footer">
+    <el-form
+      :model="StoreCheck"
+      :rules="rules"
+      ref="StoreCheck"
+      label-width="100px"
+      class="demo-ruleForm"
+    >
+      <el-row :gutter="20">
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="单据编号" prop="code">
+              <el-input
+                type="text"
+                v-model="StoreCheck.code"
+                disabled
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="单据日期" prop="billDate">
+              <el-date-picker
+                v-model="StoreCheck.billDate"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                :disabled="true"
+              >
+              </el-date-picker>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="执行阶段" prop="orderStatusName">
+              <el-input
+                type="text"
+                v-model="StoreCheck.orderStatusName"
+                :disabled="true"
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="生效日期" prop="effectiveTime">
+              <el-date-picker
+                v-model="StoreCheck.effectiveTime"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                :disabled="true"
+              >
+              </el-date-picker>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="核批人" prop="approverByName">
+              <el-input
+                type="text"
+                v-model="StoreCheck.approverByName"
+                :disabled="true"
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="制单人" prop="createByName">
+              <el-input
+                type="text"
+                v-model="StoreCheck.createByName"
+                :disabled="true"
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="修改日期" prop="updateTime">
+              <el-date-picker
+                v-model="StoreCheck.updateTime"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日"
+                :disabled="true"
+              >
+              </el-date-picker>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="修改人" prop="updateByName">
+              <el-input
+                type="text"
+                v-model="StoreCheck.updateByName"
+                :disabled="true"
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="单据主题" prop="subject">
+              <el-input
+                type="text"
+                v-model="StoreCheck.subject"
+                disabled
+              ></el-input>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="6"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="盘点人" prop="checkerBy">
+              <el-select
+                v-model="StoreCheck.checkerBy"
+                placeholder="请选择盘点人"
+                clearable
+                filterable
+                disabled
+              >
+                <el-option
+                  v-for="item in Useroptions"
+                  :key="item.userid"
+                  :label="item.username"
+                  :value="item.userid"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="24">
+          <div style="text-align: center; margin-top: 10px; position: relative">
+            <div
+              style="
+                display: inline-block;
+                width: 50%;
+                height: 1px;
+                background-color: #ccc;
+              "
+            ></div>
+            <strong
+              style="
+                position: absolute;
+                top: -10px;
+                background-color: #fff;
+                padding: 0 10px;
+                color: #333;
+              "
+              >盘点范围</strong
+            >
+            <div
+              style="
+                display: inline-block;
+                width: 50%;
+                height: 1px;
+                background-color: #ccc;
+              "
+            ></div>
+          </div>
+        </el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="仓库" prop="warehouseId">
+              <el-select
+                v-model="StoreCheck.warehouseId"
+                placeholder="请选择仓库"
+                :disabled="true"
+              >
+                <el-option
+                  v-for="item in warehouseList"
+                  :label="item.name"
+                  :value="item.id"
+                  :key="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item></div
+        ></el-col>
+
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="医药商品选择">
+              <el-cascader
+                :options="medicineoptions"
+                placeholder="请选择"
+                v-model="StoreCheck.materialCategoryId"
+                @change="onChange($event)"
+                :disabled="true"
+              ></el-cascader>
+            </el-form-item></div
+        ></el-col>
+      </el-row>
+
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="明细" name="first">
+          <el-table
+            :data="bcglXiangXiList"
+            :row-class-name="rowClassName"
+            @selection-change="chandleDetailSelectionChange"
+            ref="tb"
+            show-summary
+            v-loading="loading"
+          >
+            <el-table-column label="仓库" width="250" prop="warehouseName">
+            </el-table-column>
+
+            <el-table-column
+              label="医用商品名称"
+              align="center"
+              prop="medecineName"
+              width="150"
+            >
+            </el-table-column>
+
+            <el-table-column
+              label="供应商"
+              align="center"
+              prop="providername"
+              width="150"
+            >
+            </el-table-column>
+
+            <el-table-column
+              label="单位"
+              align="center"
+              prop="unitName"
+              width="150"
+            >
+            </el-table-column>
+
+            <el-table-column
+              label="账存数量"
+              align="center"
+              prop="totalQuantity"
+              width="150"
+            >
+            </el-table-column>
+
+            <el-table-column
+              label="实存数量"
+              align="center"
+              prop="exactCount"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input
+                  v-model="scope.row.exactCount"
+                  placeholder="请输入数量"
+                  disabled
+                ></el-input>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="盘盈数量"
+              align="center"
+              prop="profitCount"
+              width="150"
+            >
+              <template slot-scope="scope">
+                {{ getProfitQuantity(scope.row) }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="盘亏数量"
+              align="center"
+              prop="lossCount"
+              width="150"
+            >
+              <template slot-scope="scope">
+                {{ getLossQuantity(scope.row) }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="备注"
+              align="center"
+              prop="mark"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.mark" disabled></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+        </el-tab-pane>
+        <el-tab-pane label="账外物料">
+          <el-table
+            :data="bcglXiangXiList1"
+            :row-class-name="rowClassName"
+            @selection-change="chandleDetailSelectionChange"
+            ref="tb"
+            show-summary
+            v-loading="loading"
+          >
+            <el-table-column type="selection" width="30" align="center" />
+            <el-table-column
+              label="序号"
+              align="center"
+              prop="xh"
+              width="50"
+            ></el-table-column>
+
+            <el-table-column label="仓库" width="250" prop="warehouseName">
+              <template slot-scope="scope">
+                <el-select
+                  v-model="scope.row.storehouseId"
+                  placeholder="请选择仓库"
+                  @change="onMedicineChange(scope.row)"
+                  disabled
+                >
+                  <el-option
+                    v-for="item in warehouseList"
+                    :label="item.name"
+                    :value="item.id"
+                    :key="item.id"
+                  ></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="医用商品名称"
+              align="center"
+              prop="medecineName"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-cascader
+                  :options="medicineoptions"
+                  placeholder="请选择"
+                  v-model="scope.row.medicineId"
+                  @change="onChange($event, scope.row)"
+                  disabled
+                ></el-cascader>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="供应商"
+              align="center"
+              prop="providerId"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  v-model="scope.row.providername"
+                  placeholder="请选择供应商"
+                  disabled
+                >
+                  <el-option
+                    v-for="item in providerList"
+                    :label="item.name"
+                    :value="item.id"
+                    :key="item.id"
+                  ></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="单位"
+              align="center"
+              prop="unitName"
+              width="150"
+            >
+            </el-table-column>
+
+            <el-table-column
+              label="账存数量"
+              align="center"
+              prop="totalQuantity"
+              width="150"
+            >
+            </el-table-column>
+
+            <el-table-column
+              label="实存数量"
+              align="center"
+              prop="exactCount"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input
+                  v-model="scope.row.exactCount"
+                  placeholder="请输入数量"
+                  disabled
+                ></el-input>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="盘盈数量"
+              align="center"
+              prop="profitCount"
+              width="150"
+            >
+              <template slot-scope="scope">
+                {{ getProfitQuantity(scope.row) }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="盘亏数量"
+              align="center"
+              prop="lossCount"
+              width="150"
+            >
+              <template slot-scope="scope">
+                {{ getLossQuantity(scope.row) }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="备注"
+              align="center"
+              prop="mark"
+              width="150"
+            >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.mark" disabled></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+        </el-tab-pane>
+      </el-tabs>
+      <div style="text-align: left">
+        <span>备注:</span
+        ><el-input
+          class=""
+          v-model="StoreCheck.remark"
+          placeholder="请输入备注"
+          style="width: 1000px"
+          disabled
+        ></el-input>
+      </div>
+      <el-divider></el-divider>
+      <div style="text-align: left">
+        <div class="demo-input-suffix">
+          核批意见:
+          <el-input
+            placeholder="请输入内容"
+            prefix-icon="el-icon-search"
+            v-model="StoreCheck.approverRemark"
+            style="width: 1000px"
+          >
+          </el-input>
+        </div>
+
+        <div style="margin-top: 20px; margin-bottom: 25px">
+          核批结果:<el-select
+            v-model="StoreCheck.isApproved"
+            placeholder="请选择"
+          >
+            <el-option label="未通过" value="1"> </el-option>
+            <el-option label="通过" value="2"> </el-option>
+          </el-select>
+        </div>
+      </div>
+
+      <el-form-item style="width: 500px">
+        <el-button class="anniu" type="primary" @click="cancel()"
+          >取 消</el-button
+        >
+
+        <el-button
+          class="anniu"
+          type="primary"
+          @click="submitForm('StoreCheck')"
+          >审 核</el-button
+        >
+      </el-form-item>
+    </el-form>
+    <!-- <el-dialog
+          title="采购申请单"
+          :visible.sync="checkdialog"
+          width="100%"
+          v-if="checkdialog"
+        >
+          <p>
+            <el-form :inline="true" :model="vo" class="demo-form-inline">
+              <el-form-item label="单据编号">
+                <el-input v-model="vo.code" placeholder="请输入单据编号"></el-input>
+              </el-form-item>
+              <el-form-item label="单据主题">
+                <el-input
+                  v-model="vo.subject"
+                  placeholder="请输入单据编号"
+                ></el-input>
+              </el-form-item>
+    
+              <el-form-item label="采购类型">
+                <el-select v-model="vo.type" placeholder="请选择采购类型">
+                  <el-option label="请选择" value="0"></el-option>
+                  <el-option label="直接采购" value="1"></el-option>
+                  <el-option label="紧急采购" value="2"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="作废状态">
+                <el-select v-model="vo.voidState" placeholder="请选择采购类型">
+                  <el-option label="请选择" value="-1"></el-option>
+                  <el-option label="已作废" value="0"></el-option>
+                  <el-option label="未作废" value="1"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="initCgSqOrderList()"
+                  >查询</el-button
+                >
+              </el-form-item>
+            </el-form>
+          </p>
+    
+          <div class="block">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              :current-page.sync="list.pageNum"
+              :page-size="list.pageSize"
+              layout="prev, pager, next, jumper"
+              :total="list.total"
+            >
+            </el-pagination>
+            <el-row type="flex" justify="center">
+              <el-col :span="2">
+                <el-button type="primary" @click="getMedicineList()"
+                  >确认</el-button
+                >
+              </el-col>
+              <el-col :span="2">
+                <el-button @click="cancel">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog> -->
+  </span>
+</template>
+      
+      <script>
+//   import { addStoreHouse, checkName } from "@/api/storeHouse.js";
+import { Message } from "element-ui";
+export default {
+  name: "addCheck",
+  props: {
+    id: {
+      type: Number,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      loading: true,
+      selectedItems: [],
+      kid: null,
+      providerList: [],
+      Useroptions: [],
+      medicineoptions: [],
+      selectedProduct: [],
+      warehouseList: [],
+      bcglXiangXiList: [],
+      bcglXiangXiList1: [],
+      //选中的从表数据
+      checkedDetail: [],
+      StoreCheck: {
+        id: null,
+        code: "",
+        billDate: "",
+        orderStatusName: "",
+        effectiveTime: "",
+        approverByName: "",
+        createByName: "",
+        updateTime: "",
+        updateByName: "",
+        warehouseId: null,
+        materialCategoryId: null,
+        subject: "",
+        checkerBy: "",
+        remark: "",
+        approverRemark: "",
+        isApproved: "",
+        kcMedicineList: [],
+        kcInventorydetailList: [],
+        exactCount: null,
+      },
+      vo: {
+        currentPageNo: 1,
+        pageSize: 5,
+        code: "",
+        subject: "",
+        type: "0",
+        startTime: "",
+        endTime: "",
+        voidState: "",
+      },
+      list: {},
+      activeName: "first",
+      adddialogVisible: false,
+      checkdialog: false,
+      rules: {
+        // subject: [
+        //   { required: true, message: "请输入主题名称", trigger: "blur" },
+        //   { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        // ],
+        // type: [{ required: true, message: "请选择采购类型", trigger: "blur" }],
+        // warehouseId: [
+        //   { required: true, message: "仓库面积不能为空", trigger: "blur" },
+        // ],
+      },
+    };
+  },
+  async created() {
+    // 在created生命周期钩子中将props中的id值赋给StoreCheck对象中的id属性
+    this.kid = this.id;
+  },
+  async mounted() {
+    this.initStoreHouse();
+    this.getAllMedicine();
+    this.initCheckUser();
+    this.initInventoryDetail();
+    this.initkk();
+    this.loading = false;
+  },
+  methods: {
+    onMedicineChange(row) {
+      console.log("mmsadasdasdasdsadsa");
+      console.log(row);
+      this.selectedItems = [];
+
+      this.selectedItems.push({
+        storehouseId: row.storehouseId,
+        medicineId: row.medicineId,
+      });
+
+      this.initallProvider(row.storehouseId, row.medicineId);
+      this.fetchData(row.xh);
+    },
+    async fetchData(xh) {
+      console.log(this.selectedItems);
+      await this.$axios
+        .get("warehouse/check/getKcInventoryUnitName", {
+          params: {
+            warehouseId: this.selectedItems[0].storehouseId,
+            medecineId: this.selectedItems[0].medicineId,
+          },
+        })
+        .then((response) => {
+          // console.log( this.bcglXiangXiList1);
+
+          this.bcglXiangXiList1[xh - 1].unitName = response.data.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    onChange(value, row) {
+      console.log(value[2]);
+      this.StoreCheck.materialCategoryId = value[2];
+      this.bcglXiangXiList1[row.xh - 1].medicineId = value[2];
+      this.onMedicineChange(row);
+    },
+    async getAllMedicine() {
+      await this.$axios.get("/base/getTreeMedicine").then((resp) => {
+        this.medicineoptions = resp.data.data.map((item) => ({
+          value: item.id,
+          label: item.name,
+          children: item.children
+            ? item.children.map((child) => ({
+                value: child.id,
+                label: child.name,
+                children: child.medicine
+                  ? child.medicine.map((grandchild) => ({
+                      value: grandchild.id,
+                      label: grandchild.name,
+                    }))
+                  : [],
+              }))
+            : [],
+        }));
+      });
+    },
+    async initCheckUser() {
+      await this.$axios.get("/user/getAllUser").then((resp) => {
+        this.Useroptions = resp.data.data;
+      });
+    },
+    async initallProvider(value1, value2) {
+      await this.$axios
+        .get("/base/getProviderByWareAndMe", {
+          params: { warehouseId: value1, medecineId: value2 },
+        })
+        .then((resp) => {
+          this.providerList = resp.data.data;
+        });
+    },
+    async initStoreHouse() {
+      await this.$axios.get("/base/getAllStoreHouseList").then((resp) => {
+        this.warehouseList = resp.data.data;
+      });
+    },
+    async initkk() {
+      await this.$axios
+        .get("/warehouse/check/getKcInventoryDetailByIdwithother", {
+          params: { id: this.kid },
+        })
+        .then((resp) => {
+          this.bcglXiangXiList1 = resp.data.data;
+        });
+    },
+    async initInventoryDetail() {
+      await this.$axios
+        .get("/warehouse/check/getKcInventoryVoById", {
+          params: { id: this.kid },
+        })
+        .then((resp) => {
+          this.StoreCheck = resp.data.data;
+          this.StoreCheck.isApproved = null;
+          this.bcglXiangXiList = this.StoreCheck.kcInventorydetailList;
+        });
+    },
+
+    handleCurrentChange(val) {
+      this.page.pageNum = val;
+      this.getList(this.page);
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.bcglXiangXiList = [
+            ...this.bcglXiangXiList,
+            ...this.bcglXiangXiList1,
+          ];
+          console.log(this.bcglXiangXiList);
+          this.StoreCheck.kcInventorydetailList = this.bcglXiangXiList;
+          console.log(this.StoreCheck);
+          this.$axios
+            .post("/warehouse/check/approveCheck", this.StoreCheck, {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+            .then((resp) => {
+              if (resp.status === 200) {
+                if (
+                  resp.data.code === "200" &&
+                  resp.data.message === "审核信息未通过"
+                ) {
+                  this.$message({
+                    message: "审核成功!",
+                    type: "success",
+                    center: true,
+                  });
+                  this.$emit("closeapproveDiago");
+                } else if (resp.data.code === "200") {
+                  this.$message({
+                    message: "审核成功!",
+                    type: "success",
+                    center: true,
+                  });
+                  this.$emit("closeapproveDiago");
+                } else {
+                  this.$message({
+                    message: "审核失败!",
+                    type: "error",
+                    center: true,
+                  });
+                }
+              } else {
+                console.log("Response status is not 200");
+              }
+            })
+            .catch((error) => {
+              console.error("Error in sending request:", error);
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    cancel() {
+      this.$emit("closeapproveDiago");
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+
+    getMedicineList() {},
+    rowClassName({ row, rowIndex }) {
+      row.xh = rowIndex + 1;
+    },
+    chandleDetailSelectionChange(selection) {
+      this.checkedDetail = selection;
+    },
+
+    getProfitQuantity(row) {
+      if (row.exactCount > row.totalQuantity) {
+        return row.exactCount - row.totalQuantity;
+      } else {
+        return 0;
+      }
+    },
+    getLossQuantity(row) {
+      console.log(row);
+      if (row.exactCount === null || row.exactCount === undefined) {
+        return 0;
+      }
+      if (row.exactCount < row.totalQuantity) {
+        return row.totalQuantity - row.exactCount;
+      } else {
+        return 0;
+      }
+    },
+    handleAddDetails() {
+      this.bcglXiangXiList1.push({
+        xh: this.bcglXiangXiList1.length + 1,
+        warehouseName: "",
+        storehouseId: null,
+        medecineName: "",
+        medicineId: null,
+        providername: "",
+        providerId: null,
+        unitName: null,
+        quantity: null,
+        totalQuantity: null,
+        exactCount: null,
+        profitCount: null,
+        lossCount: null,
+        remark: "",
+        editing: true, // 标记该行数据处于编辑状态
+      });
+    },
+    handleDeleteDetails() {
+      if (this.checkedDetail.length == 0) {
+        this.$alert("请先选择要删除的数据", "提示", {
+          confirmButtonText: "确定",
+        });
+      } else {
+        this.bcglXiangXiList1.splice(this.checkedDetail[0].xh - 1, 1);
+      }
+    },
+    handleDeleteAllDetails() {
+      this.bcglXiangXiList1 = [];
+    },
+  },
+};
+</script>
+      
+      <style>
+.anniu {
+  float: left;
+}
+</style>

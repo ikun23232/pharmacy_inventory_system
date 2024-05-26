@@ -49,10 +49,10 @@ export default {
         callback(new Error("请输入分类名称"));
       } else {
         let resp = await checkCat(this.reOrder.name);
-        if (resp.data.code == 200) {
+        if (resp.code == 200) {
           callback();
         } else {
-          const id1 = parseInt(resp.data.data.id);
+          const id1 = parseInt(resp.data.id);
           const id2 = parseInt(this.id);
           if (id1 === id2) {
             callback();
@@ -87,9 +87,9 @@ export default {
   methods: {
     async init() {
       let response = await checkCatById(this.reOrder.id);
-      console.log(response.data);
-      this.reOrder = response.data.data;
-      this.parentId = response.data.data.id;
+      console.log(response);
+      this.reOrder = response.data;
+      this.parentId = response.data.id;
       console.log(this.parentId);
       this.setTreeData(this.parentId);
     },
@@ -108,7 +108,7 @@ export default {
     },
     async getList() {
       let data = await initCat();
-      this.categories = data.data.data;
+      this.categories = data.data;
 
       // 创建一个新的父节点对象
       let newParent = { id: 0, name: "全部", children: this.categories };
@@ -136,7 +136,7 @@ export default {
     },
     async update(formdata) {
       let respones = await updateCat(formdata);
-      if (respones.data.code == "200") {
+      if (respones.code == "200") {
         Message({
           type: "success",
           message: "修改成功",

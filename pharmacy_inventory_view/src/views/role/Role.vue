@@ -197,7 +197,7 @@ export default {
     this.getRoleList();
 
     this.$axios.get("/user/menu/list").then((res) => {
-      this.permTreeData = res.data.data;
+      this.permTreeData = res.data;
     });
   },
   methods: {
@@ -247,11 +247,11 @@ export default {
         })
         .then((res) => {
           console.log(1000);
-          console.log(res.data);
-          this.tableData = res.data.data.list;
-          this.size = res.data.data.pageSize;
-          this.current = res.data.data.pageNum;
-          this.total = res.data.data.total;
+          console.log(res);
+          this.tableData = res.data.list;
+          this.size = res.data.pageSize;
+          this.current = res.data.pageNum;
+          this.total = res.data.total;
         });
     },
 
@@ -284,7 +284,7 @@ export default {
     },
     editHandle(id) {
       this.$axios.get("/user/role/info/" + id).then((res) => {
-        this.editForm = res.data.data;
+        this.editForm = res.data;
 
         this.dialogVisible = true;
       });
@@ -317,8 +317,8 @@ export default {
       this.permDialogVisible = true;
 
       this.$axios.get("/user/role/info/" + id).then((res) => {
-        this.$refs.permTree.setCheckedKeys(res.data.data.menuIds);
-        this.permForm = res.data.data;
+        this.$refs.permTree.setCheckedKeys(res.data.menuIds);
+        this.permForm = res.data;
       });
     },
 
@@ -333,7 +333,7 @@ export default {
         .then((res) => {
           console.log("perm");
 
-          console.log(res.data);
+          console.log(res);
 		  if(res.code==="200"){
 			this.$message({
             showClose: true,

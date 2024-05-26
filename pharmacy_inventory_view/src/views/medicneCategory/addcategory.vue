@@ -40,7 +40,7 @@ export default {
       } else {
         let resp = await checkCat(this.reOrder.name);
         console.log(resp);
-        if (resp.data.code == 200) {
+        if (resp.code == 200) {
           callback();
         } else {
           callback(new Error("分类名称已经重复"));
@@ -69,7 +69,7 @@ export default {
     },
     async getList() {
       let data = await initCat();
-      this.categories = data.data.data;
+      this.categories = data.data;
 
       // 创建一个新的父节点对象
       let newParent = { id: 0, name: "全部", children: this.categories };
@@ -94,7 +94,7 @@ export default {
     async add(formdata) {
       let respones = await addCat(formdata);
       console.log(respones);
-      if (respones.data.code == "200") {
+      if (respones.code == "200") {
         Message({
           type: "success",
           message: "添加成功",

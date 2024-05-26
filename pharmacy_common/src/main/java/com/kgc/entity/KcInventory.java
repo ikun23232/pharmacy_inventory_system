@@ -148,8 +148,7 @@ public class KcInventory implements Serializable {
 
     @TableField(exist = false)
     private String orderStatusName;
-    /**
-     * 审批意见
-     */
-    private String approveComent;
+    @TableField(exist = false)
+    private Integer totalQuantity;
+
 }

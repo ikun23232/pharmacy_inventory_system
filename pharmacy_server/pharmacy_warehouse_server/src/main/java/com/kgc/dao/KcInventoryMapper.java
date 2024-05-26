@@ -4,7 +4,9 @@ import com.kgc.entity.KcInventory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.KcInventorydetail;
 import com.kgc.entity.KcMedicine;
+import com.kgc.entity.KcReporteddetail;
 import com.kgc.vo.KcInventoryVo;
+import com.kgc.vo.PandianDetailVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,6 +24,12 @@ import java.util.List;
 public interface KcInventoryMapper extends BaseMapper<KcInventory> {
     List<KcInventory> getAllCheckByPage(KcInventoryVo vo);
 
-    List<KcMedicine> getKcMedicineByMedicine(@Param("storehouseId") Integer storehouseId, @Param("materialCategoryId") Integer materialCategoryId);
+    List<KcInventorydetail> getKcMedicineByMedicine(@Param("storehouseId") Integer storehouseId, @Param("materialCategoryId") Integer materialCategoryId);
+
+    KcInventoryVo getKcInventoryVoById(Integer id);
+    boolean updateorderStatus(Integer id);
+    boolean updateisVoid(Integer id);
+
+    List<PandianDetailVo> getAllCheck();
 
 }

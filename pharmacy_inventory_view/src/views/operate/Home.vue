@@ -127,15 +127,15 @@ export default {
     },
     async getUserInfo() {
       let res = await selectUser();
-      if (res.data.code === "200") {
+      if (res.code === "200") {
         console.log(res);
 
-        this.userInfo = res.data.data;
+        this.userInfo = res.data;
       }
     },
     async logout() {
       let res = await logout();
-      if (res.data.code === "200") {
+      if (res.code === "200") {
         localStorage.clear();
         sessionStorage.clear();
         this.$store.commit("resetState");

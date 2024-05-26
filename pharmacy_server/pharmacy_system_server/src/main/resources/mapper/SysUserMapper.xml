@@ -34,6 +34,11 @@
           and isDel = 0
     </select>
 
+    <select id="getAllUser"  resultType="com.kgc.entity.SysUser">
+        select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
+        where isDel = 0
+    </select>
+
     <select id="selectUser"  resultType="com.kgc.entity.SysUser">
         select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
         where isDel = 0

@@ -4,4 +4,6 @@
     <select id="getUnitListByPage" resultType="com.kgc.entity.BaseUnit">
         select * from base_unit where isDel=0
     </select>
+
+
 </mapper>

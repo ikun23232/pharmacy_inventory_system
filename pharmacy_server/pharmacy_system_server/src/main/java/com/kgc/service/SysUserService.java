@@ -25,7 +25,7 @@ public interface SysUserService extends IService<SysUser> {
     public Message existUser(String userName,Integer id);
     public Message login(SysUser user);
     public Message getUsersListByPage(String username,Integer sex,Integer isstate, Page page);
-
+    public Message getAllUser();
     public Message delUserById(Integer[] ids);
     public Message updateUser(SysUser sysUser);
     public Message selectUser();

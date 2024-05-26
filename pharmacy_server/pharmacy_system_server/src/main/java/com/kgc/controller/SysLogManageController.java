@@ -1,8 +1,6 @@
 package com.kgc.controller;
 
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.date.DateUtil;
 import com.kgc.annotation.Log;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
@@ -12,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>

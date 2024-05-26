@@ -179,8 +179,8 @@
 			getMenuTree() {
 				this.$axios.get("/user/menu/list").then(res => {
 					console.log("kkk");
-					console.log(res.data.data);
-					this.tableData = res.data.data
+					console.log(res.data);
+					this.tableData = res.data
 				})
 			},
 			submitForm(formName) {
@@ -207,8 +207,8 @@
 			editHandle(id) {
 				this.$axios.get('/user/menu/info/' + id).then(res => {
 					console.log("111lllppp");
-					console.log(res.data.data);
-					this.editForm = res.data.data
+					console.log(res.data);
+					this.editForm = res.data
 
 					this.dialogVisible = true
 				})

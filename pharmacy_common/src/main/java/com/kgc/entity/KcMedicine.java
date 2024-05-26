@@ -3,6 +3,7 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -62,12 +63,17 @@ public class KcMedicine implements Serializable {
     /**
      * 数量
      */
-    private int quantity;
+    @TableField("quantity")
+    private Integer quantity;
 
     /**
      * 库存价值
      */
     private BigDecimal money;
+    /**
+     * 库存价值
+     */
+    private BigDecimal totalPrice;
 
     /**
      * 药品名称
@@ -75,7 +81,9 @@ public class KcMedicine implements Serializable {
     @TableField("medicineName")
     private String medicineName;
 
-    private int isDel;
+    @TableField("isDel")
+    @TableLogic
+    private Integer isDel;
 
     /**
      * 供应商名称
@@ -83,7 +91,8 @@ public class KcMedicine implements Serializable {
     @TableField("providerName")
     private String providerName;
 
-    private int reportedNum;
-
-
+    @TableField(exist = false)
+    private Integer reportedNum;
+    @TableField(exist = false)
+    private Integer totalQuantity;
 }

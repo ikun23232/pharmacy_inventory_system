@@ -3,15 +3,18 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lemon
@@ -26,7 +29,7 @@ public class BaseProvider implements Serializable {
     /**
      * 供应商id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -45,28 +48,44 @@ public class BaseProvider implements Serializable {
     private Integer type;
 
     /**
+     * 供应商名称
+     */
+    private String typeName;
+
+    /**
      * 创建人
      */
     @TableField("createBy")
-    private Integer createby;
+    private Integer createBy;
+    /**
+     * 创建人名
+     */
+    private String createMan;
 
     /**
      * 创建时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
+    private Date createDate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateby;
+    private Integer updateBy;
+
+    /**
+     * 修改人
+     */
+    private String updateMan;
 
     /**
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date updateDate;
 
     /**
      * 删除标识

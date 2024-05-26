@@ -31,20 +31,15 @@ const routes = [
 		component: () => import('../views/operate/Login.vue')
 	},
 	{
-		path: '/check',
-		name: 'Check',
-		component: () => import('../views/stocktake/1.vue')
+		path: '/printcheck',
+		name: 'Printcheck',
+		component: () => import('../views/stocktake/PrintCheckList.vue')
 	},
 	{
-		path: '/check1',
-		name: 'Check1',
-		component: () => import('../views/stocktake/CheckList.vue')
-	},
-	// {
-	// 	path: '/Basecat',
-	// 	name: 'BaseCat',
-	// 	component: () => import('../views/medicneCategory/baseCategory.vue')
-	// }
+		path: '/printcheckRK',
+		name: 'PrintcheckRK',
+		component: () => import('../views/stocktake/PrintCheckRK.vue')
+	}
 ]
 
 const router = new VueRouter({
@@ -72,21 +67,21 @@ if (to.path == '/login') {
 			Authorization: localStorage.getItem("token")
 		}
 	}).then(res => {
-		console.log(res.data.data.nav)
+		console.log(res.data.nav)
 
 
 		// 拿到menuList
-		store.commit("setMenuList", res.data.data.nav)
+		store.commit("setMenuList", res.data.nav)
 
 		// 拿到用户权限
-		store.commit("setPermList", res.data.data.authoritys)
+		store.commit("setPermList", res.data.authoritys)
 
 		console.log(store.state.menus.menuList)
 
 		// 动态绑定路由
 		let newRoutes = router.options.routes
 
-		res.data.data.nav.forEach(menu => {
+		res.data.nav.forEach(menu => {
 			if (menu.children && menu.children.length > 0) {
 				menu.children.forEach(e => {
 

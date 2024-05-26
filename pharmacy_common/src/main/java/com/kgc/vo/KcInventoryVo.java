@@ -1,6 +1,7 @@
 package com.kgc.vo;
 
 import com.kgc.entity.KcInventory;
+import com.kgc.entity.KcInventorydetail;
 import com.kgc.entity.KcMedicine;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,9 @@ public class KcInventoryVo extends KcInventory {
     private String endTime;
     private String current;
     private List<KcMedicine> kcMedicineList;
+    private List<KcInventorydetail> KcInventorydetailList;
+
+    private List<PandianMedicineVo> PandianMedicineList;
 
 
 

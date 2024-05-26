@@ -2,7 +2,6 @@ package com.kgc.controller;
 
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.kgc.annotation.LoginLog;
 import com.kgc.entity.*;
 import com.kgc.service.SysRoleService;
@@ -12,11 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -112,5 +106,11 @@ public class SysUserController {
         Message message = userService.repass(userId);
         return message;
     }
+    @RequestMapping("/getAllUser")
+    public Message getAllUser() {
+        Message message = userService.getAllUser();
+        return message;
+    }
+
 }
 
