@@ -107,7 +107,7 @@
 
         <el-col :span="8"
           ><div class="grid-content bg-purple">
-            <el-form-item label="单据主题" prop="subject">
+            <el-form-item label="单据主题" prop="subject" :rules="[{ required: true, message: '请输入单据主题', trigger: 'blur' }]">
               <el-input
                 type="text"
                 v-model="StoreCheck.subject"
@@ -484,67 +484,6 @@
         >
       </el-form-item>
     </el-form>
-    <!-- <el-dialog
-          title="采购申请单"
-          :visible.sync="checkdialog"
-          width="100%"
-          v-if="checkdialog"
-        >
-          <p>
-            <el-form :inline="true" :model="vo" class="demo-form-inline">
-              <el-form-item label="单据编号">
-                <el-input v-model="vo.code" placeholder="请输入单据编号"></el-input>
-              </el-form-item>
-              <el-form-item label="单据主题">
-                <el-input
-                  v-model="vo.subject"
-                  placeholder="请输入单据编号"
-                ></el-input>
-              </el-form-item>
-    
-              <el-form-item label="采购类型">
-                <el-select v-model="vo.type" placeholder="请选择采购类型">
-                  <el-option label="请选择" value="0"></el-option>
-                  <el-option label="直接采购" value="1"></el-option>
-                  <el-option label="紧急采购" value="2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="作废状态">
-                <el-select v-model="vo.voidState" placeholder="请选择采购类型">
-                  <el-option label="请选择" value="-1"></el-option>
-                  <el-option label="已作废" value="0"></el-option>
-                  <el-option label="未作废" value="1"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="initCgSqOrderList()"
-                  >查询</el-button
-                >
-              </el-form-item>
-            </el-form>
-          </p>
-    
-          <div class="block">
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page.sync="list.pageNum"
-              :page-size="list.pageSize"
-              layout="prev, pager, next, jumper"
-              :total="list.total"
-            >
-            </el-pagination>
-            <el-row type="flex" justify="center">
-              <el-col :span="2">
-                <el-button type="primary" @click="getMedicineList()"
-                  >确认</el-button
-                >
-              </el-col>
-              <el-col :span="2">
-                <el-button @click="cancel">取消</el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </el-dialog> -->
   </span>
 </template>
       
@@ -658,7 +597,7 @@ export default {
         .then((response) => {
           // console.log( this.bcglXiangXiList1);
 
-          this.bcglXiangXiList1[xh - 1].unitName = response.data.data;
+          this.bcglXiangXiList1[xh - 1].unitName = response.data;
         })
         .catch((error) => {
           console.error(error);
@@ -672,7 +611,7 @@ export default {
     },
     async getAllMedicine() {
       await this.$axios.get("/base/getTreeMedicine").then((resp) => {
-        this.medicineoptions = resp.data.data.map((item) => ({
+        this.medicineoptions = resp.data.map((item) => ({
           value: item.id,
           label: item.name,
           children: item.children
@@ -692,7 +631,7 @@ export default {
     },
     async initCheckUser() {
       await this.$axios.get("/user/getAllUser").then((resp) => {
-        this.Useroptions = resp.data.data;
+        this.Useroptions = resp.data;
       });
     },
     async initallProvider(value1, value2) {
@@ -701,12 +640,12 @@ export default {
           params: { warehouseId: value1, medecineId: value2 },
         })
         .then((resp) => {
-          this.providerList = resp.data.data;
+          this.providerList = resp.data;
         });
     },
     async initStoreHouse() {
       await this.$axios.get("/base/getAllStoreHouseList").then((resp) => {
-        this.warehouseList = resp.data.data;
+        this.warehouseList = resp.data;
       });
     },
     async initkk() {
@@ -715,7 +654,7 @@ export default {
           params: { id: this.kid },
         })
         .then((resp) => {
-          this.bcglXiangXiList1 = resp.data.data;
+          this.bcglXiangXiList1 = resp.data;
         });
     },
     async initInventoryDetail() {
@@ -724,7 +663,7 @@ export default {
           params: { id: this.kid },
         })
         .then((resp) => {
-          this.StoreCheck = resp.data.data;
+          this.StoreCheck = resp.data;
           this.StoreCheck.isApproved = null;
           this.bcglXiangXiList = this.StoreCheck.kcInventorydetailList;
         });
@@ -737,6 +676,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.StoreCheck.isApproved===null||this.StoreCheck.isApproved===undefined || this.StoreCheck.isApproved === 0) {
+            this.$message({
+              message: "请先选择核批结果",
+              type: "warning",
+              center: true,
+            });
+            return;
+          }
           this.bcglXiangXiList = [
             ...this.bcglXiangXiList,
             ...this.bcglXiangXiList1,
@@ -752,17 +699,14 @@ export default {
             })
             .then((resp) => {
               if (resp.status === 200) {
-                if (
-                  resp.data.code === "200" &&
-                  resp.data.message === "审核信息未通过"
-                ) {
+                if (resp.code === "200" && resp.message === "审核信息未通过") {
                   this.$message({
                     message: "审核成功!",
                     type: "success",
                     center: true,
                   });
                   this.$emit("closeapproveDiago");
-                } else if (resp.data.code === "200") {
+                } else if (resp.code === "200") {
                   this.$message({
                     message: "审核成功!",
                     type: "success",

@@ -407,67 +407,6 @@
         >
       </el-form-item>
     </el-form>
-    <!-- <el-dialog
-      title="采购申请单"
-      :visible.sync="checkdialog"
-      width="100%"
-      v-if="checkdialog"
-    >
-      <p>
-        <el-form :inline="true" :model="vo" class="demo-form-inline">
-          <el-form-item label="单据编号">
-            <el-input v-model="vo.code" placeholder="请输入单据编号"></el-input>
-          </el-form-item>
-          <el-form-item label="单据主题">
-            <el-input
-              v-model="vo.subject"
-              placeholder="请输入单据编号"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="采购类型">
-            <el-select v-model="vo.type" placeholder="请选择采购类型">
-              <el-option label="请选择" value="0"></el-option>
-              <el-option label="直接采购" value="1"></el-option>
-              <el-option label="紧急采购" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="作废状态">
-            <el-select v-model="vo.voidState" placeholder="请选择采购类型">
-              <el-option label="请选择" value="-1"></el-option>
-              <el-option label="已作废" value="0"></el-option>
-              <el-option label="未作废" value="1"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="initCgSqOrderList()"
-              >查询</el-button
-            >
-          </el-form-item>
-        </el-form>
-      </p>
-
-      <div class="block">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page.sync="list.pageNum"
-          :page-size="list.pageSize"
-          layout="prev, pager, next, jumper"
-          :total="list.total"
-        >
-        </el-pagination>
-        <el-row type="flex" justify="center">
-          <el-col :span="2">
-            <el-button type="primary" @click="getMedicineList()"
-              >确认</el-button
-            >
-          </el-col>
-          <el-col :span="2">
-            <el-button @click="cancel">取消</el-button>
-          </el-col>
-        </el-row>
-      </div>
-    </el-dialog> -->
   </span>
 </template>
   
@@ -549,7 +488,7 @@ export default {
     },
     async getAllMedicine() {
       await this.$axios.get("/base/getTreeMedicine").then((resp) => {
-        const mappedData = resp.data.data.map((item) => ({
+        const mappedData = resp.data.map((item) => ({
           value: item.id,
           label: item.name,
           children: item.children
@@ -572,13 +511,13 @@ export default {
     async initCheckUser() {
       await this.$axios.get("/user/getAllUser").then((resp) => {
         console.log("2312321312312llllllllll");
-        console.log(resp.data.data);
-        this.Useroptions = resp.data.data;
+        console.log(resp.data);
+        this.Useroptions = resp.data;
       });
     },
     async initStoreHouse() {
       await this.$axios.get("/base/getAllStoreHouseList").then((resp) => {
-        this.warehouseList = resp.data.data;
+        this.warehouseList = resp.data;
       });
     },
     async initcheckShop() {
@@ -592,7 +531,7 @@ export default {
         .then((resp) => {
           console.log(this.bcglXiangXiList);
 
-          this.bcglXiangXiList = resp.data.data;
+          this.bcglXiangXiList = resp.data;
         });
     },
 
@@ -612,7 +551,7 @@ export default {
             })
             .then((resp) => {
               if (resp.status === 200) {
-                if (resp.data.code === "200") {
+                if (resp.code === "200") {
                   this.$message({
                     message: "添加成功!",
                     type: "success",

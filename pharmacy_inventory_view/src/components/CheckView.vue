@@ -625,7 +625,7 @@ export default {
         .then((response) => {
           // console.log( this.bcglXiangXiList1);
 
-          this.bcglXiangXiList1[xh - 1].unitName = response.data.data;
+          this.bcglXiangXiList1[xh - 1].unitName = response.data;
         })
         .catch((error) => {
           console.error(error);
@@ -639,7 +639,7 @@ export default {
     },
     async getAllMedicine() {
       await this.$axios.get("/base/getTreeMedicine").then((resp) => {
-        this.medicineoptions = resp.data.data.map((item) => ({
+        this.medicineoptions = resp.data.map((item) => ({
           value: item.id,
           label: item.name,
           children: item.children
@@ -659,7 +659,7 @@ export default {
     },
     async initCheckUser() {
       await this.$axios.get("/user/getAllUser").then((resp) => {
-        this.Useroptions = resp.data.data;
+        this.Useroptions = resp.data;
       });
     },
     async initallProvider(value1, value2) {
@@ -670,13 +670,13 @@ export default {
           params: { warehouseId: value1, medecineId: value2 },
         })
         .then((resp) => {
-          console.log(resp.data);
-          this.providerList = resp.data.data;
+          console.log(resp);
+          this.providerList = resp.data;
         });
     },
     async initStoreHouse() {
       await this.$axios.get("/base/getAllStoreHouseList").then((resp) => {
-        this.warehouseList = resp.data.data;
+        this.warehouseList = resp.data;
       });
     },
     async initkk() {
@@ -685,7 +685,7 @@ export default {
           params: { id: this.kid },
         })
         .then((resp) => {
-          this.bcglXiangXiList1 = resp.data.data;
+          this.bcglXiangXiList1 = resp.data;
         });
     },
     async initInventoryDetail() {
@@ -696,7 +696,7 @@ export default {
         .then((resp) => {
           console.log("oooooooooooooooooooooo");
           console.log(this.StoreCheck);
-          this.StoreCheck = resp.data.data;
+          this.StoreCheck = resp.data;
           this.bcglXiangXiList = this.StoreCheck.kcInventorydetailList;
         });
     },
@@ -723,7 +723,7 @@ export default {
             })
             .then((resp) => {
               if (resp.status === 200) {
-                if (resp.data.code === "200") {
+                if (resp.code === "200") {
                   this.$message({
                     message: "添加成功!",
                     type: "success",
@@ -756,7 +756,7 @@ export default {
           params: { id: this.kid },
         })
         .then((resp) => {
-          if (resp.data.code === "200") {
+          if (resp.code === "200") {
             this.$message({
               message: "提交成功!",
               type: "success",
