@@ -176,4 +176,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         });
     }
 
+    @Override
+    public Message getAllUser() {
+        List<SysUser> allUser = sysUserMapper.selectList(null);
+        return Message.success(allUser);
+    }
 }

@@ -76,6 +76,7 @@ public class BaseMedicine implements Serializable {
     private Integer warning;
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @ExcelFiled("创造时间")
     private Date createTime;
 
     private Integer createBy;
@@ -85,21 +86,26 @@ public class BaseMedicine implements Serializable {
     private Integer updateBy;
 
     @TableField(exist=false)
+    @ExcelFiled("创造人名称")
     private String createByName;
 
     @TableField(exist=false)
+    @ExcelFiled("修改人名称")
     private String updateByName;
 
     @TableField(exist=false)
+    @ExcelFiled("医药品分类名")
     private String categoryName;
 
     @TableField(exist=false)
+    @ExcelFiled("计量单位")
     private String unitName;
 
     @TableField(exist=false)
     private Integer currentPage;
 
     @TableField(exist=false)
+    @ExcelFiled("数量")
     private Integer quantity;
 
     @TableField(exist=false)
@@ -109,9 +115,11 @@ public class BaseMedicine implements Serializable {
     private Integer providerId;
 
     @TableField(exist=false)
+    @ExcelFiled("供应商名称")
     private String providerName;
 
     @TableField(exist=false)
+    @ExcelFiled("采购价")
     private BigDecimal purchasePrice;
 
     @TableField(exist=false)
@@ -148,5 +156,4 @@ public class BaseMedicine implements Serializable {
     private Integer fowardWarHouseId;
     @TableField(exist=false)
     private String fowardWarHouseName;
-
 }

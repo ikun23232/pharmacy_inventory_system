@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.OrderStatisticsMapper">
+    <select id="getSaleOrderStatisticsList" resultType="com.kgc.entity.OrderStatistics">
+        SELECT
+            YEAR(orderDate) AS orderYear,
+            MONTH(orderDate) AS orderMonth,
+            COUNT(id) AS orderCount,
+            SUM(totalPrice) AS totalAmount
+        FROM
+            xs_order
+        where isDelete=0 and type=0
+        <if test="orderYear!=null and orderYear!=''">and YEAR(orderDate)=#{orderYear} </if>
+        GROUP BY
+            YEAR(orderDate),
+            MONTH(orderDate)
+    </select>
+
+    <select id="getRefundOrderStatisticsList" resultType="com.kgc.entity.OrderStatistics">
+        SELECT
+        YEAR(orderDate) AS orderYear,
+        MONTH(orderDate) AS orderMonth,
+        COUNT(id) AS orderCount,
+        SUM(totalPrice) AS totalAmount
+        FROM
+        xs_order
+        where isDelete=0 and type=1
+        <if test="orderYear!=null and orderYear!=''">and YEAR(orderDate)=#{orderYear} </if>
+        GROUP BY
+        YEAR(orderDate),
+        MONTH(orderDate)
+    </select>
+
+    <select id="getSaleOrderDetailStatisticsList" resultType="com.kgc.entity.OrderStatistics">
+        SELECT
+            YEAR(xs.orderDate) AS orderYear,
+            MONTH(xs.orderDate) AS orderMonth,
+            b.name,
+            c.`name` as categoryName,
+            u.`name` as unitName,
+            b.specification,
+            SUM(o.quantity) AS totalQuantity,
+            SUM(o.totalPrice) AS totalAmount
+        FROM
+            xs_order xs
+                JOIN
+            order_medicine o ON o.code = xs.orderNo
+                JOIN
+            base_medicine b ON b.id = o.medicineId
+                JOIN
+            base_unit u ON b.unitId = u.id
+                JOIN
+            base_medicine_category c ON b.categoryId = c.id
+        WHERE
+            xs.type = 0
+          AND xs.isDelete = 0 and o.isDel=0 and b.isDel=0 and c.isDel=0 and u.isDel=0
+        <if test="orderYear!=null and orderYear!=''">AND YEAR(xs.orderDate) = #{orderYear}</if>
+        <if test="orderMonth!=null and orderMonth!=''">AND MONTH(xs.orderDate) = #{orderMonth}</if>
+        GROUP BY
+            b.name,c.`name`,u.`name`,b.specification,YEAR(xs.orderDate), MONTH(xs.orderDate)
+    </select>
+
+    <select id="getRefundOrderDetailStatisticsList" resultType="com.kgc.entity.OrderStatistics">
+        SELECT
+            YEAR(xs.orderDate) AS orderYear,
+            MONTH(xs.orderDate) AS orderMonth,
+            b.name,
+            c.`name` as categoryName,
+            u.`name` as unitName,
+            b.specification,
+            SUM(o.quantity) AS totalQuantity,
+            SUM(o.totalPrice) AS totalAmount
+        FROM
+            xs_order xs
+                JOIN
+            order_medicine o ON o.code = xs.orderNo
+                JOIN
+            base_medicine b ON b.id = o.medicineId
+                JOIN
+            base_unit u ON b.unitId = u.id
+                JOIN
+            base_medicine_category c ON b.categoryId = c.id
+        WHERE
+            xs.type = 1
+          AND xs.isDelete = 0 and o.isDel=0 and b.isDel=0 and c.isDel=0 and u.isDel=0
+        <if test="orderYear!=null and orderYear!=''">AND YEAR(xs.orderDate) = #{orderYear}</if>
+        <if test="orderMonth!=null and orderMonth!=''">AND MONTH(xs.orderDate) = #{orderMonth}</if>
+        GROUP BY
+            b.name,c.`name`,u.`name`,b.specification,YEAR(xs.orderDate), MONTH(xs.orderDate)
+    </select>
+
+    <select id="getSaleOrderStatisticsVoList" resultType="com.kgc.vo.OrderStatisticsVo">
+        SELECT
+            YEAR(xs.orderDate) AS orderYear,
+            MONTH(xs.orderDate) AS orderMonth,
+            b.name,
+            c.`name` as categoryName,
+            u.`name` as unitName,
+            b.specification,
+            SUM(o.quantity) AS totalQuantity,
+            SUM(o.totalPrice) AS totalAmount
+        FROM
+            xs_order xs
+                JOIN
+            order_medicine o ON o.code = xs.orderNo
+                JOIN
+            base_medicine b ON b.id = o.medicineId
+                JOIN
+            base_unit u ON b.unitId = u.id
+                JOIN
+            base_medicine_category c ON b.categoryId = c.id
+        WHERE
+            xs.type = 0
+          AND xs.isDelete = 0 and o.isDel=0 and b.isDel=0 and c.isDel=0 and u.isDel=0
+        <if test="orderYear!=null and orderYear!=''">AND YEAR(xs.orderDate) = #{orderYear}</if>
+        <if test="orderMonth!=null and orderMonth!=''">AND MONTH(xs.orderDate) = #{orderMonth}</if>
+        GROUP BY
+            b.name,c.`name`,u.`name`,b.specification,YEAR(xs.orderDate), MONTH(xs.orderDate)
+    </select>
+
+
+    <select id="getRefundOrderStatisticsVoList" resultType="com.kgc.vo.OrderStatisticsVo">
+        SELECT
+            YEAR(xs.orderDate) AS orderYear,
+            MONTH(xs.orderDate) AS orderMonth,
+            b.name,
+            c.`name` as categoryName,
+            u.`name` as unitName,
+            b.specification,
+            SUM(o.quantity) AS totalQuantity,
+            SUM(o.totalPrice) AS totalAmount
+        FROM
+            xs_order xs
+                JOIN
+            order_medicine o ON o.code = xs.orderNo
+                JOIN
+            base_medicine b ON b.id = o.medicineId
+                JOIN
+            base_unit u ON b.unitId = u.id
+                JOIN
+            base_medicine_category c ON b.categoryId = c.id
+        WHERE
+            xs.type = 1
+          AND xs.isDelete = 0 and o.isDel=0 and b.isDel=0 and c.isDel=0 and u.isDel=0
+        <if test="orderYear!=null and orderYear!=''">AND YEAR(xs.orderDate) = #{orderYear}</if>
+        <if test="orderMonth!=null and orderMonth!=''">AND MONTH(xs.orderDate) = #{orderMonth}</if>
+        GROUP BY
+            b.name,c.`name`,u.`name`,b.specification,YEAR(xs.orderDate), MONTH(xs.orderDate)
+    </select>
+</mapper>

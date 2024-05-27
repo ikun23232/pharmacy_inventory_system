@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.BaseMedicineMapper">
 
-    <select id="getBaseMedicineListByPage" resultType="BaseMedicine">
+    <select id="getBaseMedicineListByPage" resultType="com.kgc.entity.BaseMedicine">
         select b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
             un.name as unitName,mc.name as categoryName,
             c.userName as createByName,u.userName as updateByName
@@ -18,7 +18,7 @@
         <if test="unitId!=null and unitId>0">and unitId=#{unitId}</if>
     </select>
 
-    <select id="getMedicineListByCode" resultType="BaseMedicine">
+    <select id="getMedicineListByCode" resultType="com.kgc.entity.BaseMedicine">
         SELECT b.*,o.quantity,o.totalPrice,o.code,o.providerId,bpt.type AS providerName,
                b.createBy,b.createTime,b.updateBy,b.updateTime,
                un.name as unitName,mc.name as categoryName,
@@ -35,7 +35,7 @@
           AND o.code=#{code}
     </select>
 
-    <select id="getBaseMedicineListByProviderId" resultType="BaseMedicine">
+    <select id="getBaseMedicineListByProviderId" resultType="com.kgc.entity.BaseMedicine">
         select DISTINCT b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
                         un.name as unitName,mc.name as categoryName,
                         c.userName as createByName,u.userName as updateByName,
@@ -49,7 +49,7 @@
           AND p.providerId=#{providerId}
     </select>
 
-    <select id="getBaseMedicineById" resultType="BaseMedicine">
+    <select id="getBaseMedicineById" resultType="com.kgc.entity.BaseMedicine">
         select DISTINCT b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
                c.userName as createByName,u.userName as updateByName,
                un.name as unitName,mc.name as categoryName,k.quantity as stock
@@ -62,11 +62,11 @@
           and b.id=#{id} and k.batchCode=#{batchCode}
     </select>
 
-    <select id="getAllBaseMedicine" resultType="BaseMedicine">
-        select DISTINCT base_medicine.* FROM base_medicine,kc_medicine where kc_medicine.medicineId=base_medicine.id
+    <select id="getAllBaseMedicine" resultType="com.kgc.entity.BaseMedicine">
+        select DISTINCT base_medicine.* FROM base_medicine,kc_medicine where kc_medicine.medicineId=base_medicine.id and storehouseId=1
     </select>
 
-    <select id="getAllBatchCodeByMedicineId" resultType="KcMedicine">
+    <select id="getAllBatchCodeByMedicineId" resultType="com.kgc.entity.BaseMedicine">
         select kc_medicine.* FROM kc_medicine where medicineId=#{medicineId}
     </select>
 

@@ -31,6 +31,22 @@
                <el-form-item label="制单人" prop="createByName">
                  <el-input type="text" disabled v-model="saleOrder.createByName"></el-input>
                </el-form-item></div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple">
+        <el-form-item label="退款原因" prop="refundTypeId">
+            <el-select
+                v-model="saleOrder.refundTypeId"
+                placeholder="请选择"
+                clearable
+                filterable
+                >
+                <el-option v-for="item in refundTypeList"
+                    :key="item.index"
+                    :label="item.type"
+                    :value="item.id">
+                </el-option>
+                </el-select>
+        </el-form-item></div></el-col>   
+
            <el-col :span="8"
              ><div class="grid-content bg-purple">
                <el-form-item label="银行账户" prop="bankAccountId">
@@ -134,14 +150,44 @@
           </el-table>
            </el-col>
            </el-row>
-           <div style="text-align: left;">
-             <span style=" margin-bottom:25px;">合计: {{saleOrder.totalPrice}} 元</span> 
-           </div>   
+           <el-row type="flex" justify="start" style="margin-top: 10px;">
+          <el-col :span="2"><span>合计: {{saleOrder.totalPrice}} 元</span></el-col>
+          </el-row>
           <el-divider></el-divider>
-         <div style="text-align: left;">
-          <span>备注: </span><el-input size="small" v-model="saleOrder.remark" placeholder="请输入备注" style="width: 860px;"></el-input>
-        </div>
-   
+          <el-row>
+            <el-col :span="24"><div>
+              <el-form-item label-width="80px" size="small">
+                <label slot="label" v-html="'备&#8195;&#8195;注:'"></label>
+                <el-input
+                type="textarea"
+                autosize
+                placeholder="请输入内容"
+                v-model="saleOrder.remark">
+              </el-input>
+              </el-form-item>
+            </div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12"><div>
+              <el-form-item label="核批意见:" label-width="80px" size="small">
+                <el-input
+                type="textarea"
+                autosize
+                placeholder="请输入内容"
+                v-model="saleOrder.opinion">
+              </el-input>
+              </el-form-item>
+            </div></el-col>
+            <el-col :span="12"><div>
+              <el-form-item label="核批结果:" label-width="80px" size="small" prop="isCheck">
+                <el-select v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
+                  <el-option label="同意" :value=1></el-option>
+                  <el-option label="拒绝" :value=2></el-option>
+                </el-select>
+              </el-form-item>
+            </div></el-col>
+          </el-row>
+          <el-divider></el-divider>
        <el-row type="flex" justify="end" style="margin-top: 20px;">
          <el-col :span="2" >
            <el-button type="primary" size="mini" @click="saveForm('saleOrderForm')">保存</el-button>
@@ -164,6 +210,7 @@
    import {getAllBankCountList} from "../../api/BankAccount.js";
    import { getCurrentTime } from "../../api/util.js";
    import {getAllBaseMedicine,getBaseMedicineById,getAllBatchCodeByMedicineId} from "../../api/baseMedicine.js";
+   import {getAllRefundTypeList} from "../../api/refundOrder.js";
    
    export default {
      name: "UpdateSaleOrder",
@@ -184,7 +231,8 @@
            checkedDetail: [],
            totalPrice:"",
            totalNumber:""
-         },   
+         },  
+         refundTypeList:[], 
          rules:{
            orderNo:[
                { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -206,17 +254,23 @@
        this.getAllBankCountList();
        this.getAllBaseMedicine();
        this.getSaleOrderByOrderNo();
+       this.getAllBankCountList();
+       this.getAllRefundTypeList();
      },
      methods: {
+      async getAllBankCountList() {
+         let data = await getAllBankCountList();
+         this.bankAccountList=data.data;
+       },
+       async getAllRefundTypeList() {
+         let data = await getAllRefundTypeList();
+         this.refundTypeList=data.data;
+       },
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
           this.saleOrder=data.data;
           this.medicineDetailList = this.saleOrder.baseMedicineList;
         },
-       async getAllBankCountList() {
-         let data = await getAllBankCountList();
-         this.bankAccountList=data.data;
-       },
        async getAllBaseMedicine() {
          let data = await getAllBaseMedicine();
          this.baseMedicineList=data.data;

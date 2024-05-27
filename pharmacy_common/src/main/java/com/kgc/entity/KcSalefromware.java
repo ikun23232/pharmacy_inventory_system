@@ -37,10 +37,10 @@ public class KcSalefromware implements Serializable {
     private String code;
 
     /**
-     * 销售订单id
+     * 销售订单编号
      */
-    @TableField("orderId")
-    private Integer orderId;
+    @TableField("orderNo")
+    private String orderNo;
 
     @TableLogic
     private Integer isDel;

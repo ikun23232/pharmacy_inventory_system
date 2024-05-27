@@ -2,6 +2,7 @@ package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.XsOrder;
+import com.kgc.vo.RefundOrderVo;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface RefundOrderMapper extends BaseMapper<XsOrder> {
      * @return
      */
     public List<XsOrder> getRefundOrderListByPage(XsOrder xsOrder);
+
+    public List<RefundOrderVo> getRefundOrderList(XsOrder xsOrder);
 }

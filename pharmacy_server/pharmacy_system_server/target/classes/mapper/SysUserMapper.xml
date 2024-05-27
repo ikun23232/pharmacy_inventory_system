@@ -8,67 +8,33 @@
         <result column="userName" property="username" />
         <result column="password" property="password" />
         <result column="age" property="age" />
-        <result column="sex" property="sex" />
+        <result column="six" property="six" />
         <result column="createDate" property="createdate" />
         <result column="createBy" property="createby" />
         <result column="updateDate" property="updatedate" />
         <result column="updateBy" property="updateby" />
         <result column="isDel" property="isdel" />
-        <result column="isState" property="isstate" />
+        <result column="isAdmin" property="isadmin" />
         <result column="nickName" property="nickname" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         <if test="true">
-        userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isAdmin, nickName
+        userId, userName, password, age, six, createDate, createBy, updateDate, updateBy, isDel, isAdmin, nickName
         </if>
     </sql>
     <select id="existUser"  resultType="com.kgc.entity.SysUser">
-        select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
+        select userId, userName, password, age, six, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
         where
-            userName = #{username}
+            userName = #{userName}
           and isDel = 0
-    </select>
-
-    <select id="selectUser"  resultType="com.kgc.entity.SysUser">
-        select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
-        where isDel = 0
     </select>
     <select id="login"  resultType="com.kgc.entity.SysUser">
-        select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
+        select userId, userName, password, age, six, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
         where
-            userName = #{username}
+            userName = #{userName}
           and password = #{password}
           and isDel = 0
-    </select>
-    <select id="getUsersListByPage" resultType="com.kgc.entity.SysUser">
-        select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
-        <where>
-            isDel = 0
-            <if test="username != null and username != ''">
-                and userName like concat("%",#{username},"%")
-            </if>
-            <if test="sex ==0 and sex ==1">
-                and sex = #{sex}
-            </if>
-            <if test="isstate ==0 and isstate ==1">
-                and isState = #{isstate}
-            </if>
-        </where>
-    </select>
-
-
-
-    <select id="listByMenuId" resultType="com.kgc.entity.SysUser">
-
-        SELECT DISTINCT
-            su.*
-        FROM
-            sys_userrole ur
-                LEFT JOIN sys_rolemenu rm ON ur.roleId = rm.roleId
-                LEFT JOIN sys_user su ON ur.userId = su.userId
-        WHERE
-            rm.menuId = #{menuId}
     </select>
 </mapper>

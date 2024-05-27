@@ -90,9 +90,13 @@
         <el-input v-model="baseMedicine.name" autocomplete="off" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="医用商品类型" prop="categoryId" :label-width="formLabelWidth">
-            <el-select v-model="baseMedicine.categoryId" placeholder="请选择" style="width: 100%;" >
-                <!-- <el-option :label="item.name" :value="item.id" v-for="(item,index) in categoryList" :key="index"></el-option> -->
-            </el-select>
+          <el-cascader
+            v-model="value"
+            :options="options"
+            @change="handleChange"
+            style="width:380px"
+            >
+          </el-cascader>
         </el-form-item>
         <el-form-item label="医用商品规格" prop="specification" :label-width="formLabelWidth">
         <el-input v-model="baseMedicine.specification" autocomplete="off" placeholder="请输入"></el-input>

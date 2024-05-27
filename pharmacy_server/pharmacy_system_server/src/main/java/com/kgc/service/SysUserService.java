@@ -32,4 +32,6 @@ public interface SysUserService extends IService<SysUser> {
 
     void clearUserAuthorityInfoByMenuId(Integer menuId);
 
+    public Message getAllUser();
+
 }

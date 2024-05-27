@@ -25,6 +25,13 @@ import axios from "@/utils/request";
 import store from "@/store/index"
 import Home from '../views/operate/Home.vue'
 import Index from '../views/operate/Index.vue'
+import RefundInWarehouse from "../views/kc/TKRK/RefundInWarehouse.vue";
+import SaleOrderStatistics from "../views/saleStatistics/SaleOrderStatistics.vue";
+import RefundOrderStatistics from "../views/saleStatistics/RefundOrderStatistics.vue";
+import SaleStatistics from "../views/saleStatistics/SaleStatistics.vue";
+import SaleOrderDetailStatistics from "../views/saleStatistics/SaleOrderDetailStatistics.vue";
+import RefundOrderDetailStatistics from "../views/saleStatistics/RefundOrderDetailStatistics.vue";
+import IndexHome from "../views/index/IndexHome.vue";
 
 Vue.use(VueRouter)
 
@@ -53,6 +60,11 @@ const routes = [
   },
   {
     //仓库管理
+    path: '/indexHome',
+    name: 'indexHome',
+    component: IndexHome
+  },
+  {
     path: '/storeHouse',
     name: 'storeHouse',
     component: storeHouse
@@ -255,6 +267,50 @@ const routes = [
     path: '/printCGRKOrder',
     name: 'PrintCGRKOrder',
     component: PrintCGRKOrder
+
+    },
+    {
+        path:'/ddckManager',
+        name: 'DDCKManager',
+        component: () => import('@/views/kc/DDCK/DDCKManager')
+    },{
+        path:'/printDDCKOrder',
+        name: 'PrintDDCKOrder',
+        component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
+    },{
+        path:'/crkmxManager',
+        name: 'CRKMXManager',
+        component: () => import('@/views/kc/CRKMX/CRKMXManager')
+    },
+  {
+    path: '/refundInWarehouse',
+    name: 'refundInWarehouse',
+    component: RefundInWarehouse
+  },
+  {
+    path: '/saleOrderStatistics',
+    name: 'saleOrderStatistics',
+    component: SaleOrderStatistics
+  },
+  {
+    path: '/saleOrderDetailStatistics',
+    name: 'saleOrderDetailStatistics',
+    component: SaleOrderDetailStatistics
+  },
+  {
+    path: '/refundOrderStatistics',
+    name: 'refundOrderStatistics',
+    component: RefundOrderStatistics
+  },
+  {
+    path: '/refundOrderDetailStatistics',
+    name: 'refundOrderDetailStatistics',
+    component: RefundOrderDetailStatistics
+  },
+  {
+    path: '/saleStatistics',
+    name: 'saleStatistics',
+    component: SaleStatistics
   },
   {
     //调度入库订单

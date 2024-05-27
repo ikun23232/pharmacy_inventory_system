@@ -39,6 +39,7 @@
                    placeholder="请选择"
                    clearable
                    filterable
+                   disabled
                  >
                  <el-option v-for="item in bankAccountList"
                      :key="item.index"
@@ -59,65 +60,57 @@
             @selection-change="handleSelectionChange"
             ref="tb"
             border
-            style="width:900px"
+            style="width:960px"
           >
-            <el-table-column type="selection" width="50" align="center" />
             <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
-             <!-- <template slot-scope="scope">
-                <el-select clearable filterable @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
-                  <el-option
-                    v-for="dict in baseMedicineList"
-                    :key="dict.id"
-                    :label="dict.name"
-                    :value="dict.id"/>
-                </el-select>
-              </template> -->
+              <template slot-scope="scope">
+               <el-input v-model="medicineDetailList[scope.row.xh-1].name" readonly="true"></el-input>
+              </template>
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
-             <!-- <template slot-scope="scope">
-                <el-select clearable filterable @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
-                  <el-option
-                    v-for="dict in scope.row.batchCodeList"
-                    :key="dict.batchcode"
-                    :label="dict.batchcode"
-                    :value="dict.batchcode"/>
-                </el-select>
-              </template> -->
+              <template slot-scope="scope">
+               <el-input v-model="medicineDetailList[scope.row.xh-1].batchCode" readonly="true"></el-input>
+              </template>
             </el-table-column>
             <el-table-column label="规格型号" align="center" prop="specification" width="120">
               <template slot-scope="scope">
-               <el-input  v-model="medicineDetailList[scope.row.xh-1].specification"></el-input>
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].specification" readonly="true"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="药品类型" align="center" prop="categoryId" width="120">
              <template slot-scope="scope">
-               <el-input v-model="medicineDetailList[scope.row.xh-1].categoryName"></el-input>
+               <el-input v-model="medicineDetailList[scope.row.xh-1].categoryName" readonly="true"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="计量单位" align="center" prop="unitId" width="120">
              <template slot-scope="scope">
-               <el-input  v-model="medicineDetailList[scope.row.xh-1].unitName"></el-input>
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].unitName" readonly="true"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="数量" align="center" prop="quantity" width="160">
               <template slot-scope="scope">
-                  <el-input-number size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
+                  <el-input-number size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity" disabled></el-input-number>
               </template>
             </el-table-column>
             <el-table-column label="单价" align="center" prop="salePrice" width="120">
               <template slot-scope="scope">
-               <el-input  v-model="medicineDetailList[scope.row.xh-1].salePrice"></el-input>
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].salePrice" readonly="true"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="总价" align="center" prop="totalPrice" width="120">
               <template slot-scope="scope">
-               <el-input  v-model="medicineDetailList[scope.row.xh-1].totalPrice"></el-input>
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].totalPrice" readonly="true"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="当前库存" align="center" prop="stock" width="120">
               <template slot-scope="scope">
-               <el-input  v-model="medicineDetailList[scope.row.xh-1].stock"></el-input>
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].stock" readonly="true"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="库存预警值" align="center" prop="warning" width="120">
+              <template slot-scope="scope">
+                <el-input  v-model="medicineDetailList[scope.row.xh-1].warning" disabled></el-input>
               </template>
             </el-table-column>
           </el-table>
@@ -146,6 +139,7 @@
    
    <script>
    import {getSaleOrderByOrderNo} from "../../api/saleOrder.js";
+   import {getAllBankCountList} from "../../api/BankAccount.js";
 
    export default {
      name: "SaleOrderDetail",
@@ -154,17 +148,9 @@
      },
      data() {
        return {
+        bankAccountList:[],
          medicineDetailList:[],
-         saleOrder:{
-           orderNo:"",
-           orderDate:new Date(),
-           createByName:"",
-           bankAccountId:"",
-           remark:'',
-           checkedDetail: [],
-           totalPrice:"",
-           totalNumber:""
-         },   
+         saleOrder:"",   
          rules:{
            orderNo:[
                { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -183,12 +169,16 @@
      },
      async mounted() {
        this.getSaleOrderByOrderNo();
+       this.getAllBankCountList();
      },
      methods: {
+        async getAllBankCountList() {
+          let data = await getAllBankCountList();
+          this.bankAccountList=data.data;
+        },
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
           this.saleOrder=data.data;
-          console.log("saleOrder",this.saleOrder)
           this.medicineDetailList = this.saleOrder.baseMedicineList;
         },
         rowClassName({ row, rowIndex }) {
