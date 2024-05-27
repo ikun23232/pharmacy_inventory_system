@@ -96,6 +96,7 @@
          :data="bcglXiangXiList"
          :row-class-name="rowClassName"
          @selection-change="chandleDetailSelectionChange"
+
          ref="tb">
          <el-table-column type="selection" width="30" align="center"/>
          <el-table-column label="序号" align="center" prop="xh" width="50"></el-table-column>
@@ -169,7 +170,7 @@
          <el-table-column label="数量" align="center" prop="totalPrice" width="150">
            <template slot-scope="scope">
 
-               <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+               <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right" @change="handleChange" :min="1" :max="100"></el-input-number>
            </template>
 
          </el-table-column>
@@ -658,7 +659,7 @@ export default {
       if (this.bcglXiangXiList==undefined){
         return 0
       }
-      return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice*item.quantity, 0);
+      return this.bcglXiangXiList.reduce((total, item) => total + item.price*item.quantity, 0);
     },
     calculatedTotalPrice() {
       return row => {

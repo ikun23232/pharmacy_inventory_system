@@ -17,7 +17,7 @@
         <el-col :span="8"
         ><div class="grid-content bg-purple">
 
-           <el-form-item label="单据日期" >
+           <el-form-item label="单据日期">
               <el-input type="text" v-model="CgsqOrder.createtime" disabled></el-input>
             </el-form-item></div>
 
@@ -40,7 +40,7 @@
                   filterable
               >
             <el-option label="请选择" value="0"></el-option>
-          <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
+          <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id" :key="item.id"></el-option>
 
               </el-select>
             </el-form-item>
@@ -94,6 +94,7 @@
               :row-class-name="rowClassName"
               @selection-change="chandleDetailSelectionChange"
               ref="tb"
+
           >
          <el-table-column type="selection" width="30" align="center"/>
          <el-table-column label="序号" align="center" prop="xh" width="50"></el-table-column>
@@ -103,7 +104,7 @@
              <el-select
                  clearable
                  filterable
-                 @change="changeProvider(scope.row)"
+                 @change="handleSelectChange(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].providerId"
              >
                <el-option
@@ -136,7 +137,6 @@
            <template slot-scope="scope">
              <el-select
                  clearable
-                 @change="changezdts(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].specification"
                  disabled
              >
@@ -151,23 +151,18 @@
            <template slot-scope="scope">
              <el-select
                  clearable
-                 @change="changezdts(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].unitName"
                  disabled
              >
-               <el-option
-                   v-for="dict in zdtsOptions"
-                   :key="dict.dictValue"
-                   :label="dict.dictLabel"
-                   :value="dict.dictValue"
-               />
+
              </el-select>
            </template>
          </el-table-column>
          <el-table-column label="数量" align="center" prop="totalPrice" width="150">
            <template slot-scope="scope">
 
-               <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+               <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right"
+                                @change="handleChange" :min="1" :max="100"></el-input-number>
            </template>
 
          </el-table-column>
@@ -175,16 +170,10 @@
            <template slot-scope="scope">
              <el-select
                  clearable
-                 @change="changezdts(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].price"
                  disabled
              >
-               <el-option
-                   v-for="dict in zdtsOptions"
-                   :key="dict.dictValue"
-                   :label="dict.dictLabel"
-                   :value="dict.dictValue"
-               />
+
              </el-select>
            </template>
          </el-table-column>
@@ -202,14 +191,15 @@
 
        <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
        <div style="text-align: left;">
-       <div style=" margin-bottom:25px;">合计{{totalPrice}}元</div>
+       <div style=" margin-bottom:25px;">合计{{ totalPrice }}元</div>
 
-     <span>备注:</span><el-input class="" v-model="CgsqOrder.remark"  placeholder="请输入备注" style="width: 1000px;"></el-input>
+     <span>备注:</span><el-input class="" v-model="CgsqOrder.remark" placeholder="请输入备注"
+                               style="width: 1000px;"></el-input>
     </div>
 
 
         </el-tab-pane>
-        <el-tab-pane label="采购申请单" >
+        <el-tab-pane label="采购申请单">
           <el-button
               icon="el-icon-plus"
               @click="cgsqdialog = true"
@@ -232,7 +222,8 @@
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择" disabled>
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select v-model="CgsqOrder.approvement"
+                                                                          placeholder="请选择" disabled>
 
     <el-option
         label="未通过"
@@ -331,9 +322,10 @@
 // import { addStoreHouse, checkName } from "@/api/storeHouse.js";
 import {getPayType} from "@/api/public"
 import {getBaseMedicineListByProviderId} from "@/api/baseMedicine"
-import {init}from "../api/BaseProvider.js"
-import { Message } from "element-ui";
-import { updateCgsqOrder,getCgsqOrderById} from "@/api/CgsdOrder";
+import {init} from "../api/BaseProvider.js"
+import {Message} from "element-ui";
+import {updateCgsqOrder, getCgsqOrderById} from "@/api/CgsdOrder";
+
 export default {
   name: "addProcOrder",
   props: {
@@ -359,8 +351,8 @@ export default {
         subject: "",
         createTime: '',
         remark: "",
-        approvement:'',
-        medicineList:[]
+        approvement: '',
+        medicineList: []
       },
       vo: {
         currentPageNo: 1,
@@ -377,19 +369,19 @@ export default {
       adddialogVisible: false,
       cgsqdialog: false,
       cgsqList: [],
-      providerList:[],
-      cgTypeList:[],
+      providerList: [],
+      cgTypeList: [],
       rules: {
         subject: [
-          { required: true, message: "请输入主题名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+          {required: true, message: "请输入主题名称", trigger: "blur"},
+          {min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur"},
         ],
         type: [
-          { required: true, message: "请选择采购类型", trigger: "blur" },
+          {required: true, message: "请选择采购类型", trigger: "blur"},
         ],
 
         capacity: [
-          { required: true, message: "仓库面积不能为空" },
+          {required: true, message: "仓库面积不能为空"},
           {
             type: "number",
             min: 1,
@@ -398,52 +390,55 @@ export default {
           },
         ],
       },
+      loading:true
     };
   },
   async mounted() {
-
-    this.initCgSqOrder(this.id)
+    await this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
+    this.loading=false;
   },
   methods: {
-    async initCgSqOrder(id){
-       let resp = await getCgsqOrderById(id);
-      this.CgsqOrder=resp.data
+    async initCgSqOrder(id) {
+      let resp = await getCgsqOrderById(id);
+      this.CgsqOrder = resp.data
+      console.log("hhhh", this.CgsqOrder)
       for (const medicineListElement of resp.data.medicineList) {
-        medicineListElement.medicineId=medicineListElement.id;
+        medicineListElement.medicineId = medicineListElement.id;
       }
       // console.log(resp.data[0].medicineList)
-      this.bcglXiangXiList=resp.data.medicineList
-      this.checkFalg=false
+      this.bcglXiangXiList = resp.data.medicineList
+      this.checkFalg = false
       for (const Obj of this.bcglXiangXiList) {
-       await this.changeProvider(Obj)
-         this.changeMedicine(Obj)
+        await this.changeProvider(Obj)
+        this.changeMedicine(Obj)
         console.log("-------")
         console.log(Obj)
       }
+      this.checkFalg = true;
     },
-    async initCgType(){
+    async initCgType() {
       let resp = await getPayType();
-      this.cgTypeList=resp.data
+      this.cgTypeList = resp.data
     },
     handleCurrentChange(val) {
       this.page.pageNum = val;
       this.getList(this.page);
     },
-    submitForm(formName,type) {
+    submitForm(formName, type) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.bcglXiangXiList.length==0){
+          if (this.bcglXiangXiList.length == 0) {
             Message({
               message: "请输入对应采购商品",
               type: "error",
               center: "true",
             });
             return
-          }else {
+          } else {
             for (const obj of this.bcglXiangXiList) {
-              if (obj.providerId==''||obj.providerId==undefined||obj.medicineId==''||obj.medicineId==undefined){
+              if (obj.providerId == '' || obj.providerId == undefined || obj.medicineId == '' || obj.medicineId == undefined) {
                 Message({
                   message: "您商品明细没输入全哦",
                   type: "error",
@@ -454,11 +449,11 @@ export default {
             }
           }
 
-          if (type==1){
-            this.CgsqOrder.orderstatus=2
+          if (type == 1) {
+            this.CgsqOrder.orderstatus = 2
 
           }
-          this.CgsqOrder.medicineList=this.bcglXiangXiList
+          this.CgsqOrder.medicineList = this.bcglXiangXiList
           updateCgsqOrder(this.CgsqOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
@@ -468,7 +463,7 @@ export default {
                 center: "true",
               });
               this.$emit("closeUpdateDiago");
-            }else {
+            } else {
               Message({
                 message: "修改失败!",
                 type: "error",
@@ -494,25 +489,33 @@ export default {
     handleCgsqSelectionChange(val) {
       this.cgsqList = val;
     },
-    getMedicineList() {},
-    rowClassName({ row, rowIndex }) {
+    getMedicineList() {
+    },
+    rowClassName({row, rowIndex}) {
       row.xh = rowIndex + 1;
     },
+    checkj(){
+      // alert(1)
+      this.$forceUpdate()
+    },
     chandleDetailSelectionChange(selection) {
+      // alert(1)
       if (selection.length > 1) {
         this.$refs.tb.clearSelection();
         this.$refs.tb.toggleRowSelection(selection.pop());
       } else {
         this.checkedDetail = selection;
       }
+
+
     },
     async handleAddDetails() {
       if (this.bcglXiangXiList == undefined) {
         this.bcglXiangXiList = new Array();
       }
-      if (this.bcglXiangXiList.length>0){
+      if (this.bcglXiangXiList.length > 0) {
         for (const objElement of this.bcglXiangXiList) {
-          if (objElement.medicineId==''){
+          if (objElement.medicineId == '') {
             Message({
               message: "请先填写完别的商品明细先!",
               type: "error",
@@ -523,15 +526,15 @@ export default {
         }
       }
       let obj = {
-        providerList:[],
-        medicineList:[],
-        providerId:'',
-        medicineId:'',
-        unitName:'',
-        specification:'',
-        price:'',
-        totalPrice:'',
-        quantity:'',
+        providerList: [],
+        medicineList: [],
+        providerId: '',
+        medicineId: '',
+        unitName: '',
+        specification: '',
+        price: '',
+        totalPrice: '',
+        quantity: '',
       };
       console.log(this.providerList)
       obj.providerList = this.providerList;
@@ -540,9 +543,9 @@ export default {
       obj.jxsjfw = ["06:00", "12:00"];
       this.bcglXiangXiList.push(obj);
     },
-    async initProvider(){
-      let resp=await init('',0,1,5);
-      this.providerList=resp.data.list
+    async initProvider() {
+      let resp = await init('', 0, 1, 5);
+      this.providerList = resp.data.list
     },
     handleDeleteDetails() {
       if (this.checkedDetail.length == 0) {
@@ -557,85 +560,127 @@ export default {
     handleDeleteAllDetails() {
       this.bcglXiangXiList = undefined;
     },
-    async changeProvider(obj){
-      if (obj.providerId==''){
 
-        obj.medicineId=''
-        obj.specification=''
-        obj.price=''
-        obj.totalPrice=''
-        obj.unitName=''
+    async changeProvider(obj) {
+      // alert(obj.providerId)
+
+      obj.medicineList = []
+      if (obj.providerId != '') {
+
+        let resp = await getBaseMedicineListByProviderId(obj.providerId)
+        // obj.medicineList = resp.data.data
+
+        this.$set(obj,'medicineList',resp.data.data)
+        console.log("看看我",obj.medicineList)
+        console.log("我是失败",this.bcglXiangXiList)
       }
-      obj.medicineList=[]
-      if (obj.providerId!=''){
-        let resp=await getBaseMedicineListByProviderId(obj.providerId)
-        obj.medicineList=resp.data.data
+      if (obj.providerId == '') {
+        obj.medicineId = ''
+        obj.specification = ''
+        obj.price = ''
+        obj.totalPrice = ''
+        obj.unitName = ''
       }
-
-      // console.log(resp)
-
+      // this.$forceUpdate();
     },
-    async changeMedicine(obj){
-
- if (this.checkFalg) {
-   for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
-     if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-       // alert(i)
-       // alert(this.bcglXiangXiList[i].providerId)
-       // alert(obj.providerId)
-       if (this.bcglXiangXiList[i].providerId != obj.providerId) {
-         break;
-       }
-
-       Message({
-         message: "您重复添加了商品!",
-         type: "error",
-         center: "true",
-       });
-       obj.medicineId = ''
-       this.index=2;
-       return
-     }
-   }
- }
-      this.checkFalg=true
+    fetchData(row) {
+      // 模拟从API获取数据
+      // 这里可以替换为实际的API调用逻辑
+      setTimeout(() => {
+        this.tableData = [
+          this.changeProvider(row)
+        ];
+      }, 500);
+    },
+    handleSelectChange(row) {
+      // 这里可以添加逻辑，根据row.selectedValue来更新表格数据
+      // 例如，可以调用一个方法来重新获取或更新tableData
+      this.fetchData(row);
+    },
+    async changeMedicine(obj) {
+      console.log("bcgl", this.bcglXiangXiList);
+      console.log("obj", obj);
+      if (this.checkFalg) {
+        let isDuplicate = false;
+        for (let i = 0; i < this.bcglXiangXiList.length; i++) {
+       if (this.bcglXiangXiList[i].xh === obj.xh){
+      continue;
+      }
+          if (this.bcglXiangXiList[i].medicineId === obj.medicineId &&
+              this.bcglXiangXiList[i].providerId === obj.providerId
+              ) {
+            // 如果找到重复项
+            isDuplicate = true;
+            break;
+          }
+        }
+        if (isDuplicate) {
+          Message({
+            message: "您重复添加了商品!",
+            type: "error",
+            center: true,
+          });
+          obj.medicineId = ''; // 清空输入
+        }
+      }
 
       for (const objElement of obj.medicineList) {
-        if (obj.medicineId==objElement.id){
-          obj.unitName=objElement.unitName
-          obj.specification=objElement.specification
-          obj.price=objElement.purchasePrice
-          obj.id=obj.medicineId
-          obj.purchasePrice=objElement.purchasePrice
+        if (obj.medicineId == objElement.id) {
+          obj.unitName = objElement.unitName
+          obj.specification = objElement.specification
+          obj.price = objElement.purchasePrice
+          obj.id = obj.medicineId
+          obj.purchasePrice = objElement.purchasePrice
         }
       }
 
     },
-    cacltotalPrice(row){
+    cacltotalPrice(row) {
       alert(row)
     },
-    closeDiago(){
-      this.formDisabled=false;
+    closeDiago() {
+      this.formDisabled = false;
       this.$emit("closeUpdateDiago");
     }
 
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList==undefined){
-        return 0
+      // 检查bcglXiangXiList是否存在且不为空
+      if (!this.bcglXiangXiList || this.bcglXiangXiList.length === 0) {
+        return 0;
       }
-      return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice*item.quantity, 0);
+
+      // 使用reduce方法计算总价，并确保price和quantity都是数字
+      return this.bcglXiangXiList.reduce((total, item) => {
+        // 确保price和quantity都是数字
+        const price = Number(item.price);
+        const quantity = Number(item.quantity);
+
+        // 如果price或quantity不是数字，返回0
+        if (isNaN(price) || isNaN(quantity)) {
+          console.error("价格或数量不是数字，无法计算总价。");
+          return this.CgsqOrder.referenceamount;
+        }
+
+        return total + price * quantity;
+      }, 0);
     },
     calculatedTotalPrice() {
       return row => {
-        row.totalPrice=row.quantity * row.price;
+        row.totalPrice = row.quantity * row.price;
         return row.quantity * row.price;
       };
     }
+  },
+  watch: {
+    bcglXiangXiList: {
+      handler(val, oldval) {
+        this.bcglXiangXiList=val
+      },
+      deep: true
+    }
   }
-
 
 
 };

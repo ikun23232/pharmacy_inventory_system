@@ -7,5 +7,8 @@
                (SELECT userName FROM sys_user u WHERE b.updateBy = u.userId) AS 'updateUserName'
         from base_unit b
         WHERE b.isDel = 0
+<if test="name!=null and name!=''">
+    AND name like concat('%',#{name},'%')
+</if>
     </select>
 </mapper>

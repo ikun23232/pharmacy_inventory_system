@@ -48,8 +48,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         try {
             Date beginDate = inputSdf.parse(cgddOrder.getBeginTime());
             Date endDate = inputSdf.parse(cgddOrder.getEndTime());
-           cgddOrder.setBeginTime(outputSdf.format(beginDate));
-           cgddOrder.setEndTime(outputSdf.format(endDate));
+            cgddOrder.setBeginTime(outputSdf.format(beginDate));
+            cgddOrder.setEndTime(outputSdf.format(endDate));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -237,5 +237,40 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             return Message.success(pageInfo);
         }
         return Message.error("没有数据");
+    }
+
+    @Override
+    public BigDecimal getReferenceAmountByCode(String code) {
+        BigDecimal referenceAmountById = mapper.getReferenceAmountByCode(code);
+        return referenceAmountById;
+    }
+
+    @Override
+    public int updateCgddIsPayByCode(String code) {
+        int isPay= mapper.updateCgddIsPayByCode(code);
+        return isPay;
+    }
+
+    @Override
+    public Message addcgyf(CwCgyf cwCgyf) {
+        String originalOrder = "";
+//                cwCgyf.getOriginalOrder();
+        BigDecimal referenceAmountByCode = mapper.getReferenceAmountByCode(originalOrder);
+        if (referenceAmountByCode == null){
+            return Message.error("该订单编号没有订单");
+        }
+        cwCgyf.setCost(referenceAmountByCode);
+        String code = UUID.randomUUID().toString().replace("-", "");
+        cwCgyf.setCode(code);
+        int isAdd = mapper.addcgyf(cwCgyf);
+        int isPay=this.updateCgddIsPayByCode(originalOrder);
+        if (isPay <= 0){
+            return Message.error("付款失败");
+        }
+        if (isAdd > 0){
+            return Message.success();
+        }
+
+        return  Message.error("付款失败");
     }
 }

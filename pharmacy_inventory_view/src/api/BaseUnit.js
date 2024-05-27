@@ -3,13 +3,13 @@ import request from '../utils/request.js';
 const baseUrl = '/base';
 
 
-export function initUnit(currentPageNo, pageSize) {
+export function initUnit(currentPageNo, pageSize,name) {
     return request.get(baseUrl + "/getUnitListByPage", {
         params: {
             currentPageNo: currentPageNo,
-            pageSize: pageSize
+            pageSize: pageSize,
+            name:name
         }
-
     });
 }
 export function delUnit(id) {
@@ -30,7 +30,6 @@ export function addUnit(reOrder) {
     return request.post(baseUrl + "/addUnit", reOrder);
 }
 export function updateUnit(reOrder) {
-    alert(reOrder.id)
     return request.post(baseUrl + "/updateUnit", reOrder);
 }
 

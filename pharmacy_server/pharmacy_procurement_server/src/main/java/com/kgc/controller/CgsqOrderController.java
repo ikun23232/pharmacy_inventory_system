@@ -3,6 +3,7 @@ package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.kgc.entity.CgddOrder;
 import com.kgc.entity.CgsqOrder;
 import com.kgc.entity.Message;
 import com.kgc.service.CgsqOrderService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +82,15 @@ public class CgsqOrderController {
     public Message getCgsqOrderByCode(CgsqOrder cgsqOrder) {
         Message message = cgsqOrderService.getCgsqOrderByCode(cgsqOrder);
         return message;
+    }
+    @RequestMapping("getCgsqOrderListByExcel")
+    public Message getCgsqOrderListByExcel() {
+        Message cgsqOrderListByExcel = cgsqOrderService.getCgsqOrderListByExcel();
+        return cgsqOrderListByExcel;
+    }
+    @RequestMapping("/cgsqExcel")
+    public void cgddExcel(@RequestBody CgsqOrder cgsqOrder, HttpServletResponse response) {
+        cgsqOrderService.cgsqExcel(cgsqOrder,response);
     }
 }
 

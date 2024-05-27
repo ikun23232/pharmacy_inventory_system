@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Mapper
 public interface UnitMapper extends BaseMapper<BaseUnit> {
-   List<BaseUnit> getUnitListByPage();
+   List<BaseUnit> getUnitListByPage(String name);
 
 
 }

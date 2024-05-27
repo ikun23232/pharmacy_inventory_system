@@ -39,7 +39,7 @@ public class KcDistowareController {
         return message;
     }
     @RequestMapping("/ddrkExcel")
-    public Message ddrkExcel(@RequestBody KcDistoware kcDistoware, HttpServletResponse response) {
+    public Message ddckExcel(@RequestBody KcDistoware kcDistoware, HttpServletResponse response) {
         kcDistowareService.ddrkExcel(kcDistoware,response);
         return Message.success(null);
     }

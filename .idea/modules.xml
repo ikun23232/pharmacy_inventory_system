@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/pharmacy_inventory_system.iml" filepath="$PROJECT_DIR$/pharmacy_inventory_system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pharmacy_inventory_system.iml" filepath="$PROJECT_DIR$/.idea/pharmacy_inventory_system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pharmacy_nacos/pharmacy_nacos.iml" filepath="$PROJECT_DIR$/pharmacy_nacos/pharmacy_nacos.iml" />
     </modules>
   </component>
 </project>

@@ -9,6 +9,8 @@ import java.util.Map;
 public interface KcReportedService {
     //查询库存报损列表
     Message getKcReportedList(KcReported kcReported,int pageNum,int pageSize);
+    //根据id查询库存报损
+    Message getKcReportedListById(Integer id);
     //根据code查询code
     Message getCodeByCode(String code);
     //查询仓库列表
@@ -36,4 +38,11 @@ public interface KcReportedService {
     Message updateReportedAndDetail(Map map);
     //删除库存报损和详情
     Message delKcReportedAndDetailByCode(String code);
+    //添加库存报损来源
+    Message addKcReportedfromwareByReported(int reportedId);
+    //查询报损出库
+    Message getKcReportedfromware(KcReportedfromware kcReportedfromware,int pageNum,int pageSize);
+
+    List<KcReported> getAllKcReported();
+
 }

@@ -5,6 +5,7 @@ import com.kgc.entity.*;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -35,4 +36,10 @@ public interface ProcurementOrderService extends IService<CgddOrder> {
     Message getCgPayNum(String year);
 
     Message getCgPayNumList(String year,int pageNum,int pageSize);
+
+    BigDecimal getReferenceAmountByCode(String code);
+
+    int updateCgddIsPayByCode(String code);
+
+    Message addcgyf(CwCgyf cwCgyf);
 }
