@@ -38,8 +38,8 @@ public class SysUser implements Serializable {
     /**
      * 账户名
      */
-    @TableField("账户")
-    @ExcelFiled("商品主键")
+    @TableField("username")
+    @ExcelFiled("账户")
     private String username;
 
     /**

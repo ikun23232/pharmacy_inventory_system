@@ -188,7 +188,7 @@ export default {
       permForm: {},
       defaultProps: {
         children: "children",
-        label: "name",
+        label: "menuname",
       },
       permTreeData: [],
     };
@@ -246,7 +246,7 @@ export default {
           },
         })
         .then((res) => {
-          console.log(1000);
+          console.log("sdasdasdsadasdsadasdsadsadsadsadasd");
           console.log(res);
           this.tableData = res.data.list;
           this.size = res.data.pageSize;

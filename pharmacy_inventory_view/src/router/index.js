@@ -125,7 +125,6 @@ const menuToRoute = (menu) => {
 	if (!menu.component) {
 		return null
 	}
-
 	let route = {
 		name: menu.perms,
 		path: menu.path,

@@ -16,7 +16,7 @@
 				:tree-props="{children: 'children', hasChildren: 'hasChildren'}">
 
 			<el-table-column
-					prop="name"
+					prop="menuname"
 					label="名称"
 					sortable
 					width="180">
@@ -89,18 +89,18 @@
 					<el-select v-model="editForm.parentid" placeholder="请选择上级菜单">
 						<el-option :label="'一级目录'" :value="0"></el-option>
 						<template v-for="item in tableData">
-							<el-option :label="item.name" :value="item.id" :key="item.id"></el-option>
+							<el-option :label="item.menuname" :value="item.id" :key="item.id"></el-option>
 							<template v-for="child in item.children">
-								<el-option :label="child.name" :value="child.id" :key="child.id">
-									<span>{{ "- " + child.name }}</span>
+								<el-option :label="child.menuname" :value="child.id" :key="child.id">
+									<span>{{ "- " + child.menuname }}</span>
 								</el-option>
 							</template>
 						</template>
 					</el-select>
 				</el-form-item>
 
-				<el-form-item label="菜单名称" prop="name" label-width="100px">
-					<el-input v-model="editForm.name" autocomplete="off"></el-input>
+				<el-form-item label="菜单名称" prop="menuname" label-width="100px">
+					<el-input v-model="editForm.menuname" autocomplete="off"></el-input>
 				</el-form-item>
 
 				<el-form-item label="权限编码" prop="perms" label-width="100px">
@@ -155,7 +155,7 @@
 					parentid: [
 						{required: true, message: '请选择上级菜单', trigger: 'blur'}
 					],
-					name: [
+					menuname: [
 						{required: true, message: '请输入名称', trigger: 'blur'}
 					],
 					perms: [

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kgc.constant.ResponseCodeConstant;
 import com.kgc.constant.ResponseMessageConstant;
 import lombok.Data;
@@ -18,7 +17,6 @@ import java.util.Map;
  * @param <T>
  */
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultJsonUtil<T> implements Serializable {
 
     private int    code;

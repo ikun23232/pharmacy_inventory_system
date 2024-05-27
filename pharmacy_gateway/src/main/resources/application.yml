@@ -7,9 +7,11 @@ spring:
   application:
     name: gatewayServe
   cloud:
-    #    nacos:
-    #      discovery:
-    #        server-addr: 121.43.152.126:8848
+    nacos:
+      discovery:
+        server-addr: 8.134.253.155:8848
+        namespace: 78c95adb-0b11-4fba-95da-8146c87f0f8b
+
     gateway:
       routes:
         - id: gateway

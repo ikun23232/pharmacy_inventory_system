@@ -3,7 +3,6 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -66,7 +65,6 @@ public class BaseProvider implements Serializable {
      * 创建时间
      */
     @TableField("createDate")
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private Date createDate;
 
     /**
@@ -84,7 +82,6 @@ public class BaseProvider implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateDate;
 
     /**
