@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * <p>
- *
+ * 
  * </p>
  *
  * @author lemon
@@ -27,7 +27,7 @@ public class BaseStorehouse implements Serializable {
     /**
      * 仓库id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+      @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**

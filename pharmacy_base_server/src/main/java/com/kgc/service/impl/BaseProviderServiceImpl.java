@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
- * 服务实现类
+ *  服务实现类
  * </p>
  *
  * @author lemon
@@ -27,11 +27,10 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
 
     @Autowired
     private BaseProviderMapper baseProviderMapper;
-
     @Override
-    public Message getBaseProviderList(String name, int type, int currentPageNo, int pageSize) {
-        PageHelper.startPage(currentPageNo, pageSize);
-        List<BaseProvider> baseProviderList = baseProviderMapper.getBaseProviderList(name, type);
+    public Message getBaseProviderList(String name,int type,int currentPageNo,int pageSize) {
+        PageHelper.startPage(currentPageNo,pageSize);
+        List<BaseProvider> baseProviderList = baseProviderMapper.getBaseProviderList(name,type);
         PageInfo<BaseProvider> page = new PageInfo<>(baseProviderList);
         page.setList(baseProviderList);
         return Message.success(page);
@@ -40,9 +39,9 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
     @Override
     public Message delBaseProvider(int id) {
         int del = baseProviderMapper.del(id);
-        if (del > 0) {
+        if(del > 0){
             return Message.success();
-        } else {
+        }else {
             return Message.error();
         }
     }
@@ -51,9 +50,9 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
     public Message addBaseProvider(BaseProvider baseProvider) {
         baseProvider.setCreateDate(new Date());
         int insert = baseProviderMapper.insert(baseProvider);
-        if (insert > 0) {
+        if(insert>0){
             return Message.success();
-        } else {
+        }else {
             return Message.error();
         }
     }
@@ -64,11 +63,11 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
         baseProvider.setUpdateDate(new Date());
         baseProvider.setCreateDate(baseProvider1.getCreateDate());
         UpdateWrapper<BaseProvider> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", baseProvider.getId());
-        int update = baseProviderMapper.update(baseProvider, wrapper);
-        if (update > 0) {
+        wrapper.eq("id",baseProvider.getId());
+        int update = baseProviderMapper.update(baseProvider,wrapper);
+        if(update>0){
             return Message.success();
-        } else {
+        }else {
             return Message.error();
         }
     }
@@ -76,9 +75,9 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
     @Override
     public Message getBaseProviderById(int id) {
         BaseProvider baseProviderById = baseProviderMapper.getBaseProviderById(id);
-        if (baseProviderById != null) {
+        if(baseProviderById!=null){
             return Message.success(baseProviderById);
-        } else {
+        }else {
             return Message.error();
         }
 
@@ -87,27 +86,32 @@ public class BaseProviderServiceImpl extends ServiceImpl<BaseProviderMapper, Bas
     @Override
     public Message checkaddBaseProvider(String name) {
         BaseProvider baseProvider = baseProviderMapper.checkaddBaseProvider(name);
-        if (baseProvider != null) {
+        if(baseProvider!=null){
             return Message.error();
-        } else {
+        }else {
             return Message.success();
         }
     }
 
     @Override
-    public Message checkupdateBaseProvider(String name, int id) {
+    public Message checkupdateBaseProvider(String name,int id) {
         BaseProvider baseProvider = baseProviderMapper.checkaddBaseProvider(name);
         BaseProvider baseProvider1 = baseProviderMapper.getBaseProviderById(id);
-        if (baseProvider != null) {
-            if (baseProvider.getName().equals(baseProvider1.getName())) {
+        if(baseProvider!=null){
+            if(baseProvider.getName().equals(baseProvider1.getName())){
                 return Message.success();
             }
             return Message.error();
-        } else {
+        }else {
             return Message.success();
         }
     }
 
+    @Override
+    public Message getAllBaseProvider() {
+        List<BaseProvider> baseProviderList = baseProviderMapper.getBaseProviderList(null, 0);
+        return Message.success(baseProviderList);
+    }
     @Override
     public Message getAllProvider() {
         List<BaseProvider> allProvider = baseProviderMapper.getAllProvider();

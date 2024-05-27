@@ -101,7 +101,9 @@ export default {
               console.log(res);
               this.$router.push("/index");
             this.$message.success('登录成功')
+          
             }
+          
           });
         } else {
           console.log("error submit!!");

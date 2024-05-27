@@ -11,88 +11,89 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * <p>
  *
- * </p>
- *
+ * 库存药品(KcMedicine)实体类
+ * 完整版(1.0)
  * @author lemon
- * @since 2024-04-30
+ * @since 2024-05-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class KcMedicine implements Serializable {
-
     private static final long serialVersionUID = 1L;
-
     /**
      * 库存-药品主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
-
-    /**
-     * 仓库id
-     */
-    @TableField("storehouseId")
-    private Integer storehouseId;
-
-    /**
-     * 仓库编号
-     */
-    private String code;
-
     /**
      * 批次编号
      */
     @TableField("batchCode")
     private String batchCode;
-
+    /**
+     * 仓库id
+     */
+    @TableField("storehouseId")
+    private Integer storehouseId;
+    /**
+     * 仓库名称(外表字段)
+     */
+    @TableField("storehouseName")
+    private String storehouseName;
     /**
      * 药品id
      */
     @TableField("medicineId")
     private Integer medicineId;
-
+    /**
+     * 药品名称(外表字段)
+     */
+    @TableField("medicineName")
+    private String medicineName;
     /**
      * 供应商id
      */
     @TableField("providerId")
     private Integer providerId;
-
     /**
-     * 数量
+     * 供应商名称(外表字段)
+     */
+    @TableField("providerName")
+    private String providerName;
+    /**
+     * 库存数量
      */
     @TableField("quantity")
     private Integer quantity;
-
     /**
-     * 库存价值
+     * 单价
      */
     private BigDecimal money;
     /**
      * 库存价值
      */
     private BigDecimal totalPrice;
-
     /**
-     * 药品名称
+     * 删除标识
      */
-    @TableField("medicineName")
-    private String medicineName;
-
     @TableField("isDel")
     @TableLogic
     private Integer isDel;
 
-    /**
-     * 供应商名称
-     */
-    @TableField("providerName")
-    private String providerName;
 
+
+    /**
+     * 报损数量(外表字段)
+     */
     @TableField(exist = false)
     private Integer reportedNum;
+
+    /**
+     * 报损明细id(外表字段)
+     */
+    @TableField(exist = false)
+    private Integer reporteddetailId;
     @TableField(exist = false)
     private Integer totalQuantity;
 }

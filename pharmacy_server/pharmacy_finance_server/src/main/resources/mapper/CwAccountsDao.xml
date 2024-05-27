@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CwAccountsDao">
+    <select id="getCwAccountsList" resultType="com.kgc.entity.CwAccounts">
+        SELECT
+            a.id,
+            a.code,
+            a.categoryId,
+            (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId = id) accountsCategoryName,
+            a.orderCode,
+            a.cost,
+            a.bankAcountId,
+            (SELECT bandCount FROM bank_account WHERE a.bankAcountId=id) bandCount,
+            a.description,
+            a.createTime,
+            a.modificationTime,
+            a.createBy,
+            (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+            a.modificationBy,
+            (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName
+        FROM cw_accounts a where isDel=0
+        <if test="code!=null and code!=''">
+            and a.code like concat('%',#{code},'%')
+        </if>
+        <if test="categoryId>0">
+            and a.categoryId=#{categoryId}
+        </if>
+        <if test="orderCode!=null and orderCode!=''">
+            and a.orderCode like concat('%',#{orderCode},'%')
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+
+    </select>
+
+    <select id="getCwAccountsVOList" resultType="com.kgc.vo.CwAccountsVO">
+        SELECT
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId = id) accountsCategoryName,
+        a.orderCode,
+        a.cost,
+        a.bankAcountId,
+        (SELECT bandCount FROM bank_account WHERE a.bankAcountId=id) bandCount,
+        a.description,
+        a.createTime,
+        a.modificationTime,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName
+        FROM cw_accounts a where isDel=0
+    </select>
+    
+    <select id="getCwNumByYear" resultType="com.kgc.entity.CwNumByYear">
+        SELECT
+            YEAR(a.createTime) AS year,
+            MONTH(a.createTime) AS month,
+            COUNT(CASE WHEN b.parentId = 2 THEN a.id ELSE NULL END) AS inCount,
+            SUM(CASE WHEN b.parentId = 2 THEN a.cost ELSE 0 END) AS totalInAmount,
+            COUNT(CASE WHEN b.parentId = 1 THEN a.id ELSE NULL END) AS outCount,
+            SUM(CASE WHEN b.parentId = 1 THEN a.cost ELSE 0 END) AS totalOutAmount
+        FROM
+            cw_accounts a
+                JOIN
+            cw_category b ON a.categoryId = b.id
+        WHERE
+            a.isDel = 0
+        <if test="year!=null and year!=''">
+            AND YEAR(a.createTime) = #{year}
+        </if>
+        GROUP BY
+            YEAR(a.createTime),
+            MONTH(a.createTime)
+        ORDER BY
+            YEAR(a.createTime),
+            MONTH(a.createTime);
+    </select>
+
+    <select id="getCwNumByMonth" resultType="com.kgc.entity.CwNumByMonth">
+        SELECT
+            COUNT(CASE WHEN b.parentId = 1 THEN a.id ELSE NULL END) AS outCount,
+            SUM(CASE WHEN b.parentId = 1 THEN a.cost ELSE 0 END) AS totalOutAmount,
+            COUNT(CASE WHEN b.parentId = 2 THEN a.id ELSE NULL END) AS inCount,
+            SUM(CASE WHEN b.parentId = 2 THEN a.cost ELSE 0 END) AS totalInAmount
+        FROM
+            cw_accounts a
+                JOIN
+            cw_category b ON a.categoryId = b.id
+        WHERE
+            a.isDel = 0
+            <if test="year!=null and year!=''">
+                AND YEAR(a.createTime) = #{year}
+            </if>
+            <if test="month!=null and month!=''">
+                AND MONTH(a.createTime) = #{month}
+            </if>
+
+    </select>
+
+</mapper>
+

@@ -3,11 +3,16 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -26,7 +31,7 @@ public class KcDispatch implements Serializable {
     /**
      * 调度申请id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -42,19 +47,16 @@ public class KcDispatch implements Serializable {
     /**
      * 调度的总价格
      */
-    private Double price;
+    private BigDecimal price;
 
     /**
      * 原仓库Id
      */
     @TableField("beforeWarehouseId")
-    private Integer beforewarehouseid;
+    private Integer beforeWarehouseId;
 
-    /**
-     * 目标仓库Id
-     */
-    @TableField("AimWarehouseId")
-    private Integer aimwarehouseid;
+    @TableField(exist = false)
+    private String beforeWareName;
 
     /**
      * 备注
@@ -65,55 +67,80 @@ public class KcDispatch implements Serializable {
      * 审批人
      */
     @TableField("approverBy")
-    private Integer approverby;
+    private Integer approverBy;
+
+    @TableField(exist = false)
+    private String approverName;
 
     /**
      * 审批结果：0-未审批 1-未通过 2-通过
      */
     @TableField("approvalStatus")
-    private Integer approvalstatus;
+    private Integer approvalStatus;
 
     /**
      * 核批备注
      */
     @TableField("approverRemark")
-    private String approverremark;
+    private String approverRemark;
 
     /**
      * 制单人
      */
     @TableField("documenterBy")
-    private Integer documenterby;
+    private Integer documenterBy;
 
     /**
      * 作废状态
      */
     @TableField("voidState")
-    private Integer voidstate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Integer voidState;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
-    private LocalDateTime createdate;
+    private Date createDate;
 
-    /**
-     * 创造人
-     */
-    @TableField("createBy")
-    private Integer createby;
+
+    @TableField(exist = false)
+    private String createName;
 
     /**
      * 修改时间
      */
     @TableField("updateDate")
-    private LocalDateTime updatedate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date updateDate;
 
     /**
      * 修改人
      */
     @TableField("updateBy")
-    private Integer updateby;
+    private Integer updateBy;
 
+    @TableField(exist = false)
+    private String updateName;
 
+    @TableField("orderStatus")
+    private Integer orderStatus;
+
+    @TableField(exist = false)
+    private String orderStatusResult;
+
+    @TableLogic
+    private Integer isDel;//删除id
+
+    @TableField(exist = false)
+    private List<BaseMedicine> medicineList;
+
+    @TableField(exist = false)
+    private Integer isCommit;
+
+    @TableField("dispatchTime")
+    private Date dispatchTime;//调度时间
+
+    @TableField("totalCount")
+    private Integer totalCount;
 }

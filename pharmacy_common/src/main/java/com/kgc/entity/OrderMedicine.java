@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -25,19 +26,20 @@ public class OrderMedicine implements Serializable {
     /**
      * 订单-商品主键id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
      * 订单编号
      */
+    private String sourceCode;
     private String code;
 
     /**
      * 商品id
      */
     @TableField("medicineId")
-    private Integer medicineid;
+    private Integer medicineId;
 
     /**
      * 数量
@@ -48,7 +50,19 @@ public class OrderMedicine implements Serializable {
      * 商品总价
      */
     @TableField("totalPrice")
-    private Double totalprice;
+    private BigDecimal totalPrice;
 
+    private Integer isDel;
 
+    private String batchCode;
+
+    @TableField("providerId")
+    private Integer providerId;
+    @TableField("fowardWarHouseId")
+    private Integer fowardWarHouseId;
+    @TableField(exist = false)
+    private String fowardWarHouseName;
+
+    @TableField(exist = false)
+    private BigDecimal salePrice;
 }

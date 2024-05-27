@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.SaleOutWarehouseMapper">
+
+    <resultMap id="KcSalefromwareMap" type="com.kgc.entity.KcSalefromware">
+        <!--column指定的是数据库的列名，property指定的是对应的实体类的属性。也就是希望将column指定的列名赋值给该实体类的property指定的属性-->
+        <!--主键列使用id标签-->
+        <id column="id" property="id"></id>
+        <!--非主键列使用result标签-->
+        <result column="orderNo" property="xsOrder.orderNo"></result>
+        <result column="orderDate" property="xsOrder.orderDate"></result>
+        <result column="totalNumber" property="xsOrder.totalNumber"></result>
+        <result column="totalPrice" property="xsOrder.totalPrice"></result>
+        <result column="remark" property="xsOrder.remark"></result>
+        <result column="createByName" property="xsOrder.createByName"></result>
+        <result column="updateByName" property="xsOrder.updateByName"></result>
+        <result column="updateDate" property="xsOrder.updateDate"></result>
+    </resultMap>
+    <select id="getSaleOutWarehouseListByPage" resultMap="KcSalefromwareMap" parameterType="com.kgc.entity.KcSalefromware">
+        SELECT kc.id,code,orderNo,orderDate,totalNumber,totalPrice,remark,
+        xs.updateDate,c.userName AS createByName,u.userName AS updateByName
+        from kc_salefromware kc,xs_order xs
+        LEFT JOIN sys_user c ON xs.createBy = c.userId AND c.isDel = 0
+        LEFT JOIN sys_user u ON xs.updateBy = u.userId AND u.isDel = 0
+        WHERE kc.orderId=xs.id and kc.isDel=0 and xs.isDelete=0 and xs.type=0
+        <if test="code!=null and code!=''">
+            and code like concat('%',#{code},'%')
+        </if>
+    </select>
+
+</mapper>

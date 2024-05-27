@@ -3,10 +3,12 @@ package com.kgc.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.BaseProvider;
 import com.kgc.entity.Message;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 服务类
+ *  服务类
  * </p>
  *
  * @author lemon
@@ -14,7 +16,7 @@ import com.kgc.entity.Message;
  */
 public interface BaseProviderService extends IService<BaseProvider> {
 
-    public Message getBaseProviderList(String name, int type, int currentPageNo, int pageSize);
+    public Message getBaseProviderList(String name,int type,int currentPageNo,int pageSize);
 
     public Message delBaseProvider(int id);
 
@@ -27,8 +29,9 @@ public interface BaseProviderService extends IService<BaseProvider> {
 
     public Message checkaddBaseProvider(String name);
 
-    public Message checkupdateBaseProvider(String name, int id);
+    public Message checkupdateBaseProvider(String name,int id);
 
+    public Message getAllBaseProvider();
     public Message getAllProvider();
 
     public Message getProviderByWareAndMe(Integer warehouseId, Integer medecineId);

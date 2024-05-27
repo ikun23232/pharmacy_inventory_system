@@ -16,3 +16,4 @@ public @interface ExcelFiled {
 
     Class type() default String.class;
 }
+

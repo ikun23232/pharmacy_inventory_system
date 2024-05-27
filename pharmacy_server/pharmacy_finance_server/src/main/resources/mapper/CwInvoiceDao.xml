@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CwInvoiceDao">
+    <select id="getCwInvoice" resultType="com.kgc.entity.CwInvoice">
+        SELECT
+            a.id,
+            a.code,
+            a.categoryId,
+            (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId=id) categoryName,
+            a.orderNumber,
+            a.createBy,
+            (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+            a.createTime,
+            a.modificationTime,
+            a.modificationBy,
+            (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName,
+            a.cost
+        FROM cw_invoice a
+        where a.isDel=0
+        <if test="code!=null and code!=''">
+            and a.code like concat('%',#{code},'%')
+        </if>
+        <if test="orderNumber!=null and orderNumber!=''">
+            and a.orderNumber like concat('%',#{orderNumber},'%')
+        </if>
+        <if test="categoryId>2">
+            and a.categoryId=#{categoryId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+    </select>
+
+    <select id="getCwInvoiceByCode" resultType="com.kgc.entity.CwInvoice">
+        SELECT
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId=id) categoryName,
+        a.orderNumber,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.createTime,
+        a.modificationTime,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName,
+        a.cost
+        FROM cw_invoice a
+        where a.isDel=0 and a.code=#{code}
+    </select>
+
+    <select id="getCwInvoiceVO" resultType="com.kgc.vo.CwInvoiceVO">
+        SELECT
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId=id) categoryName,
+        a.orderNumber,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.createTime,
+        a.modificationTime,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName,
+        a.cost
+        FROM cw_invoice a
+        where a.isDel=0
+    </select>
+
+    <select id="getCategoryString" resultType="com.kgc.entity.CwCategory">
+        SELECT
+            id,
+            accountsCategoryName
+        FROM cw_category
+    </select>
+
+</mapper>
+

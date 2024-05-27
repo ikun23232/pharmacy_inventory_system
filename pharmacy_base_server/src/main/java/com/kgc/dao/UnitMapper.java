@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- * Mapper 接口
+ *  Mapper 接口
  * </p>
  *
  * @author lemon
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Mapper
 public interface UnitMapper extends BaseMapper<BaseUnit> {
-    List<BaseUnit> getUnitListByPage();
+   List<BaseUnit> getUnitListByPage(String name);
 
 
 }

@@ -1,13 +1,16 @@
 package com.kgc.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.kgc.entity.BaseProvider;
 import com.kgc.entity.Message;
 import com.kgc.service.BaseProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-04-30
  */
 @RestController
-@RequestMapping("/base")
+@RequestMapping("/base/baseProvider")
 public class BaseProviderController {
 
     @Autowired
@@ -50,23 +53,32 @@ public class BaseProviderController {
     }
 
     @RequestMapping("getBaseProviderById")
-    public Message getBaseProviderById(@RequestParam("id") int id) {
+    public Message getBaseProviderById(@RequestParam("id")int id) {
         Message message = baseProviderService.getBaseProviderById(id);
         return message;
     }
 
     @RequestMapping("checkaddBaseProvider")
-    public Message checkaddBaseProvider(@RequestParam("name") String name) {
+    public Message checkaddBaseProvider(@RequestParam("name")String name) {
         Message message = baseProviderService.checkaddBaseProvider(name);
         return message;
     }
 
     @RequestMapping("checkupdateBaseProvider")
-    public Message checkupdateBaseProvider(@RequestParam("name") String name, @RequestParam("id") int id) {
-        Message message = baseProviderService.checkupdateBaseProvider(name, id);
+    public Message checkupdateBaseProvider(@RequestParam("name") String name,@RequestParam("id")int id) {
+        Message message = baseProviderService.checkupdateBaseProvider(name,id);
         return message;
     }
 
+    /**
+     * 获得全部供应商
+     * @return
+     */
+    @RequestMapping("getAllBaseProvider")
+    public Message getAllBaseProvider() {
+        Message message= baseProviderService.getAllBaseProvider();
+        return message;
+    }
     @RequestMapping("getAllProvider")
     public Message getAllProvider() {
         Message message = baseProviderService.getAllProvider();
@@ -79,3 +91,4 @@ public class BaseProviderController {
         return message;
     }
 }
+

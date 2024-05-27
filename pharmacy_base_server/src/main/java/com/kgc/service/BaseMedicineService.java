@@ -3,10 +3,14 @@ package com.kgc.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.Message;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
- * 服务类
+ *  服务类
  * </p>
  *
  * @author lemon
@@ -26,9 +30,17 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
 
     public Message getMedicineListByCode(String code);
 
+    public Message getBaseMedicineListByProviderId(int providerId);
+
+
+    Message getMedicineListByCodeComblie(String code);
+    public Message getAllBatchCodeByMedicineId(int medicineId);
+
+
+}
+
     public Message getAllBaseMedicine();
 
-    public Message getAllBatchCodeByMedicineId(int medicineId);
 
     public Message getTreeMedicine();
 

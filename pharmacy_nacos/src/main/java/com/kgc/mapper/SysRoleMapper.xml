@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.SysRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.SysRole">
+        <id column="roleId" property="roleid" />
+        <result column="roleName" property="rolename" />
+        <result column="isUse" property="isuse" />
+        <result column="createTime" property="createtime" />
+        <result column="createBy" property="createby" />
+        <result column="updateTime" property="updatetime" />
+        <result column="updateBy" property="updateby" />
+        <result column="isDel" property="isdel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        roleId, roleName, isUse, createTime, createBy, updateTime, updateBy, isDel
+    </sql>
+
+</mapper>

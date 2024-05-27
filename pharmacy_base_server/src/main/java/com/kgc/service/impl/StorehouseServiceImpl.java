@@ -24,13 +24,12 @@ import java.util.List;
  */
 @Service
 public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseStorehouse> implements StoreHouseService {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger= LoggerFactory.getLogger(this.getClass());
     @Autowired
     private StoreHouseMapper storeHouseMapper;
-
     @Override
     public Message getStoreHouseList(String code, Page page) {
-        PageHelper.startPage(page.getCurrentPageNo(), page.getPageSize());
+        PageHelper.startPage(page.getCurrentPageNo(),page.getPageSize());
         List<BaseStorehouse> storeHouseList = storeHouseMapper.getStoreHouseList(code);
         PageInfo pageInfo = new PageInfo(storeHouseList);
         return Message.success(pageInfo);
@@ -39,7 +38,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
     @Override
     public Message deleteStorehouse(int id) {
         int count = storeHouseMapper.deleteStorehouse(id);
-        if (count > 0) {
+        if (count > 0){
             return Message.success();
         }
         return Message.error("删除失败");
@@ -48,7 +47,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
     @Override
     public Message checkName(String name) {
         BaseStorehouse storeHouse = storeHouseMapper.checkName(name);
-        if (storeHouse != null) {
+        if (storeHouse != null){
             return Message.success(storeHouse);
         }
         return Message.error("没有该仓库");
@@ -62,7 +61,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
         storeHouse.setCode(code);
         storeHouse.setCreateTime(new Date());
         int count = storeHouseMapper.insert(storeHouse);
-        if (count > 0) {
+        if (count > 0){
             return Message.success();
         }
         return Message.error("添加失败");
@@ -72,7 +71,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
     public Message updateStoreHouse(BaseStorehouse storeHouse) {
         storeHouse.setUpdateTime(new Date());
         int count = storeHouseMapper.updateById(storeHouse);
-        if (count > 0) {
+        if (count > 0){
             return Message.success();
         }
         return Message.error("修改失败");
@@ -81,7 +80,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
     @Override
     public Message getStoreHouseById(int id) {
         BaseStorehouse storeHouse = storeHouseMapper.selectById(id);
-        if (storeHouse != null) {
+        if (storeHouse != null){
             return Message.success(storeHouse);
         }
         return Message.error("没有该用户");
@@ -90,7 +89,7 @@ public class StorehouseServiceImpl extends ServiceImpl<StoreHouseMapper, BaseSto
     @Override
     public Message getAllStoreHouseList() {
         List<BaseStorehouse> storeHouseList = storeHouseMapper.getStoreHouseList(null);
-        if (storeHouseList.isEmpty()) {
+        if (storeHouseList.isEmpty()){
             return Message.error("没有数据");
         }
         return Message.success(storeHouseList);

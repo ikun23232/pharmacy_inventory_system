@@ -41,4 +41,6 @@ public interface SysUserService extends IService<SysUser> {
     public Message repass( Integer userId);
     public void Userexcel(SysUser sysUser, HttpServletResponse response);
 
+    public Message getAllUser();
+
 }

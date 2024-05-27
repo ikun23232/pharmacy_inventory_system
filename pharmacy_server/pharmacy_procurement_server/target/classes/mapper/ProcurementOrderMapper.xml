@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.ProcurementOrderMapper">
+    <select id="getCgddOrder" parameterType="CgddOrder" resultType="CgddOrder">
+        select id, code, subject, type,
+               (SELECT `name` FROM cg_type b WHERE a.type = b.id) AS OrderTypeName,demanderBy,
+               (SELECT `userName` FROM sys_user c WHERE a.demanderBy = c.userId) AS OrderTypeName,demandTime,
+               count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
+               (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
+               (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
+               createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
+               updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,
+               contactperson, phone, fax, email, deliveryDate, deliveryBy,
+               (SELECT `userName` FROM sys_user c WHERE a.deliveryBy = c.userId) AS deliveryName, payType, payTime, isPay
+               from cgdd_order AS a
+                <where>
+                    a.isDel = 0
+               <if test="code != null and code != ''">
+                    and code = #{code}
+               </if>
+                <if test="beginTime != null and beginTime != ''">
+                   and demandTime BETWEEN #{beginTime} and #{endTime}
+                </if>
+                <if test="orderStatus > 0">
+                    and orderStatus=#{orderStatus}
+                </if>
+                 <if test="providerId > 0">
+                     and providerId=#{providerId}
+                 </if>
+                <if test="type > 0">
+                     and type=#{type}
+                </if>
+            </where>
+    </select>
+</mapper>

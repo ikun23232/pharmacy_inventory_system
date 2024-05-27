@@ -10,9 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
+
  *
  * @author lemon
  * @since 2024-04-30
@@ -33,42 +31,60 @@ public class KcReporteddetail implements Serializable {
      * 药品Id
      */
     @TableField("medicineId")
-    private Integer medicineid;
+    private Integer medicineId;
 
     /**
      * 报损订单Id
      */
     @TableField("reportedId")
-    private Integer reportedid;
+    private Integer reportedId;
+
+    /**
+     * 报损订单号编号
+     */
+    @TableField("reportedCode")
+    private String reportedCode;
+
+    /**
+     * 报损数量
+     */
+    @TableField("quantity")
+    private Integer quantity;
 
     /**
      * 报损人
      */
     @TableField("createdBy")
-    private String createdby;
+    private String createdBy;
 
     /**
      * 报损时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private LocalDateTime createTime;
 
     /**
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationtime;
+    private LocalDateTime modificationTime;
 
     /**
      * 修改人
      */
     @TableField("modificationBy")
-    private String modificationby;
+    private String modificationBy;
 
     /**
      * 删除
      */
-    private String idel;
+    private String isDel;
+
+    /**
+     * 批号
+     */
+    @TableField("batchCode")
+    private String batchCode;
 
 
 }

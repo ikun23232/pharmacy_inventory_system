@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcAlarmMapper">
+    <select id="getKcAlarmList" resultType="KcAlarm">
+        select id, code, warningType, warningCount, medicineId,(select name from base_medicine where medicineId = base_medicine.id) as medicineName,
+               isKnow, createDate,isDel
+        from kc_alarm
+            <where>
+            and isDel = 0
+            <if test="code != null and code != ''">
+               and code like concat("%",#{code},"%")
+            </if>
+            <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+                and createDate BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="warningType > 0">
+                and warningType = #{warningType}
+            </if>
+            <if test="medicineId > 0">
+                and medicineId = #{medicineId}
+            </if>
+            order by isKnow asc
+        </where>
+    </select>
+    
+    <select id="excelAlarmList" resultType="com.kgc.vo.KcAlarmVO">
+        select id, code, CASE WHEN warningType = 0 THEN '本地仓库报警'ELSE '库存数量报警' END AS warningTypeName,
+               warningCount,(select name from base_medicine where medicineId = base_medicine.id) as medicineName,
+               CASE WHEN isKnow = 0 THEN '未处理'ELSE '已处理' END AS isKnowName, createDate,isDel
+        from kc_alarm
+    </select>
+
+    <update id="updateAlarm">
+        UPDATE kc_alarm
+        SET warningCount = #{warningCount},
+            isDel = #{isDel}
+        WHERE id = #{id}
+    </update>
+</mapper>

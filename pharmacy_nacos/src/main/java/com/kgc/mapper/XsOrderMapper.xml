@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.XsOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.entity.XsOrder">
+        <id column="id" property="id" />
+        <result column="orderNo" property="orderno" />
+        <result column="orderDate" property="orderdate" />
+        <result column="createBy" property="createby" />
+        <result column="type" property="type" />
+        <result column="totalPrice" property="totalprice" />
+        <result column="totalNumber" property="totalnumber" />
+        <result column="bankAccountId" property="bankaccountid" />
+        <result column="remark" property="remark" />
+        <result column="updateBy" property="updateby" />
+        <result column="updateDate" property="updatedate" />
+        <result column="isDelete" property="isdelete" />
+        <result column="isCheck" property="ischeck" />
+        <result column="isCancel" property="iscancel" />
+        <result column="refundTypeId" property="refundtypeid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, orderNo, orderDate, createBy, type, totalPrice, totalNumber, bankAccountId, remark, updateBy, updateDate, isDelete, isCheck, isCancel, refundTypeId
+    </sql>
+
+</mapper>

@@ -12,17 +12,10 @@ import com.kgc.entity.Page;
  */
 public interface StoreHouseService extends IService<BaseStorehouse> {
     public Message getStoreHouseList(String code, Page page);
-
     public Message deleteStorehouse(int id);
-
     public Message checkName(String name);
-
     public Message addStoreHouse(BaseStorehouse storeHouse);
-
     public Message updateStoreHouse(BaseStorehouse storeHouse);
-
     public Message getStoreHouseById(int id);
-
     public Message getAllStoreHouseList();
-
 }

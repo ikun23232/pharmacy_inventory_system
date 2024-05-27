@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @create: 2024-05-07 09:13
  **/
 @RestController
-@RequestMapping("/sysCommon")
+@RequestMapping("/user")
 public class SysCommonController {
     private Logger logger=LoggerFactory.getLogger(getClass());
     @Autowired
     private ReplayUtil replayUtil;
 
-    @RequestMapping("/getUUID")
+    @RequestMapping("/sysCommon/getUUID")
     public String getUUID(){
         replayUtil.checkRandom("");
         String random = replayUtil.getRandom();
