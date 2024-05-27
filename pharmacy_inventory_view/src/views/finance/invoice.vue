@@ -1,5 +1,5 @@
 <script>
-import { getCwInvoice,getCategoryString } from '@/api/finance'
+import { getCwInvoice,getCategoryString,cwInvoiceExcel } from '@/api/finance'
 export default {
   name: "invoice",
   data() {
@@ -27,12 +27,9 @@ export default {
   methods: {
     getCwInvoices() {
       if (Array.isArray(this.time) && this.time.length > 0) {
-        // time 是一个非空数组
         this.cwInvoice.beginTime = this.time[0];
         this.cwInvoice.endTime = this.time[1];
       } else {
-        // time 是空数组、null 或 undefined
-        // 这里可以添加适当的处理逻辑，例如重置 beginTime 和 endTime
         this.cwInvoice.beginTime = null;
         this.cwInvoice.endTime = null;
       }
@@ -57,6 +54,18 @@ export default {
       this.cwInvoice.categoryId=0
       this.time = {};
       this.getCwInvoices()
+    },
+    async printExcel(){
+      await cwInvoiceExcel();
+    },
+    print(code) {
+      const newPage = this.$router.resolve({
+        path: "/printInvoice",
+        query: {
+          code: code,
+        },
+      });
+      window.open(newPage.href, "_blank");
     },
   }
 }
@@ -110,7 +119,8 @@ export default {
             end-placeholder="结束日期"
         />&nbsp;&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getCwInvoices()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
+      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="printExcel()">导出</el-button><br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwInvoicePage.list" border style="width: 100%">
@@ -125,6 +135,7 @@ export default {
         <el-table-column prop="cost" label="发票总金额" width="120"/>
         <el-table-column align="center" label="操作" fixed="right">
           <template #default="{ row }">
+            <el-button type="primary" plain @click="print(row.code)">打印</el-button>&nbsp;
             <el-button type="primary" plain>详情</el-button>&nbsp;
           </template>
         </el-table-column>

@@ -1,97 +1,78 @@
-package com.kgc.entity;
+package com.kgc.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- *
- * 库存药品(KcMedicine)实体类
- * 完整版(1.0)
- * @author lemon
- * @since 2024-05-20
+ * 库存-药品报损详情vo
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class KcMedicine implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class KcMedicineBSVO implements Serializable {
     /**
      * 库存-药品主键id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ExcelFiled("库存-药品主键id")
     private Integer id;
     /**
      * 批次编号
      */
-    @TableField("batchCode")
+    @ExcelFiled("批次编号")
     private String batchCode;
     /**
      * 仓库id
      */
-    @TableField("storehouseId")
     private Integer storehouseId;
     /**
      * 仓库名称(外表字段)
      */
-    @TableField("storehouseName")
     private String storehouseName;
     /**
      * 药品id
      */
-    @TableField("medicineId")
     private Integer medicineId;
     /**
      * 药品名称(外表字段)
      */
-    @TableField("medicineName")
+    @ExcelFiled("药品名称")
     private String medicineName;
     /**
      * 供应商id
      */
-    @TableField("providerId")
     private Integer providerId;
     /**
      * 供应商名称(外表字段)
      */
-    @TableField("providerName")
+    @ExcelFiled("供应商名称")
     private String providerName;
     /**
      * 库存数量
      */
-    @TableField("quantity")
+    @ExcelFiled("库存数量")
     private Integer quantity;
     /**
      * 单价
      */
+    @ExcelFiled("单价")
     private BigDecimal money;
     /**
      * 库存价值
      */
+    @ExcelFiled("库存价值")
     private BigDecimal totalPrice;
-    /**
-     * 删除标识
-     */
-    @TableField("isDel")
-    @TableLogic
-    private Integer isDel;
-
 
 
     /**
      * 报损数量(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("报损数量")
     private Integer reportedNum;
 
     /**
      * 报损明细id(外表字段)
      */
-    @TableField(exist = false)
     private Integer reporteddetailId;
+
 }

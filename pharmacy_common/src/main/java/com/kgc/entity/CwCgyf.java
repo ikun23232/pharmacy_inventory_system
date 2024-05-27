@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -32,7 +33,7 @@ public class CwCgyf implements Serializable {
     /**
      * 采购订单编号
      */
-    @TableField("cgdd_code")
+    @TableField("cgddCode")
     private String cgddCode;
     /**
      * 供应商id
@@ -42,7 +43,7 @@ public class CwCgyf implements Serializable {
     /**
      * 采购应付状态(付款状态(0未知,1待付款,已付款))
      */
-    @TableField("is_pay")
+    @TableField("isPay")
     private Integer isPay;
     /**
      * 采购应付金额
@@ -75,4 +76,29 @@ public class CwCgyf implements Serializable {
     @TableField(exist = false)
     private String endTime;
 
+    /**
+     * 采购订单id
+     */
+    @TableField(exist = false)
+    private Integer cgddId;
+    /**
+     * 采购订单创建人
+     */
+    @TableField(exist = false)
+    private String demanderName;
+    /**
+     * 采购订单创建时间
+     */
+    @TableField(exist = false)
+    private Date demandTime;
+    /**
+     * 采购订单主题
+     */
+    @TableField(exist = false)
+    private String subject;
+    /**
+     * 付款人id
+     */
+    @TableField(exist = false)
+    private Integer payUserId;
 }

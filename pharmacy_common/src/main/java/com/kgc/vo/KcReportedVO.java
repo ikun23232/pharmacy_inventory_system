@@ -1,134 +1,110 @@
-package com.kgc.entity;
+package com.kgc.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
- *
- * 库存报损(KcReported)实体类
- * 完整版(1.0)
- * @author lemon
- * @since 2024-05-20
+ * 采购报损Vo
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class KcReported implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class KcReportedVO {
     /**
      * 报损订单id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ExcelFiled("报损订单id")
     private Integer id;
     /**
      * 报损编号
      */
-    @TableField("code")
+    @ExcelFiled("报损编号")
     private String code;
     /**
      * 仓库Id
      */
-    @TableField("storehouseId")
     private Integer storehouseId;
     /**
      * 仓库名称(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("仓库名称")
     private String storehouseName;
     /**
      * 报损类型id
      */
-    @TableField("reportedTypeId")
     private Integer reportedTypeId;
     /**
      * 报损类型名称(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("报损类型名称")
     private String reportedTypeName;
     /**
      * 审批人
      */
-    @TableField("approverBy")
     private int approverBy;
     /**
      * 审批结果：0-未审批 1-未通过 2-通过
      */
-    @TableField("approvalStatus")
+    @ExcelFiled("审批结果0未审批1未通过2通过")
     private Integer approvalStatus;
     /**
      * 审批标注
      */
-    @TableField("approverRemark")
+    @ExcelFiled("审批标注")
     private String approverRemark;
     /**
      * 制单人
      */
-    @TableField("documenterBy")
     private int documenterBy;
     /**
      * 报损时间
      */
-    @TableField("createTime")
+    @ExcelFiled("报损时间")
     private LocalDateTime createTime;
     /**
      * 创建人
      */
-    @TableField("createBy")
     private int createBy;
     /**
      * 修改时间
      */
-    @TableField("modificationTime")
+    @ExcelFiled("修改时间")
     private LocalDateTime modificationTime;
     /**
      * 修改人
      */
-    @TableField("modificationBy")
     private int modificationBy;
-    /**
-     * 删除
-     */
-    @TableField("isDel")
-    private int isDel;
     /**
      * 审批人姓名(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("审批人姓名")
     private String approverName;
     /**
      * 制单人姓名(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("制单人姓名")
     private String documenterName;
     /**
      * 创建人姓名(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("创建人姓名")
     private String createName;
     /**
      * 修改人姓名(外表字段)
      */
-    @TableField(exist = false)
+    @ExcelFiled("修改人姓名")
     private String modificationName;
     /**
      * 开始时间(模糊查询createTime)
      */
-    @TableField(exist = false)
     private String beginTime;
     /**
      * 结束时间(模糊查询createTime)
      */
-    @TableField(exist = false)
     private String endTime;
 
-    @TableField(exist = false)
-    private List<KcMedicine> medicineList;
+    @ExcelFiled(value = "药品报损明细",type = KcMedicineBSVO.class)
+    private List<KcMedicineBSVO> medicineList;
 
 }

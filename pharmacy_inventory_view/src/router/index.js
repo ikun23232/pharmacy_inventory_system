@@ -154,6 +154,12 @@ const routes = [
     component: () => import('../views/warehouse/KCBC/KcReported.vue')
   },
   {
+    //库存报损打印
+    path:'/PrintKcReported',
+    name: 'PrintKcReported',
+    component: () => import('../views/warehouse/KCBC/PrintKcReported.vue')
+  },
+  {
     //报损出库
     path:'/KcReportedfromware',
     name: 'KcReportedfromware',
@@ -172,10 +178,23 @@ const routes = [
     component: () => import('../views/finance/CGYF/purchasePay.vue')
   },
   {
+    //采购应付打印
+    path:'/printPurchasePay',
+    name: 'printPurchasePay',
+    component: () => import('../views/finance/CGYF/printPurchasePay.vue')
+
+  },
+  {
     //报损应收
     path:'/breakageReceivable',
     name: 'breakageReceivable',
     component: () => import('../views/finance/BSYS/breakageReceivable.vue')
+  },
+  {
+    //报损应收打印
+    path:'/printBreakageReceivable',
+    name: 'printBreakageReceivable',
+    component: () => import('../views/finance/BSYS/printBreakageReceivable.vue')
   },
   {
     //销售应收
@@ -184,16 +203,34 @@ const routes = [
     component: () => import('../views/finance/XS/salesReceivable.vue')
   },
   {
+    //销售应收打印
+    path:'/printSalesReceivable',
+    name: 'printSalesReceivable',
+    component: () => import('../views/finance/XS/printSalesReceivable.vue')
+  },
+  {
     //销售退款
     path:'/salesRefund',
     name: 'salesRefund',
     component: () => import('../views/finance/XS/salesRefund.vue')
   },
   {
+    //销售退款打印
+    path:'/printSalesRefund',
+    name: 'printSalesRefund',
+    component: () => import('../views/finance/XS/printSalesRefund.vue')
+  },
+  {
     //发票详情
     path:'/invoice',
     name: 'invoice',
     component: () => import('../views/finance/invoice.vue')
+  },
+  {
+    //发票详情打印
+    path:'/printInvoice',
+    name: 'printInvoice',
+    component: () => import('../views/finance/printInvoice.vue')
   },
   {
     //流水统计

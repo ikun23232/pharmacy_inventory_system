@@ -238,7 +238,9 @@
             f.name AS storehouseName,
             h.reportedName AS reportedTypeName,
             a.modificationTime,
-            e.userName AS modificationName
+            e.userName AS modificationName,
+            g.userName AS documenterName,
+            a.createTime AS createTime
         FROM
             kc_reportedfromware rf
                 LEFT JOIN
@@ -249,6 +251,8 @@
             base_storehouse f ON a.storehouseId = f.id
                 LEFT JOIN
             kc_reportedtype h ON a.reportedTypeId = h.id
+                LEFT JOIN
+            sys_user g ON a.documenterBy= g.userId
         where a.isDel=0
         <if test="code!=null and code!=''">
             and rf.code like concat('%',#{code},'%')
@@ -262,6 +266,84 @@
         <if test="reportedTypeId>0">
             and a.reportedTypeId=#{reportedTypeId}
         </if>
+    </select>
+
+    <select id="getKcReportedfromwareVO" resultType="com.kgc.vo.KcReportedfromwareVO">
+        SELECT
+        rf.id,
+        rf.code,
+        rf.reportedId,
+        a.code AS reportedCode,
+        f.name AS storehouseName,
+        h.reportedName AS reportedTypeName,
+        a.modificationTime,
+        e.userName AS modificationName,
+        g.userName AS documenterName,
+        a.createTime AS createTime
+        FROM
+        kc_reportedfromware rf
+        LEFT JOIN
+        kc_reported a ON rf.reportedId = a.id
+        LEFT JOIN
+        sys_user e ON a.modificationBy = e.userId
+        LEFT JOIN
+        base_storehouse f ON a.storehouseId = f.id
+        LEFT JOIN
+        kc_reportedtype h ON a.reportedTypeId = h.id
+        LEFT JOIN
+        sys_user g ON a.documenterBy= g.userId
+        where a.isDel=0
+    </select>
+
+    <select id="getKcReportedVOList" resultType="com.kgc.vo.KcReportedVO">
+        SELECT
+        a.id,
+        a.`code`,
+        a.storehouseId,
+        f.name AS storehouseName,
+        a.reportedTypeId,
+        h.reportedName AS reportedTypeName,
+        a.approverBy,
+        a.approvalStatus,
+        a.approverRemark,
+        a.documenterBy,
+        a.createTime,
+        a.createBy,
+        a.modificationTime,
+        a.modificationBy,
+        b.userName AS approverName,
+        c.userName AS documenterName,
+        d.userName AS createName,
+        e.userName AS modificationName
+        FROM
+        kc_reported a
+        LEFT JOIN
+        sys_user b ON a.approverBy = b.userId
+        LEFT JOIN
+        sys_user c ON a.documenterBy = c.userId
+        LEFT JOIN
+        sys_user d ON a.createBy = d.userId
+        LEFT JOIN
+        sys_user e ON a.modificationBy = e.userId
+        LEFT JOIN
+        base_storehouse f ON a.storehouseId = f.id
+        LEFT JOIN
+        kc_reportedtype h ON a.reportedTypeId = h.id
+        WHERE
+        a.isDel = 0
+        <if test="storehouseId>0">
+            and a.storehouseId=#{storehouseId}
+        </if>
+        <if test="reportedTypeId>0">
+            and a.reportedTypeId=#{reportedTypeId}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like concat('%',#{code},'%')
+        </if>
+
     </select>
 
 </mapper>

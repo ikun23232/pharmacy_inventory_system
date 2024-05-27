@@ -30,6 +30,7 @@ import java.util.Map;
  */
 @Service
 public class KcOutintodetialServiceImpl extends ServiceImpl<KcOutintodetialMapper, KcOutintodetial> implements KcOutintodetialService {
+
     @Autowired
     private KcOutintodetialMapper kcOutintodetialMapper;
 
@@ -69,5 +70,14 @@ public class KcOutintodetialServiceImpl extends ServiceImpl<KcOutintodetialMappe
 //            e.printStackTrace();
 //        }
 
+    }
+
+    @Override
+    public Message addKcOutinTodetail(KcOutintodetial kcOutintodetial) {
+        int isAdd = kcOutintodetialMapper.insert(kcOutintodetial);
+        if (isAdd>0){
+            return Message.success();
+        }
+        return Message.error();
     }
 }

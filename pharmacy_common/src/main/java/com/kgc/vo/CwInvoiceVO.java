@@ -1,10 +1,7 @@
-package com.kgc.entity;
+package com.kgc.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -12,89 +9,72 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- *
- * 发票表(CwInvoice)实体类
- * 完整版(1.1)
- * @author lemon
- * @since 2024-04-30
+ * 发票VO
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class CwInvoice implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class CwInvoiceVO implements Serializable {
     /**
      * 发票id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ExcelFiled("发票id")
     private Integer id;
     /**
      * 发票单据
      */
+    @ExcelFiled("发票单据")
     private String code;
 //    /**
 //     * 发票编号
 //     */
-//    @TableField("InvoiceNumber")
+//    @ExcelFiled("发票编号")
 //    private Integer InvoiceNumber;
     /**
      * 类型
      */
-    @TableField("categoryId")
     private Integer categoryId;
     /**
      * 类型名称
      */
-    @TableField(exist = false)
+    @ExcelFiled("类型名称")
     private String categoryName;
     /**
      * 订单号
      */
-    @TableField("orderNumber")
+    @ExcelFiled("订单号")
     private String orderNumber;
     /**
      * 创建人
      */
-    @TableField("createBy")
     private Integer createBy;
     /**
      * 创建人名称
      */
-    @TableField("createName")
+    @ExcelFiled("创建人名称")
     private String createName;
     /**
      * 创建时间
      */
-    @TableField("createTime")
+    @ExcelFiled("创建时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     /**
      * 修改时间
      */
-    @TableField("modificationTime")
+    @ExcelFiled("修改时间")
     private LocalDateTime modificationTime;
     /**
      * 修改人
      */
-    @TableField("modificationBy")
     private Integer modificationBy;
     /**
      * 修改人名称
      */
-    @TableField("modificationName")
+    @ExcelFiled("修改人名称")
     private String modificationName;
     /**
      * 发票总金额
      */
+    @ExcelFiled("发票总金额")
     private BigDecimal cost;
-    /**
-     * 开始时间(模糊查询createTime)
-     */
-    @TableField(exist = false)
-    private String beginTime;
-    /**
-     * 结束时间(模糊查询createTime)
-     */
-    @TableField(exist = false)
-    private String endTime;
 
 }

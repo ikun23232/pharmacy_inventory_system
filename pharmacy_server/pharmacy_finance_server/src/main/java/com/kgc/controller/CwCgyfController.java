@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * (CwCgyf)表控制层
@@ -30,6 +31,18 @@ public class CwCgyfController {
         return message;
     }
 
+    @RequestMapping("/updateCwCgyf")
+    public Message updateCwCgyf(@RequestBody CwCgyf cwCgyf){
+        Message message = cwCgyfService.updateCwCgyf(cwCgyf);
+        return message;
+    }
+
+    @RequestMapping("/getCwCgyfByCode")
+    public Message getCwCgyfByCode(@RequestParam("code") String code){
+        Message message = cwCgyfService.getCwCgyfByCode(code);
+        return message;
+    }
+
     @RequestMapping("/getProviderList")
     public Message getProviderList(){
         Message message = cwCgyfService.getProviderList();
@@ -42,5 +55,9 @@ public class CwCgyfController {
         return message;
     }
 
+    @RequestMapping("/cwCgyfExcel")
+    public void cwCgyfExcel(HttpServletResponse response) {
+        cwCgyfService.cwCgyfExcel(response);
+    }
 }
 

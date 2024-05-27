@@ -6,6 +6,7 @@ import com.kgc.dao.KcMedicineMapper;
 import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.KcMedicineService;
+import com.kgc.vo.KcMedicineBSVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +32,21 @@ public class KcMedicineServiceImpl implements KcMedicineService {
     }
 
     @Override
-    public Message getKcMedicineByReportedCode(int storehouseId, String reportedCode) {
-        List<KcMedicine> list = kcMedicineMapper.getKcMedicineByReportedCode(storehouseId, reportedCode);
+    public Message getKcMedicineByReportedCode(String reportedCode) {
+        List<KcMedicine> list = kcMedicineMapper.getKcMedicineByReportedCode(reportedCode);
         if (list.size() > 0){
             return Message.success(list);
         }
         return Message.error();
+    }
+
+    @Override
+    public List<KcMedicine> getKcMedicineByReportedCodeTo(String reportedCode) {
+        List<KcMedicine> list = kcMedicineMapper.getKcMedicineByReportedCode(reportedCode);
+        if (list.size() > 0){
+            return list;
+        }
+        return null;
     }
 
     @Override
@@ -47,5 +57,15 @@ public class KcMedicineServiceImpl implements KcMedicineService {
             return Message.success();
         }
         return Message.error();
+    }
+
+    @Override
+    public List<KcMedicineBSVO> getKcMedicineVOByReportedCode(String reportedCode) {
+        return kcMedicineMapper.getKcMedicineVOByReportedCode(reportedCode);
+    }
+
+    @Override
+    public List<KcMedicine> getMedicineByStorehouseIdMedicineId(KcMedicine kcMedicine) {
+        return kcMedicineMapper.getMedicineByStorehouseIdMedicineId(kcMedicine);
     }
 }

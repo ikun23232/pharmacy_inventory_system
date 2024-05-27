@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/finance")
 public class CwAccountsController {
@@ -31,4 +33,8 @@ public class CwAccountsController {
         return cwAccountsService.getCwNumByMonth(year,month);
     }
 
+    @RequestMapping("/cwAccountsExcel")
+    public void cwAccountsExcel(HttpServletResponse response) {
+        cwAccountsService.cwAccountsExcel(response);
+    }
 }

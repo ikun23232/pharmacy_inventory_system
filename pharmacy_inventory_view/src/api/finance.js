@@ -88,3 +88,142 @@ export function getCwNumByMonth(year,month){
 export function getProviderList(){
     return request.get(baseUrl + "/getProviderList");
 }
+
+export function getStorehouseList(){
+    return request.get(baseUrl + "/getStorehouseList");
+}
+
+export function cwbsysExcel() {
+    return request.get(baseUrl + "/cwbsysExcel", {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '报损应收.xlsx';
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+export function cwCgyfExcel() {
+    return request.get(baseUrl + "/cwCgyfExcel", {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '采购费用.xlsx';
+        link.click();
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+export function cwXstkExcel() {
+    return request.get(baseUrl + "/cwXstkExcel", {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '销售退款.xlsx';
+        link.click();
+   }).catch(error =>{
+       console.log("error:",error)
+    })
+}
+
+export function cwXsysExcel() {
+    return request.get(baseUrl + "/cwXsysExcel", {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '销售应收.xlsx';
+        link.click();
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+export function cwInvoiceExcel() {
+    return request.get(baseUrl + "/cwInvoiceExcel", {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '发票.xlsx';
+        link.click();
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+export function cwAccountsExcel() {
+    return request.get(baseUrl + "/cwAccountsExcel", {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '财务总账.xlsx';
+        link.click();
+   }).catch(error =>{
+       console.log("error:",error)
+    })
+}
+
+export function getCwbsysByCode(code) {
+    return request.get(baseUrl + "/getCwbsysByCode", {
+        params: {
+            code:code
+        }
+    });
+}
+
+export function getCwCgyfByCode(code) {
+    return request.get(baseUrl + "/getCwCgyfByCode", {
+        params: {
+            code:code
+        }
+    });
+}
+
+export function getCwXstkByCode(code) {
+    return request.get(baseUrl + "/getCwXstkByCode", {
+        params: {
+            code:code
+        }
+    });
+}
+
+export function getCwXsysByCode(code) {
+    return request.get(baseUrl + "/getCwXsysByCode", {
+        params: {
+            code:code
+        }
+    });
+}
+
+export function getCwInvoiceByCode(code) {
+    return request.get(baseUrl + "/getCwInvoiceByCode", {
+        params: {
+            code:code
+        }
+    });
+}
+
+export function updateCwCgyf(cwCgyf) {
+    return request.post(baseUrl + "/updateCwCgyf",cwCgyf);
+}

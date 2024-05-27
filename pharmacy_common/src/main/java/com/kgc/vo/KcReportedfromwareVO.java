@@ -1,86 +1,68 @@
-package com.kgc.entity;
+package com.kgc.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * 报损出库表(KcReportedfromware)实体类
- * 完整版(1.0)
- * @author lemon
- * @since 2024-04-30
- */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class KcReportedfromware implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class KcReportedfromwareVO implements Serializable {
     /**
      * 报损出库id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ExcelFiled("报损出库id")
     private Integer id;
     /**
      * 报损出库编号
      */
+    @ExcelFiled("报损出库编号")
     private String code;
     /**
      * 报损id
      */
-    @TableField("reportedId")
     private Integer reportedId;
-    /**
-     * 删除id
-     */
-    @TableField("isDel")
-    private Integer isDel;
     /**
      * 报损原单号(外表字段)
      */
-    @TableField("reportedCode")
+    @ExcelFiled("报损原单号")
     private String reportedCode;
     /**
      * 仓库id(外表字段)
      */
-    @TableField("storehouseId")
     private Integer storehouseId;
     /**
      * 仓库名称(外表字段)
      */
-    @TableField("storehouseName")
+    @ExcelFiled("仓库名称")
     private String storehouseName;
     /**
      * 报损类型id(外表字段)
      */
-    @TableField("reportedTypeId")
     private Integer reportedTypeId;
     /**
      * 报损类型(外表字段)
      */
-    @TableField("reportedTypeName")
+    @ExcelFiled("报损类型")
     private String reportedTypeName;
     /**
      * 出库时间(外表字段)
      */
-    @TableField("modificationBy")
+    @ExcelFiled("出库时间")
     private LocalDateTime modificationTime;
     /**
      * 出库人(外表字段)
      */
-    @TableField("modificationName")
+    @ExcelFiled("出库人")
     private String modificationName;
     /**
      * 制单人(外表字段)
      */
-    @TableField("documenterName")
+    @ExcelFiled("制单人")
     private String documenterName;
     /**
      * 制单时间(外表字段)
      */
+    @ExcelFiled("制单时间")
     private LocalDateTime createTime;
-
 }

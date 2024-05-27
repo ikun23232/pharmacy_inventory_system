@@ -1,116 +1,93 @@
-package com.kgc.entity;
+package com.kgc.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- *
- * 流水表(CwAccounts)实体类
- * 完整版(1.0)
- * @author lemon
- * @since 2024-04-30
+ * 财务流水VO
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class CwAccounts implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class CwAccountsVO implements Serializable {
     /**
      * 流水Id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @ExcelFiled("流水Id")
     private Integer id;
     /**
      * 流水编号
      */
-    @TableField("code")
+    @ExcelFiled("流水编号")
     private String code;
     /**
      * 流水类别Id
      */
-    @TableField("categoryId")
     private Integer categoryId;
     /**
      * 流水类别名称
      */
-    @TableField(exist = false)
+    @ExcelFiled("流水类别名称")
     private String accountsCategoryName;
     /**
      * 流水总价
      */
+    @ExcelFiled("流水总价")
     private BigDecimal cost;
     /**
      * 订单Id
      */
-    @TableField("orderCode")
+    @ExcelFiled("订单Id")
     private String orderCode;
     /**
      * 创建时间
      */
-    @TableField("createTime")
-    private Date createTime;
+    @ExcelFiled("创建时间")
+    private LocalDateTime createTime;
     /**
      * 修改时间
      */
-    @TableField("modificationTime")
+    @ExcelFiled("修改时间")
     private LocalDateTime modificationTime;
     /**
      * 创建人
      */
-    @TableField("createBy")
     private Integer createBy;
     /**
      * 创建人姓名
      */
-    @TableField(exist = false)
+    @ExcelFiled("创建人姓名")
     private String createName;
     /**
      * 修改人
      */
-    @TableField("modificationBy")
     private Integer modificationBy;
     /**
      * 修改人姓名
      */
-    @TableField(exist = false)
+    @ExcelFiled("修改人姓名")
     private String modificationName;
     /**
      * 逻辑删除
      */
-    @TableField("isDel")
     private String isDel;
     /**
      * 银行卡Id
      */
-    @TableField("bankAcountId")
     private Integer bankAcountId;
     /**
      * 银行卡号
      */
-    @TableField(exist = false)
+    @ExcelFiled("银行卡号")
     private String bandCount;
     /**
      * 描述
      */
-    @TableField("description")
+    @ExcelFiled("描述")
     private String description;
-    /**
-     * 开始时间(模糊查询createTime)
-     */
-    @TableField(exist = false)
-    private String beginTime;
-    /**
-     * 结束时间(模糊查询createTime)
-     */
-    @TableField(exist = false)
-    private String endTime;
-
-
 }

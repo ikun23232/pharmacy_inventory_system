@@ -2,8 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.CwBsysDao">
     <select id="getCwbsysList" resultType="com.kgc.entity.CwBsys">
-        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost
-        FROM cw_bsys a WHERE a.isDel=0
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,
+        b.storehouseId,
+        (SELECT `name` FROM base_storehouse WHERE b.storehouseId=id) storehouseName,
+        b.reportedTypeId,
+        (SELECT reportedName FROM kc_reportedtype WHERE b.reportedTypeId=id) reportedTypeName,
+        (SELECT userName FROM sys_user WHERE b.approverBy=userId) approverByName,
+        b.createBy,
+        (SELECT userName FROM sys_user WHERE b.createBy=userId) createByName
+        FROM cw_bsys a LEFT JOIN kc_reported b ON a.originalOrder=b.`code`
+        where a.isDel=0
         <if test="code!=null and code!=''">
             AND a.code LIKE concat('%',#{code},'%')
         </if>
@@ -13,7 +21,39 @@
         <if test="beginTime != null and beginTime != ''">
             and a.createTime BETWEEN #{beginTime} and #{endTime}
         </if>
+        <if test="storehouseId>0">
+            and b.storehouseId=#{storehouseId}
+        </if>
+    </select>
 
+    <select id="getCwbsysByCode" resultType="com.kgc.entity.CwBsys">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,
+        b.storehouseId,
+        (SELECT `name` FROM base_storehouse WHERE b.storehouseId=id) storehouseName,
+        b.reportedTypeId,
+        (SELECT reportedName FROM kc_reportedtype WHERE b.reportedTypeId=id) reportedTypeName,
+        (SELECT userName FROM sys_user WHERE b.approverBy=userId) approverByName,
+        b.createBy,
+        (SELECT userName FROM sys_user WHERE b.createBy=userId) createByName
+        FROM cw_bsys a LEFT JOIN kc_reported b ON a.originalOrder=b.`code`
+        where a.isDel=0 and a.code=#{code}
+    </select>
+
+    <select id="getStorehouseList" resultType="com.kgc.entity.BaseStorehouse">
+        SELECT id,`name` FROM base_storehouse WHERE isDel=0
+    </select>
+
+    <select id="getCwbsysVOList" resultType="com.kgc.vo.CwBsysVO">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,
+        b.storehouseId,
+        (SELECT `name` FROM base_storehouse WHERE b.storehouseId=id) storehouseName,
+        b.reportedTypeId,
+        (SELECT reportedName FROM kc_reportedtype WHERE b.reportedTypeId=id) reportedTypeName,
+        (SELECT userName FROM sys_user WHERE b.approverBy=userId) approverByName,
+        b.createBy,
+        (SELECT userName FROM sys_user WHERE b.createBy=userId) createByName
+        FROM cw_bsys a LEFT JOIN kc_reported b ON a.originalOrder=b.`code`
+        where a.isDel=0
     </select>
 
 </mapper>
