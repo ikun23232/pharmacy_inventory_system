@@ -4,8 +4,10 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.SysLogManage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kgc.entity.SysUser;
 import com.kgc.vo.SysOperationLogVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -33,4 +35,6 @@ public interface SysLogManageService extends IService<SysLogManage> {
      * @return
      */
     SysOperationLogVo queryById(Integer id);
+
+    public void LogManageexcel(SysOperationLogVo sysOperationLogVo, HttpServletResponse response);
 }

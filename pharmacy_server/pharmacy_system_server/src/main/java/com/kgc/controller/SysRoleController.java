@@ -3,6 +3,7 @@ package com.kgc.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.kgc.annotation.Log;
 import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.*;
 import com.kgc.service.SysRoleMenuService;
@@ -47,6 +48,7 @@ public class SysRoleController {
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
 
+    @Log("根据id查询角色")
     @RequestMapping("/role/info/{id}")
     public Message info(@PathVariable("id") Integer id) {
 
@@ -73,15 +75,15 @@ public class SysRoleController {
         Message message = sysRoleService.getRoleListPage(rolename,isUse,page);
         return message;
     }
+
     @RequestMapping("/role/AllList")
     public Message AllList() {
-
         Message message = sysRoleService.getAllList();
         return message;
     }
 
 
-
+    @Log("添加角色")
     @RequestMapping("/role/save")
     public Message save(@Validated @RequestBody SysRole sysRole) {
         String token = GetUser.getUser();
@@ -92,7 +94,7 @@ public class SysRoleController {
         return Message.success(sysRole);
     }
 
-
+    @Log("修改角色")
     @RequestMapping("/role/update")
     public Message update(@Validated @RequestBody SysRole sysRole) {
 
@@ -105,7 +107,7 @@ public class SysRoleController {
 
         return Message.success(sysRole);
     }
-
+    @Log("根据id删除角色")
     @RequestMapping("/role/delete")
     public Message info(@RequestBody Integer[] ids) {
 

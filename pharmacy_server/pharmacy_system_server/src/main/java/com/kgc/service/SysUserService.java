@@ -5,11 +5,13 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kgc.vo.KcInventoryVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -37,5 +39,6 @@ public interface SysUserService extends IService<SysUser> {
 
     void clearUserAuthorityInfoByMenuId(Integer menuId);
     public Message repass( Integer userId);
+    public void Userexcel(SysUser sysUser, HttpServletResponse response);
 
 }

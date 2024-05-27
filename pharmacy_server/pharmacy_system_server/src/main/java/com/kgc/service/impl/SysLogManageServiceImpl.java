@@ -2,17 +2,18 @@ package com.kgc.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kgc.entity.Message;
-import com.kgc.entity.Page;
-import com.kgc.entity.SysLogManage;
+import com.kgc.entity.*;
 import com.kgc.dao.SysLogManageMapper;
-import com.kgc.entity.SysNotice;
 import com.kgc.service.SysLogManageService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.SysOperationLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,5 +40,16 @@ public class SysLogManageServiceImpl extends ServiceImpl<SysLogManageMapper, Sys
     @Override
     public SysOperationLogVo queryById(Integer id) {
         return sysLogManageMapper.queryById(id);
+    }
+
+    @Override
+    public void LogManageexcel(SysOperationLogVo sysOperationLogVo, HttpServletResponse response) {
+        List<SysOperationLogVo> sysOperationLogVos = sysLogManageMapper.queryList(null, null, null, null, null);
+
+        try {
+            ExeclUtil.write(sysOperationLogVos, SysOperationLogVo.class,response,"操作日志信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

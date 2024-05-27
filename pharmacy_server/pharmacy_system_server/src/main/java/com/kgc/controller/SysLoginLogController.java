@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 /**
@@ -46,13 +47,13 @@ public class SysLoginLogController  {
         return Message.success(sysLoginLogVo);
     }
 
-//    @Log("登录日志导出")
-////    @SaCheckPermission("system:sysLoginLog:export")
-//    @GetMapping("/exportExcel")
-//    public void exportExcel(SysLoginLogVo entity) {
-//        List<SysLoginLogVo> list = sysLoginLogService.queryList(getAllPage(), entity).getRecords();
-//        EasyPoiExcelUtils.exportExcel(list, "登录日志-" + DateUtil.format(DateUtil.date(), "yyyyMMddHHmmss"), SysLoginLogVo.class);
-//    }
+    @Log("登录日志导出")
+//    @SaCheckPermission("system:sysLoginLog:export")
+    @GetMapping("/sysLoginLog/LogLoginexcel")
+    public void LogLoginexcel(@RequestBody  SysLoginLogVo entity,HttpServletResponse response) {
+        sysLoginLogService.LogLoginexcel(entity,response);
+
+    }
 
     @Log("登录日志根据主键删除")
 //    @SaCheckPermission("system:sysLoginLog:remove")

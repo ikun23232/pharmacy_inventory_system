@@ -2,6 +2,7 @@ package com.kgc.controller;
 
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.annotation.LoginLog;
 import com.kgc.entity.*;
 import com.kgc.service.SysRoleService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -48,21 +50,31 @@ public class SysUserController {
         Message message = userService.getUsersListByPage(username,sex,isstate,page);
         return message;
     }
+    @Log("注销用户")
     @RequestMapping("logout")
     public Message logout() {
         StpUtil.logout();
         return Message.success();
     }
+
+    @Log("导出用户")
+    @RequestMapping("Userexcel")
+    public void Userexcel(@RequestBody SysUser sysUser , HttpServletResponse response) {
+        userService.Userexcel(sysUser,response);
+    }
+    @Log("删除用户")
     @RequestMapping("/delUserById")
     public Message delUnitById(@RequestBody Integer[] ids) {
         Message message = userService.delUserById(ids);
         return message;
     }
+    @Log("修改用户")
     @RequestMapping("/updateUser")
     public Message updateUnit(@RequestBody SysUser sysUser) {
         Message message = userService.updateUser(sysUser);
         return message;
     }
+    @Log("保存用户")
     @RequestMapping("/saveUser")
     public Message saveUser(@RequestBody SysUser sysUser) {
         sysUser.setCreatedate(new Date());
@@ -77,7 +89,7 @@ public class SysUserController {
         Message message = userService.selectUser();
         return message;
     }
-
+    @Log("根据id查询用户")
     @RequestMapping("/info/{id}")
     public Message info(@PathVariable("id") Integer id) {
 
@@ -100,7 +112,7 @@ public class SysUserController {
         Message message = userService.existUser(username,id);
         return message;
     }
-
+    @Log("修改密码")
     @RequestMapping("/repass")
     public Message repass(Integer userId) {
         Message message = userService.repass(userId);

@@ -4,12 +4,14 @@ package com.kgc.controller;
 import com.kgc.annotation.Log;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
+import com.kgc.entity.SysUser;
 import com.kgc.service.SysLogManageService;
 import com.kgc.vo.SysOperationLogVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 /**
@@ -77,6 +79,14 @@ public class SysLogManageController {
             return Message.success(b);
         }
         return Message.error("删除失败");
+    }
+
+    @Log("操作日志导出")
+//    @SaCheckPermission("system:sysOperationLog:removeBatch")
+    @RequestMapping("/sysLogManage/LogManageexcel")
+    public void LogManageexcel(@RequestBody SysOperationLogVo sysOperationLogVo , HttpServletResponse response) {
+       sysOperationLogService.LogManageexcel(sysOperationLogVo,response);
+
     }
 }
 

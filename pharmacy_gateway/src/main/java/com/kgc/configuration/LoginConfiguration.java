@@ -38,7 +38,7 @@ public class LoginConfiguration {
                     SaRouter.match("/base/**", r -> StpUtil.checkRoleOr("admin","master"));
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/user/**", r -> StpUtil.checkPermission("admin"));
-                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("admin"));
+                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("master"));
 //                    SaRouter.match("/base/**", r -> StpUtil.checkPermission("admin"));
 //                    SaRouter.match("/user/**", r -> StpUtil.checkPermission("master"));
 //                    SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));

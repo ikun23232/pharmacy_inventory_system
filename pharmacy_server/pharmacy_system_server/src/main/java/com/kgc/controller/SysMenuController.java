@@ -2,6 +2,7 @@ package com.kgc.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.kgc.annotation.Log;
 import com.kgc.entity.Message;
 import com.kgc.entity.SysMenu;
 import com.kgc.entity.SysRolemenu;
@@ -43,7 +44,7 @@ public class SysMenuController {
         Message message = sysMenuService.getAuth();
         return message;
     }
-
+    @Log("根据id获取菜单")
     @RequestMapping("/menu/info/{id}")
     public Message info(@PathVariable(name = "id") Integer id) {
         return Message.success(sysMenuService.getById(id));
@@ -54,6 +55,7 @@ public class SysMenuController {
         Message message = sysMenuService.getAllMenuList();
         return message;
     }
+    @Log("添加菜单")
     @RequestMapping("/menu/save")
     public Message save(@Validated @RequestBody SysMenu sysMenu) {
 
@@ -62,7 +64,7 @@ public class SysMenuController {
         sysMenuService.save(sysMenu);
         return Message.success(sysMenu);
     }
-
+    @Log("修改菜单")
     @RequestMapping("/menu/update")
 
     public Message update(@Validated @RequestBody SysMenu sysMenu) {
@@ -75,7 +77,7 @@ public class SysMenuController {
         sysUserService.clearUserAuthorityInfoByMenuId(sysMenu.getId());
         return Message.success(sysMenu);
     }
-
+    @Log("根据id删除菜单")
     @RequestMapping("/menu/delete/{id}")
     public Message delete(@PathVariable("id") Integer id) {
 

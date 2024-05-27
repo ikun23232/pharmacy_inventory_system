@@ -4,8 +4,10 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.SysNotice;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kgc.entity.SysUser;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -25,4 +27,5 @@ public interface SysNoticeService extends IService<SysNotice> {
 
     public Message updateNotice(SysNotice sysNotice);
     public Message saveNotice(SysNotice sysNotice);
+    public void Newsexcel(SysNotice sysNotice, HttpServletResponse response);
 }

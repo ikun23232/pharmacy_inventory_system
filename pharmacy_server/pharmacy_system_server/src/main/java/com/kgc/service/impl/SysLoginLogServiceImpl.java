@@ -8,12 +8,15 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.SysLoginLog;
 import com.kgc.service.SysLoginLogService;
+import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.SysLoginLogVo;
 import com.kgc.vo.SysOperationLogVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -38,5 +41,16 @@ public class SysLoginLogServiceImpl extends ServiceImpl<SysLoginLogMapper, SysLo
     @Override
     public SysLoginLogVo queryById(Integer id) {
         return sysLoginLogMapper.queryById(id);
+    }
+
+    @Override
+    public void LogLoginexcel(SysLoginLogVo sysLoginLogVo, HttpServletResponse response) {
+        List<SysLoginLogVo> sysLoginLogVos = sysLoginLogMapper.queryList(null, null, null, null);
+
+        try {
+            ExeclUtil.write(sysLoginLogVos, SysLoginLogVo.class,response,"操作登陆日志信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

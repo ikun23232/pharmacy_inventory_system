@@ -31,6 +31,7 @@
 
       <el-form-item>
         <el-button type="primary" @click="addHandle">新增</el-button>
+        <el-button type="success" @click="excelContent()">导出</el-button>
         <!-- <el-button type="primary" @click="dialogVisible = true" v-if="hasAuth('sys:user:save')">新增</el-button> -->
       </el-form-item>
       <el-form-item>
@@ -446,6 +447,21 @@ export default {
             });
           });
       });
+    },
+    excelContent() {
+      this.$axios
+        .post("/user/Userexcel", this.searchForm, {
+          responseType: "blob",
+        })
+        .then((resp) => {
+          let blob = new Blob([resp], { type: "application/xlsx" });
+          let url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a"); //创建a标签
+          link.href = url;
+          link.download = "用户明细.xlsx"; //重命名文件
+          link.click();
+          URL.revokeObjectURL(url);
+        });
     },
   },
 };

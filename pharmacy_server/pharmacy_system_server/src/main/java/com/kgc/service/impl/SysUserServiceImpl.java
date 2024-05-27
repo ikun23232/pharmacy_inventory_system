@@ -14,14 +14,19 @@ import com.kgc.service.SysMenuService;
 import com.kgc.service.SysRoleService;
 import com.kgc.service.SysUserRoleService;
 import com.kgc.service.SysUserService;
+import com.kgc.utils.ExeclUtil;
 import com.kgc.utils.Md5Util;
 import com.kgc.utils.RedisUtil;
+import com.kgc.vo.PandianDetailVo;
+import com.kgc.vo.PandianMedicineVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -222,6 +227,22 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         boolean flag = this.updateById(sysUser);
         return Message.success(flag);
+    }
+
+    @Override
+    public void Userexcel(SysUser sysUser, HttpServletResponse response) {
+        List<SysUser> allUser = sysUserMapper.getAllUser();
+        List<SysUser> temp = new ArrayList<>();
+        for (SysUser user : allUser) {
+            List<SysRole> allKcInventoryDetailById = sysRoleMapper.getRoleList(sysUser.getUserid());
+            sysUser.setSysRoles(allKcInventoryDetailById);
+            temp.add(user);
+        }
+        try {
+            ExeclUtil.write(temp, SysUser.class,response,"用户信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

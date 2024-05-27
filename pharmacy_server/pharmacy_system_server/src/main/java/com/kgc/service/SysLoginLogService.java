@@ -5,7 +5,9 @@ import com.kgc.entity.Message;
 import com.kgc.entity.Page;
 import com.kgc.entity.SysLoginLog;
 import com.kgc.vo.SysLoginLogVo;
+import com.kgc.vo.SysOperationLogVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -32,4 +34,5 @@ public interface SysLoginLogService extends IService<SysLoginLog> {
      * @return
      */
     SysLoginLogVo queryById(Integer id);
+    public void LogLoginexcel(SysLoginLogVo sysLoginLogVo, HttpServletResponse response);
 }

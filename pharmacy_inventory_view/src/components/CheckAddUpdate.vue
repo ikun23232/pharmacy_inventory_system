@@ -519,6 +519,7 @@
         <el-button class="anniu" @click="tosumbit()">提 交</el-button>
       </el-form-item>
     </el-form>
+    
   </span>
 </template>
     
@@ -701,9 +702,6 @@ export default {
           params: { id: this.kid },
         })
         .then((resp) => {
-          console.log(resp.data);
-          console.log("oooooooooooooooooooooo");
-          console.log(this.StoreCheck);
           this.StoreCheck = resp.data;
           this.bcglXiangXiList = this.StoreCheck.kcInventorydetailList;
         });
@@ -730,6 +728,7 @@ export default {
               },
             })
             .then((resp) => {
+              if (resp.status === 200) {
                 if (resp.code === "200") {
                   this.$message({
                     message: "添加成功!",
@@ -744,7 +743,9 @@ export default {
                     center: true,
                   });
                 }
-             
+              } else {
+                console.log("Response status is not 200");
+              }
             })
             .catch((error) => {
               console.error("Error in sending request:", error);

@@ -37,6 +37,8 @@
           >
         </el-popconfirm>
       </el-form-item>
+      <el-button type="success" @click="excelContent()">导出</el-button>
+
     </el-form>
 
     <el-table

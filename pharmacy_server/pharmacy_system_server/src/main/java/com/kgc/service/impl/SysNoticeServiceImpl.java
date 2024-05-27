@@ -9,9 +9,13 @@ import com.kgc.entity.*;
 import com.kgc.dao.SysNoticeMapper;
 import com.kgc.service.SysNoticeService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kgc.utils.ExeclUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -82,5 +86,15 @@ public class SysNoticeServiceImpl extends ServiceImpl<SysNoticeMapper, SysNotice
             return Message.success(flag);
         }
         return Message.error("修改失败");
+    }
+
+    @Override
+    public void Newsexcel(SysNotice sysNotice, HttpServletResponse response) {
+        List<SysNotice> allUser = sysNoticeMapper.getNoticeList(null,null,null);
+        try {
+            ExeclUtil.write(allUser, SysNotice.class,response,"公告信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

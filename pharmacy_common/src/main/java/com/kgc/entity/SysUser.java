@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.*;
 
 import java.io.Serializable;
@@ -37,7 +38,8 @@ public class SysUser implements Serializable {
     /**
      * 账户名
      */
-    @TableField("userName")
+    @TableField("账户")
+    @ExcelFiled("商品主键")
     private String username;
 
     /**
@@ -48,6 +50,8 @@ public class SysUser implements Serializable {
     /**
      * 年龄 1:男 0:女
      */
+    @ExcelFiled("年龄")
+
     private Integer age;
 
     /**
@@ -57,12 +61,14 @@ public class SysUser implements Serializable {
     /**
      * 邮箱
      */
+    @ExcelFiled("邮箱")
     private String email;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
+    @ExcelFiled("创建时间")
     private Date createdate;
 
     /**
@@ -75,6 +81,7 @@ public class SysUser implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
+    @ExcelFiled("修改时间")
     private Date updatedate;
 
     /**
@@ -97,6 +104,7 @@ public class SysUser implements Serializable {
      * 用户名
      */
     @TableField("nickName")
+    @ExcelFiled("用户名")
     private String nickname;
 
 //    @TableField(exist = false)
