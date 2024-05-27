@@ -1,8 +1,6 @@
 package com.kgc.auth;
 
 import cn.dev33.satoken.stp.StpInterface;
-import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import com.kgc.dao.SysMenuMapper;
 import com.kgc.dao.SysRoleMapper;
 import com.kgc.dao.SysUserMapper;
@@ -11,6 +9,7 @@ import com.kgc.entity.SysRole;
 import com.kgc.entity.SysUser;
 import com.kgc.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,12 +19,16 @@ import java.util.List;
  * 自定义权限验证接口扩展
  */
 @Component
-public class SaTokenStpInterfaceImpl implements StpInterface {
+@Primary
+public class StpInterfaceImpl implements StpInterface {
 
     @Autowired
     private SysMenuMapper sysMenuMapper;
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
@@ -35,9 +38,7 @@ public class SaTokenStpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        String tokenValue = StpUtil.getTokenValue();
-        String rolelst = (String)StpUtil.getLoginIdByToken(tokenValue);
-        SysUser loginUser = (SysUser)StpUtil.getSession().get("user");
+        SysUser loginUser = sysUserMapper.existUser(loginId.toString(), null);
         List<String> list = new ArrayList<>();
         List<SysRole> roles = sysRoleMapper.getRoleList(loginUser.getUserid());
         if (roles.isEmpty()) {
@@ -46,9 +47,7 @@ public class SaTokenStpInterfaceImpl implements StpInterface {
         for (SysRole role : roles) {
             list.add(role.getCode());
         }
-        if (CollectionUtil.isNotEmpty(list)) {
-            StpUtil.getTokenSession().set(rolelst, list);
-        }
+
         return list;
     }
 
@@ -58,10 +57,7 @@ public class SaTokenStpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 从session中获取
-        String tokenValue = StpUtil.getTokenValue();
-        String menulst = (String)StpUtil.getLoginIdByToken(tokenValue);
-//        SysUser loginUser = sysUserMapper.existUser(menulst,null);
-        SysUser loginUser = (SysUser)StpUtil.getSession().get("user");
+        SysUser loginUser = sysUserMapper.existUser(loginId.toString(), null);
         List<Integer> menuIds = sysMenuMapper.getNavMenuIds(loginUser.getUserid());
         List<String> list = new ArrayList<>();
         // 超级管理员
@@ -80,10 +76,15 @@ public class SaTokenStpInterfaceImpl implements StpInterface {
             for (SysMenu menu : menus) {
                 list.add(menu.getPerms());
             }
-            if (CollectionUtil.isNotEmpty(list)) {
-                StpUtil.getTokenSession().set(menulst, list);
-            }
+
         }
+        list.add("101");
+        list.add("user-add");
+        list.add("user-delete");
+        list.add("user-update");
+        list.add("user-get");
+        list.add("article-get");
+
         return list;
 
     }

@@ -2,6 +2,7 @@ package com.kgc.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.kgc.entity.KcInventorydetail;
 import com.kgc.entity.KcInventoryrk;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -59,9 +61,11 @@ public class KcInventoryrkController {
         return message;
     }
 
-    @SaCheckPermission("kc:inventroyRK:excel")//必须拥有该权限可访问
     @RequestMapping("/check/getAllCheckRkexcel")
     public void getAllCheckRkexcel(@RequestBody KcInventoryrk kcInventoryrk , HttpServletResponse response) {
+        List<String> permissionList = StpUtil.getPermissionList();
+        System.out.println(permissionList);
+        StpUtil.checkPermission("kc:inventroyRK:excel");
          iKcInventoryrkService.getAllCheckRkexcel(kcInventoryrk, response);
     }
     @RequestMapping("/check/getAllCheckById")
