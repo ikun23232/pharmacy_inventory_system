@@ -70,7 +70,7 @@
 
       </el-table-column>
 
-      <el-table-column prop="totalPrice" label="参考金额" width="120">
+      <el-table-column prop="price" label="参考金额" width="120">
       </el-table-column>
 
       <el-table-column prop="approvalstatus
