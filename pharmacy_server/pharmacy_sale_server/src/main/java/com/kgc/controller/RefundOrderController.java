@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Controller
@@ -34,6 +35,13 @@ public class RefundOrderController {
         Message message = refundOrderService.addRefundOrder(xsOrder);
         return message;
     }
+    @RequestMapping("/saveRefundOrder")
+    @ResponseBody
+    public Message saveRefundOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = refundOrderService.saveRefundOrder(xsOrder);
+        return message;
+    }
 
     @RequestMapping("/checkedRefundOrder")
     @ResponseBody
@@ -41,5 +49,10 @@ public class RefundOrderController {
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = refundOrderService.checkedRefundOrder(xsOrder);
         return message;
+    }
+
+    @RequestMapping("/refundOrderExcel")
+    public void saleOrderExcel(@RequestBody XsOrder xsOrder, HttpServletResponse response) {
+        refundOrderService.refundOrderExcel(xsOrder,response);
     }
 }

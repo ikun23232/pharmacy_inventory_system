@@ -54,7 +54,7 @@ public class OrderMedicine implements Serializable {
 
     private Integer isDel;
 
-    private Integer batchCode;
+    private String batchCode;
 
     @TableField("providerId")
     private Integer providerId;

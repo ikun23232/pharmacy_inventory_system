@@ -6,6 +6,7 @@ import com.kgc.entity.OrderStatistics;
 import com.kgc.entity.XsOrder;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface OrderStatisticsService extends IService<OrderStatistics> {
@@ -20,5 +21,13 @@ public interface OrderStatisticsService extends IService<OrderStatistics> {
     public Message getRefundOrderDetailStatisticsList(OrderStatistics orderStatistics);
 
     public Message getALLSaleOrderDetailStatisticsList(OrderStatistics orderStatistics);
+
+    public void saleOrderStatisticsExcel(OrderStatistics orderStatistics, HttpServletResponse response);
+
+    public void refundOrderStatisticsExcel(OrderStatistics orderStatistics, HttpServletResponse response);
+
+    public void saleOrderDetailStatisticsExcel(OrderStatistics orderStatistics, HttpServletResponse response);
+
+    public void refundOrderDetailStatisticsExcel(OrderStatistics orderStatistics, HttpServletResponse response);
 
 }

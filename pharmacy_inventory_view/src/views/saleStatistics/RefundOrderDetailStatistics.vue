@@ -45,7 +45,7 @@
                <el-form-item>
                    <el-button type="primary" icon="el-icon-search" @click="initRefundOrderDetailStatisticsList(1)">查询</el-button>
                    <el-button icon="el-icon-refresh-right" >重置</el-button>
-               <el-button type="text" icon="el-icon-upload2" style="margin-left:18px">导出</el-button>
+               <el-button type="text" icon="el-icon-upload2" style="margin-left:18px" @click="handleExcel">导出</el-button>
                </el-form-item>
            </el-form>
            </div>
@@ -83,7 +83,7 @@
  </template>
  
  <script>
- import {getRefundOrderDetailStatisticsList} from "@/api/saleStatistics.js";
+ import {getRefundOrderDetailStatisticsList,refundOrderDetailStatisticsExcel} from "@/api/saleStatistics.js";
  
  export default {
      name:"refundOrderDetailStatistics",
@@ -115,6 +115,9 @@
              this.object.currentPage = val;
              this.initRefundOrderDetailStatisticsList(this.object.currentPage);
          },
+         async handleExcel(){
+          await refundOrderDetailStatisticsExcel(this.object);
+        }
      }
  }
  </script>

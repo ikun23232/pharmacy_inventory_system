@@ -72,7 +72,7 @@
             @selection-change="handleSelectionChange"
             ref="tb"
             border
-            style="width:900px"
+            style="width:960px"
           >
             <el-table-column type="selection" width="50" align="center" />
             <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
@@ -131,6 +131,11 @@
             <el-table-column label="当前库存" align="center" prop="stock" width="120">
               <template slot-scope="scope">
                <el-input  v-model="medicineDetailList[scope.row.xh-1].stock"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="库存预警值" align="center" prop="warning" width="120">
+              <template slot-scope="scope">
+                <el-input  v-model="medicineDetailList[scope.row.xh-1].warning" disabled></el-input>
               </template>
             </el-table-column>
           </el-table>
@@ -204,7 +209,6 @@
        };
      },
      async mounted() {
-       this.saleOrder.orderNo = await getCurrentTime("XXDD");
        this.getAllBankCountList();
        this.getAllBaseMedicine();
        this.getSaleOrderByOrderNo();
@@ -214,6 +218,7 @@
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
           this.saleOrder=data.data;
+          this.saleOrder.orderDate=new Date();
           this.medicineDetailList = this.saleOrder.baseMedicineList;
         },
         //查询银行
@@ -245,6 +250,7 @@
          obj.quantity=data.data.quantity
          obj.salePrice=data.data.salePrice
          obj.totalPrice=data.data.salePrice
+         obj.warning=data.data.warning
          this.saleOrder.totalPrice=this.sumPrice
        },
        //改变数量
@@ -268,6 +274,7 @@
           quantity:"",
           stock:"",
           totalPrice:'',
+          warning:"",
          };
          this.medicineDetailList.push(obj);
        },

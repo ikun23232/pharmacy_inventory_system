@@ -188,7 +188,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
                 kcOutintodetial.setBatchCode(baseMedicine.getBatchCode());
                 kcOutintodetial.setMedicineId(baseMedicine.getMedicineId());
                 kcOutintodetial.setPrice(baseMedicine.getPurchasePrice());
-                kcOutintodetial.setProviderId(baseMedicine.getProviderId());
+                kcOutintodetial.setProviderid(baseMedicine.getProviderId());
                 kcOutintodetial.setFromStockMoney(baseMedicine.getPurchasePrice().multiply(BigDecimal.valueOf(baseMedicine.getQuantity())));
                 kcOutintodetial.setFromStockQuantity(baseMedicine.getQuantity());
                 kcOutintodetial.setWareHouseId(kcDispatch.getBeforeWarehouseId());
@@ -221,7 +221,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
                 kcOutintodetial.setMedicineId(baseMedicine.getMedicineId());
                 kcOutintodetial.setPrice(baseMedicine.getPurchasePrice());
                 kcOutintodetial.setBatchCode(baseMedicine.getBatchCode());
-                kcOutintodetial.setProviderId(baseMedicine.getProviderId());
+                kcOutintodetial.setProviderid(baseMedicine.getProviderId());
                 kcOutintodetial.setToStockMoney(baseMedicine.getPurchasePrice().multiply(BigDecimal.valueOf(baseMedicine.getQuantity())));
                 kcOutintodetial.setToStockQuantity(baseMedicine.getQuantity());
                 kcOutintodetial.setPrice(baseMedicine.getPurchasePrice());

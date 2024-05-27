@@ -76,7 +76,7 @@ public class KcReported implements Serializable {
      * 报损时间
      */
     @TableField("createTime")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 创建人
@@ -88,7 +88,7 @@ public class KcReported implements Serializable {
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationTime;
+    private Date modificationTime;
 
     /**
      * 修改人

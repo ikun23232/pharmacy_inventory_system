@@ -13,21 +13,38 @@
         <result column="totalPrice" property="xsOrder.totalPrice"></result>
         <result column="remark" property="xsOrder.remark"></result>
         <result column="refundTypeId" property="xsOrder.refundTypeId"></result>
+        <result column="checkByName" property="xsOrder.checkByName"></result>
         <result column="refundTypeName" property="xsOrder.refundTypeName"></result>
         <result column="createByName" property="xsOrder.createByName"></result>
         <result column="updateByName" property="xsOrder.updateByName"></result>
         <result column="updateDate" property="xsOrder.updateDate"></result>
     </resultMap>
     <select id="getRefundInWarehouseListByPage" resultMap="KcSalefromwareMap" parameterType="com.kgc.entity.KcSalefromware">
-        SELECT kc.id,code,orderNo,orderDate,totalNumber,totalPrice,remark,refundTypeId,r.type AS refundTypeName,
+        SELECT kc.id,code,kc.orderNo,orderDate,totalNumber,totalPrice,remark,refundTypeId,r.type AS refundTypeName,
+        sys.userName AS checkByName,
         xs.updateDate,c.userName AS createByName,u.userName AS updateByName
         from kc_salefromware kc,xs_refundtype r,xs_order xs
         LEFT JOIN sys_user c ON xs.createBy = c.userId AND c.isDel = 0
         LEFT JOIN sys_user u ON xs.updateBy = u.userId AND u.isDel = 0
-        WHERE kc.orderId=xs.id and xs.refundTypeId=r.id and kc.isDel=0 and xs.isDelete=0 and xs.type=1
+        LEFT JOIN sys_user sys ON xs.checkBy = sys.userId AND sys.isDel = 0
+        WHERE kc.orderNo=xs.orderNo and xs.refundTypeId=r.id and kc.isDel=0 and xs.isDelete=0 and xs.type=1
         <if test="code!=null and code!=''">
             and code like concat('%',#{code},'%')
         </if>
     </select>
 
+
+    <select id="getRefundInWarehouseList" resultType="com.kgc.vo.KcRefundInWareVo">
+        SELECT kc.id,code,kc.orderNo,orderDate,totalNumber,totalPrice,remark,refundTypeId,r.type AS refundTypeName,
+        sys.userName AS checkByName,
+        xs.updateDate,c.userName AS createByName,u.userName AS updateByName
+        from kc_salefromware kc,xs_refundtype r,xs_order xs
+        LEFT JOIN sys_user c ON xs.createBy = c.userId AND c.isDel = 0
+        LEFT JOIN sys_user u ON xs.updateBy = u.userId AND u.isDel = 0
+        LEFT JOIN sys_user sys ON xs.checkBy = sys.userId AND sys.isDel = 0
+        WHERE kc.orderNo=xs.orderNo and xs.refundTypeId=r.id and kc.isDel=0 and xs.isDelete=0 and xs.type=1
+        <if test="code!=null and code!=''">
+            and code like concat('%',#{code},'%')
+        </if>
+    </select>
 </mapper>

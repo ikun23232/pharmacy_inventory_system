@@ -1,5 +1,6 @@
 package com.kgc.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.BaseStorehouse;
 import com.kgc.entity.KcReported;
 import com.kgc.entity.KcReporteddetail;
@@ -8,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface KcReportedMapper {
+public interface KcReportedMapper extends BaseMapper<KcReported> {
     /**
      * 获取报损库存列表
      * @param kcReported
@@ -51,5 +52,4 @@ public interface KcReportedMapper {
     int delKcReporteddetailByCode(@Param("reportedCode") String reportedCode);
 
     int delKcReportedByCode(@Param("code") String code);
-
 }

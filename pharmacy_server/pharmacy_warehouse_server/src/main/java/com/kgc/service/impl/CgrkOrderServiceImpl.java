@@ -98,9 +98,9 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
-            Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode((batchCode+1)+"");
+//            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
+//            Integer batchCode = orderMapper.selectMaxYourField();
+//            orderMedicine.setBatchCode((batchCode+1)+"");
             orderMapper.insert(orderMedicine);
         }
         return Message.success();
@@ -133,9 +133,9 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
-            Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode((batchCode+1)+"");
+//            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
+//            Integer batchCode = orderMapper.selectMaxYourField();
+//            orderMedicine.setBatchCode((batchCode+1)+"");
             orderMapper.insert(orderMedicine);
         }
         return Message.success();
@@ -181,7 +181,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         for (BaseMedicine baseMedicine : medicineList) {
             KcMedicine kcMedicine=new KcMedicine();
             kcMedicine.setBatchCode(baseMedicine.getBatchCode());
-            kcMedicine.setStorehouseId(baseMedicine.getFowardWarHouseId());
+//            kcMedicine.setStorehouseId(baseMedicine.getFowardWarHouseId());
             kcMedicine.setMedicineId(baseMedicine.getMedicineId());
             kcMedicine.setProviderId(baseMedicine.getProviderId());
             kcMedicine.setQuantity(baseMedicine.getQuantity());

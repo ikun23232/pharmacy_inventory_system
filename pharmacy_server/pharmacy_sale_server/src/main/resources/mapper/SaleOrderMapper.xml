@@ -22,6 +22,7 @@
         LEFT JOIN sys_user u ON o.updateBy = u.userId AND u.isDel = 0
         JOIN bank_account b ON o.bankAccountId = b.id AND b.isDel = 0
         WHERE o.isDelete = 0 and o.type=0
+        <if test="editStatus>0">and editStatus=1</if>
         <if test="orderNo!=null and orderNo!=''">and orderNo like concat('%',#{orderNo},'%')</if>
         <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and o.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
         <if test="createBy>0">and o.createBy=#{createBy}</if>
@@ -53,8 +54,11 @@
 
     <select id="getSaleOrderDetailByOrderNo" resultType="BaseMedicine">
         select b.id,b.name,b.categoryId,b.unitId,b.salePrice,b.specification,b.warning,
-               un.name as unitName,mc.name as categoryName,om.medicineId,om.quantity,om.totalPrice,om.batchCode,kc.quantity as stock
-        from base_medicine b,base_unit un,base_medicine_category mc,order_medicine om,kc_medicine kc
+               un.name as unitName,mc.name as categoryName,om.medicineId,om.quantity,om.totalPrice,om.batchCode,kc.quantity as stock,
+               c.userName AS createByName,u.userName AS updateByName,b.createTime,b.updateTime
+        from base_unit un,base_medicine_category mc,order_medicine om,kc_medicine kc,base_medicine b
+         LEFT JOIN sys_user c ON b.createBy = c.userId AND c.isDel = 0
+         LEFT JOIN sys_user u ON b.updateBy = u.userId AND u.isDel = 0
         where b.categoryId=mc.id and b.unitId=un.id and b.id=om.medicineId and kc.batchCode=om.batchCode and kc.medicineId=om.medicineId
           and b.isDel=0 and un.isDel=0 and mc.isDel=0 and om.isDel=0
           and om.code=#{orderNo}
@@ -78,4 +82,16 @@
     <update id="cancelOrderDetailByOrderNo">
         update order_medicine set isCancel=1 where code=#{orderNo}
     </update>
+
+    <delete id="deleteSaleOrderByOrderNo">
+        delete from xs_order where orderNo=#{orderNo}
+    </delete>
+
+    <delete id="deleteSaleOrderByOrderNo">
+        delete from xs_order where orderNo=#{orderNo}
+    </delete>
+
+    <delete id="deleteSaleOrderDetailByOrderNo">
+        delete from order_medicine where code=#{orderNo}
+    </delete>
 </mapper>

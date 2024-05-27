@@ -108,6 +108,11 @@
                <el-input  v-model="medicineDetailList[scope.row.xh-1].stock" readonly="true"></el-input>
               </template>
             </el-table-column>
+            <el-table-column label="库存预警值" align="center" prop="warning" width="120">
+              <template slot-scope="scope">
+                <el-input  v-model="medicineDetailList[scope.row.xh-1].warning" disabled></el-input>
+              </template>
+            </el-table-column>
           </el-table>
            </el-col>
            </el-row>

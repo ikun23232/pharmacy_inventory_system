@@ -1,5 +1,5 @@
 <template>
-    <div id="saleOutWarehouse">
+    <div id="refundInWarehouse">
     <h1>销售退货入库</h1>
     <div>
       <div style="padding-top: 15px;padding-left: 20px;">
@@ -22,7 +22,7 @@
               <el-form-item>
                   <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
                   <el-button icon="el-icon-refresh-right" >重置</el-button>
-              <el-button type="text" icon="el-icon-download" style="margin-left:18px">导出</el-button>
+              <el-button type="text" icon="el-icon-download" style="margin-left:18px" @click="handleExcel">导出</el-button>
               <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
               </el-form-item>
           </el-form>
@@ -52,7 +52,7 @@
       </el-table-column>
       <el-table-column prop="xsOrder.remark" label="备注" width="120">
       </el-table-column>
-      <el-table-column prop="xsOrder.createByName" label="审批人" width="120">
+      <el-table-column prop="xsOrder.checkByName" label="审批人" width="120">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
@@ -86,11 +86,11 @@
   <script>
   import RefundOrderDetail from "@/views/refund/RefundOrderDetail.vue";
   import {deleteSaleOutWarehouseOrder} from  "../../../api/saleOutWarehouse.js";
-  import {initRefundInWarehouseListByPage} from  "../../../api/refundInWarehouse.js";
+  import {initRefundInWarehouseListByPage,refundInWarehouseExcel} from  "../../../api/refundInWarehouse.js";
   import { Message } from "element-ui";
   
   export default {
-    name:"saleOutWarehouse",
+    name:"refundInWarehouse",
     components: {
       RefundOrderDetail
     },
@@ -167,6 +167,9 @@
               message: '取消删除成功！'
             })
           });
+      },
+      async handleExcel(){
+        await refundInWarehouseExcel(this.object);
       }
     }
   }

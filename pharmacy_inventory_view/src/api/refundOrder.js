@@ -11,6 +11,7 @@ export function initRefundOrder(xsOrder) {
 export function addRefundOrder(xsOrder) {
     return request.post(baseUrl + "/addRefundOrder",{xsOrder:xsOrder});
 }
+
 //获取退货原因
 export function getAllRefundTypeList() {
     return request.post(baseUrl + "/getAllRefundTypeList");
@@ -27,6 +28,24 @@ export function checkedRefundOrder(xsOrder) {
     });
 }
 
+//导出销售退货订单
+export function refundOrderExcel(xsOrder) {
+    return request.post(baseUrl + "/refundOrderExcel", {
+        xsOrder: xsOrder,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '销售退货订单.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
 // export function updateRefundOrder(xsOrder) {
 //     return request.post(baseUrl + "/updateRefundOrder",{xsOrder:xsOrder});
 // }

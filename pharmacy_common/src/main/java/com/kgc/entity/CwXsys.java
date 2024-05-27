@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -39,18 +40,18 @@ public class CwXsys implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createTime;
 
     /**
      * 原单号
      */
     @TableField("originalOrder")
-    private String originalorder;
+    private String originalOrder;
 
-    /**
-     * 药	品名
-     */
-    private String medicine;
+//    /**
+//     * 药	品名
+//     */
+//    private String medicine;
 
     /**
      * 金额
@@ -60,13 +61,13 @@ public class CwXsys implements Serializable {
     /**
      * 是否删除
      */
-    private String isdel;
+    private String isDel;
 
     /**
      * 销售员
      */
     @TableField("createBy")
-    private String createby;
+    private Integer createBy;
 
 
 }

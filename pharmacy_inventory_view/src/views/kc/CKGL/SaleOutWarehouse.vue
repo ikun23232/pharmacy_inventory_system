@@ -22,7 +22,7 @@
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
                 <el-button icon="el-icon-refresh-right" >重置</el-button>
-            <el-button type="text" icon="el-icon-download" style="margin-left:18px">导出</el-button>
+            <el-button type="text" icon="el-icon-download" style="margin-left:18px" @click="handleExcel">导出</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
             </el-form-item>
         </el-form>
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import {initSaleOutWarehouseListByPage,deleteSaleOutWarehouseOrder} from  "../../../api/saleOutWarehouse.js";
+import {initSaleOutWarehouseListByPage,deleteSaleOutWarehouseOrder,saleOutWarehouseExcel} from  "../../../api/saleOutWarehouse.js";
 import SaleOrderDetail from "../../sale/SaleOrderDetail.vue";
 import { Message } from "element-ui";
 
@@ -167,6 +167,9 @@ export default {
             message: '取消删除成功！'
           })
         });
+    },
+    async handleExcel(){
+      await saleOutWarehouseExcel(this.object);
     }
   }
 }

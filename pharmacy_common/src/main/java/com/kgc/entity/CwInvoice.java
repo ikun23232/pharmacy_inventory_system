@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -36,51 +37,45 @@ public class CwInvoice implements Serializable {
     private String code;
 
     /**
-     * 发票编号
-     */
-    @TableField("InvoiceNumber")
-    private Integer invoicenumber;
-
-    /**
      * 类型
      */
     @TableField("categoryId")
-    private String categoryid;
+    private Integer categoryId;
 
     /**
      * 订单号
      */
     @TableField("orderNumber")
-    private Integer ordernumber;
+    private String orderNumber;
 
     /**
      * 创建人
      */
     @TableField("createBy")
-    private Integer createby;
+    private Integer createBy;
 
     /**
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createtime;
+    private Date createTime;
 
     /**
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationtime;
+    private Date modificationTime;
 
     /**
      * 修改人
      */
     @TableField("modificationBy")
-    private Integer modificationby;
+    private Integer modificationBy;
 
     /**
      * 逻辑删除
      */
-    private String isdel;
+    private String isDel;
 
     /**
      * 发票总金额

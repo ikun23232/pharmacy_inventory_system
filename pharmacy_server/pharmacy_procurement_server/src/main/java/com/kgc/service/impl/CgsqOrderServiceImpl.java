@@ -99,7 +99,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setMedicineId(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
@@ -140,7 +140,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setMedicineId(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());

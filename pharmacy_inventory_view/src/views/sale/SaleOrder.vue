@@ -3,7 +3,7 @@
   <h1>销售订单</h1>
   <div>
     <div style="padding-top: 15px;padding-left: 20px;">
-        <el-form :inline="true" >
+        <el-form :inline="true" ref="saleOrderForm">
             <el-form-item label="单据编号">
                 <el-input placeholder="单据编号" v-model="object.orderNo"></el-input>
             </el-form-item>
@@ -27,9 +27,9 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="initSaleOrderByPage(1)">查询</el-button>
-                <el-button icon="el-icon-refresh-right" @click="resetForm">重置</el-button>
+                <el-button icon="el-icon-refresh-right" @click="resetForm('saleOrderForm')">重置</el-button>
                  <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
-            <el-button type="text" icon="el-icon-upload2" style="margin-left:18px">导出</el-button>
+            <el-button type="text" icon="el-icon-upload2" style="margin-left:18px" @click="handleExcel">导出</el-button>
             <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
             </el-form-item>
         </el-form>
@@ -83,7 +83,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="handleDelete(scope.row.orderNo)">删除</el-dropdown-item>
-            <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)">作废</el-dropdown-item>
+            <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)" :disabled="scope.row.cancelStatus==1?true:false" >作废</el-dropdown-item>
             <el-dropdown-item @click.native="printSaleOrder(scope.row.orderNo)">打印</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import {initSaleOrder,deleteSaleOrder,cancelSaleOrder} from "../../api/saleOrder.js";
+import {initSaleOrder,deleteSaleOrder,cancelSaleOrder,saleOrderExcel} from "../../api/saleOrder.js";
 import {getAllUser} from "../../api/sysUser.js";
 import AddSaleOrder from "../sale/AddSaleOrder.vue";
 import UpdateSaleOrder from "../sale/UpdateSaleOrder.vue";
@@ -263,8 +263,12 @@ export default {
           })
         });
     },
-    resetForm(){
-      
+    //销售订单导出
+   async handleExcel(){
+      await saleOrderExcel();
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
 }

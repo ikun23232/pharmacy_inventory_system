@@ -20,15 +20,42 @@
         o.updateDate,
         b.bandCount AS bankAccountName,
         c.userName AS createByName,
-        u.userName AS updateByName
+        u.userName AS updateByName,
+        sys.userName As checkByName
         FROM xs_order o
         LEFT JOIN sys_user c ON o.createBy = c.userId AND c.isDel = 0
         LEFT JOIN sys_user u ON o.updateBy = u.userId AND u.isDel = 0
+        LEFT JOIN sys_user sys ON o.checkBy = sys.userId AND sys.isDel = 0
         JOIN bank_account b ON o.bankAccountId = b.id AND b.isDel = 0,
         xs_refundtype xs
         WHERE o.refundTypeId=xs.id and o.isDelete = 0 and o.type=1
         <if test="orderNo!=null and orderNo!=''">and orderNo like concat('%',#{orderNo},'%')</if>
-        <if test="orderDate!=null and orderDate!=''">and orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and o.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="createBy>0">and o.createBy=#{createBy}</if>
+        order by orderDate DESC
+    </select>
+
+    <select id="getRefundOrderList" resultType="com.kgc.vo.RefundOrderVo">
+        SELECT
+        orderNo,
+        orderDate,
+        totalNumber,
+        totalPrice,
+        remark,
+        xs.type as refundTypeName,
+        o.updateDate,
+        b.bandCount AS bankAccountName,
+        c.userName AS createByName,
+        u.userName AS updateByName,
+        sys.userName As checkByName
+        FROM xs_order o
+        LEFT JOIN sys_user c ON o.createBy = c.userId AND c.isDel = 0
+        LEFT JOIN sys_user u ON o.updateBy = u.userId AND u.isDel = 0
+        LEFT JOIN sys_user sys ON o.checkBy = sys.userId AND sys.isDel = 0
+        JOIN bank_account b ON o.bankAccountId = b.id AND b.isDel = 0,
+        xs_refundtype xs
+        WHERE o.refundTypeId=xs.id and o.isDelete = 0 and o.type=1
+<!--        <if test="orderNo!=null and orderNo!=''">and orderNo like concat('%',#{orderNo},'%')</if>-->
         order by orderDate DESC
     </select>
 

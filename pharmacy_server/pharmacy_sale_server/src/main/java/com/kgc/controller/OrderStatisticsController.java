@@ -2,12 +2,15 @@ package com.kgc.controller;
 
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderStatistics;
+import com.kgc.entity.XsOrder;
 import com.kgc.service.OrderStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -59,5 +62,23 @@ public class OrderStatisticsController {
         Message message=orderStatisticsService.getALLSaleOrderDetailStatisticsList(orderStatistics);
         return message;
     }
+    @RequestMapping("/saleOrderStatisticsExcel")
+    public void saleOrderStatisticsExcel(@RequestBody OrderStatistics orderStatistics, HttpServletResponse response) {
+        orderStatisticsService.saleOrderStatisticsExcel(orderStatistics,response);
+    }
 
+    @RequestMapping("/refundOrderStatisticsExcel")
+    public void refundOrderStatisticsExcel(@RequestBody OrderStatistics orderStatistics, HttpServletResponse response) {
+        orderStatisticsService.refundOrderStatisticsExcel(orderStatistics,response);
+    }
+
+    @RequestMapping("/saleOrderDetailStatisticsExcel")
+    public void saleOrderDetailStatisticsExcel(@RequestBody OrderStatistics orderStatistics, HttpServletResponse response) {
+        orderStatisticsService.saleOrderDetailStatisticsExcel(orderStatistics,response);
+    }
+
+    @RequestMapping("/refundOrderDetailStatisticsExcel")
+    public void refundOrderDetailStatisticsExcel(@RequestBody OrderStatistics orderStatistics, HttpServletResponse response) {
+        orderStatisticsService.refundOrderDetailStatisticsExcel(orderStatistics,response);
+    }
 }

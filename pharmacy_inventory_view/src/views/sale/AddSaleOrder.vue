@@ -71,7 +71,7 @@
          @selection-change="handleSelectionChange"
          ref="tb"
          border
-         style="width:900px"
+         style="width:960px"
        >
          <el-table-column type="selection" width="50" align="center" />
          <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
@@ -130,6 +130,11 @@
          <el-table-column label="当前库存" align="center" prop="stock" width="120">
            <template slot-scope="scope">
             <el-input  v-model="medicineDetailList[scope.row.xh-1].stock" disabled></el-input>
+           </template>
+         </el-table-column>
+         <el-table-column label="库存预警值" align="center" prop="warning" width="120">
+           <template slot-scope="scope">
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].warning" disabled></el-input>
            </template>
          </el-table-column>
        </el-table>
@@ -235,6 +240,7 @@ export default {
       obj.quantity=data.data.quantity
       obj.salePrice=data.data.salePrice
       obj.totalPrice=data.data.salePrice
+      obj.warning=data.data.warning
     },
     //数量发生变化
     async changeQuantity(obj){
@@ -256,6 +262,7 @@ export default {
         quantity:"",
         stock:"",
         totalPrice:'',
+        warning:"",
       };
       this.medicineDetailList.push(obj);
     },
@@ -298,6 +305,13 @@ export default {
                 center: "true",
               });
               return;
+            }else if (obj.stock<obj.quantity){
+              Message({
+                message: "库存不足，无法购买",
+                type: "error",
+                center: "true",
+              });
+              return;
             }
           }
           }
@@ -336,7 +350,6 @@ export default {
                 this.$emit("handleDialogFormVisible",false);
               }         
             });
-          this.$emit("handleDialogFormVisible",false);
         } else {
           console.log("error submit!!");
           return false;

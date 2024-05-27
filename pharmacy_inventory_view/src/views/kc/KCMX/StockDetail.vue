@@ -50,6 +50,7 @@
               type="text"
               icon="el-icon-upload2"
               style="margin-left: 18px"
+              @click="handleExcel"
               >导出</el-button
             >
             <el-button
@@ -137,7 +138,7 @@
 </template>
   
   <script>
-import { initStockDetailListByPage } from "../../../api/stockDetail.js";
+import { initStockDetailListByPage,stockDetailExcel} from "../../../api/stockDetail.js";
 import { Message } from "element-ui";
 
 export default {
@@ -202,6 +203,9 @@ export default {
           });
         });
     },
+    async handleExcel(){
+      await stockDetailExcel(this.object);
+    }
   },
 };
 </script>

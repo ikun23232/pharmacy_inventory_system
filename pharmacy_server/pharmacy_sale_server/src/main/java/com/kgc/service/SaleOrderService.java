@@ -2,9 +2,11 @@ package com.kgc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.BaseMedicine;
+import com.kgc.entity.CgddOrder;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
 
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.RescaleOp;
 import java.util.List;
 import java.util.Map;
@@ -27,5 +29,7 @@ public interface SaleOrderService extends IService<XsOrder> {
     public Message deleteSaleOrder(String orderNo);
 
     public Message cancelSaleOrder(String orderNo);
+
+    public void saleOrderExcel(XsOrder xsOrder, HttpServletResponse response);
 
 }

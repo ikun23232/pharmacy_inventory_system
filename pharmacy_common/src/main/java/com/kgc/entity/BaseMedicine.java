@@ -63,7 +63,11 @@ public class BaseMedicine implements Serializable {
     @TableField("isDel")
     @ExcelIgnore
     private Integer isDel;
-
+    /**
+     * 医用商品规格
+     */
+    @ExcelFiled("医用商品规格")
+    private String specification;
     /**
      * 零售价
      */
@@ -71,53 +75,47 @@ public class BaseMedicine implements Serializable {
     private BigDecimal salePrice;
 
     /**
-     * 医用商品规格
-     */
-    @ExcelFiled("医用商品规格")
-    private String specification;
-
-    /**
      * 库存预警值
      */
     @ExcelIgnore
     private Integer warning;
 
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    @ExcelFiled("创造时间")
-    private Date createTime;
-
-    @ExcelIgnore
-    private Integer createBy;
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    @ExcelFiled("修改时间")
-    private Date updateTime;
-
-    @ExcelIgnore
-    private Integer updateBy;
-
-    @TableField(exist=false)
-    @ExcelFiled("创造人名称")
-    private String createByName;
-
-    @TableField(exist=false)
-    @ExcelFiled("修改人名称")
-    private String updateByName;
-
     @TableField(exist=false)
     @ExcelFiled("医药品分类名")
     private String categoryName;
-
     @TableField(exist=false)
     @ExcelFiled("计量单位")
     private String unitName;
 
     @TableField(exist=false)
-    @ExcelIgnore
-    private Integer currentPage;
-
-    @TableField(exist=false)
     @ExcelFiled("数量")
     private Integer quantity;
+
+    @TableField(exist=false)
+    @ExcelFiled("创建人名称")
+    private String createByName;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @ExcelFiled("创造时间")
+    private Date createTime;
+
+    @TableField(exist=false)
+    @ExcelFiled("修改人名称")
+    private String updateByName;
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @ExcelFiled("修改时间")
+    private Date updateTime;
+
+    @ExcelIgnore
+    private Integer createBy;
+    @ExcelIgnore
+    private Integer updateBy;
+
+
+
+
+    @TableField(exist=false)
+    @ExcelIgnore
+    private Integer currentPage;
 
     @TableField(exist=false)
     @ExcelIgnore

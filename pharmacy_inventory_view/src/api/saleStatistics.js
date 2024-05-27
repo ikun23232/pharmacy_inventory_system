@@ -31,3 +31,76 @@ export function getALLSaleOrderDetailStatisticsList(orderStatistics) {
     return request.post(baseUrl + "/getALLSaleOrderDetailStatisticsList",orderStatistics);
 }
 
+//导出销售订单统计
+export function saleOrderStatisticsExcel(orderStatistics) {
+    return request.post(baseUrl + "/saleOrderStatisticsExcel", {
+        orderStatistics: orderStatistics,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '销售订单统计.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+//导出销售退货订单统计
+export function refundOrderStatisticsExcel(orderStatistics) {
+    return request.post(baseUrl + "/refundOrderStatisticsExcel", {
+        orderStatistics: orderStatistics,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '销售退货订单统计.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+//导出销售订单明细统计
+export function saleOrderDetailStatisticsExcel(orderStatistics) {
+    return request.post(baseUrl + "/saleOrderDetailStatisticsExcel", {
+        orderStatistics: orderStatistics,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '销售订单明细统计.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+//导出销售退货订单明细统计
+export function refundOrderDetailStatisticsExcel(orderStatistics) {
+    return request.post(baseUrl + "/refundOrderDetailStatisticsExcel", {
+        orderStatistics: orderStatistics,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '销售退货订单明细统计.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}

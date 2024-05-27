@@ -6,23 +6,29 @@
           <div style="padding-left: 20px;">
             <el-form :inline="true" ref="saleOrderForm">
               <el-form-item label="单据编号">
-                  <el-input placeholder="单据编号" v-model="object.orderNo"></el-input>
+                  <el-input placeholder="单据编号" v-model="object.orderNo" size="small"></el-input>
               </el-form-item>
               <el-form-item label="单据日期">
                 <el-col :span="11">
-                  <el-date-picker type="date" placeholder="请选择开始" v-model="object.orderDateBegin" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="请选择开始" v-model="object.orderDateBegin" style="width: 100%;" size="small"></el-date-picker>
                 </el-col>
                 <el-col class="line" :span="1">~</el-col>
                   <el-col :span="11">
-                  <el-date-picker type="date" placeholder="请选择结束" v-model="object.orderDateEnd" style="width: 100%;"></el-date-picker>
+                  <el-date-picker type="date" placeholder="请选择结束" v-model="object.orderDateEnd" style="width: 100%;" size="small"></el-date-picker>
                 </el-col>
               </el-form-item>
               <el-form-item label="创建人">
-                  <el-input placeholder="创建人" v-model="object.createByName"></el-input>
+                <el-select v-model="object.createBy" size="small">
+                  <el-option
+                    v-for="dict in userList"
+                    :key="dict.id"
+                    :label="dict.username"
+                    :value="dict.userid"/>
+                 </el-select>
               </el-form-item>
               <el-form-item>
-                  <el-button type="primary" icon="el-icon-search" @click="initSaleOrderByPage(1)">查询</el-button>
-                  <el-button icon="el-icon-refresh-right" @click="resetForm('saleOrderForm')">重置</el-button>
+                  <el-button type="primary" icon="el-icon-search" @click="initSaleOrderByPage(1)" size="small">查询</el-button>
+                  <el-button icon="el-icon-refresh-right" @click="resetForm('saleOrderForm')" size="small">重置</el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -82,7 +88,8 @@
   </template>
   
   <script>
-  import {addSaleOrder, initSaleOrder} from "../../api/saleOrder.js";
+  import {initSaleOrder} from "../../api/saleOrder.js";
+  import {getAllUser} from "../../api/sysUser.js";
   import { Message } from "element-ui";
   
   export default {
@@ -90,12 +97,14 @@
     data(){
       return{
         orderNo:"",
+        userList:[],
         object:{
               orderNo:"",
               orderDateBegin:"",
               orderDateEnd:"",
               createByName:"",
               currentPage:1, 
+              editStatus:1
           },
           pageInfo:"",
           list:"",
@@ -105,8 +114,14 @@
     },
     mounted() {
       this.initSaleOrderByPage(1);
+      this.initAllUser();
     },
     methods: {
+      async initAllUser() {
+        let data = await getAllUser();
+        console.log("12345",data.data)
+        this.userList=data.data;
+      },
       async initSaleOrderByPage(currentPage) {
           this.object.currentPage=currentPage;
           let data = await initSaleOrder(this.object);

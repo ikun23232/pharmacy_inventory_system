@@ -132,8 +132,6 @@ public class KcOutintodetial implements Serializable {
     @TableField("price")
     private BigDecimal price;
 
-    @ExcelIgnore
-    private Integer warehouseid;
     @TableField(exist = false)
     @ExcelProperty("出/入仓库")
     private String warehouseName;

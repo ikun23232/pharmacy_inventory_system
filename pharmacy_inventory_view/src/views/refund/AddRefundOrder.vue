@@ -12,13 +12,14 @@
          <el-col :span="8">
            <div class="grid-content bg-purple">
                <el-form-item label="单据编号" prop="orderNo">
-                 <el-input type="text" disabled v-model="saleOrder.orderNo"></el-input>
+                 <el-input type="text" disabled v-model="saleOrder.orderNo" size="small"></el-input>
                </el-form-item></div>
          </el-col>
            <el-col :span="8">
              <div class="grid-content bg-purple">
                <el-form-item label="单据日期" prop="orderDate">
                  <el-date-picker
+                   size="small"
                    v-model="saleOrder.orderDate"
                    disabled
                    type="date"
@@ -29,11 +30,12 @@
            </el-col>
            <el-col :span="8"><div class="grid-content bg-purple">
                <el-form-item label="制单人" prop="createByName">
-                 <el-input type="text" disabled v-model="saleOrder.createByName"></el-input>
+                 <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
                </el-form-item></div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple">
         <el-form-item label="退款原因" prop="refundTypeId">
             <el-select
+                size="small"
                 v-model="saleOrder.refundTypeId"
                 placeholder="请选择"
                 clearable
@@ -51,6 +53,7 @@
              ><div class="grid-content bg-purple">
                <el-form-item label="银行账户" prop="bankAccountId">
                  <el-select
+                   size="small"
                    v-model="saleOrder.bankAccountId"
                    placeholder="请选择"
                    clearable
@@ -221,9 +224,9 @@
             </el-table>
            </el-tab-pane>
            </el-tabs> 
-           <el-row type="flex" justify="start" style="margin-top: 10px;">
-          <el-col :span="2"><span>合计: {{sumPrice}} 元</span></el-col>
-          </el-row>
+           <div style="text-align: left;margin-top: 10px;">
+            <span>合计: {{sumPrice}} 元</span> 
+           </div>  
           <el-divider></el-divider>
           <el-row>
             <el-col :span="24"><div>
@@ -264,7 +267,7 @@
            <el-button type="primary" size="mini" @click="saveForm('saleOrderForm')">保存</el-button>
          </el-col>
          <el-col :span="2">
-           <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
+           <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')" :disabled="activeName=='first'?true:false">提交</el-button>
          </el-col>
          <el-col :span="2">
            <el-button size="mini" @click="cancelForm">取消</el-button>
@@ -358,7 +361,7 @@
         handleClick(tab, event) {
             console.log(tab, event);
             if (tab.index == 1) {
-              this.activeName="first";      
+              this.activeName="first";     
             } else if (tab.index == 2) {
               this.activeName="second";   
             }
@@ -408,7 +411,6 @@
        //处理要添加的订单详情
        handleSelectionDetail(val){
         this.saleOrder.checkedDetail = val;
-        console.log("123",this.saleOrder.checkedDetail)
        },
       //添加要退款的订单详情
        handleAddSaleOrderDetail(){
@@ -418,26 +420,26 @@
        submitForm(formName){
          this.$refs[formName].validate((valid) => {
            if (valid) {
-             if(this.saleOrder.checkedDetail.length>0){
-               this.saleOrder.totalPrice=this.sumPrice
-               this.saleOrder.totalNumber=this.totalNumber
-               addRefundOrder(this.saleOrder).then((resp) => {
-                 if (resp.code == "200") {
-                   Message({
-                     message: "添加成功!",
-                     type: "success",
-                     center: "true",
-                   });
-                   this.$emit("handleDialogFormVisible",false);
-                 }         
-               });
-             }else{
-               Message({
-                   message: "请输入退货订单详情!",
-                   type: "error",
-                   center: "true",
-                 });
-             }         
+            if (this.saleOrder.checkedDetail.length==0){
+              Message({
+                message: "请输入退款订单详情",
+                type: "error",
+                center: "true",
+              });
+              return;
+            }
+            this.saleOrder.totalPrice=this.sumPrice
+            this.saleOrder.totalNumber=this.totalNumber
+            addRefundOrder(this.saleOrder).then((resp) => {
+              if (resp.code == "200") {
+                Message({
+                  message: "添加成功!",
+                  type: "success",
+                  center: "true",
+                });
+                this.$emit("handleDialogFormVisible",false);
+              }         
+            });       
            } else {
              console.log("error submit!!");
              return false;

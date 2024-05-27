@@ -1,5 +1,5 @@
 <template>
-   <div id="saleOrderDetailStatistics">
+   <div id="saleOrderStatistics">
     <h1>销售订单统计</h1>
     <div>
       <div style="padding-top: 15px;padding-left: 20px;">
@@ -16,7 +16,7 @@
               <el-form-item>
                   <el-button type="primary" icon="el-icon-search" @click="initSaleOrderStatisticsList(1)">查询</el-button>
                   <el-button icon="el-icon-refresh-right" >重置</el-button>
-              <el-button type="text" icon="el-icon-upload2" style="margin-left:18px">导出</el-button>
+              <el-button type="text" icon="el-icon-upload2" style="margin-left:18px" @click="handleExcel">导出</el-button>
               </el-form-item>
           </el-form>
           </div>
@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import {getSaleOrderStatisticsList} from "@/api/saleStatistics.js";
+import {getSaleOrderStatisticsList,saleOrderStatisticsExcel} from "@/api/saleStatistics.js";
 
 export default {
-    name:"saleOrderDetailStatistics",
+    name:"saleOrderStatistics",
     data(){
         return{
             object:{
@@ -75,6 +75,9 @@ export default {
             this.object.currentPage = val;
             this.initSaleOrderStatisticsList(this.object.currentPage);
         },
+        async handleExcel(){
+          await saleOrderStatisticsExcel();
+        }
     }
 }
 </script>

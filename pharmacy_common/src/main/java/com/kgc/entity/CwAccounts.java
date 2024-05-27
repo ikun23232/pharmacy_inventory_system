@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -29,12 +30,18 @@ public class CwAccounts implements Serializable {
      */
       @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+    /**
+     * 财务流水订单号
+     */
+      private String code;
 
     /**
      * 流水类别Id
      */
-    @TableField("accountsCategoryId")
-    private Integer accountscategoryid;
+    @TableField("categoryId")
+    private Integer categoryId;
+
+    private String orderCode;
 
     /**
      * 流水总价
@@ -42,51 +49,46 @@ public class CwAccounts implements Serializable {
     private BigDecimal cost;
 
     /**
-     * 订单Id
-     */
-    @TableField("orderId")
-    private Integer orderid;
-
-    /**
-     * 创建时间
-     */
-    @TableField("createTime")
-    private LocalDateTime createtime;
-
-    /**
-     * 修改时间
-     */
-    @TableField("modificationTime")
-    private LocalDateTime modificationtime;
-
-    /**
-     * 创建人
-     */
-    @TableField("createBy")
-    private Integer createby;
-
-    /**
-     * 修改人
-     */
-    @TableField("modificationBy")
-    private Integer modificationby;
-
-    /**
-     * 逻辑删除
-     */
-    @TableField("isDel")
-    private String isdel;
-
-    /**
      * 银行Id
      */
     @TableField("bankAcountId")
-    private Integer bankacountid;
+    private Integer bankAcountId;
 
     /**
      * 描述
      */
     private String description;
+    /**
+     * 创建时间
+     */
+    @TableField("createTime")
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    @TableField("modificationTime")
+    private Date modificationTime;
+
+    /**
+     * 创建人
+     */
+    @TableField("createBy")
+    private Integer createBy;
+
+    /**
+     * 修改人
+     */
+    @TableField("modificationBy")
+    private Integer modificationBy;
+
+    /**
+     * 逻辑删除
+     */
+    @TableField("isDel")
+    private Integer isDel;
+
+
 
 
 }

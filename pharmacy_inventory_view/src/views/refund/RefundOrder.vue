@@ -17,13 +17,19 @@
                 </el-col>
               </el-form-item>
               <el-form-item label="创建人">
-                  <el-input placeholder="创建人" v-model="object.createByName"></el-input>
+                <el-select v-model="object.createBy" >
+                  <el-option
+                    v-for="dict in userList"
+                    :key="dict.id"
+                    :label="dict.username"
+                    :value="dict.userid"/>
+                 </el-select>
               </el-form-item>
               <el-form-item>
                   <el-button type="primary" icon="el-icon-search" @click="initRefundOrderByPage(1)">查询</el-button>
                   <el-button icon="el-icon-refresh-right" >重置</el-button>
                    <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
-              <el-button type="text" icon="el-icon-upload2" style="margin-left:18px">导出</el-button>
+              <el-button type="text" icon="el-icon-upload2" style="margin-left:18px" @click="handleExcel">导出</el-button>
               <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
               </el-form-item>
           </el-form>
@@ -66,6 +72,8 @@
           <span v-if="scope.row.isCheck==1">已通过</span>
           <span v-if="scope.row.isCheck==2">不通过</span>
         </template>
+      </el-table-column>
+      <el-table-column prop="checkByName" label="审批人" width="120">
       </el-table-column>
       <el-table-column prop="cancelStatus" label="是否作废" width="120">
         <template slot-scope="scope">
@@ -146,12 +154,13 @@
   </template>
   
   <script>
-  import {initRefundOrder,deleteRefundOrder,cancelRefundOrder} from "../../api/refundOrder.js";
+  import {initRefundOrder,refundOrderExcel} from "../../api/refundOrder.js";
   import AddRefundOrder from "../refund/AddRefundOrder.vue";
   import UpdateRefundOrder from "../refund/UpdateRefundOrder.vue";
   import RefundOrderDetail from "../refund/RefundOrderDetail.vue";
   import CheckRefundOrder from "../refund/CheckRefundOrder.vue";
   import {deleteSaleOrder,cancelSaleOrder} from "../../api/saleOrder.js";
+  import {getAllUser} from "../../api/sysUser.js";
   import { Message } from "element-ui";
   
   export default {
@@ -165,11 +174,12 @@
     data(){
       return{
         orderNo:"",
+        userList:[],
         object:{
               orderNo:"",
               orderDateBegin:"",
               orderDateEnd:"",
-              createByName:"",
+              createBy:"",
               currentPage:1, 
           },
           pageInfo:[],
@@ -177,13 +187,20 @@
           addDialogFormVisible:false,
           updateDialogFormVisible:false,
           detailDialogFormVisible:false,
-          checkDialogFormVisible:false,
+          checkDialogFormVisible:false,  
       }
     },
     mounted() {
       this.initRefundOrderByPage(1);
+      this.initAllUser();
     },
     methods: {
+      async initAllUser() {
+        let data = await getAllUser();
+        console.log("12345",data.data)
+        this.userList=data.data;
+        console.log("999",this.userList)
+      },
       async initRefundOrderByPage(currentPage) {
           this.object.currentPage=currentPage;
           let data = await initRefundOrder(this.object);
@@ -278,6 +295,14 @@
               message: '取消删除成功！'
             })
           });
+      },
+      //销售退货订单导出
+      async handleExcel(){
+        await refundOrderExcel();
+      },
+      //重置
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       }
     }
   }

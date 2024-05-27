@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping("/warehouse")
 public class RefundInWarehouseController {
@@ -23,5 +25,8 @@ public class RefundInWarehouseController {
         return message;
     }
 
-
+    @RequestMapping("/refundInWarehouseExcel")
+    public void refundInWarehouseExcel(@RequestBody KcSalefromware kcSalefromware, HttpServletResponse response) {
+        refundInWarehouseService.refundInWarehouseExcel(kcSalefromware,response);
+    }
 }
