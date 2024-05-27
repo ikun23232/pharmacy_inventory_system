@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -34,7 +35,7 @@ public class CwXstk implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 原单号
      */
@@ -57,7 +58,7 @@ public class CwXstk implements Serializable {
      * 销售员
      */
     @TableField("createBy")
-    private String createBy;
+    private Integer createBy;
     /**
      * 销售员名称(外表字段)
      */

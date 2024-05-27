@@ -70,12 +70,12 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setMedicineId(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
-            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            orderMedicine.setMedicineId(baseMedicine.getMedicineId());
             int temp = orderMapper.insert(orderMedicine);
             if (temp > 0){
                 count1++;
@@ -141,7 +141,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            orderMedicine.setMedicineId(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());

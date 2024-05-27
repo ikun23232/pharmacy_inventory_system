@@ -429,7 +429,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
         kcReported.setReportedTypeId(3);
         kcReported.setDocumenterBy((Integer) a.get("documenterBy"));
         kcReported.setApprovalStatus(2);
-        kcReported.setCreateTime(LocalDateTime.now());
+        kcReported.setCreateTime(new Date());
         kcReported.setApproverRemark("盘亏");
 
         List list = (List) a.get("list");

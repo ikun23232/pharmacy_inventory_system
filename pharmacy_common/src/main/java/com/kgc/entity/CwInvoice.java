@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -66,12 +67,12 @@ public class CwInvoice implements Serializable {
      */
     @TableField("createTime")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationTime;
+    private Date modificationTime;
     /**
      * 修改人
      */
