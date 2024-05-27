@@ -62,4 +62,13 @@ public interface SaleOrderMapper extends BaseMapper<XsOrder> {
      * @return
      */
     public int cancelOrderDetailByOrderNo(@Param("orderNo") String orderNo);
+
+    /**
+     * 物理删除订单
+     * @param orderNo
+     * @return
+     */
+    public int deleteSaleOrderByOrderNo(@Param("orderNo") String orderNo);
+
+    public int deleteSaleOrderDetailByOrderNo(@Param("orderNo") String orderNo);
 }

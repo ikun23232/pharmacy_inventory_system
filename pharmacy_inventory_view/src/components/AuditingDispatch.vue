@@ -246,7 +246,7 @@
             >
               <template slot-scope="scope">
                 <el-input-number
-                disabled
+                  disabled
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="
@@ -279,7 +279,7 @@
             >
               <template slot-scope="scope">
                 <el-select
-                disabled
+                  disabled
                   clearable
                   @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].aimStoreHouseId"
@@ -377,7 +377,7 @@
 <script>
 import wareDetails from "./wareDetails.vue";
 import { Message } from "element-ui";
-import { auditingDispatch , getKcDispatchById } from "./../api/KcDispatch";
+import { auditingDispatch, getKcDispatchById } from "./../api/KcDispatch";
 import { getKcDetailsList } from "@/api/kcDisparchDetails";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
@@ -608,19 +608,17 @@ export default {
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList == undefined) {
+      if (this.bcglXiangXiList === undefined) {
         return 0;
       }
-      return this.bcglXiangXiList.reduce(
-        (total, item) => total + item.totalPrice * item.stock,
-        0
-      );
+      return this.bcglXiangXiList.reduce((total, element) => {
+        return total + element.quantity * element.purchasePrice;
+      }, 0);
     },
     calculatedTotalPrice() {
       return (row) => {
-        row.totalPrice = row.quantity * row.price;
-        return row.quantity * row.price;
+        row.totalPrice = row.quantity * row.purchasePrice;
+        return row.quantity * row.purchasePrice;
       };
     },
   },

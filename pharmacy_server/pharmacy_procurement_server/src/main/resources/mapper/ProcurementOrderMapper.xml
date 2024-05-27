@@ -9,6 +9,7 @@
                count, referenceAmount, orderStatus, approvalStatus, remark, effectiveTime, approverBy,
                (SELECT `userName` FROM sys_user c WHERE a.approverBy = c.userId),approverRemark, documenterBy,
                (SELECT `userName` FROM sys_user c WHERE a.documenterBy = c.userId) AS documenterName, voidState,
+               (select order_statue.type from order_statue where order_statue.id = orderStatus) as voidStateName,
                createTime, updateBy,(SELECT `userName` FROM sys_user c WHERE a.updateBy = c.userId) AS updateName,
                updateTime, providerId,(SELECT `name` FROM base_provider b WHERE b.id = a.providerId) AS providerName,
                contactperson, phone, fax, email, deliveryDate, deliveryBy,

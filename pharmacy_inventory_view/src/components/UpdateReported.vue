@@ -177,6 +177,17 @@ export default {
         })
         return
       }
+      for (let i = 0; i < this.wereAddList.length; i++) {
+        const item = this.wereAddList[i];
+        if (item.quantity === 0) {
+          Message({
+            message: item.medicineName + '库存不足请移除该报损',
+            type: 'error',
+            duration: 5 * 1000
+          });
+          return; // 退出方法
+        }
+      }
       this.reportedData.modificationBy=this.loginUser;
       const theData = {
         kcReported:this.reportedData,

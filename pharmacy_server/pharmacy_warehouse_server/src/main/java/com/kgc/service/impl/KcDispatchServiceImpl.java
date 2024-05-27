@@ -11,6 +11,8 @@ import com.kgc.dao.*;
 import com.kgc.entity.*;
 import com.kgc.service.KcDispatchService;
 import com.kgc.utils.CodeUtil;
+import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.DispatchExcelVO;
 import com.kgc.vo.DispatchVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -161,7 +165,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
     public Message auditingDispatch(KcDispatch kcDispatch) {
         int addCount = 0;
         if (kcDispatch.getApprovalStatus() == 2){
-            String ddrk = CodeUtil.createCode("DDRK");
+            String ddrk = CodeUtil.createCode("DDCK");
             KcDisfromware kcDisfromware = new KcDisfromware();
             kcDisfromware.setCode(ddrk);
             kcDisfromware.setDispatchid(kcDispatch.getId());
@@ -169,7 +173,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
             if (count == 0){
                 return Message.error("添加调度出库信息失败！");
             }
-            String ddck = CodeUtil.createCode("DDCK");
+            String ddck = CodeUtil.createCode("DDRK");
             KcDistoware kcDistoware = new KcDistoware();
             kcDistoware.setCode(ddck);
             kcDistoware.setDispatchid(kcDispatch.getId());
@@ -291,5 +295,13 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
         return Message.error("作废失败");
     }
 
-
+    @Override
+    public void excelDispatch(DispatchVO dispatchVO, HttpServletResponse response) {
+        List<DispatchExcelVO> kcDispatches = kcDispatchMapper.excelDispatch(dispatchVO);
+        try {
+            ExeclUtil.write(kcDispatches, DispatchExcelVO.class,response,"库存调度");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,24 +1,30 @@
 package com.kgc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.KcReportedMapper;
 import com.kgc.entity.*;
-import com.kgc.service.KcMedicineService;
-import com.kgc.service.KcReportedService;
+import com.kgc.service.*;
+import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.KcMedicineBSVO;
+import com.kgc.vo.KcReportedVO;
+import com.kgc.vo.KcReportedfromwareVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
 
 @Service
-public class KcReportedServiceImpl implements KcReportedService {
+public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcReported> implements KcReportedService {
 
     @Autowired
     private KcReportedMapper kcReportedMapper;
@@ -26,6 +32,13 @@ public class KcReportedServiceImpl implements KcReportedService {
     @Autowired
     private KcMedicineService kcMedicineService;
 
+    @Autowired
+    private CwBsysService cwBsysService;
+
+    @Autowired
+    private CwAccountsService cwAccountsService;
+
+    private KcOutintodetialService kcOutintodetialService;
     /**
      * 分页获取库存报损列表
      * @param kcReported
@@ -140,13 +153,28 @@ public class KcReportedServiceImpl implements KcReportedService {
         return Message.error();
     }
 
+    /**
+     * 根据code获取库存报损
+     * @param code
+     * @return
+     */
     @Override
     public Message getKcReportedByCode(String code) {
-        return Message.success(kcReportedMapper.getKcReportedByCode(code));
+        KcReported kcReported = kcReportedMapper.getKcReportedByCode(code);
+        List<KcMedicine> kcMedicineList = kcMedicineService.getKcMedicineByReportedCodeTo(code);
+        kcReported.setMedicineList(kcMedicineList);
+        if (kcReported!=null){
+            return Message.success(kcReported);
+        }
+        return Message.error();
     }
 
 
-
+    /**
+     * 删除库存报损明细
+     * @param reportedCode
+     * @return
+     */
     @Override
     public Message delKcReporteddetailByCode(String reportedCode) {
         int isDel = kcReportedMapper.delKcReporteddetailByCode(reportedCode);
@@ -156,6 +184,11 @@ public class KcReportedServiceImpl implements KcReportedService {
         return Message.error();
     }
 
+    /**
+     * 删除库存报损
+     * @param code
+     * @return
+     */
     @Override
     public Message delKcReportedByCode(String code) {
         int isDel = kcReportedMapper.delKcReportedByCode(code);
@@ -212,6 +245,16 @@ public class KcReportedServiceImpl implements KcReportedService {
         List list = (List) theData.get("kcMedicineList");
         if (kcReported.getApprovalStatus()==2){
             this.addKcReportedfromwareByReported(kcReported.getId());
+//            KcOutintodetial kcOutintodetial = new KcOutintodetial();
+
+//            CwBsys cwBsys = new CwBsys();
+//            String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//            cwBsys.setCode(code);
+//            cwBsys.setOriginalOrder(kcReported.getCode());
+//            cwBsys.setCost(kcReported.getCost());
+//            cwBsys.setCreateTime(LocalDateTime.now());
+
+
         }
         Message messageDel = delKcReporteddetailByCode(kcReported.getCode());
         if (!messageDel.getCode().equals("200")){
@@ -236,7 +279,39 @@ public class KcReportedServiceImpl implements KcReportedService {
                 return message;
             }
         }
+        BigDecimal allCost = new BigDecimal(0);
+        for (int i = 0; i < list.size(); i++){
+            if (((Map)list.get(i)).get("reportedNum")!=null){
+                allCost = allCost.add(new BigDecimal(((Map)list.get(i)).get("allPrice").toString()));
+            }
 
+        }
+        if (kcReported.getApprovalStatus()==2){
+
+            if (kcReported.getReportedTypeId()==1){
+                CwBsys cwBsys = new CwBsys();
+                String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+                cwBsys.setCode(code);
+                cwBsys.setOriginalOrder(kcReported.getCode());
+                cwBsys.setCost(allCost);
+                cwBsys.setCreateTime(LocalDateTime.now());
+                cwBsysService.addCwbsys(cwBsys);
+
+                CwAccounts cwAccounts = new CwAccounts();
+                String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+                cwAccounts.setCode(codes);
+                cwAccounts.setCategoryId(7);
+                cwAccounts.setCost(allCost);
+                cwAccounts.setAccountsCategoryName("供应商退款");
+                cwAccounts.setCreateTime(new Date());
+                cwAccounts.setOrderCode(kcReported.getCode());
+                cwAccounts.setCreateBy(kcReported.getModificationBy());
+                cwAccountsService.addCwAccounts(cwAccounts);
+            }
+
+
+
+        }
         Message message = updateReportedByCode(kcReported);
         if (!message.getCode().equals("200")){
             return message;
@@ -263,6 +338,11 @@ public class KcReportedServiceImpl implements KcReportedService {
         return Message.error();
     }
 
+    /**
+     * 添加库存报损出库
+     * @param reportedId
+     * @return
+     */
     @Override
     public Message addKcReportedfromwareByReported(int reportedId) {
         KcReportedfromware kcReportedfromware = new KcReportedfromware();
@@ -276,6 +356,13 @@ public class KcReportedServiceImpl implements KcReportedService {
         return Message.error();
     }
 
+    /**
+     * 获取库存报损出库
+     * @param kcReportedfromware
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @Override
     public Message getKcReportedfromware(KcReportedfromware kcReportedfromware,int pageNum,int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
@@ -288,12 +375,175 @@ public class KcReportedServiceImpl implements KcReportedService {
 
     }
 
+    /**
+     * 获取所有库存报损
+     * @return
+     */
     @Override
     public List<KcReported> getAllKcReported() {
         return kcReportedMapper.getKcReportedList(null);
     }
 
+    /**
+     * 库存报损导出
+     * @param kcReportedVO
+     * @param response
+     */
+    @Override
+    public void kcReportedExcel(KcReportedVO kcReportedVO, HttpServletResponse response) {
+        List<KcReportedVO> list = kcReportedMapper.getKcReportedVOList(kcReportedVO);
+        List<KcReportedVO> listExcel = new ArrayList<>();
+        for (KcReportedVO kcReportedVO1 : list){
+            List<KcMedicineBSVO> medicineList = kcMedicineService.getKcMedicineVOByReportedCode(kcReportedVO1.getCode());
+            kcReportedVO1.setMedicineList(medicineList);
+            listExcel.add(kcReportedVO1);
+        }
+        try {
+            ExeclUtil.write(listExcel, KcReportedVO.class,response,"库存报损");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 库存报损出库导出
+     * @param response
+     */
+    @Override
+    public void kcReportedfromwareExcel(HttpServletResponse response) {
+        List<KcReportedfromwareVO> listExcel = kcReportedMapper.getKcReportedfromwareVO();
+        try {
+            ExeclUtil.write(listExcel, KcReportedfromwareVO.class,response,"报损出库");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Message addKcReportedAllByPk(Map map) {
+        String code = UUID.randomUUID().toString().replace("-", "");
+        Map a = (Map) map.get("theData");
+        KcReported kcReported = new KcReported();
+        kcReported.setCode(code);
+        kcReported.setStorehouseId((Integer) a.get("storehouseId"));
+        kcReported.setReportedTypeId(3);
+        kcReported.setDocumenterBy((Integer) a.get("documenterBy"));
+        kcReported.setApprovalStatus(2);
+        kcReported.setCreateTime(new Date());
+        kcReported.setApproverRemark("盘亏");
+
+        List list = (List) a.get("list");
+        for (int i = 0; i < list.size(); i++){
+
+            Integer reportedNum = (Integer) ((Map)list.get(i)).get("reportedNum");
+            Integer storehouseId = (Integer) a.get("storehouseId");
+            Integer medicineId = (Integer) ((Map)list.get(i)).get("medicineId");
+            KcMedicine kcMedicine = new KcMedicine();
+            kcMedicine.setStorehouseId(storehouseId);
+            kcMedicine.setMedicineId(medicineId);
+            List<KcMedicine> medicineList = kcMedicineService.getMedicineByStorehouseIdMedicineId(kcMedicine);
+            for (KcMedicine kcMedicine1 : medicineList){
+                if (kcMedicine1.getQuantity()==0){
+                    continue;
+                }
+                if (kcMedicine1.getQuantity()<=reportedNum){
+                    int quantity = kcMedicine1.getQuantity();
+                    reportedNum = reportedNum-kcMedicine1.getQuantity();
+                    //添加明细
+                    KcReporteddetail kcReporteddetail = new KcReporteddetail();
+                    kcReporteddetail.setReportedCode(code);
+                    kcReporteddetail.setQuantity(quantity);
+                    kcReporteddetail.setBatchCode(kcMedicine1.getBatchCode());
+                    kcReporteddetail.setMedicineId(kcMedicine1.getMedicineId());
+                    Message message = addKcReporteddetail(kcReporteddetail);
+                    if (!message.getCode().equals("200")){
+                        return Message.error("明细添加失败");
+                    }
+                    //减少库存
+                    KcMedicine kcMedicine2 = new KcMedicine();
+                    kcMedicine2.setId(kcMedicine1.getId());
+                    kcMedicine2.setQuantity(quantity);
+                    kcMedicine2.setReportedNum(quantity);
+                    this.kcMedicineService.updateQuantityById(kcMedicine2);
+                }
+                if (kcMedicine1.getQuantity()>reportedNum){
+                    int quantity = reportedNum;
+                    KcReporteddetail kcReporteddetail = new KcReporteddetail();
+                    kcReporteddetail.setReportedCode(code);
+                    kcReporteddetail.setQuantity(quantity);
+                    kcReporteddetail.setBatchCode(kcMedicine1.getBatchCode());
+                    kcReporteddetail.setMedicineId(kcMedicine1.getMedicineId());
+                    Message message = addKcReporteddetail(kcReporteddetail);
+                    if (!message.getCode().equals("200")){
+                        return Message.error("明细添加失败");
+                    }
+                    KcMedicine kcMedicine2 = new KcMedicine();
+                    kcMedicine2.setId(kcMedicine1.getId());
+                    kcMedicine2.setQuantity(kcMedicine1.getQuantity());
+                    kcMedicine2.setReportedNum(quantity);
+                    this.kcMedicineService.updateQuantityById(kcMedicine2);
+                }
+            }
+            if (reportedNum!=0){
+                return Message.error("库存不足");
+            }
+        }
+        int isAdd = addKcReportedBits(kcReported);
+        if (isAdd>0){
+            return Message.success();
+        }
+        return Message.error("添加失败");
+
+    }
+
+    @Override
+    public int addKcReportedBits(KcReported kcReported) {
+        return kcReportedMapper.insert(kcReported);
+    }
 
 
+    @Override
+    public boolean saveBatch(Collection<KcReported> entityList, int batchSize) {
+        return false;
+    }
 
+    @Override
+    public boolean saveOrUpdateBatch(Collection<KcReported> entityList, int batchSize) {
+        return false;
+    }
+
+    @Override
+    public boolean updateBatchById(Collection<KcReported> entityList, int batchSize) {
+        return false;
+    }
+
+    @Override
+    public boolean saveOrUpdate(KcReported entity) {
+        return false;
+    }
+
+    @Override
+    public KcReported getOne(Wrapper<KcReported> queryWrapper, boolean throwEx) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getMap(Wrapper<KcReported> queryWrapper) {
+        return null;
+    }
+
+    @Override
+    public <V> V getObj(Wrapper<KcReported> queryWrapper, Function<? super Object, V> mapper) {
+        return null;
+    }
+
+    @Override
+    public KcReportedMapper getBaseMapper() {
+        return null;
+    }
+
+    @Override
+    public Class<KcReported> getEntityClass() {
+        return null;
+    }
 }

@@ -32,17 +32,14 @@ public class OrderMedicine implements Serializable {
     /**
      * 订单编号
      */
+    private String sourceCode;
     private String code;
 
-    /**
-     * 源订单编号
-     */
-    private String sourceCode;
     /**
      * 商品id
      */
     @TableField("medicineId")
-    private Integer medicineid;
+    private Integer medicineId;
 
     /**
      * 数量
@@ -57,7 +54,7 @@ public class OrderMedicine implements Serializable {
 
     private Integer isDel;
 
-    private Integer batchCode;
+    private String batchCode;
 
     @TableField("providerId")
     private Integer providerId;
@@ -65,4 +62,7 @@ public class OrderMedicine implements Serializable {
     private Integer fowardWarHouseId;
     @TableField(exist = false)
     private String fowardWarHouseName;
+
+    @TableField(exist = false)
+    private BigDecimal salePrice;
 }

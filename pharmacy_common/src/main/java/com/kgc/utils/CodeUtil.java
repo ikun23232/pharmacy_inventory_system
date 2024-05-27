@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class CodeUtil {
     public static String createCode(String codeName){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String code = simpleDateFormat.format(new Date());
         return codeName+"-"+code;
     }

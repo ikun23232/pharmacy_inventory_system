@@ -1,11 +1,6 @@
 package com.kgc.vo;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 
@@ -22,8 +17,6 @@ import java.util.Date;
 public class MedicineVO implements Serializable {
     @ExcelFiled("医用商品名称")
     private String name;
-    @TableField("unitId")
-    private Integer unitId;
     @ExcelFiled("零售价")
     private BigDecimal salePrice;
     @ExcelFiled("医用商品规格")

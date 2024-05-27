@@ -66,6 +66,20 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     }
 
     @Override
+    public Message getCgsqOrderByStates(CgVO vo) {
+        Map paramsMap = new HashMap<String, Object>();
+        paramsMap.put("code", vo.getCode());
+        paramsMap.put("subject", vo.getSubject());
+        paramsMap.put("type", vo.getType());
+        paramsMap.put("startTime", vo.getStartTime());
+        paramsMap.put("endTime", vo.getEndTime());
+        PageHelper.startPage(vo.getCurrentPageNo(), vo.getPageSize());
+        List<CgsqOrder> cgsqOrderList = cgsqOrderMapper.getCgsqOrderByStates(paramsMap);
+        PageInfo<CgsqOrder> pageInfo = new PageInfo<>(cgsqOrderList);
+        return Message.success(pageInfo);
+    }
+
+    @Override
     public Message delCgsqOrderById(int id) {
         int updateRow = cgsqOrderMapper.deleteById(id);
         if (updateRow > 0) {
@@ -103,7 +117,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setMedicineId(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
@@ -143,7 +157,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setMedicineId(baseMedicine.getId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());

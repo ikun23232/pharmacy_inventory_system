@@ -10,11 +10,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
  * 发票表(CwInvoice)实体类
- * 完整版(1.0)
+ * 完整版(1.1)
  * @author lemon
  * @since 2024-04-30
  */
@@ -25,17 +26,17 @@ public class CwInvoice implements Serializable {
     /**
      * 发票id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 发票单据
      */
     private String code;
-    /**
-     * 发票编号
-     */
-    @TableField("InvoiceNumber")
-    private Integer InvoiceNumber;
+//    /**
+//     * 发票编号
+//     */
+//    @TableField("InvoiceNumber")
+//    private Integer InvoiceNumber;
     /**
      * 类型
      */
@@ -66,12 +67,12 @@ public class CwInvoice implements Serializable {
      */
     @TableField("createTime")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationTime;
+    private Date modificationTime;
     /**
      * 修改人
      */

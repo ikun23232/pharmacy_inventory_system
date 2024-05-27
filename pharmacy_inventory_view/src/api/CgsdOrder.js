@@ -6,6 +6,10 @@ export function initCgSqOrderList(vo) {
     return request.post(baseUrl + "/getCgSqOrderList", vo);
 }
 
+export function getCgsqOrderByStates(vo) {
+    return request.post(baseUrl + "/getCgsqOrderByStates", vo);
+}
+
 export function delCgsqOrderById(id) {
     return request.get(baseUrl + "/delCgsqOrderById",{
         params:{

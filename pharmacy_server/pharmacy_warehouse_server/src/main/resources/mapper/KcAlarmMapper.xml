@@ -3,8 +3,7 @@
 <mapper namespace="com.kgc.dao.KcAlarmMapper">
     <select id="getKcAlarmList" resultType="KcAlarm">
         select id, code, warningType, warningCount, medicineId,(select name from base_medicine where medicineId = base_medicine.id) as medicineName,
-               isKnow, createDate, createBy,(select userName from sys_user where kc_alarm.createBy = userId) as createName,
-               handleDate, handleBy,(select userName from sys_user where kc_alarm.handleBy = userId) as updateName ,isDel, isRemind
+               isKnow, createDate,isDel
         from kc_alarm
             <where>
             and isDel = 0
@@ -20,7 +19,21 @@
             <if test="medicineId > 0">
                 and medicineId = #{medicineId}
             </if>
-            order by warningType desc
+            order by isKnow asc
         </where>
     </select>
+    
+    <select id="excelAlarmList" resultType="com.kgc.vo.KcAlarmVO">
+        select id, code, CASE WHEN warningType = 0 THEN '本地仓库报警'ELSE '库存数量报警' END AS warningTypeName,
+               warningCount,(select name from base_medicine where medicineId = base_medicine.id) as medicineName,
+               CASE WHEN isKnow = 0 THEN '未处理'ELSE '已处理' END AS isKnowName, createDate,isDel
+        from kc_alarm
+    </select>
+
+    <update id="updateAlarm">
+        UPDATE kc_alarm
+        SET warningCount = #{warningCount},
+            isDel = #{isDel}
+        WHERE id = #{id}
+    </update>
 </mapper>

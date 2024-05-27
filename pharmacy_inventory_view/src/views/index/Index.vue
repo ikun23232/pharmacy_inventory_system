@@ -36,9 +36,27 @@
         </div>
       </div>
     </el-card>
-    <el-card shadow="always" :body-style="{ padding: '0px' }" style="width: 98%;height: 400px;margin:0 auto">
-     <div id="moneyChartLine" style="width:100%;height: 360px"></div>
-    </el-card>
+<!--    <el-card shadow="always" :body-style="{ padding: '0px' }" style="width: 98%;height: 400px;margin:0 auto">-->
+<!--     <div id="moneyChartLine" style="width:100%;height: 360px"></div>-->
+<!--    </el-card>-->
+      <el-card style="width: 28%;height:210px;float:left;margin: 10px" shadow="hover">
+        <div slot="header" class="clearfix">
+          <span>销售</span>
+          <el-button style="float: right; padding: 3px 0" type="text"><i class="el-icon-refresh"></i></el-button>
+        </div>
+        <div class="content" style="height: 20px">
+          <span>订单</span>
+          <div style="margin-left: 2em;">
+            <span style="color: #ff4e00;margin-right: 40%">今日笔数</span><span style="color: #ff4e00">今日金额</span>
+          </div>
+          <div style="margin-left: 2em;">
+            <span style="margin-right: 40%">45&nbsp;&nbsp;</span><span >55</span>
+          </div>
+
+        </div>
+
+
+      </el-card>
 
     </div>
 </template>

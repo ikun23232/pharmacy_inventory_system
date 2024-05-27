@@ -5,6 +5,7 @@ import com.kgc.entity.KcDispatch;
 import com.kgc.entity.Message;
 import com.kgc.vo.DispatchVO;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -31,4 +32,10 @@ public interface KcDispatchService extends IService<KcDispatch> {
      * @return
      */
     Message updateVoidStatus(int id);
+
+    /**
+     * 导出excel调度单
+     * @return
+     */
+    void excelDispatch(DispatchVO dispatchVO, HttpServletResponse response);
 }

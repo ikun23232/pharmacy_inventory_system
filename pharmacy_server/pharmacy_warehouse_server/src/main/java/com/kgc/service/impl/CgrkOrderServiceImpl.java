@@ -103,13 +103,13 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgrqOrder.getCode());
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
-            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            orderMedicine.setMedicineId(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
             Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode(batchCode+1);
+            orderMedicine.setBatchCode(String.valueOf(batchCode+1));
             orderMapper.insert(orderMedicine);
         }
         return Message.success();
@@ -138,13 +138,13 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgrqOrder.getCode());
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
-            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
+            orderMedicine.setMedicineId(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
             Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode(batchCode+1);
+            orderMedicine.setBatchCode(String.valueOf(batchCode+1));
             orderMapper.insert(orderMedicine);
         }
         return Message.success();

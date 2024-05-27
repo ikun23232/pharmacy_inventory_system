@@ -27,6 +27,12 @@ public interface CgsqOrderService extends IService<CgsqOrder> {
     Message getCgsqOrderList(CgVO cgVO);
 
     /**
+     * 查询审批通过执行状态为执行种的数据
+     * @param cgVO
+     * @return
+     */
+    Message getCgsqOrderByStates(CgVO cgVO);
+    /**
      * 单个删除
      * @param id
      * @return

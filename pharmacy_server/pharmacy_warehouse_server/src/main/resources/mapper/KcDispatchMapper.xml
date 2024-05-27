@@ -41,4 +41,26 @@
         from kc_dispatch kd
         where kd.id = #{id}
     </select>
+
+    <select id="excelDispatch" resultMap="BaseResultMap">
+        select kd.id, code, subject, kd.price, beforeWarehouseId,(select name from base_storehouse where kd.beforeWarehouseId = base_storehouse.id) as beforeWareName,
+               remark, approverBy,(select userName from sys_user where approverBy = userId) as approverName,approvalStatus, approverRemark,
+               documenterBy, (select userName from sys_user where documenterBy = userId) as createName,voidState, createDate,
+               updateDate, updateBy, (select userName from sys_user where kd.updateBy = userId) as updateName,orderStatus,
+               (select type from order_statue where orderStatus = order_statue.id) as orderStatusResult,
+               kt.medicineId as medicineIdTemp,(select base_medicine.specification from base_medicine where medicineId = base_medicine.id) as specification,
+               (select (select name from base_medicine_category where categoryId = base_medicine_category.id) from base_medicine where medicineId = base_medicine.id) as categoryName,
+               kt.quantity, (select (select name from base_unit where unitId = base_unit.id) from base_medicine where medicineId = base_medicine.id) as unitName,
+               kt.price as purchasePrice,(select name from base_medicine where kt.medicineId = base_medicine.id) as name
+        from kc_dispatch kd,kc_dispatchdetails kt
+        where kd.code = kt.dispatchCode
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.kgc.vo.DispatchExcelVO" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="medicineList" ofType="com.kgc.vo.DispatchMedicineVO" autoMapping="true">
+            <result column="medicineIdTemp" property="id"/>
+        </collection>
+    </resultMap>
 </mapper>

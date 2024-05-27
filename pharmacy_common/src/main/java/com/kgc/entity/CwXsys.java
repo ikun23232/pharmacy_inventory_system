@@ -10,11 +10,12 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
  * 销售应收表(CwXsys)实体类
- * 完整版(1.0)
+ * 完整版(1.1)
  * @author lemon
  * @since 2024-04-30
  */
@@ -36,7 +37,7 @@ public class CwXsys implements Serializable {
      */
     @TableField("createTime")
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 原单号
      */
@@ -58,7 +59,7 @@ public class CwXsys implements Serializable {
      * 销售员
      */
     @TableField("createBy")
-    private String createBy;
+    private Integer createBy;
     /**
      * 销售员名称
      */
@@ -74,6 +75,14 @@ public class CwXsys implements Serializable {
      */
     @TableField(exist = false)
     private String endTime;
+    /**
+     * 银行账户(外表字段)
+     */
+    private String bandCount;
+    /**
+     * 审核意见(外表字段)
+     */
+    private String opinion;
 
 
 }

@@ -22,8 +22,10 @@
         LEFT JOIN sys_user u ON o.updateBy = u.userId AND u.isDel = 0
         JOIN bank_account b ON o.bankAccountId = b.id AND b.isDel = 0
         WHERE o.isDelete = 0 and o.type=0
+        <if test="editStatus>0">and editStatus=1</if>
         <if test="orderNo!=null and orderNo!=''">and orderNo like concat('%',#{orderNo},'%')</if>
-<!--        <if test="orderDate!=null and orderDate!=''">and orderDate between #{orderDateBegin} and #{orderDateEnd}</if>-->
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and o.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="createBy>0">and o.createBy=#{createBy}</if>
         order by orderDate DESC
     </select>
 
@@ -35,6 +37,9 @@
                totalPrice,
                bankAccountId,
                remark,
+               refundTypeId,
+               isCheck,
+               opinion,
                o.createBy,
                o.updateBy,
                o.updateDate,
@@ -48,22 +53,20 @@
     </select>
 
     <select id="getSaleOrderDetailByOrderNo" resultType="BaseMedicine">
-        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,
-               un.name as unitName,mc.name as categoryName,om.medicineId,om.quantity,om.totalPrice,om.batchCode,kc.quantity as stock
-        from base_medicine b,base_unit un,base_medicine_category mc,order_medicine om,kc_medicine kc
+        select b.id,b.name,b.categoryId,b.unitId,b.salePrice,b.specification,b.warning,
+               un.name as unitName,mc.name as categoryName,om.medicineId,om.quantity,om.totalPrice,om.batchCode,kc.quantity as stock,
+               c.userName AS createByName,u.userName AS updateByName,b.createTime,b.updateTime
+        from base_unit un,base_medicine_category mc,order_medicine om,kc_medicine kc,base_medicine b
+         LEFT JOIN sys_user c ON b.createBy = c.userId AND c.isDel = 0
+         LEFT JOIN sys_user u ON b.updateBy = u.userId AND u.isDel = 0
         where b.categoryId=mc.id and b.unitId=un.id and b.id=om.medicineId and kc.batchCode=om.batchCode and kc.medicineId=om.medicineId
           and b.isDel=0 and un.isDel=0 and mc.isDel=0 and om.isDel=0
           and om.code=#{orderNo}
     </select>
 
-<!--    <insert id="addSaleOrder" parameterType="XsOrder">-->
-<!--        INSERT INTO `pharmacy`.`xs_order` (`orderNo`, `orderDate`, `createBy`, `type`, `totalPrice`, `totalNumber`, `bankAccountId`, `remark`, `updateBy`, `updateDate`, `editStatus`)-->
-<!--        VALUES (#{orderNo},#{orderDate},#{createBy},#{type}, #{totalPrice}, #{totalNumber}, #{bankAccountId}, #{remark}, #{updateBy}, #{updateDate},#{editStatus});-->
-<!--    </insert>-->
-
-    <insert id="addSaleOrderDetail" parameterType="OrderMedicine">
+    <insert id="addSaleOrderDetail" parameterType="com.kgc.entity.OrderMedicine">
         INSERT INTO `pharmacy`.`order_medicine` (`code`, `medicineId`, `quantity`, `totalPrice`,`batchCode`)
-        VALUES (#{code},#{medicineId},#{quantity},#{totalPrice},#{batchCode});
+        VALUES (#{code},#{medicineId},#{quantity},#{totalPrice},#{batchCode})
     </insert>
 
     <update id="updateSaleOrderDetail" parameterType="OrderMedicine">
@@ -79,4 +82,16 @@
     <update id="cancelOrderDetailByOrderNo">
         update order_medicine set isCancel=1 where code=#{orderNo}
     </update>
+
+    <delete id="deleteSaleOrderByOrderNo">
+        delete from xs_order where orderNo=#{orderNo}
+    </delete>
+
+    <delete id="deleteSaleOrderByOrderNo">
+        delete from xs_order where orderNo=#{orderNo}
+    </delete>
+
+    <delete id="deleteSaleOrderDetailByOrderNo">
+        delete from order_medicine where code=#{orderNo}
+    </delete>
 </mapper>

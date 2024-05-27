@@ -9,11 +9,12 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
  * 销售退款表(CwXstk)实体类
- *
+ * 完整版(1.1)
  * @author lemon
  * @since 2024-04-30
  */
@@ -34,7 +35,7 @@ public class CwXstk implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 原单号
      */
@@ -57,9 +58,9 @@ public class CwXstk implements Serializable {
      * 销售员
      */
     @TableField("createBy")
-    private String createBy;
+    private Integer createBy;
     /**
-     * 销售员名称
+     * 销售员名称(外表字段)
      */
     @TableField(exist = false)
     private String createName;
@@ -73,5 +74,16 @@ public class CwXstk implements Serializable {
      */
     @TableField(exist = false)
     private String endTime;
-
+    /**
+     * 银行账户(外表字段)
+     */
+    private String bandCount;
+    /**
+     * 退款类型(外表字段)
+     */
+    private String refundType;
+    /**
+     * 审核意见(外表字段)
+     */
+    private String opinion;
 }

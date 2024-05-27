@@ -47,7 +47,6 @@ public class KcOutintodetial implements Serializable {
      * 进出库类型
      */
     @TableField("typeId")
-
     private Integer typeId;
 
     /**
@@ -73,7 +72,7 @@ public class KcOutintodetial implements Serializable {
      * 修改人
      */
     @TableField("updateBy")
-    private String updateBy;
+    private Integer updateBy;
 
     /**
      * 删除id
@@ -86,11 +85,10 @@ public class KcOutintodetial implements Serializable {
      * 订单编号
      */
     @TableField("orderCode")
-
     private String orderCode;
 
-
     private Integer medicineId;
+
     @TableField(exist = false)
     @ExcelFiled("药品名称")
     private String medicineName;
@@ -101,40 +99,32 @@ public class KcOutintodetial implements Serializable {
 
     @TableField(exist = false)
     @ExcelFiled("供应商")
-
     private String providerName;
     /**
      * 入库金额
      */
     @ExcelFiled("入库金额")
-
     private BigDecimal toStockMoney;
-    /**
-     * 批次编号
 
     /**
      * 入库数量
      */
     @ExcelFiled("入库数量")
-
     private Integer toStockQuantity;
     /**
      * 出库金额
      */
     @ExcelFiled("出库金额")
-
     private BigDecimal fromStockMoney;
     /**
      * 出库数量
      */
     @ExcelFiled("出库数量")
-
     private Integer fromStockQuantity;
     /**
      * 单价(当前)
      */
     @ExcelFiled("单价")
-
     private BigDecimal price;
     /**
      * 删除id
@@ -143,27 +133,23 @@ public class KcOutintodetial implements Serializable {
      * 进出库仓库
      */
     private Integer wareHouseId;
+
     @TableField(exist = false)
     @ExcelFiled("出入库仓库")
-
     private String warehouseName;
+
     @TableField(exist = false)
     @ExcelFiled("产品规格")
-
     private String specification;
+
     @TableField(exist = false)
     @ExcelFiled("计量单位")
-
     private String unitName;
+
     @TableField(exist = false)
     @ExcelFiled("库存类型")
     private String type;
+
     @ExcelFiled("批次号")
     private String batchCode;
-
-
-
-
-
-
 }

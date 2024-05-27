@@ -51,6 +51,7 @@
             供应商：
             <el-select
               v-model="procPage.providerId"
+              clearable
               filterable
               placeholder="请选择供应商"
             >
@@ -78,6 +79,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="code" label="订单编码" width="150" fixed>
+        <template slot-scope="scope">
+          <a href="#" @click="viewOrder(scope.row.code)">{{
+            scope.row.code
+          }}</a>
+        </template>
       </el-table-column>
       <el-table-column prop="orderTypeName" label="采购类型" width="120">
       </el-table-column>
@@ -85,11 +91,6 @@
       </el-table-column>
       <el-table-column prop="subject" label="单据主题" width="120">
       </el-table-column>
-      <el-table-column
-        prop="demanderName"
-        label="需求人"
-        width="120"
-      ></el-table-column>
       <el-table-column
         prop="providerName"
         label="供应商名字"
@@ -112,10 +113,7 @@
       </el-table-column>
       <el-table-column prop="referenceAmount" label="参考金额" width="120">
       </el-table-column>
-      <el-table-column prop="orderStatus" label="单据状态" width="120">
-        <template slot-scope="scope">
-          {{ scope.row.orderStatus }}
-        </template>
+      <el-table-column prop="voidStateName" label="单据状态" width="120">
       </el-table-column>
       <el-table-column prop="payType" label="结算方式" width="120">
         <template slot-scope="scope">
@@ -131,7 +129,10 @@
       </el-table-column>
       <el-table-column prop="approvalStatus" label="核批结果" width="120">
         <template slot-scope="scope">
-          {{ scope.row.approvalStatus == 0 ? "未通过" : "通过" }}
+          <div v-if="scope.row.approvalStatus == 0">未审批</div>
+          <div v-if="scope.row.approvalStatus != 0">
+            {{ scope.row.approvalStatus == 1 ? "未通过" : "通过" }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="voidState" label="作废状态" width="120">
@@ -153,9 +154,8 @@
         <template slot-scope="scope">
           <el-button
             @click="updateOrder(scope.row)"
-            :disabled="scope.row.voidState == 1"
-            type="text"
-            >编辑
+            :disabled="scope.row.orderStatus != 1 && scope.row.orderStatus != 2 || scope.row.voidState == 1"
+            type="text">编辑
           </el-button>
           <el-dropdown>
             <span class="el-dropdown-link">
@@ -168,13 +168,12 @@
               <el-dropdown-item @click.native="setVoidState(scope.row)"
                 >作废</el-dropdown-item
               >
-              <el-dropdown-item @click.native="printExcel"
+              <el-dropdown-item @click.native="printCGDD(scope.row)"
                 >打印</el-dropdown-item
               >
-              <el-dropdown-item @click.native="handleAuditing(scope.row)"
-
-                >审核</el-dropdown-item
-              >
+              <el-dropdown-item
+                @click.native="handleAuditing(scope.row)"
+                :disabled="scope.row.orderStatus != 2">审核</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -228,22 +227,40 @@
       >
       </auditingProOrder>
     </el-dialog>
+    <el-dialog
+      title="查看采购订单"
+      :visible.sync="viewdialogVisible"
+      width="85%"
+      v-if="viewdialogVisible"
+    >
+      <CGDDviewOrder
+        :code="this.code"
+        @closeviewOrder="closeviewOrder"
+      ></CGDDviewOrder>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getProcList, deleteById, setVoidState,cgddExcel } from "@/api/procurementOrder";
+import {
+  getProcList,
+  deleteById,
+  setVoidState,
+  cgddExcel,
+} from "@/api/procurementOrder";
 import addProcOrder from "../../../components/addProcOrder.vue";
 import updateProOrder from "./../../../components/updateProOrder.vue";
-import auditingProOrder from "@/components/auditingProOrder";
+import auditingProOrder from "../../../components/AuditingProOrder.vue";
 import { Message } from "element-ui";
 import { getPayType } from "./../../../api/public.js";
 import { getAllBaseProvider } from "@/api/BaseProvider.js";
+import CGDDviewOrder from "./../../../components/CGDDviewOrder.vue";
 export default {
   name: "procOrder",
   components: {
     addProcOrder,
     updateProOrder,
     auditingProOrder,
+    CGDDviewOrder,
   },
   data() {
     return {
@@ -283,8 +300,8 @@ export default {
         beginTime: "",
         endTime: "",
         orderStatus: "",
-        providerId: 0,
-        type: 0,
+        providerId: "",
+        type: "",
         pageNum: 0,
         pageSize: 0,
       },
@@ -292,6 +309,7 @@ export default {
       adddialogVisible: false,
       updatedialogVisible: false,
       auditingdialogVisible: false,
+      viewdialogVisible: false,
       time: {},
       list: {},
       cgType: [],
@@ -301,10 +319,6 @@ export default {
     };
   },
   async mounted() {
-    if (this.$route.query.code){
-      this.procPage.code=this.$route.query.code
-    }
-
     this.getOrderList(1, 5);
     let data = await getPayType();
     console.log("data:", data.data);
@@ -314,6 +328,13 @@ export default {
     this.providerList = providerList.data;
   },
   methods: {
+    closeviewOrder() {
+      this.viewdialogVisible = false;
+    },
+    viewOrder(code) {
+      this.code = code;
+      this.viewdialogVisible = true;
+    },
     getOrderList(currentPageNo, pageSize) {
       this.procPage.pageNum = currentPageNo;
       this.procPage.pageSize = pageSize;
@@ -414,6 +435,16 @@ export default {
       this.code = row.code;
       this.id = row.id;
       this.auditingdialogVisible = true;
+    },
+    printCGDD(row) {
+      const newPage = this.$router.resolve({
+        path: "/printCGDDOrder",
+        query: {
+          //要传的参数 可传多个
+          code: row.code,
+        },
+      });
+      window.open(newPage.href, "_blank");
     },
   },
 };

@@ -152,13 +152,10 @@
         title="查看采购申请单"
         :visible.sync="viewdialogVisible"
         width="85%"
-
-        v-if="viewdialogVisible"
-    >
+        v-if="viewdialogVisible">
       <CGRKViewOrder
           :id="this.id"
-          @closeviewOrder="closeviewOrder"
-      ></CGRKViewOrder>
+          @closeviewOrder="closeviewOrder"></CGRKViewOrder>
     </el-dialog>
 
     <el-dialog

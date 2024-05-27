@@ -8,7 +8,7 @@
 #         where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`code`=bs.`code`
 #           and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0
         select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,
-               kc.quantity as stock,kc.batchCode,kc.`code`,bs.name as storehouseName,kc.providerId,kc.money as purchasePrice,
+               kc.quantity as stock,kc.batchCode,bs.name as storehouseName,kc.providerId,kc.money as purchasePrice,
             kc.id as kcMedicineId
         from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs
         where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.storehouseId=bs.id
@@ -16,12 +16,24 @@
           and bs.id =#{storeHouseId}
     </select>
 
-<!--    <select id="getStockDetailList" parameterType="com.kgc.entity.BaseMedicine" resultType="com.kgc.entity.BaseMedicine">-->
-<!--        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,-->
-<!--               kc.quantity as stock,kc.batchCode,kc.`code`,bs.name as storehouseName-->
-<!--        from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs-->
-<!--        where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`code`=bs.`code`-->
-<!--          and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0-->
-<!--    </select>-->
+    <update id="reduceStockDetailByMedicineId">
+        UPDATE `pharmacy`.`kc_medicine` SET `quantity` =quantity-#{quantity} WHERE medicineId=#{medicineId} and batchCode=#{batchCode}
+    </update>
+
+    <update id="addStockDetailByMedicineId">
+        UPDATE `pharmacy`.`kc_medicine` SET `quantity` =quantity+#{quantity} WHERE medicineId=#{medicineId} and batchCode=#{batchCode}
+    </update>
+
+    <select id="getStockDetailList" resultType="com.kgc.vo.MedicineStockVo">
+        select b.name,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,
+               kc.quantity as stock,kc.batchCode,bs.name as storehouseName,
+               b.createTime,b.updateTime,
+               c.userName as createByName,u.userName as updateByName
+        from base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs,base_medicine b
+              LEFT JOIN sys_user c on b.createBy=c.userId
+              LEFT JOIN sys_user u on b.updateBy=u.userId
+        where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`storehouseId`=bs.`id`
+          and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0 and c.isDel=0 and u.isDel=0
+    </select>
 
 </mapper>

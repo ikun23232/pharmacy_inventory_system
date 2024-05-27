@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -39,7 +40,7 @@ public class CwAccounts implements Serializable {
     /**
      * 流水类别名称
      */
-    @TableField("accountsCategoryName")
+    @TableField(exist = false)
     private String accountsCategoryName;
     /**
      * 流水总价
@@ -54,7 +55,7 @@ public class CwAccounts implements Serializable {
      * 创建时间
      */
     @TableField("createTime")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 修改时间
      */
@@ -68,7 +69,7 @@ public class CwAccounts implements Serializable {
     /**
      * 创建人姓名
      */
-    @TableField("createName")
+    @TableField(exist = false)
     private String createName;
     /**
      * 修改人
@@ -78,7 +79,7 @@ public class CwAccounts implements Serializable {
     /**
      * 修改人姓名
      */
-    @TableField("modificationName")
+    @TableField(exist = false)
     private String modificationName;
     /**
      * 逻辑删除
@@ -93,7 +94,7 @@ public class CwAccounts implements Serializable {
     /**
      * 银行卡号
      */
-    @TableField("bandCount")
+    @TableField(exist = false)
     private String bandCount;
     /**
      * 描述

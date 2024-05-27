@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,7 +32,6 @@ public class SaleOrderController {
         Message message=saleOrderService.getSaleOrderListByPage(xsOrder);
         return message;
     }
-
     @RequestMapping("/addSaleOrder")
     @ResponseBody
     public Message addSaleOrder(@RequestBody Map<String,Object> map) {
@@ -83,5 +83,10 @@ public class SaleOrderController {
     public Message cancelSaleOrder(@RequestParam("orderNo") String orderNo) {
         Message message=saleOrderService.cancelSaleOrder(orderNo);
         return message;
+    }
+
+    @RequestMapping("/saleOrderExcel")
+    public void saleOrderExcel(@RequestBody XsOrder xsOrder, HttpServletResponse response) {
+        saleOrderService.saleOrderExcel(xsOrder,response);
     }
 }

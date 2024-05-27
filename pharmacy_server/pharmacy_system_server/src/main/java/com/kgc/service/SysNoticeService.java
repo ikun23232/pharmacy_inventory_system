@@ -1,7 +1,10 @@
 package com.kgc.service;
 
+import com.kgc.entity.Message;
 import com.kgc.entity.SysNotice;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-04-30
  */
 public interface SysNoticeService extends IService<SysNotice> {
+
+    public Message getSysNoticeList();
 
 }

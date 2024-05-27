@@ -1,5 +1,5 @@
 <script>
-import { getCwAccountsList ,getCwNumByYear,getCwNumByMonth } from '@/api/finance'
+import {getCwAccountsList, getCwNumByYear, getCwNumByMonth, cwAccountsExcel} from '@/api/finance'
 import * as echarts from "echarts";
 export default {
   name: "runningWater",
@@ -254,6 +254,9 @@ export default {
         ]
       });
     },
+    async printExcel(){
+      await cwAccountsExcel();
+    }
 
   }
 }
@@ -305,6 +308,7 @@ export default {
      />&nbsp;&nbsp;&nbsp;&nbsp;
      <el-button type="primary" @click="getCwAccountsLists()">查询</el-button>
      <el-button type="primary" @click="clean()">清空</el-button>
+     <el-button type="primary" @click="printExcel()">导出Excel</el-button>
      <br/><br/>
    </div>
    <div class="table">

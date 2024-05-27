@@ -1,7 +1,5 @@
 package com.kgc.entity;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -33,7 +31,6 @@ public class BaseMedicine implements Serializable {
      * 药品id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    @ExcelIgnore
     private Integer id;
 
     /**
@@ -46,14 +43,12 @@ public class BaseMedicine implements Serializable {
      * 医用商品类型
      */
     @TableField("categoryId")
-    @ExcelIgnore
     private Integer categoryId;
 
     /**
      * 计量单位
      */
     @TableField("unitId")
-    @ExcelIgnore
     private Integer unitId;
 
     /**
@@ -61,7 +56,6 @@ public class BaseMedicine implements Serializable {
      */
     @TableLogic
     @TableField("isDel")
-    @ExcelIgnore
     private Integer isDel;
 
     /**
@@ -79,20 +73,16 @@ public class BaseMedicine implements Serializable {
     /**
      * 库存预警值
      */
-    @ExcelIgnore
     private Integer warning;
 
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @ExcelFiled("创造时间")
     private Date createTime;
 
-    @ExcelIgnore
     private Integer createBy;
     @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    @ExcelFiled("修改时间")
     private Date updateTime;
 
-    @ExcelIgnore
     private Integer updateBy;
 
     @TableField(exist=false)
@@ -112,7 +102,6 @@ public class BaseMedicine implements Serializable {
     private String unitName;
 
     @TableField(exist=false)
-    @ExcelIgnore
     private Integer currentPage;
 
     @TableField(exist=false)
@@ -120,11 +109,9 @@ public class BaseMedicine implements Serializable {
     private Integer quantity;
 
     @TableField(exist=false)
-    @ExcelIgnore
     private BigDecimal totalPrice;
 
     @TableField(exist=false)
-    @ExcelIgnore
     private Integer providerId;
 
     @TableField(exist=false)
@@ -136,40 +123,32 @@ public class BaseMedicine implements Serializable {
     private BigDecimal purchasePrice;
 
     @TableField(exist=false)
-    @ExcelIgnore
     private String code;//单据编号
 
     /**
      * 原单号
      */
-    @ExcelIgnore
+
     private String  sourceCode;
 
     /**
      * 订单药品表id
      */
-    @ExcelIgnore
     private Integer medicineOrderId;
-    @ExcelIgnore
     private Integer medicineId;
-    @ExcelIgnore
     private Integer stock;
 
     @TableField(exist=false)
-    @ExcelIgnore
     private String batchCode;
 
 
     @TableField(exist=false)
-    @ExcelIgnore
     private String storehouseName;
-    @ExcelIgnore
+
     private Integer storeHouseId;
 
-    @ExcelIgnore
     private Integer aimStoreHouseId;
 
-    @ExcelIgnore
     private Integer kcMedicineId;//库存明细id
 
     private Integer totalWarning;//全部仓库预警值
@@ -177,5 +156,4 @@ public class BaseMedicine implements Serializable {
     private Integer fowardWarHouseId;
     @TableField(exist=false)
     private String fowardWarHouseName;
-
 }

@@ -2,8 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.CwXstkDao">
     <select id="getXstkList" resultType="com.kgc.entity.CwXstk">
-        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.backReson,a.cost,a.createBy,b.userName createName
-        FROM cw_xstk a LEFT JOIN sys_user b ON a.createBy=b.userId WHERE a.isDel=0
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.backReson,a.cost,a.createBy,b.userName createName,
+        (SELECT bandCount FROM bank_account WHERE c.bankAccountId=id) bandCount,
+        (SELECT type FROM xs_refundtype WHERE c.refundTypeId=id) refundType,
+        c.opinion
+        FROM cw_xstk a
+        LEFT JOIN sys_user b ON a.createBy=b.userId
+        LEFT JOIN xs_order c ON a.originalOrder=c.orderNo
+        WHERE a.isDel=0
         <if test="code!=null and code!=''">
             AND a.code LIKE concat('%',#{code},'%')
         </if>
@@ -15,9 +21,35 @@
         </if>
     </select>
 
+    <select id="getXstkByCode" resultType="com.kgc.entity.CwXstk">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.backReson,a.cost,a.createBy,b.userName createName,
+        (SELECT bandCount FROM bank_account WHERE c.bankAccountId=id) bandCount,
+        (SELECT type FROM xs_refundtype WHERE c.refundTypeId=id) refundType,
+        c.opinion
+        FROM cw_xstk a
+        LEFT JOIN sys_user b ON a.createBy=b.userId
+        LEFT JOIN xs_order c ON a.originalOrder=c.orderNo
+        WHERE a.isDel=0 AND a.code=#{code}
+    </select>
+
+    <select id="getXstkVOList" resultType="com.kgc.vo.CwXstkVO">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.backReson,a.cost,a.createBy,b.userName createName,
+        (SELECT bandCount FROM bank_account WHERE c.bankAccountId=id) bandCount,
+        (SELECT type FROM xs_refundtype WHERE c.refundTypeId=id) refundType,
+        c.opinion
+        FROM cw_xstk a
+        LEFT JOIN sys_user b ON a.createBy=b.userId
+        LEFT JOIN xs_order c ON a.originalOrder=c.orderNo
+        WHERE a.isDel=0
+    </select>
+
     <select id="getXsysList" resultType="com.kgc.entity.CwXsys">
-        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,a.createBy,b.userName createName
-        FROM cw_xsys a LEFT JOIN sys_user b ON a.createBy=b.userId WHERE a.isDel=0
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,a.createBy,b.userName createName,
+        (SELECT bandCount FROM bank_account WHERE c.bankAccountId=id) bandCount,
+        c.opinion
+        FROM cw_xsys a LEFT JOIN sys_user b ON a.createBy=b.userId
+        LEFT JOIN xs_order c ON a.originalOrder=c.orderNo
+        WHERE a.isDel=0
         <if test="code!=null and code!=''">
             AND a.code LIKE concat('%',#{code},'%')
         </if>
@@ -27,6 +59,24 @@
         <if test="beginTime != null and beginTime != ''">
             and a.createTime BETWEEN #{beginTime} and #{endTime}
         </if>
+    </select>
+
+    <select id="getXsysByCode" resultType="com.kgc.entity.CwXsys">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,a.createBy,b.userName createName,
+        (SELECT bandCount FROM bank_account WHERE c.bankAccountId=id) bandCount,
+        c.opinion
+        FROM cw_xsys a LEFT JOIN sys_user b ON a.createBy=b.userId
+        LEFT JOIN xs_order c ON a.originalOrder=c.orderNo
+        WHERE a.isDel=0 AND a.code=#{code}
+    </select>
+
+    <select id="getXsysVOList" resultType="com.kgc.vo.CwXsysVO">
+        SELECT a.id,a.`code`,a.originalOrder,a.createTime,a.cost,a.createBy,b.userName createName,
+        (SELECT bandCount FROM bank_account WHERE c.bankAccountId=id) bandCount,
+        c.opinion
+        FROM cw_xsys a LEFT JOIN sys_user b ON a.createBy=b.userId
+        LEFT JOIN xs_order c ON a.originalOrder=c.orderNo
+        WHERE a.isDel=0
     </select>
 
 </mapper>

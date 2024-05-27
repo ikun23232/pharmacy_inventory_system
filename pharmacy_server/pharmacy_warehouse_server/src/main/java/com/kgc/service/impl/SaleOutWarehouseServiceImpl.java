@@ -4,21 +4,29 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+//import com.kgc.dao.SaleOrderMapper;
 import com.kgc.dao.SaleOutWarehouseMapper;
+import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcSalefromware;
 import com.kgc.entity.Message;
-import com.kgc.entity.XsOrder;
 import com.kgc.service.SaleOutWarehouseService;
+import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.KcSalefromwareVo;
+import com.kgc.vo.RefundOrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @Service
-public class SaleOutWarehouseServiceImpl  extends ServiceImpl<SaleOutWarehouseMapper, KcSalefromware> implements SaleOutWarehouseService {
+public class SaleOutWarehouseServiceImpl extends ServiceImpl<SaleOutWarehouseMapper, KcSalefromware> implements SaleOutWarehouseService {
 
     @Autowired
     private SaleOutWarehouseMapper saleOutWarehouseMapper;
+//    @Autowired
+//    private SaleOrderMapper saleOrderMapper;
 
     @Override
     public Message getSaleOutWarehouseListByPage(KcSalefromware kcSalefromware) {
@@ -42,5 +50,19 @@ public class SaleOutWarehouseServiceImpl  extends ServiceImpl<SaleOutWarehouseMa
         }else{
             return Message.error();
         }
+    }
+
+    @Override
+    public void saleOutWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response) {
+//        List<KcSalefromwareVo> kcSalefromwareList=saleOutWarehouseMapper.getSaleOutWarehouseList(kcSalefromware);
+//        for (KcSalefromwareVo KcSalefromwareVo :kcSalefromwareList) {
+//            List<BaseMedicine> baseMedicineList = saleOrderMapper.getSaleOrderDetailByOrderNo(KcSalefromwareVo.getOrderNo());
+//            KcSalefromwareVo.setBaseMedicineList(baseMedicineList);
+//        }
+//        try {
+//            ExeclUtil.write(kcSalefromwareList, KcSalefromwareVo.class,response,"销售出库订单");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

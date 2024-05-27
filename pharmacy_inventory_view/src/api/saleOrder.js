@@ -7,6 +7,11 @@ export function initSaleOrder(xsOrder) {
     return request.post(baseUrl + "/getSaleOrderListByPage",xsOrder);
 }
 
+//查询已完成的销售订单
+// export function initSaleOrder(xsOrder) {
+//     return request.post(baseUrl + "/getSaleOrderListByPage",xsOrder);
+// }
+
 //添加销售订单
 export function addSaleOrder(xsOrder) {
     return request.post(baseUrl + "/addSaleOrder",{xsOrder:xsOrder});
@@ -45,4 +50,22 @@ export function deleteSaleOrder(orderNo) {
             orderNo: orderNo,
         }
     });
+}
+//导出销售订单
+export function saleOrderExcel(xsOrder) {
+    return request.post(baseUrl + "/saleOrderExcel", {
+        xsOrder: xsOrder,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '销售订单.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
 }

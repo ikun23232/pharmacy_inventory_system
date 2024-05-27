@@ -1,5 +1,5 @@
 <script>
-import { getXsysList } from '@/api/finance'
+import { getXsysList ,cwXsysExcel} from '@/api/finance'
 export default {
   name: "salesReceivable",
   data() {
@@ -45,7 +45,19 @@ export default {
       this.cwXsys.originalOrder = '';
       this.time = {};
       this.getXsysLists()
-    }
+    },
+    async printExcel(){
+      await cwXsysExcel();
+    },
+    print(code) {
+      const newPage = this.$router.resolve({
+        path: "/printSalesReceivable",
+        query: {
+          code: code,
+        },
+      });
+      window.open(newPage.href, "_blank");
+    },
   }
 }
 </script>
@@ -89,7 +101,8 @@ export default {
 
       </el-row>
       <el-button type="primary" @click="getXsysLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
+      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="printExcel()">导出</el-button><br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwXsysPage.list" border style="width: 100%">
@@ -99,9 +112,12 @@ export default {
         <el-table-column prop="createTime" label="单号生成时间" width="120"/>
         <el-table-column prop="cost" label="应收金额" width="120"/>
         <el-table-column prop="createName" label="销售员" width="120"/>
+        <el-table-column prop="bandCount" label="银行账户" width="120"/>
+        <el-table-column prop="opinion" label="审核意见" width="120"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain>详情</el-button>&nbsp;
+            <el-button type="primary" plain @click="print(row.code)">打印</el-button>&nbsp;
+<!--            <el-button type="primary" plain>详情</el-button>&nbsp;-->
           </template>
         </el-table-column>
       </el-table>

@@ -5,24 +5,38 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kgc.dao.SaleOrderMapper;
-import com.kgc.entity.BaseMedicine;
-import com.kgc.entity.Message;
-import com.kgc.entity.OrderMedicine;
-import com.kgc.entity.XsOrder;
+import com.kgc.dao.*;
+import com.kgc.entity.*;
 import com.kgc.service.SaleOrderService;
+import com.kgc.utils.CodeUtil;
+import com.kgc.utils.ExeclUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 @Service
+@Transactional
 public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> implements SaleOrderService {
     @Autowired
     private SaleOrderMapper saleOrderMapper;
+    @Autowired
+    private StockDetailMapper stockDetailMapper;
+    @Autowired
+    private SaleOutWarehouseMapper saleOutWarehouseMapper;
+    @Autowired
+    private KcOutintodetialMapper kcOutintodetialMapper;
+    @Autowired
+    private CwXsysMapper cwXsysMapper;
+    @Autowired
+    private CwAccountsMapper cwAccountsMapper;
+    @Autowired
+    private CwInvoiceMapper cwInvoiceMapper;
+
+
     @Override
     public Message getSaleOrderListByPage(XsOrder xsOrder) {
         Message message=new Message();
@@ -37,6 +51,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         return message;
     }
 
+
     @Override
     public Message addSaleOrder(XsOrder xsOrder) {
         xsOrder.setCreateBy(1);
@@ -44,17 +59,73 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         xsOrder.setType(0);
         xsOrder.setUpdateDate(xsOrder.getOrderDate());
         xsOrder.setEditStatus(1);
+        //添加销售订单
         int count=saleOrderMapper.insert(xsOrder);
-        List<OrderMedicine> checkedDetail=xsOrder.getCheckedDetail();
+        //生成销售出库单
+        String code= CodeUtil.createCode("XXCK");
+        KcSalefromware kcSalefromware=new KcSalefromware();
+        kcSalefromware.setCode(code);
+        kcSalefromware.setOrderNo(xsOrder.getOrderNo());
+        int saleOutCount=saleOutWarehouseMapper.insert(kcSalefromware);
+        //获取订单详情
+        List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
         boolean result=true;
-        for(OrderMedicine orderMedicine:checkedDetail){
+        for(OrderMedicine orderMedicine:medicineDetailList){
             orderMedicine.setCode(xsOrder.getOrderNo());
+            //生成销售明细单
             int count2=saleOrderMapper.addSaleOrderDetail(orderMedicine);
-            if(count2<0){
+            //更新库存明细
+            int stockDetailCount=stockDetailMapper.reduceStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
+            //生成销售出库明细单
+            String code2=CodeUtil.createCode("CRKMX");
+            KcOutintodetial kcOutintodetial=new KcOutintodetial();
+            kcOutintodetial.setCode(code2);
+            kcOutintodetial.setTypeId(5);
+            kcOutintodetial.setCreateBy(1);
+            kcOutintodetial.setCreateDate(xsOrder.getOrderDate());
+            kcOutintodetial.setOrderCode(xsOrder.getOrderNo());
+            kcOutintodetial.setMedicineId(orderMedicine.getMedicineId());
+            kcOutintodetial.setToStockMoney(orderMedicine.getTotalPrice());
+            kcOutintodetial.setBatchCode(orderMedicine.getBatchCode());
+            kcOutintodetial.setToStockQuantity(orderMedicine.getQuantity());
+            kcOutintodetial.setPrice(orderMedicine.getSalePrice());
+            int count3=kcOutintodetialMapper.insert(kcOutintodetial);
+            if(count2<0&&stockDetailCount<0&&count3<0){
                 result=false;
             }
         }
-        if(count>0&&result){
+        //生成销售收款单
+        CwXsys cwXsys=new CwXsys();
+        String code3=CodeUtil.createCode("CWXSYS");
+        cwXsys.setCode(code3);
+        cwXsys.setOriginalOrder(xsOrder.getOrderNo());
+        cwXsys.setCreateTime(xsOrder.getOrderDate());
+        cwXsys.setCost(xsOrder.getTotalPrice());
+        cwXsys.setCreateBy(1);
+        int count4=cwXsysMapper.insert(cwXsys);
+        //生成销售应收流水
+        CwAccounts cwAccounts=new CwAccounts();
+        String code4=CodeUtil.createCode("XSYSLS");
+        cwAccounts.setCode(code4);
+        cwAccounts.setOrderCode(xsOrder.getOrderNo());
+        cwAccounts.setCategoryId(3);
+        cwAccounts.setCost(xsOrder.getTotalPrice());
+        cwAccounts.setBankAcountId(xsOrder.getBankAccountId());
+        cwAccounts.setDescription(xsOrder.getRemark());
+        cwAccounts.setCreateTime(xsOrder.getOrderDate());
+        cwAccounts.setCreateBy(1);
+        int count5=cwAccountsMapper.insert(cwAccounts);
+        //生成销售应收发票
+        CwInvoice cwInvoice=new CwInvoice();
+        String code5=CodeUtil.createCode("XSYSFP");
+        cwInvoice.setCode(code5);
+        cwInvoice.setCategoryId(3);
+        cwInvoice.setOrderNumber(xsOrder.getOrderNo());
+        cwInvoice.setCreateTime(xsOrder.getOrderDate());
+        cwInvoice.setCreateBy(1);
+        cwInvoice.setCost(xsOrder.getTotalPrice());
+        int count6=cwInvoiceMapper.insert(cwInvoice);
+        if(count>0&&saleOutCount>0&&result&&count4>0&&count5>0&&count6>0){
             return Message.success();
         }else{
             return Message.error();
@@ -70,12 +141,14 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         xsOrder.setEditStatus(0);
         int count=saleOrderMapper.insert(xsOrder);
         boolean result=true;
-        List<OrderMedicine> checkedDetail=xsOrder.getCheckedDetail();
-        for(OrderMedicine orderMedicine:checkedDetail){
-            orderMedicine.setCode(xsOrder.getOrderNo());
-            int count2=saleOrderMapper.addSaleOrderDetail(orderMedicine);
-            if(count2<0){
-                result=false;
+        List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
+        if(medicineDetailList!=null){
+            for(OrderMedicine orderMedicine:medicineDetailList){
+                orderMedicine.setCode(xsOrder.getOrderNo());
+                int count2=saleOrderMapper.addSaleOrderDetail(orderMedicine);
+                if(count2<0){
+                    result=false;
+                }
             }
         }
         if(count>0&&result){
@@ -99,24 +172,19 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
 
     @Override
     public Message updateSaleOrder(XsOrder xsOrder) {
-        xsOrder.setEditStatus(1);
-        UpdateWrapper<XsOrder> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("orderNo",xsOrder.getOrderNo());
-        int count=saleOrderMapper.update(xsOrder, updateWrapper);
-//        int count=saleOrderMapper.updateSaleOrder(xsOrder);
-
-        List<OrderMedicine> checkedDetail=xsOrder.getCheckedDetail();
-        boolean result=true;
-        if(checkedDetail!=null){
-            for(OrderMedicine orderMedicine:checkedDetail){
-                orderMedicine.setCode(xsOrder.getOrderNo());
-                int count2=saleOrderMapper.updateSaleOrderDetail(orderMedicine);
-                if(count2<0){
-                    result=false;
-                }
+//       Message message=deleteSaleOrder(xsOrder.getOrderNo());
+        //删除
+       int count=saleOrderMapper.deleteSaleOrderByOrderNo(xsOrder.getOrderNo());
+       int count2=saleOrderMapper.deleteSaleOrderDetailByOrderNo(xsOrder.getOrderNo());
+       boolean result=false;
+        if(count>0){
+            xsOrder.setId(null);
+            Message message1=addSaleOrder(xsOrder);
+            if("200".equals(message1.getCode())){
+                result=true;
             }
         }
-        if(count>0&&result){
+        if(result){
             return Message.success();
         }else{
             return Message.error();
@@ -125,24 +193,18 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
 
     @Override
     public Message saveUpdateSaleOrder(XsOrder xsOrder) {
-        xsOrder.setEditStatus(0);
-        UpdateWrapper<XsOrder> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("orderNo",xsOrder.getOrderNo());
-        int count=saleOrderMapper.update(xsOrder, updateWrapper);
-//        int count=saleOrderMapper.updateSaleOrder(xsOrder);
-
-        List<OrderMedicine> checkedDetail=xsOrder.getCheckedDetail();
-        boolean result=true;
-        if(checkedDetail!=null){
-            for(OrderMedicine orderMedicine:checkedDetail){
-                orderMedicine.setCode(xsOrder.getOrderNo());
-                int count2=saleOrderMapper.updateSaleOrderDetail(orderMedicine);
-                if(count2<0){
-                    result=false;
-                }
+//        Message message=deleteSaleOrder(xsOrder.getOrderNo());
+        //删除
+        int count=saleOrderMapper.deleteSaleOrderByOrderNo(xsOrder.getOrderNo());
+        int count2=saleOrderMapper.deleteSaleOrderDetailByOrderNo(xsOrder.getOrderNo());
+        boolean result=false;
+        if(count>0){
+            Message message1=saveSaleOrder(xsOrder);
+            if("200".equals(message1.getCode())){
+                result=true;
             }
         }
-        if(count>0&&result){
+        if(result){
             return Message.success();
         }else{
             return Message.error();
@@ -155,7 +217,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         queryWrapper.likeRight("orderNo",orderNo);
         int count=saleOrderMapper.delete(queryWrapper);
         int count2=saleOrderMapper.deleteOrderDetailByOrderNo(orderNo);
-        if(count>0&&count2>0){
+        if(count>0){
             return Message.success();
         }else{
             return Message.error();
@@ -175,6 +237,20 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
             return Message.error();
         }
 
+    }
+
+    @Override
+    public void saleOrderExcel(XsOrder xsOrder, HttpServletResponse response) {
+        List<XsOrder> xsOrderList=saleOrderMapper.getSaleOrderListByPage(xsOrder);
+        for (XsOrder xsOrder1 :xsOrderList) {
+            List<BaseMedicine> baseMedicineList = saleOrderMapper.getSaleOrderDetailByOrderNo(xsOrder1.getOrderNo());
+            xsOrder1.setBaseMedicineList(baseMedicineList);
+        }
+        try {
+            ExeclUtil.write(xsOrderList, XsOrder.class,response,"销售订单");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
