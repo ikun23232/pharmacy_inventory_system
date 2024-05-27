@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -87,7 +88,11 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         }
         cgddOrder.setCount(num);
         cgddOrder.setReferenceAmount(price);
-        cgddOrder.setOrderStatus(2);
+        if (cgddOrder.getIsSave() == 1){
+            cgddOrder.setOrderStatus(2);
+        }else {
+            cgddOrder.setOrderStatus(1);
+        }
         int count = mapper.insert(cgddOrder);
         if (count > 0){
             return Message.success();
@@ -127,16 +132,22 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         int count1 = 0;
         int num = 0;
         BigDecimal price  =BigDecimal.ZERO;
+        Map<String,Object> map = new HashMap<>();
+        map.put("code",cgddOrder.getCode());
+        int i = orderMapper.deleteByMap(map);
+        if (i == 0){
+            return Message.error("删除订单药品详情失败！");
+        }
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgddOrder.getCode());
-            orderMedicine.setMedicineid(baseMedicine.getId());
+            orderMedicine.setMedicineid(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
-            orderMedicine.setSourceCode(baseMedicine.getCode());
+            orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setId(baseMedicine.getMedicineOrderId());
-            int temp = orderMapper.updateById(orderMedicine);
+            int temp = orderMapper.insert(orderMedicine);
             if (temp > 0){
                 count1++;
                 num += orderMedicine.getQuantity();
@@ -144,13 +155,17 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
-            return Message.error("修改失败");
+            throw new RuntimeException("添加药品失败！");
         }
         cgddOrder.setCount(num);
         cgddOrder.setReferenceAmount(price);
         cgddOrder.setUpdateBy(1);
         cgddOrder.setUpdateTime(new Date());
-        int count = mapper.updateById(cgddOrder);
+        if (cgddOrder.getIsSave() == 1){
+            cgddOrder.setOrderStatus(2);
+        }else {
+            cgddOrder.setOrderStatus(1);
+        }        int count = mapper.updateById(cgddOrder);
         if (count > 0){
             return Message.success();
         }
@@ -159,13 +174,19 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public Message auditingOrder(CgddOrder cgddOrder) {
-        if (cgddOrder.getApprovalStatus() == 1){
-            cgddOrder.setEffectiveTime(new Date());
-            cgddOrder.setIsPay(1);
+        cgddOrder.setEffectiveTime(new Date());
+        cgddOrder.setApproverBy(1);
+        cgddOrder.setApproverRemark(cgddOrder.getApproverRemark());
+        if (cgddOrder.getApprovalStatus() == 2){
+            if (cgddOrder.getPayType() == 2){
+                cgddOrder.setIsPay(1);
+                //添加流水
+            }
             cgddOrder.setPayTime(new Date());
             cgddOrder.setOrderStatus(3);
+        }else {
+            cgddOrder.setOrderStatus(4);
         }
-        cgddOrder.setApproverBy(1);
         int count = mapper.updateById(cgddOrder);
         if (count > 0){
             return Message.success();

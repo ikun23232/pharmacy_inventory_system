@@ -67,5 +67,29 @@
           AND o.code=#{code}
     </select>
 
-
+    <select id="getCgsqOrderByStates" resultType="CgsqOrder">
+        SELECT o.*,t.name AS 'cgtype',(SELECT userName FROM sys_user u WHERE o.demanderBy=u.userId)AS
+        'demanderUserName',
+        (SELECT userName FROM sys_user u WHERE o.approverBy=u.userId)AS 'approverUserName',
+        (SELECT userName FROM sys_user u WHERE o.documenterBy=u.userId)AS 'documenterUserName',
+        (SELECT userName FROM sys_user u WHERE o.updateBy=u.userId)AS 'updateUserName',
+        s.type AS 'orderStatueName'
+        FROM cgsq_order o,cg_type t,order_statue s
+        WHERE o.type=t.id
+        AND s.id=o.orderStatus and o.orderStatus = 3
+        <if test="code!=null and code!=''">
+            and o.code like concat('%',#{code},'%')
+        </if>
+        <if test="subject!=null and subject!=''">
+            and o.subject like concat('%',#{subject},'%')
+        </if>
+        <if test="type>0">
+            and o.type=#{type}
+        </if>
+        <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+            and o.createTime BETWEEN #{startTime} AND #{endTime}
+        </if>
+        AND o.isDel=0
+        order by o.createTime Desc
+    </select>
 </mapper>

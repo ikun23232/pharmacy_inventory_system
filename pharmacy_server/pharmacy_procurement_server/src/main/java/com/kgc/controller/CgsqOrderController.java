@@ -34,6 +34,12 @@ public class CgsqOrderController {
         Message message = cgsqOrderService.getCgsqOrderList(cgVO);
         return message;
     }
+
+    @RequestMapping("/getCgsqOrderByStates")
+    public Message getCgsqOrderByStates(@RequestBody CgVO cgVO){
+        Message message = cgsqOrderService.getCgsqOrderByStates(cgVO);
+        return message;
+    }
     @RequestMapping("/delCgsqOrderById")
     public Message delCgsqOrderById(int id){
         Message message = cgsqOrderService.delCgsqOrderById(id);

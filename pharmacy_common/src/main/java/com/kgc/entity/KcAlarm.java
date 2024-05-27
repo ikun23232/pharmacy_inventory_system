@@ -1,6 +1,8 @@
 package com.kgc.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +23,7 @@ public class KcAlarm implements Serializable {
     /**
     * 库存告警id
     */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 告警编号

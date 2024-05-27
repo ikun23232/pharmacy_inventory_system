@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.KcAlarm;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
+import com.kgc.vo.KcAlarmVO;
 import com.kgc.vo.WarningVo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 15279
@@ -17,4 +20,10 @@ public interface KcAlarmService extends IService<KcAlarm> {
     Message deleteAlarmList(Integer id);
 
     Message updateRemind(Integer id);
+
+    void excelKcAlarm(KcAlarmVO kcAlarmVO, HttpServletResponse response);
+
+    public void checkWarning();
+
+    Message getAlarmCount();
 }

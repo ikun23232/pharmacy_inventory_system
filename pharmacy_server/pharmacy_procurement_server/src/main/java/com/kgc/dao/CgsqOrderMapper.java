@@ -17,8 +17,7 @@ import java.util.Map;
  */
 public interface CgsqOrderMapper extends BaseMapper<CgsqOrder> {
     List<CgsqOrder> getCgsqOrderList(Map map);
-
-
+    List<CgsqOrder> getCgsqOrderByStates(Map map);
     CgsqOrder getCgSqOrderById(int id);
     CgsqOrder getCgsqOrderByCode(CgsqOrder cgsqOrder);
 

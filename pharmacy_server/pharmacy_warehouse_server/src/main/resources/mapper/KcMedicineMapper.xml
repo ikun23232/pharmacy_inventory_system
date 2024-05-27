@@ -37,4 +37,14 @@
         where batchCode = #{batchCode} and storehouseId = #{storehouseId}
     </select>
 
+    <select id="getWarningByLocalHouse" resultType="KcMedicine">
+        select id, batchCode, storehouseId, medicineId, providerId, quantity, money, isDel, totalPrice
+        from kc_medicine
+        where storehouseId = 1 and medicineId in (select base_medicine.id from base_medicine where warning > kc_medicine.quantity)
+    </select>
+
+    <select id="getWarningByTotalCount" resultType="baseMedicine">
+        select medicineId as id,sum(quantity) as stock from kc_medicine
+        group by medicineId HAVING (select totalWarning from base_medicine where medicineId = base_medicine.id) > sum(quantity)
+    </select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.kgc.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,6 +17,8 @@ import java.math.BigDecimal;
  */
 @Data
 public class KcDispatchdetails implements Serializable {
+
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @TableField("aimStoreHouseId")

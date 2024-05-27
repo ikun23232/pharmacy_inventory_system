@@ -2,6 +2,7 @@ package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.KcAlarm;
+import com.kgc.vo.KcAlarmVO;
 import com.kgc.vo.WarningVo;
 
 import java.util.List;
@@ -13,4 +14,8 @@ import java.util.List;
  */
 public interface KcAlarmMapper extends BaseMapper<KcAlarm> {
     List<KcAlarm> getKcAlarmList(WarningVo warningVo);
+
+    List<KcAlarmVO> excelAlarmList(KcAlarmVO kcAlarmVO);
+
+    int updateAlarm(KcAlarm kcAlarm);
 }

@@ -43,6 +43,7 @@
                 placeholder="请选择原仓库"
                 clearable
                 filterable
+                disabled
                 @change="updateDispatchDetails"
               >
                 <el-option
@@ -58,6 +59,7 @@
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <el-button
+              disabled
               icon="el-icon-plus"
               @click="addDispatchMedicine"
               style="float: left"
@@ -71,13 +73,18 @@
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="调度主题" prop="subject">
-              <el-input type="text" v-model="KcDispatch.subject"></el-input>
+              <el-input
+                disabled
+                type="text"
+                v-model="KcDispatch.subject"
+              ></el-input>
             </el-form-item></div
         ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="调度时间" prop="dispatchTime">
               <el-date-picker
+                disabled
                 v-model="KcDispatch.dispatchTime"
                 type="date"
                 placeholder="选择日期"
@@ -91,12 +98,13 @@
         <el-tab-pane label="调度申请单" name="first">
           <el-button
             icon="el-icon-plus"
-            :disabled="medicineListTemp.length == 0"
+            disabled
             @click="getMedicineListDetail"
             style="float: left"
             >添加</el-button
           >
           <el-button
+            disabled
             icon="el-icon-delete"
             type="danger"
             style="float: left"
@@ -104,6 +112,7 @@
             >删除</el-button
           >
           <el-table
+            disabled
             :data="medicineListTemp"
             border
             style="width: 1200px"
@@ -135,6 +144,7 @@
         </el-tab-pane>
         <el-tab-pane label="明细" name="second">
           <el-button
+            disabled
             type="success"
             icon="el-icon-delete"
             size="mini"
@@ -142,6 +152,7 @@
             >删除</el-button
           >
           <el-button
+            disabled
             type="danger"
             icon="el-icon-delete"
             size="mini"
@@ -149,6 +160,7 @@
             >清空</el-button
           >
           <el-table
+            disabled
             v-loading="loading"
             :data="bcglXiangXiList"
             :row-class-name="rowClassName"
@@ -193,6 +205,7 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
+                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].specification"
                   disabled
                 >
@@ -212,6 +225,7 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
+                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].unitName"
                   disabled
                 >
@@ -232,13 +246,15 @@
             >
               <template slot-scope="scope">
                 <el-input-number
-                  type="number"
+                  disabled
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
-                  min="1"
-                  :max="bcglXiangXiList[scope.row.xh - 1].maxStock"
-                  :step="1"
-                  :precision="0"
+                  @change="
+                    handleChange(
+                      bcglXiangXiList[scope.row.xh - 1].quantity,
+                      bcglXiangXiList[scope.row.xh - 1].maxStock
+                    )
+                  "
                 ></el-input-number>
               </template>
             </el-table-column>
@@ -263,8 +279,9 @@
             >
               <template slot-scope="scope">
                 <el-select
+                  disabled
                   clearable
-                  @change="changeStoreHouse(scope.row, scope.$index)"
+                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].aimStoreHouseId"
                 >
                   <el-option
@@ -287,6 +304,7 @@
         <el-col :span="8">
           <el-form-item label="备注 " style="margin-top: 10px" prop="remark">
             <el-input
+              disabled
               style="width: 300px"
               type="text"
               v-model="KcDispatch.remark"
@@ -320,7 +338,6 @@
               clearable
               filterable
             >
-              <el-option label="请选择审批结果" :value="0"></el-option>
               <el-option label="不通过" :value="1"></el-option>
               <el-option label="通过" :value="2"></el-option>
             </el-select>
@@ -331,14 +348,9 @@
         <el-row type="flex" justify="center">
           <el-col :span="6"
             ><div class="grid-content bg-purple">
-              <el-button type="primary" @click="commit('KcDispatch')"
+              <el-button disabled type="primary" @click="commit('KcDispatch')"
                 >提交</el-button
               >
-            </div></el-col
-          >
-          <el-col :span="6">
-            <div class="grid-content bg-purple">
-              <el-button s @click="save('KcDispatch')">保存</el-button>
             </div></el-col
           >
           <el-col :span="6">
@@ -367,11 +379,11 @@
 <script>
 import wareDetails from "./wareDetails.vue";
 import { Message } from "element-ui";
-import { updateDispatchBy, getKcDispatchById } from "./../api/KcDispatch";
+import { auditingDispatch, getKcDispatchById } from "../api/KcDispatch";
 import { getKcDetailsList } from "@/api/kcDisparchDetails";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
-  name: "updateDispatch",
+  name: "AuditingDispatch",
   components: {
     wareDetails,
   },
@@ -399,6 +411,7 @@ export default {
         isCommit: "",
         dispatchTime: "",
         medicineList: [],
+        approvalStatus: "",
       },
       storeHouseList: [],
       list: {},
@@ -429,9 +442,10 @@ export default {
     this.storeHouseList = data.data;
     let dispatch = await getKcDispatchById(this.id);
     this.KcDispatch = dispatch.data;
+    this.KcDispatch.approvalStatus = "";
     let kcDetailsList = await getKcDetailsList(this.KcDispatch.code);
     this.medicineListTemp = kcDetailsList.data;
-    await this.showMedicineListDetail();
+    await this.getMedicineListDetail();
   },
   methods: {
     commit(formName) {
@@ -460,15 +474,15 @@ export default {
               return;
             }
           }
-          updateDispatchBy(this.KcDispatch).then((resp) => {
+          auditingDispatch(this.KcDispatch).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
               Message({
-                message: "修改成功!",
+                message: "审批成功!",
                 type: "success",
                 center: "true",
               });
-              this.$emit("handleUpdateSuccess");
+              this.$emit("handleAuditingSuccess");
             }
           });
         } else {
@@ -483,7 +497,7 @@ export default {
       this.KcDispatch.code = data;
     },
     cancel() {
-      this.$emit("cancelUpdate");
+      this.$emit("closeviewOrder");
     },
     handleKcmxMedicineionChange(val) {
       this.changeMedicineList = val;
@@ -519,63 +533,6 @@ export default {
       }
     },
     async getMedicineListDetail() {
-      if (this.changeMedicineList.length == 0) {
-        Message({
-          message: "请选择药品！",
-          type: "error",
-          center: "true",
-        });
-        return;
-      }
-      if (this.changeMedicineList.length > 0) {
-        for (let index = 0; index < this.changeMedicineList.length; index++) {
-          if (this.KcDispatch.medicineList.length > 0) {
-            for (let i = 0; i < this.KcDispatch.medicineList.length; i++) {
-              const element = this.KcDispatch.medicineList[i];
-              if (
-                this.changeMedicineList[index].batchCode == element.batchCode &&
-                this.changeMedicineList[index].medicineId == element.medicineId
-              ) {
-                Message({
-                  message:
-                    this.changeMedicineList[index].name +
-                    "药品已经存在！请勿重复添加！",
-                  type: "error",
-                  center: "true",
-                });
-                return;
-              }
-            }
-          }
-          if (this.bcglXiangXiList == undefined) {
-            this.bcglXiangXiList = new Array();
-          }
-          if (this.changeMedicineList[index].aimStoreHouseId == 0) {
-            this.changeMedicineList[index].aimStoreHouseId = "";
-          }
-          let obj = {
-            aimStoreHouseList: this.storeHouseList,
-            batchCode: this.changeMedicineList[index].batchCode,
-            name: this.changeMedicineList[index].name,
-            medicineId: this.changeMedicineList[index].id,
-            unitId: this.changeMedicineList[index].unitId,
-            unitName: this.changeMedicineList[index].unitName,
-            specification: this.changeMedicineList[index].specification,
-            purchasePrice: this.changeMedicineList[index].purchasePrice,
-            aimStoreHouseId: this.changeMedicineList[index].aimStoreHouseId,
-            quantity: this.changeMedicineList[index].stock,
-            maxStock: this.changeMedicineList[index].stock,
-            isRight: true,
-          };
-          obj.dkdd = "1";
-          obj.sjfw = ["07:00", "07:30"];
-          obj.jxsjfw = ["06:00", "12:00"];
-          this.bcglXiangXiList.push(obj);
-        }
-        this.KcDispatch.medicineList = this.bcglXiangXiList;
-      }
-    },
-    async showMedicineListDetail() {
       if (this.medicineListTemp.length == 0) {
         Message({
           message: "请选择药品！",
@@ -588,6 +545,9 @@ export default {
         for (let index = 0; index < this.medicineListTemp.length; index++) {
           if (this.bcglXiangXiList == undefined) {
             this.bcglXiangXiList = new Array();
+          }
+          if (this.medicineListTemp[index].aimStoreHouseId == 0) {
+            this.medicineListTemp[index].aimStoreHouseId = "";
           }
           let obj = {
             aimStoreHouseList: this.storeHouseList,
@@ -635,18 +595,17 @@ export default {
     cancelKcmx() {
       this.kcmxdialog = false;
     },
+    handleChange(val, maxVal) {
+      if (val > maxVal) {
+        this.$message({
+          message: "最大值不超过" + maxVal,
+          type: "error",
+        });
+      }
+    },
     updateDispatchDetails() {
       this.medicineListTemp = [];
       this.bcglXiangXiList = [];
-    },
-    changeStoreHouse(row, index) {
-      if (this.KcDispatch.beforeWarehouseId == row.aimStoreHouseId) {
-        this.$message({
-          message: "目标仓库不能和原仓库相等",
-          type: "error",
-        });
-        this.KcDispatch.medicineList[index].aimStoreHouseId = "";
-      }
     },
   },
   computed: {
@@ -660,8 +619,8 @@ export default {
     },
     calculatedTotalPrice() {
       return (row) => {
-        row.totalPrice = row.quantity * row.price;
-        return row.quantity * row.price;
+        row.totalPrice = row.quantity * row.purchasePrice;
+        return row.quantity * row.purchasePrice;
       };
     },
   },

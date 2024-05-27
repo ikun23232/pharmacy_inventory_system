@@ -8,7 +8,7 @@
 #         where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`code`=bs.`code`
 #           and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0
         select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,
-               kc.quantity as stock,kc.batchCode,kc.`code`,bs.name as storehouseName,kc.providerId,kc.money as purchasePrice,
+               kc.quantity as stock,kc.batchCode,bs.name as storehouseName,kc.providerId,kc.money as purchasePrice,
             kc.id as kcMedicineId
         from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs
         where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.storehouseId=bs.id

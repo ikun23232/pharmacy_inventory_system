@@ -1,6 +1,7 @@
 package com.kgc.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcMedicine;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,11 @@ public interface KcMedicineMapper extends BaseMapper<KcMedicine> {
 
     KcMedicine getMedicineByBatchCode(@Param("batchCode") String batchCode,@Param("storehouseId") Integer storehouseId);
 
+    /**
+     * 查询低于告警值的本地仓库详情
+     * @return
+     */
+    List<KcMedicine> getWarningByLocalHouse();
+
+    List<BaseMedicine> getWarningByTotalCount();
 }

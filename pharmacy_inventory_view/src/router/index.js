@@ -178,6 +178,11 @@ const routes = [
     name: 'CRKMXManager',
     component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
+  {
+    path: '/printCGDDOrder',
+    name: 'printCGDDOrder',
+    component: () => import('@/views/procurement/CGDD/PrintCGDDOrder.vue')
+  },
 ]
 
 const router = new VueRouter({

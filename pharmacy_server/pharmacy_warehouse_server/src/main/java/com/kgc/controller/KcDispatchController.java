@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -68,5 +69,10 @@ public class KcDispatchController {
     public Message updateVoidStatus(int id) {
         Message message = kcDispatchService.updateVoidStatus(id);
         return message;
+    }
+
+    @RequestMapping("/excelDispatch")
+    public void excelDispatch(DispatchVO dispatchVO, HttpServletResponse response){
+        kcDispatchService.excelDispatch(dispatchVO,response);
     }
 }
