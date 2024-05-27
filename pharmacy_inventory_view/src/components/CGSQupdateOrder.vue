@@ -590,7 +590,7 @@ export default {
         this.tableData = [
           this.changeProvider(row)
         ];
-      }, 500);
+      }, 300);
     },
     handleSelectChange(row) {
       // 这里可以添加逻辑，根据row.selectedValue来更新表格数据

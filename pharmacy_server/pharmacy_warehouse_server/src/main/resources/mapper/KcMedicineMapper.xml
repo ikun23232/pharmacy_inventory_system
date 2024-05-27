@@ -3,7 +3,7 @@
 <mapper namespace="com.kgc.dao.KcMedicineMapper">
 <!--    查询库存药品-->
    <select id="getKcMedicine" resultType="com.kgc.entity.KcMedicine">
-        SELECT a.id,a.batchCode,a.storehouseId,a.`code`,a.medicineId,a.quantity,
+        SELECT a.id,a.batchCode,a.storehouseId,a.medicineId,a.quantity,
                a.money,a.providerId,b.`name` medicineName,c.`name` providerName
         FROM kc_medicine a
         LEFT JOIN base_medicine b ON a.medicineId=b.id
