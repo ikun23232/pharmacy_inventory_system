@@ -45,10 +45,12 @@
         order by o.createTime Desc
     </select>
     <select id="getCgrkOrder" resultMap="BaseResultMap">
-     SELECT o.id, o.code, o.medicinePrice, o.purchaseId, o.remark, o.effectiveTime, o.approverBy, o.approvalStatus, o.approverRemark, o.isAddWarehouse, o.documenterBy, o.voidState, o.createTime, o.createBy,(SELECT `nickName` FROM sys_user u WHERE userId=o.createBy) createByName, o.updateTime, o.updateBy, o.isDel, o.orderStatus, o.providerId, o.subject, o.warhouseUserId,
+        SELECT o.id, o.code, o.medicinePrice, o.purchaseId, o.remark, o.effectiveTime, o.approverBy, o.approvalStatus, o.approverRemark, o.isAddWarehouse, o.documenterBy, o.voidState, o.createTime, o.createBy,(SELECT `nickName` FROM sys_user u WHERE userId=o.createBy) documenterUserName
+                , o.updateTime, o.updateBy, o.isDel, o.orderStatus, o.providerId, o.subject, o.warhouseUserId,
                m.id AS 'TempId',m.`code` AS 'TempCode', m.code, m.medicineId,(SELECT name FROM base_medicine WHERE id=m.medicineId) medecineName, m.quantity, m.totalPrice, m.providerId, m.sourceCode, m.isDel, m.batchCode, m.isCancel, m.fowardWarHouseId,(SELECT `name` FROM base_storehouse WHERE id=m.fowardWarHouseId) fowardWarHouseName,
-               p.price AS 'purchasePrice',bm.*,bp.`name` AS providerName,bc.`name` AS categoryName,bu.name unitName
-        FROM cgrk_order o,order_medicine m,provider_medicine p,base_medicine bm,base_provider bp,base_medicine_category bc,base_unit bu
+               p.price AS 'purchasePrice',bm.*,bp.`name` AS providerName,bc.`name` AS categoryName,bu.name unitName,bs.`name` warhouseUserName
+
+        FROM cgrk_order o,order_medicine m,provider_medicine p,base_medicine bm,base_provider bp,base_medicine_category bc,base_unit bu,base_storehouse bs
         WHERE o.`code`=m.`code`
           AND p.medicineId=m.medicineId
           AND m.providerId=p.providerId
@@ -56,6 +58,7 @@
           AND bp.id=m.providerId
           AND bc.id=bm.categoryId
           AND bu.id=bm.unitId
+          AND bs.id=m.fowardWarHouseId
           AND o.id=#{id}
     </select>
     <select id="getCgrkOrderByExcel" resultMap="BaseResultMap">

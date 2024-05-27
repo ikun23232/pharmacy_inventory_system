@@ -12,7 +12,7 @@
           </tr>
           <tr style="margin:0;padding:0;">
             <td style="padding:5px;" align="left">源单号: {{ saleOrder.sourceCode }}</td>
-            <td style="padding:5px;" align="left">联系电话: 15578960074</td>
+            <td style="padding:5px;" align="left">供应商: {{ saleOrder.providerName}}</td>
             <td style="padding:5px;" align="left">付款备注：{{saleOrder.remark }}</td>
             <td style="padding:5px;" align="left">合计金额: {{ saleOrder.medicineprice
               }}元</td>
@@ -42,7 +42,8 @@
             <td>{{ item.unitName }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.totalPrice }}</td>
-            <td>{{ item.fowardWarHouseName }}</td>
+            <td>{{ item.fowardWarHouseName
+              }}</td>
           </tr>
           <tr align="center">
             <td colspan="6" style="font-weight: bolder;">合计</td>

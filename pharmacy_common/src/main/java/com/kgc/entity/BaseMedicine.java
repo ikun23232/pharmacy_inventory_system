@@ -175,5 +175,7 @@ public class BaseMedicine implements Serializable {
     private Integer totalWarning;//全部仓库预警值
     @TableField(exist=false)
     private Integer fowardWarHouseId;
+    @TableField(exist=false)
+    private String fowardWarHouseName;
 
 }

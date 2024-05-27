@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column prop="demanderUserName" label="需求人" width="120">
       </el-table-column>
-      <el-table-column prop="count" label="数量" width="120">
+      <el-table-column prop="count" label="采购数量" width="120">
 
       </el-table-column>
       <el-table-column prop="effectivetime" label="生效时间" width="120">
@@ -81,7 +81,7 @@
       <el-table-column prop="approvalstatus
 " label="核批结果" width="120">
         <template slot-scope="scope">
-          {{scope.row.approvalstatus === null ? "未审核" : (scope.row.approvalstatus === 0 ? "未通过" : "通过")}}
+          {{scope.row.approvalstatus === 0 ? "未审核" : (scope.row.approvalstatus === 1 ? "未通过" : "通过")}}
 
         </template>
       </el-table-column>
@@ -106,7 +106,7 @@
               @click="updateOrder(scope.row.id)"
               type="primary"
               size="small"
-              :disabled="scope.row.orderstatus>=2"
+              :disabled="scope.row.orderstatus>2 || scope.row.voidstate==1"
           >编辑
           </el-button>
           <el-dropdown>
@@ -117,10 +117,10 @@
               <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
+              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" :disabled="scope.row.voidstate==1" type="info" size="small">作废
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderstatus==2" type="success" size="small">审核
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderstatus==2&& scope.row.approvalstatus==1" type="success" size="small">审核
               </el-button></el-dropdown-item>
               <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>

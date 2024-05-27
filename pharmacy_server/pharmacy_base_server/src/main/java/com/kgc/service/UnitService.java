@@ -7,7 +7,7 @@ import com.kgc.entity.Page;
 
 public interface UnitService extends IService<BaseUnit> {
     public Message getUnitList();
-    public Message getUnitListByPage(Page page);
+    public Message getUnitListByPage(Page page,String name);
 
     public Message delUnitById(int id);
     public Message updateUnit(BaseUnit baseUnit);

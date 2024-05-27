@@ -107,14 +107,6 @@
               <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
-              </el-button></el-dropdown-item>
-
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderStatus==2" type="success" size="small">审核
-              </el-button></el-dropdown-item>
-              <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
-              </el-button></el-dropdown-item>
-
             </el-dropdown-menu>
           </el-dropdown>
 

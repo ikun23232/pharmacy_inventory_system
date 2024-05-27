@@ -29,11 +29,11 @@ public class UnitController {
 
     //分页查询查询全部计量单位
     @RequestMapping("/getUnitListByPage")
-    public Message getUnitListByPage(int currentPageNo, int pageSize,String name) {
+    public Message getUnitListByPage(int currentPageNo,int pageSize,String name) {
         Page page = new Page();
         page.setCurrentPageNo(currentPageNo);
         page.setPageSize(pageSize);
-        Message unitListByPage = unitService.getUnitListByPage(page);
+        Message unitListByPage = unitService.getUnitListByPage(page,name);
         return unitListByPage;
     }
     @RequestMapping("/delUnitById")

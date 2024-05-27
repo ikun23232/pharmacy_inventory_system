@@ -43,19 +43,6 @@
 
         <el-col :span="6"
         ><div class="grid-content bg-purple">
-            <el-form-item label="交货日期" prop="deliveryDate">
-              <el-date-picker
-                  v-model="CgddOrder.deliveryDate"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-              >
-              </el-date-picker>
-            </el-form-item></div
-        ></el-col>
-
-        <el-col :span="6"
-        ><div class="grid-content bg-purple">
             <el-form-item label="供应商" prop="providerId">
               <el-select
                   v-model="CgddOrder.providerId"
@@ -163,7 +150,7 @@
                 style="width: 1200px"
                 @selection-change="handleCgsqChange"
             >
-              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column type="selection" width="55" ></el-table-column>
                <el-table-column prop="code" label="订单编码" width="150" fixed>
       </el-table-column>
       <el-table-column prop="orderTypeName" label="采购类型" width="120">
@@ -290,6 +277,7 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAddDetails"
+              disabled
           >添加</el-button
           >
           <el-button
@@ -297,6 +285,7 @@
               icon="el-icon-delete"
               size="mini"
               @click="handleDeleteDetails"
+              disabled
           >删除</el-button
           >
           <el-button
@@ -634,9 +623,7 @@ export default {
         providerId: [
           {required: true, message: "请输入供应商", trigger: "change"},
         ],
-        deliveryDate: [
-          {required: true, message: "交货日期不能为空", trigger: "change"},
-        ],
+
         payType: [
           {required: true, message: "付款方式不能为空", trigger: "change"},
         ],
@@ -769,7 +756,16 @@ export default {
       this.medicineListTemp = []
       if (this.cgsqListTemp.length <= 0) {
         Message({
-          message: "请选择采购申请单",
+          message: "请选择采购订单",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      console.log("看看我",this.cgsqListTemp)
+      if (this.cgsqListTemp[0].isPay==0){
+        Message({
+          message: "该采购订单未支付哦!请支付后进行入库操作",
           type: "error",
           center: "true",
         });
@@ -795,15 +791,22 @@ export default {
       this.initCgSqOrderList();
     },
     async deleteCgsq() {
+      console.log("我在这",this.cgsqListTemp)
+      if (this.cgsqListTemp.length==0){
+        Message({
+          message: "请选择指定采购订单",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
       if (this.cgsqListTemp.length >= 0) {
         var data = [];
         for (let index = 0; index < this.cgsqListTemp.length; index++) {
           for (let i = 0; i < this.medicineListTemp.length; i++) {
             var temp = [];
             temp.push(this.medicineListTemp[i]);
-            alert(
-                this.cgsqListTemp[index].code == this.medicineListTemp[i].code
-            );
+
             console.log("medicineListTemp:", this.medicineListTemp);
             console.log("temp:", temp);
             if (
@@ -832,6 +835,7 @@ export default {
       );
       console.log("newData", newData);
       this.cgsqList = newData;
+      this.medicineListTemp=[]
     },
     deleteMedicine() {
       const newData = this.medicineListTemp.filter(
@@ -839,6 +843,7 @@ export default {
       );
       this.medicineListTemp = newData;
       this.changeMedicineList = [];
+
     },
     getCgsqlist() {
       if (this.CgddOrder.providerId == 0 || this.CgddOrder.providerId == "") {
@@ -978,6 +983,15 @@ export default {
         });
         return;
       }
+      if (this.cgddMedicineionList.length != this.medicineListTemp.length) {
+        Message({
+          message: "请勾选全部！",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      this.bcglXiangXiList=[]
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
           if (this.bcglXiangXiList == undefined) {
@@ -1015,11 +1029,12 @@ export default {
 
         }
       }
-      // alert(this.code)
-      // let resp =await getMedicineListByCodeComblie(this.code);
-      // console.log(resp)
-      // this.bcglXiangXiList=resp.data
-      // this.CgddOrder.medicineList=resp.data;
+      Message({
+        message: "添加成功！",
+        type: "success",
+        center: "true",
+      });
+
     }
 
   },
@@ -1030,7 +1045,7 @@ export default {
         return 0;
       }
       return this.bcglXiangXiList.reduce(
-          (total, item) => total + item.totalPrice * item.quantity,
+          (total, item) => total + item.price * item.quantity,
           0
       );
     },

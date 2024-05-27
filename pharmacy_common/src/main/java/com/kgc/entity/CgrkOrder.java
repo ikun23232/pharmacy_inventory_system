@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -182,6 +183,13 @@ public class CgrkOrder implements Serializable {
     @TableField(exist = false)
     @ExcelFiled("库管员")
     private String warhouseUserName;
+    @ExcelFiled("入库金额")
+    @TableField(exist = false)
+    private BigDecimal formMoney;
+    @ExcelFiled("结算金额")
+    @TableField(exist = false)
+    private BigDecimal payMoney;
+
 
 
 

@@ -45,7 +45,6 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
         List<KcDisfromware> kcDisfromwareList1 = kcDisfromwareMapper.getKcDisfromwareList(paramsMap);
         PageInfo<KcDisfromware> kcDisfromwarePageInfo = new PageInfo<>(kcDisfromwareList1);
         return Message.success(kcDisfromwarePageInfo);
-
     }
 
     @Override
@@ -70,7 +69,6 @@ public class KcDisfromwareServiceImpl extends ServiceImpl<KcDisfromwareMapper, K
             ExeclUtil.write(kcDisfromwareList,KcDisfromware.class,response,"调度出库");
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 }

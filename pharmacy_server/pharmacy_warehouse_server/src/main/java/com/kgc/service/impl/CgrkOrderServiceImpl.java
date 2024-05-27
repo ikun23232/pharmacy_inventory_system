@@ -12,9 +12,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CgrkOrderMapper;
 import com.kgc.dao.KcMedicineMapper;
+import com.kgc.dao.KcOutintodetialMapper;
 import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.CgrkOrderService;
+import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgVO;
 import com.sun.org.apache.bcel.internal.generic.I2D;
@@ -39,6 +41,9 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
     private PublicOMedicineMapper orderMapper;
     @Autowired
     private KcMedicineMapper kcMedicineMapper;
+
+    @Autowired
+    private KcOutintodetialMapper kcOutintodetialMapper;
     @Override
     public Message getCgrkOrderService(CgVO vo) {
         Map paramsMap = new HashMap<String, Object>();
@@ -86,9 +91,13 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         }else {
             cgrqOrder.setOrderStatus(1);
         }
+        cgrqOrder.setApprovalstatus(0);
         cgrqOrder.setDocumenterby(1);
         cgrqOrder.setVoidstate(0);
         cgrqOrder.setCreateby(1);
+        cgrqOrder.setIsaddwarehouse(0);
+//        cgrqOrder.setPayMoney(referencCount);
+//        cgrqOrder.setFormMoney(BigDecimal.ZERO);
         cgrkOrderMapper.insert(cgrqOrder);
         for (BaseMedicine baseMedicine : cgrqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
@@ -102,7 +111,6 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             Integer batchCode = orderMapper.selectMaxYourField();
             orderMedicine.setBatchCode(batchCode+1);
             orderMapper.insert(orderMedicine);
-
         }
         return Message.success();
 
@@ -132,11 +140,11 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setMedicineid(baseMedicine.getMedicineId());
             orderMedicine.setQuantity(baseMedicine.getQuantity());
-//            orderMedicine.setTotalprice(baseMedicine.getTotalPrice());
-//            orderMedicine.setProviderId(baseMedicine.getProviderId());
-//            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
-//            Integer batchCode = orderMapper.selectMaxYourField();
-//            orderMedicine.setBatchCode((batchCode+1)+"");
+            orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
+            orderMedicine.setProviderId(baseMedicine.getProviderId());
+            orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
+            Integer batchCode = orderMapper.selectMaxYourField();
+            orderMedicine.setBatchCode(batchCode+1);
             orderMapper.insert(orderMedicine);
         }
         return Message.success();
@@ -168,29 +176,46 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         updateObj.setEffectiveTime(new Date());
         updateObj.setApproverby(1);
         updateObj.setApprovalstatus(approveMent);
-        if (approveMent==1){
+        if (approveMent==2){
             updateObj.setOrderStatus(3);
             updateObj.setIsaddwarehouse(1);
+
+            //更新我的流水
+            CgrkOrder cgrkOrder = cgrkOrderMapper.getCgrkOrder(id);
+            List<BaseMedicine> medicineList = cgrkOrder.getMedicineList();
+            for (BaseMedicine baseMedicine : medicineList) {
+                KcMedicine kcMedicine=new KcMedicine();
+                kcMedicine.setBatchCode(baseMedicine.getBatchCode());
+                kcMedicine.setStorehouseId(baseMedicine.getFowardWarHouseId());
+                kcMedicine.setMedicineId(baseMedicine.getMedicineId());
+                kcMedicine.setProviderId(baseMedicine.getProviderId());
+                kcMedicine.setQuantity(baseMedicine.getQuantity());
+                kcMedicine.setMoney(baseMedicine.getPurchasePrice());
+                kcMedicine.setTotalPrice(baseMedicine.getTotalPrice());
+                kcMedicineMapper.insert(kcMedicine);
+            }
+
+            for (BaseMedicine baseMedicine : cgrkOrder.getMedicineList()) {
+                KcOutintodetial kcOutintodetial = new KcOutintodetial();
+                kcOutintodetial.setTypeId(3);
+                String crkmxCode = CodeUtil.createCode("CRKMX");
+                kcOutintodetial.setCode(crkmxCode);
+                kcOutintodetial.setCreateDate(new Date());
+                kcOutintodetial.setOrderCode(cgrkOrder.getCode());
+                kcOutintodetial.setMedicineId(baseMedicine.getMedicineId());
+                kcOutintodetial.setProviderId(baseMedicine.getProviderId());
+                kcOutintodetial.setToStockQuantity(baseMedicine.getQuantity());
+                kcOutintodetial.setToStockMoney(baseMedicine.getTotalPrice());
+                kcOutintodetial.setPrice(baseMedicine.getPurchasePrice());
+                kcOutintodetial.setWareHouseId(baseMedicine.getFowardWarHouseId());
+                kcOutintodetial.setBatchCode(baseMedicine.getBatchCode());
+                kcOutintodetialMapper.insert(kcOutintodetial);
+            }
+
         }else {
             updateObj.setOrderStatus(2);
         }
         int updateRow = cgrkOrderMapper.approveOrder(id,updateObj.getEffectiveTime(),updateObj.getApproverby(),approveMent,updateObj.getOrderStatus(),updateObj.getIsaddwarehouse());
-
-       //更新我的流水
-        CgrkOrder cgrkOrder = cgrkOrderMapper.getCgrkOrder(id);
-        List<BaseMedicine> medicineList = cgrkOrder.getMedicineList();
-        for (BaseMedicine baseMedicine : medicineList) {
-            KcMedicine kcMedicine=new KcMedicine();
-            kcMedicine.setBatchCode(baseMedicine.getBatchCode());
-//            kcMedicine.setStorehouseId(baseMedicine.getFowardWarHouseId());
-            kcMedicine.setMedicineId(baseMedicine.getMedicineId());
-            kcMedicine.setProviderId(baseMedicine.getProviderId());
-            kcMedicine.setQuantity(baseMedicine.getQuantity());
-            kcMedicine.setMoney(baseMedicine.getPurchasePrice());
-            kcMedicine.setTotalPrice(baseMedicine.getTotalPrice());
-            kcMedicineMapper.insert(kcMedicine);
-        }
-
 
         if (updateRow > 0) {
             return Message.success();

@@ -235,14 +235,13 @@
 </div>
 
       <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择">
-
-    <el-option
+        <el-option
         label="未通过"
-        value="0">
+        value="1">
     </el-option>
     <el-option
         label="通过"
-        value="1">
+        value="2">
     </el-option>
   </el-select>
 </div>
@@ -658,11 +657,25 @@ export default {
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList==undefined){
-        return 0
+      // 检查bcglXiangXiList是否存在且不为空
+      if (!this.bcglXiangXiList || this.bcglXiangXiList.length === 0) {
+        return 0;
       }
-      return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice*item.quantity, 0);
+
+      // 使用reduce方法计算总价，并确保price和quantity都是数字
+      return this.bcglXiangXiList.reduce((total, item) => {
+        // 确保price和quantity都是数字
+        const price = Number(item.price);
+        const quantity = Number(item.quantity);
+
+        // 如果price或quantity不是数字，返回0
+        if (isNaN(price) || isNaN(quantity)) {
+          console.error("价格或数量不是数字，无法计算总价。");
+          return this.CgsqOrder.referenceamount;
+        }
+
+        return total + price * quantity;
+      }, 0);
     },
     calculatedTotalPrice() {
       return row => {
