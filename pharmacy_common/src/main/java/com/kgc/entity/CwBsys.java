@@ -28,7 +28,7 @@ public class CwBsys implements Serializable {
     /**
      * 报损应收编码
      */
-    @TableField("createBy")
+    @TableField("code")
     private String code;
     /**
      * 原单号
@@ -60,5 +60,26 @@ public class CwBsys implements Serializable {
      */
     @TableField(exist = false)
     private String endTime;
+
+    @TableField(exist = false)
+    private Integer storehouseId;
+
+    @TableField(exist = false)
+    private String storehouseName;
+
+    @TableField(exist = false)
+    private Integer reportedTypeId;
+
+    @TableField(exist = false)
+    private String reportedTypeName;
+
+    @TableField(exist = false)
+    private String approverByName;
+
+    @TableField(exist = false)
+    private String createBy;
+
+    @TableField(exist = false)
+    private String createByName;
 
 }

@@ -273,4 +273,11 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
         return  Message.error("付款失败");
     }
+
+    @Override
+    public int updateCgddIsPayById(CgddOrder cgddOrder) {
+        return mapper.updateById(cgddOrder);
+    }
+
+
 }

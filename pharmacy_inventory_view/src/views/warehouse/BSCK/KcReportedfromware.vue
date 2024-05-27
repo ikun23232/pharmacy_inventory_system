@@ -1,5 +1,12 @@
 <script>
-import {getKcReportedfromware, getKcReportedListById, getStorehouseList,getReportedType} from '@/api/KcReported';
+import {
+  getKcReportedfromware,
+  getKcReportedListById,
+  getStorehouseList,
+  getReportedType,
+  kcReportedfromwareExcel,
+  kcReportedExcel
+} from '@/api/KcReported';
 import DetailsReported from "@/components/DetailsReported.vue";
 export default {
   name: "KcReportedfromware",
@@ -82,6 +89,17 @@ export default {
       this.kcReportedfromwareSelect.reportedCode=''
       this.kcReportedfromwareSelect.storehouseId=0
       this.kcReportedfromwareSelect.reportedTypeId=0
+    },
+    async printExcel(){
+      await kcReportedfromwareExcel();
+    },
+    print(code){
+      const newPage= this.$router.resolve({
+        path: "/PrintKcReported",
+        query:{ //要传的参数 可传多个
+          code:code
+        }})
+      window.open(newPage.href,'_blank')
     }
   }
 }
@@ -89,6 +107,7 @@ export default {
 
 <template>
 <div>
+    <h1>报损出库</h1>
     <div>
       报损出库编号:
       <el-input v-model="kcReportedfromwareSelect.code" placeholder="请输入报损出库编号" style="width: 200px" />
@@ -98,7 +117,7 @@ export default {
       <el-select v-model="kcReportedfromwareSelect.storehouseId" placeholder="请选择仓库">
         <el-option
           label="全部"
-          value="0">
+          :value="0">
         </el-option>
         <el-option
           v-for="item in storehouseList"
@@ -111,7 +130,7 @@ export default {
       <el-select v-model="kcReportedfromwareSelect.reportedTypeId" placeholder="请选择报损类型">
         <el-option
           label="全部"
-          value="0">
+          :value="0">
         </el-option>
         <el-option
           v-for="item in reportedTypeList"
@@ -121,9 +140,10 @@ export default {
         </el-option>
       </el-select>
       &nbsp;&nbsp;&nbsp;
-
+      <br/><br/>
       <el-button type="primary" @click="getKcReportedfromwaress(1)">查询</el-button>
       <el-button type="primary" @click="clear()">清空</el-button>
+      <el-button type="primary" @click="printExcel()">导出</el-button>
       <br/>
     </div>
     <br/>
@@ -141,6 +161,10 @@ export default {
     <el-table-column prop="modificationTime" label="出库时间" width="300">
     </el-table-column>
     <el-table-column prop="modificationName" label="审批人" width="120">
+    </el-table-column>modificationName
+    <el-table-column prop="documenterName" label="制单人" width="120">
+    </el-table-column>
+    <el-table-column prop="createTime" label="制单时间" width="120">
     </el-table-column>
 
     <el-table-column fixed="right" label="操作" width="200">
@@ -159,9 +183,7 @@ export default {
             <el-dropdown-item
             >删除</el-dropdown-item
             >
-            <el-dropdown-item
-            >打印</el-dropdown-item
-            >
+            <el-dropdown-item @click.native="print(scope.row.reportedCode)">打印</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </template>

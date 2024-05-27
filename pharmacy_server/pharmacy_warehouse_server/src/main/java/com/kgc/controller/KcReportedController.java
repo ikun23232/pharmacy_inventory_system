@@ -1,10 +1,12 @@
 package com.kgc.controller;
 
+import com.kgc.entity.CgddOrder;
 import com.kgc.entity.KcReported;
 import com.kgc.entity.KcReportedfromware;
 import com.kgc.entity.Message;
 import com.kgc.service.KcReportedService;
 import com.kgc.utils.ExcelUtils;
+import com.kgc.vo.KcReportedVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/warehouse")
@@ -75,16 +75,62 @@ public class KcReportedController {
         return kcReportedService.getKcReportedfromware(kcReportedfromware,pageNum,pageSize);
     }
 
-//    @RequestMapping("/getAllKcReported")//导出所有报损信息
-//    public List<KcReported> getAllKcReported(){
-//        return kcReportedService.getAllKcReported();
-//    }
 
-    @RequestMapping("/getAllKcReported")
+    @RequestMapping("/getAllKcReported")//获取库存报损
     public void getAllKcReported(HttpServletResponse response) throws IOException {
         List<KcReported> data = kcReportedService.getAllKcReported();
         ExcelUtils.exportToExcel(response, data, "reported_data");
     }
 
+    @RequestMapping("/getKcReportedByCode")
+    public Message getKcReportedByCode(@RequestParam("code") String code)
+    {
+        return kcReportedService.getKcReportedByCode(code);
+    }
+
+
+
+    @RequestMapping("/kcReportedExcel")
+    public void kcReportedExcel(@RequestBody KcReportedVO kcReportedVO, HttpServletResponse response) {
+        kcReportedService.kcReportedExcel(kcReportedVO, response);
+    }
+    @RequestMapping("/kcReportedfromwareExcel")
+    public void kcReportedfromwareExcel(HttpServletResponse response) {
+        kcReportedService.kcReportedfromwareExcel(response);
+    }
+
+    @RequestMapping("/addKcReportedAllByPk")
+    public Message addKcReportedAllByPk() {
+        // 创建外部Map
+        Map<String, Object> map = new HashMap<>();
+
+        // 创建内部Map，包含theData所需的键值对
+        Map<String, Object> theData = new HashMap<>();
+
+        // 设置storehouseId
+        theData.put("storehouseId", 101); // 假设仓库ID为1
+
+        // 设置documenterBy
+        theData.put("documenterBy", 1); // 假设记录人ID为2
+
+        // 创建药品列表
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        // 添加药品信息到列表
+        Map<String, Object> medicineInfo1 = new HashMap<>();
+        medicineInfo1.put("reportedNum", 100); // 假设报告数量为10
+        medicineInfo1.put("medicineId", 101); // 假设药品ID为101
+        list.add(medicineInfo1);
+
+        // 可以继续添加更多药品信息
+
+        // 将药品列表添加到theData Map中
+        theData.put("list", list);
+
+        // 将theData Map添加到外部Map中
+        map.put("theData", theData);
+        Message message =kcReportedService.addKcReportedAllByPk(map);
+        return message;
+    }
 
 }

@@ -1,12 +1,15 @@
 package com.kgc.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.kgc.entity.*;
+import com.kgc.vo.KcReportedVO;
 import org.apache.ibatis.annotations.Param;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-public interface KcReportedService {
+public interface KcReportedService extends IService<KcReported> {
     //查询库存报损列表
     Message getKcReportedList(KcReported kcReported,int pageNum,int pageSize);
     //根据id查询库存报损
@@ -42,7 +45,17 @@ public interface KcReportedService {
     Message addKcReportedfromwareByReported(int reportedId);
     //查询报损出库
     Message getKcReportedfromware(KcReportedfromware kcReportedfromware,int pageNum,int pageSize);
-
+    //查询所有库存报损
     List<KcReported> getAllKcReported();
+    //库报损excel
+    void kcReportedExcel(KcReportedVO kcReportedVO, HttpServletResponse response);
+    //库报损入库excel
+    void kcReportedfromwareExcel(HttpServletResponse response);
+
+    Message addKcReportedAllByPk(Map map);
+
+    int addKcReportedBits(KcReported kcReported);
+
+
 
 }

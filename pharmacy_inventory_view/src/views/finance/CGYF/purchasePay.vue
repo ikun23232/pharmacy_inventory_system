@@ -1,9 +1,11 @@
 <script>
-import {getCwCgyfList,getCgddByCode,getProviderList} from '@/api/finance';
+import {getCwCgyfList,getCgddByCode,getProviderList,cwCgyfExcel,updateCwCgyf} from '@/api/finance';
+import {Message} from "element-ui";
 export default {
   name: "purchasePay",
   data() {
     return {
+      userId:1,
       // 分页
       cwCgyfPage: {
         pageNum:1,
@@ -114,6 +116,37 @@ export default {
       this.cwCgyf.cgddCode = "";
       this.time = {};
       this.getCwCgyfLists();
+    },
+    async printExcel(){
+      await cwCgyfExcel();
+    },
+    print(code) {
+      const newPage = this.$router.resolve({
+        path: "/printPurchasePay",
+        query: {
+          code: code,
+        },
+      });
+      window.open(newPage.href, "_blank");
+    },
+    pay(row) {
+      updateCwCgyf(row).then(resp=>{
+        console.log(resp)
+        if (resp.code!=200){
+          Message({
+            message: '付款失败',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return
+        }
+        Message({
+          message: '付款成功',
+          type: 'success',
+          duration: 5 * 1000
+        })
+        this.getCwCgyfLists();
+      })
     }
   }
 }
@@ -168,22 +201,35 @@ export default {
           end-placeholder="结束日期"
       />&nbsp;&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getCwCgyfLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
+      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="printExcel()">导出</el-button>
+      <br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwCgyfPage.list" border style="width: 100%">
         <el-table-column prop="id" label="采购应付id" width="120"/>
         <el-table-column prop="code" label="采购应付编号" width="150" fixed/>
         <el-table-column prop="cgddCode" label="采购订单编号" width="150" fixed/>
+        <el-table-column prop="subject" label="采购订单主题" width="120"/>
         <el-table-column prop="providerName" label="供应商" width="120"/>
+        <el-table-column prop="demanderName" label="采购订单创建人" width="120"/>
+        <el-table-column prop="demandTime" label="采购订单需求时间" width="120"/>
         <el-table-column prop="createTime" label="单号生成时间" width="120"/>
         <el-table-column prop="paymentTime" label="付款时间" width="120"/>
         <el-table-column prop="cost" label="应付金额" width="120"/>
         <el-table-column prop="isPay" label="是否支付" width="120" :formatter="formatPayStatus"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain>付款</el-button>&nbsp;
             <el-button type="primary" plain @click="getCgddByCodes(row)">详情</el-button>&nbsp;
+            <el-dropdown>
+          <span class="el-dropdown-link">
+            更多<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="pay(row)" v-if="row.isPay==1">付款</el-dropdown-item>
+                <el-dropdown-item @click.native="print(row.code)">打印</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>

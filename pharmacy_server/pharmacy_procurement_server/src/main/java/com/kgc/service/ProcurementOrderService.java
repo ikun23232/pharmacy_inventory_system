@@ -42,4 +42,6 @@ public interface ProcurementOrderService extends IService<CgddOrder> {
     int updateCgddIsPayByCode(String code);
 
     Message addcgyf(CwCgyf cwCgyf);
+
+    int updateCgddIsPayById(CgddOrder cgddOrder);
 }

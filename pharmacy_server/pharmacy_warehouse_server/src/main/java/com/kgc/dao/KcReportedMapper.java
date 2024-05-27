@@ -1,11 +1,14 @@
 package com.kgc.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.*;
+import com.kgc.vo.KcReportedVO;
+import com.kgc.vo.KcReportedfromwareVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface KcReportedMapper {
+public interface KcReportedMapper extends BaseMapper<KcReported> {
     /**
      * 获取报损库存列表
      * @param kcReported
@@ -59,5 +62,10 @@ public interface KcReportedMapper {
     int addKcReportedfromwareByReported(KcReportedfromware kcReportedfromware);
 
     List<KcReportedfromware> getKcReportedfromware(KcReportedfromware kcReportedfromware);
+
+    List<KcReportedfromwareVO> getKcReportedfromwareVO();
+
+    List<KcReportedVO> getKcReportedVOList(KcReportedVO kcReportedVO);
+
 
 }

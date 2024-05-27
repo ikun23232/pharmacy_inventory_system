@@ -33,6 +33,26 @@
         </if>
 
     </select>
+
+    <select id="getCwAccountsVOList" resultType="com.kgc.vo.CwAccountsVO">
+        SELECT
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId = id) accountsCategoryName,
+        a.orderCode,
+        a.cost,
+        a.bankAcountId,
+        (SELECT bandCount FROM bank_account WHERE a.bankAcountId=id) bandCount,
+        a.description,
+        a.createTime,
+        a.modificationTime,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName
+        FROM cw_accounts a where isDel=0
+    </select>
     
     <select id="getCwNumByYear" resultType="com.kgc.entity.CwNumByYear">
         SELECT

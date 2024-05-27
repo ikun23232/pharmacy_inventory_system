@@ -1,5 +1,5 @@
 <script>
-import {getCwbsysList} from '@/api/finance';
+import {getCwbsysList,getStorehouseList,cwbsysExcel} from '@/api/finance';
 export default {
   name: "breakageReceivable",
   data() {
@@ -12,13 +12,16 @@ export default {
       },
       cwBsys: {
         code: '',
-        originalOrder: ''
+        originalOrder: '',
+        storehouseId:0
       },
-      time:{}
+      time:{},
+      storehouseList:[]
     }
   },
   mounted() {
     this.getCwbsysLists();
+    this.getStorehouseLists();
   },
   methods: {
     getCwbsysLists() {
@@ -39,11 +42,33 @@ export default {
       })
     },
     clean() {
-      this.cwBsys.code = ''
-      this.cwBsys.originalOrder = ''
+      this.cwBsys.code = '';
+      this.cwBsys.originalOrder = '';
+      this.cwBsys.storehouseId=0;
       this.time = {};
       this.getCwbsysLists()
     },
+    getStorehouseLists() {
+      getStorehouseList().then(resp => {
+        if (resp.code != 200) {// 失败
+          this.storehouseList = []
+          return
+        }
+        this.storehouseList = resp.data
+      })
+    },
+    async printExcel(){
+      await cwbsysExcel();
+    },
+    print(code) {
+      const newPage = this.$router.resolve({
+        path: "/PrintBreakageReceivable",
+        query: { //要传的参数 可传多个
+          code: code
+        }
+      })
+      window.open(newPage.href, '_blank')
+    }
   }
 }
 </script>
@@ -53,7 +78,7 @@ export default {
     <h1>报损应收</h1>
     <div>
       <el-row :gutter="20">
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -62,7 +87,7 @@ export default {
               placeholder="请输入单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="6"
+        <el-col :span="8"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -71,33 +96,49 @@ export default {
               placeholder="请输入原单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="10">
-          单号日期：
-          <el-date-picker
-              v-model="time"
-              type="daterange"
-              align="right"
-              unlink-panels
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-          />
+        <el-col :span="8">
+          报损仓库:
+          <el-select v-model="cwBsys.storehouseId" placeholder="请选择报损仓库">
+            <el-option label="全部" :value="0"/>
+            <el-option
+                v-for="item in storehouseList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+            />
+          </el-select>
         </el-col>
 
       </el-row>
+      单号日期：
+      <el-date-picker
+          v-model="time"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+      />&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getCwbsysLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button><br/><br>
+      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="printExcel">导出</el-button><br/><br>
     </div>
     <div class="table">
       <el-table :data="cwBsysPage.list" border style="width: 100%">
-        <el-table-column prop="id" label="报损应收id" width="120"/>
-        <el-table-column prop="code" label="报损应收编号" width="150" fixed/>
-        <el-table-column prop="originalOrder" label="报损申请编号" width="150" fixed/>
-        <el-table-column prop="createTime" label="单号生成时间" width="120"/>
-        <el-table-column prop="cost" label="应收金额" width="120"/>
-        <el-table-column align="center" label="操作" fixed="right" width="200">
+        <el-table-column prop="id" label="报损应收id" />
+        <el-table-column prop="code" label="报损应收编号"  fixed/>
+        <el-table-column prop="originalOrder" label="报损申请编号" fixed/>
+        <el-table-column prop="createTime" label="单号生成时间" />
+        <el-table-column prop="cost" label="应收金额"/>
+        <el-table-column prop="storehouseName" label="报损仓库"/>
+        <el-table-column prop="reportedTypeName" label="报损原因"/>
+        <el-table-column prop="approverByName" label="审批人"/>
+        <el-table-column prop="createByName" label="报损人"/>
+        <el-table-column align="center" label="操作" fixed="right" >
           <template #default="{ row }">
-            <el-button type="primary" plain>详情</el-button>&nbsp;
+<!--            <el-button type="primary" plain>详情</el-button>&nbsp;-->
+            <el-button type="primary" plain @click.native="print(row.code)">打印</el-button>
           </template>
         </el-table-column>
       </el-table>

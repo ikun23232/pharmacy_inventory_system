@@ -1,5 +1,5 @@
 <script>
-import { getXstkList } from '@/api/finance'
+import { getXstkList,cwXstkExcel} from '@/api/finance'
 export default {
   name: "salesRefund",
   data() {
@@ -46,6 +46,18 @@ export default {
       this.time = {};
       this.getXstkLists()
     },
+    async printExcel(){
+      await cwXstkExcel();
+    },
+    print(code) {
+      const newPage = this.$router.resolve({
+        path: "/printSalesRefund",
+        query: {
+          code: code,
+        },
+      });
+      window.open(newPage.href, "_blank");
+    },
   }
 }
 </script>
@@ -88,19 +100,24 @@ export default {
 
       </el-row>
       <el-button type="primary" @click="getXstkLists()">查询</el-button>
-      <el-button type="primary" @click="clean()">清空</el-button><br/><br/>
+      <el-button type="primary" @click="clean()">清空</el-button>
+      <el-button type="primary" @click="printExcel()">导出</el-button><br/><br/>
     </div>
     <div class="table">
       <el-table :data="cwXstkPage.list" border style="width: 100%">
-        <el-table-column prop="id" label="报损应收id" width="120"/>
-        <el-table-column prop="code" label="报损应收编号" width="150" fixed/>
-        <el-table-column prop="originalOrder" label="报损申请编号" width="150" fixed/>
+        <el-table-column prop="id" label="销售退款id" width="120"/>
+        <el-table-column prop="code" label="销售退款收编号" width="150" fixed/>
+        <el-table-column prop="originalOrder" label="原单号" width="150" fixed/>
         <el-table-column prop="backReson" label="退货原因" width="150" />
         <el-table-column prop="createTime" label="单号生成时间" width="120"/>
         <el-table-column prop="cost" label="应收金额" width="120"/>
         <el-table-column prop="createName" label="销售员" width="120"/>
+        <el-table-column prop="bandCount" label="银行账户" width="120"/>
+        <el-table-column prop="refundType" label="退款类型" width="120"/>
+        <el-table-column prop="opinion" label="审核意见" width="120"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
+            <el-button type="primary" plain @click="print(row.code)">打印</el-button>&nbsp;
             <el-button type="primary" plain>详情</el-button>&nbsp;
           </template>
         </el-table-column>

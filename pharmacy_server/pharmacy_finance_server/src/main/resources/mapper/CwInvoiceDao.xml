@@ -5,7 +5,6 @@
         SELECT
             a.id,
             a.code,
-            a.InvoiceNumber,
             a.categoryId,
             (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId=id) categoryName,
             a.orderNumber,
@@ -30,6 +29,42 @@
         <if test="beginTime != null and beginTime != ''">
             and a.createTime BETWEEN #{beginTime} and #{endTime}
         </if>
+    </select>
+
+    <select id="getCwInvoiceByCode" resultType="com.kgc.entity.CwInvoice">
+        SELECT
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId=id) categoryName,
+        a.orderNumber,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.createTime,
+        a.modificationTime,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName,
+        a.cost
+        FROM cw_invoice a
+        where a.isDel=0 and a.code=#{code}
+    </select>
+
+    <select id="getCwInvoiceVO" resultType="com.kgc.vo.CwInvoiceVO">
+        SELECT
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId=id) categoryName,
+        a.orderNumber,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.createTime,
+        a.modificationTime,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName,
+        a.cost
+        FROM cw_invoice a
+        where a.isDel=0
     </select>
 
     <select id="getCategoryString" resultType="com.kgc.entity.CwCategory">

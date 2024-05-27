@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/finance")
 public class CwInvoiceController {
@@ -21,9 +23,19 @@ public class CwInvoiceController {
         return cwInvoiceService.getCwInvoice(cwInvoice,pageNum,pageSize);
     }
 
+    @RequestMapping("/getCwInvoiceByCode")
+    public Message getCwInvoiceByCode(@RequestParam("code") String code){
+        return cwInvoiceService.getCwInvoiceByCode(code);
+    }
+
     @RequestMapping("/getCategoryString")
     public Message getCategoryString(){
         return cwInvoiceService.getCategoryString();
+    }
+
+    @RequestMapping("/cwInvoiceExcel")
+    public void cwInvoiceExcel(HttpServletResponse response){
+        cwInvoiceService.cwInvoiceExcel(response);
     }
 
 }
