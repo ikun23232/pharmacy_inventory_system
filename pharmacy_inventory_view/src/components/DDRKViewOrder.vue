@@ -383,7 +383,7 @@ import { auditingDispatch, getKcDispatchById } from "../api/KcDispatch";
 import { getKcDetailsList } from "@/api/kcDisparchDetails";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
-  name: "AuditingDispatch",
+  name: "DDRKViewOrder",
   components: {
     wareDetails,
   },
@@ -442,7 +442,7 @@ export default {
     this.storeHouseList = data.data;
     let dispatch = await getKcDispatchById(this.id);
     this.KcDispatch = dispatch.data;
-    let kcDetailsList = await getKcDetailsList(this.KcDispatch.code);
+    let kcDetailsList = await getKcDetailsList(this.code);
     this.medicineListTemp = kcDetailsList.data;
     await this.getMedicineListDetail();
   },

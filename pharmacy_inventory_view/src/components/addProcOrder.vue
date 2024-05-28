@@ -28,8 +28,7 @@
                 format="yyyy 年 MM 月 dd 日"
               >
               </el-date-picker>
-            </el-form-item></div
-        ></el-col>
+            </el-form-item></div></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
@@ -43,8 +42,7 @@
                 v-model="CgddOrder.type"
                 placeholder="请选择采购类型"
                 clearable
-                filterable
-              >
+                filterable>
                 <el-option
                   v-for="item in cgType"
                   :key="item.id"
@@ -933,11 +931,21 @@ export default {
         });
         return;
       }
-      this.bcglXiangXiList = [];
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
-          if (this.bcglXiangXiList == undefined) {
+          if (this.bcglXiangXiList.length == 0) {
             this.bcglXiangXiList = new Array();
+          }else if(this.bcglXiangXiList.length > 0){
+            for (let i = 0; i < this.bcglXiangXiList.length; i++) {
+              const element = this.bcglXiangXiList[i];
+              if (this.cgddMedicineionList[index].id == element.medicineId) {
+                Message({
+                  message: this.cgddMedicineionList[index].name + "已经存在",
+                  type:"error"
+                })
+                return;
+              }
+            }
           }
           let resp = await getBaseMedicineListByProviderId(
             this.CgddOrder.providerId

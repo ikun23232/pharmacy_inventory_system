@@ -98,15 +98,18 @@
                 v-model="CgddOrder.providerId"
                 placeholder="请选择供应商"
                 clearable
-                filterable>
+                filterable
+              >
                 <el-option
                   v-for="item in providerList"
                   :key="item.id"
                   :label="item.name"
-                  :value="item.id">
+                  :value="item.id"
+                >
                 </el-option>
               </el-select>
-            </el-form-item></div></el-col>
+            </el-form-item></div
+        ></el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="6"
@@ -245,8 +248,9 @@
                 prop="sourceCode"
                 label="源单据编号"
                 width="150"
-                fixed>
-              <!-- <template slot-scope="scope">
+                fixed
+              >
+                <!-- <template slot-scope="scope">
                 <div v-if="scope.row.sourceCode != null && scope.row.sourceCode != ''">
                   {{scope.row.sourceCode}}
                 </div>
@@ -254,7 +258,7 @@
                   {{scope.row.code}}
                 </div>
               </template> -->
-              </el-table-column> 
+              </el-table-column>
               <el-table-column prop="name" label="医药品名称" width="300">
               </el-table-column>
               <el-table-column
@@ -648,7 +652,7 @@ export default {
         subject: "",
         documenterBy: 1,
         medicineList: [],
-        isSave:0,
+        isSave: 0,
       },
       vo: {
         currentPageNo: 1,
@@ -716,7 +720,7 @@ export default {
     let cgdd = await getCgddByCode(this.code);
     this.CgddOrder = cgdd.data;
     let medicineList = await getMedicineListByCode(this.code);
-    console.log("medicineList111111",medicineList)
+    console.log("medicineList111111", medicineList);
     for (let index = 0; index < medicineList.data.length; index++) {
       if (
         medicineList.data[index].sourceCode != null &&
@@ -737,6 +741,7 @@ export default {
     this.cgType = data.data;
     console.log(this.cgType);
     this.CgddOrder.approvalStatus = "";
+    this.cgddMedicineionList  =[]
   },
   methods: {
     cleanList() {
@@ -983,11 +988,21 @@ export default {
         });
         return;
       }
-      this.bcglXiangXiList = [];
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
-          if (this.bcglXiangXiList == undefined) {
+          if (this.bcglXiangXiList.length == 0) {
             this.bcglXiangXiList = new Array();
+          } else if (this.bcglXiangXiList.length > 0) {
+            for (let i = 0; i < this.bcglXiangXiList.length; i++) {
+              const element = this.bcglXiangXiList[i];
+              if (this.cgddMedicineionList[index].id == element.medicineId) {
+                Message({
+                  message: this.cgddMedicineionList[index].name + "已经存在",
+                  type: "error",
+                });
+                return;
+              }
+            }
           }
           let resp = await getBaseMedicineListByProviderId(
             this.CgddOrder.providerId

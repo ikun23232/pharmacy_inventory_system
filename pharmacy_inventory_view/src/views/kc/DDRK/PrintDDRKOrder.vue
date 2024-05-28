@@ -34,14 +34,14 @@
           </tr>
           <tr v-for="(item, index) in medicineDetailList" :key="index" align="center">
             <td>{{ index + 1 }}</td>
-            <td>{{ item.batchcode }}</td>
+            <td>{{ item.batchCode }}</td>
             <td>{{ item.medicineName }}</td>
             <td>{{ item.specification}}</td>
             <td>{{ item.categoryName}}</td>
             <td>{{ item.unitName }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
-            <td>{{ item.fowardWarHouseName }}</td>
+            <td>{{ item.aimStoreHouseName }}</td>
           </tr>
           <tr align="center">
             <td colspan="6" style="font-weight: bolder;">合计</td>
