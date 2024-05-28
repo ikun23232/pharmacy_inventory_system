@@ -1034,7 +1034,7 @@ export default {
         return 0;
       }
       return this.bcglXiangXiList.reduce(
-          (total, item) => total + item.price * item.quantity,
+          (total, item) => total + item.totalPrice * item.quantity,
           0
       );
     },

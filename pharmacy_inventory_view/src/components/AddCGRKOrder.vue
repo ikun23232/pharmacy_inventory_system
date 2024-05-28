@@ -395,15 +395,15 @@
        <el-table-column label="目标仓库" width="250" prop="providerId">
         <template slot-scope="scope">
           <el-select
-              clearable
-              filterable
-              v-model="bcglXiangXiList[scope.row.xh - 1].fowardWarHouseId"
+            clearable
+            filterable
+            v-model="bcglXiangXiList[scope.row.xh - 1].fowardWarHouseId"
           >
             <el-option
-                v-for="dict in warhouseList"
-                :key="dict.id"
-                :label="dict.name"
-                :value="dict.id"
+              v-for="dict in warhouseList"
+              :key="dict.id"
+              :label="dict.name"
+              :value="dict.id"
             />
           </el-select>
         </template>
@@ -678,7 +678,7 @@ export default {
     async initWarHourseList(){
       let resp = await getStoreList(1, 10, '');
       this.warhouseList = resp.data.list;
-    },
+},
     handleCurrentChange(val) {
       this.page.pageNum = val;
     },
