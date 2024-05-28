@@ -15,6 +15,7 @@
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
     </properties>
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-context</artifactId>
