@@ -1,14 +1,14 @@
 package com.kgc.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.dao.ProcurementOrderMapper;
-import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
+import com.kgc.service.PublicBaseMedicineService;
+import com.kgc.service.PublicOMedicineService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgddVO;
 import com.kgc.vo.MedicineVO;
@@ -36,9 +36,9 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     @Autowired
     private ProcurementOrderMapper mapper;
     @Autowired
-    private PublicOMedicineMapper orderMapper;
+    private PublicOMedicineService orderService;
     @Autowired
-    private BaseMedicineMapper baseMedicineMapper;
+    private PublicBaseMedicineService baseMedicineService;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {
@@ -76,8 +76,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setMedicineId(baseMedicine.getMedicineId());
-            int temp = orderMapper.insert(orderMedicine);
-            if (temp > 0){
+            Message message = orderService.addMedicineOrder(orderMedicine);
+            if (message.getCode().equals("200")){
                 count1++;
                 num += orderMedicine.getQuantity();
                 price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
@@ -134,8 +134,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         BigDecimal price  =BigDecimal.ZERO;
         Map<String,Object> map = new HashMap<>();
         map.put("code",cgddOrder.getCode());
-        int i = orderMapper.deleteByMap(map);
-        if (i == 0){
+        Message message1 = orderService.deleteMediciOrder(map);
+        if (message1.getCode().equals("201")){
             return Message.error("删除订单药品详情失败！");
         }
         for (BaseMedicine baseMedicine: cgddOrder.getMedicineList()) {
@@ -147,8 +147,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             orderMedicine.setSourceCode(baseMedicine.getSourceCode());
             orderMedicine.setProviderId(cgddOrder.getProviderId());
             orderMedicine.setId(baseMedicine.getMedicineOrderId());
-            int temp = orderMapper.insert(orderMedicine);
-            if (temp > 0){
+            Message message = orderService.addMedicineOrder(orderMedicine);
+            if (message.getCode().equals("200")){
                 count1++;
                 num += orderMedicine.getQuantity();
                 price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
@@ -199,8 +199,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         List<CgddVO> order = mapper.imExcel();
         List<CgddVO> temp = new ArrayList<>();
         for (CgddVO cgddVO :order) {
-            List<MedicineVO> medicineListByCode = baseMedicineMapper.getMedicineVOListByCode(cgddVO.getCode());
-            cgddVO.setMedicineList(medicineListByCode);
+            Message message = baseMedicineService.getMedicineVOListByCode(cgddVO.getCode());
+            cgddVO.setMedicineList((List<MedicineVO>) message.getData());
             temp.add(cgddVO);
         }
         try {

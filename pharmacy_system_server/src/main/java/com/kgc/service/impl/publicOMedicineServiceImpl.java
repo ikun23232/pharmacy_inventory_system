@@ -8,6 +8,8 @@ import com.kgc.service.PublicOMedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * @author 15279
  * @description 功能描述
@@ -21,8 +23,17 @@ public class publicOMedicineServiceImpl extends ServiceImpl<PublicOMedicineMappe
     public Message addMedicineOrder(OrderMedicine orderMedicine) {
         int count = mapper.insert(orderMedicine);
         if (count > 0){
-            return Message.success();
+            return Message.success(count);
         }
         return Message.error("添加失败");
+    }
+
+    @Override
+    public Message deleteMediciOrder(Map map) {
+        int i = mapper.deleteByMap(map);
+        if (i > 0){
+            return Message.success(i);
+        }
+        return Message.error("删除失败");
     }
 }

@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="pharmacy_system_server" />
-        <module name="pharmacy_gateway" />
         <module name="pharmacy_finance_server" />
         <module name="pharmacy_base_server" />
         <module name="pharmacy_common" />

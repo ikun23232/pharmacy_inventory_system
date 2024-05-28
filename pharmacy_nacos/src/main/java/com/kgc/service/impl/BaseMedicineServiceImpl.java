@@ -1,7 +1,6 @@
 package com.kgc.service.impl;
 
 import com.kgc.entity.BaseMedicine;
-import com.kgc.dao.BaseMedicineMapper;
 import com.kgc.service.BaseMedicineService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
