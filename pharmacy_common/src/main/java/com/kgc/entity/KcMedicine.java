@@ -94,4 +94,6 @@ public class KcMedicine implements Serializable {
      */
     @TableField(exist = false)
     private Integer reporteddetailId;
+    @TableField(exist = false)
+    private Integer totalQuantity;
 }

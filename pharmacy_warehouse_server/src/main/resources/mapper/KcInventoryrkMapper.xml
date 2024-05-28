@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcInventoryrkMapper">
+    <select id="getAllCheckRkByPage" resultType="com.kgc.entity.KcInventoryrk">
+        SELECT k.*,
+        (select m.code from kc_inventory m where m.id=k.inventorydetailId) as code,
+        (select d.name from base_medicine d where d.id=k.medicineId) as materialCategoryName,
+        (select s.name from base_storehouse s where s.id=k.storehouseId) as storehouseName,
+        (select p.name from base_provider p where p.id=k.providerId) as providerName
+        FROM kc_inventoryrk k
+        <where>
+            <if test="inventoryCode!=null and inventoryCode!=''">
+                and k.inventoryCode like concat('%',#{inventoryCode},'%')
+            </if>
+            <if test="storehouseId>0">
+                and k.storehouseId=#{storehouseId}
+            </if>
+            <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+                and k.createDate BETWEEN #{startTime} AND #{endTime}
+            </if>
+            AND k.isdel=0
+            <if test="isApproved>0">
+                AND k.isApproved=#{isApproved}
+            </if>
+        </where>
+        order by k.createDate Desc
+    </select>
+    <select id="getAllCheckRkexcel" resultType="com.kgc.vo.PndianRKVo">
+        SELECT k.*,
+        (select m.code from kc_inventory m where m.id=k.inventorydetailId) as code,
+        (select d.name from base_medicine d where d.id=k.medicineId) as materialCategoryName,
+        (select s.name from base_storehouse s where s.id=k.storehouseId) as storehouseName,
+        (select p.name from base_provider p where p.id=k.providerId) as providerName
+        FROM kc_inventoryrk k  where k.isdel=0
+        <if test="id>0">
+            AND k.id=#{id}
+        </if>
+    </select>
+
+
+    <select id="getMeddicinequantity" resultType="com.kgc.entity.KcMedicine">
+       select * from kc_medicine where storehouseId=#{storehouseId} and medicineId=#{medicineId} and providerId=#{providerId}  and isDel=0 limit 1
+    </select>
+
+    <select id="getMeddicinequantityById" resultType="com.kgc.entity.KcInventoryrk">
+        select * from kc_inventoryrk where id=#{id}  and isDel=0
+    </select>
+
+
+
+</mapper>

@@ -1,6 +1,6 @@
 <template>
  <div>
-  <div slot="footer" class="dialog-footer">
+  <div>
     <el-form
       :model="saleOrder"
       :rules="rules"
@@ -10,15 +10,16 @@
     >
     <el-row :gutter="20">
       <el-col :span="8">
-        <div class="grid-content bg-purple">
+        <div>
             <el-form-item label="单据编号" prop="orderNo">
-              <el-input type="text" disabled v-model="saleOrder.orderNo"></el-input>
+              <el-input type="text" disabled v-model="saleOrder.orderNo" size="small"></el-input>
             </el-form-item></div>
       </el-col>
         <el-col :span="8">
-          <div class="grid-content bg-purple">
+          <div>
             <el-form-item label="单据日期" prop="orderDate">
               <el-date-picker
+                size="small"
                 v-model="saleOrder.orderDate"
                 disabled
                 type="date"
@@ -27,14 +28,15 @@
               </el-date-picker>
             </el-form-item></div>
         </el-col>
-        <el-col :span="8"><div class="grid-content bg-purple">
+        <el-col :span="8"><div>
             <el-form-item label="制单人" prop="createByName">
-              <el-input type="text" disabled v-model="saleOrder.createByName"></el-input>
+              <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
             </el-form-item></div></el-col>
         <el-col :span="8"
-          ><div class="grid-content bg-purple">
+          ><div>
             <el-form-item label="银行账户" prop="bankAccountId">
               <el-select
+                size="small"
                 v-model="saleOrder.bankAccountId"
                 placeholder="请选择"
                 clearable
@@ -49,34 +51,33 @@
             </el-form-item>
           </div></el-col>
         </el-row>
-          <el-divider></el-divider>
+        <el-divider style="margin: 0;"></el-divider>
         <el-row type="flex">
           <el-col :span="2" >
             <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddDetails">添加</el-button>
           </el-col>
           <el-col :span="2">
-            <el-button type="success" icon="el-icon-delete" size="mini" @click="handleDeleteDetails">删除</el-button>
+            <el-button icon="el-icon-minus" size="mini" @click="handleDeleteDetails">删除</el-button>
           </el-col>
           <el-col :span="2">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteAllDetails">清空</el-button>
+            <el-button icon="el-icon-delete" size="mini" @click="handleDeleteAllDetails">清空</el-button>
           </el-col>
         </el-row>
         <el-row>
           <el-col>
           <el-table
-          v-loading="loading"
          :data="medicineDetailList"
          :row-class-name="rowClassName"
          @selection-change="handleSelectionChange"
          ref="tb"
          border
-         style="width:900px"
+         style="width:960px"
        >
          <el-table-column type="selection" width="50" align="center" />
          <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
          <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
           <template slot-scope="scope">
-             <el-select clearable filterable @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
+             <el-select @change="changeMedicine(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].medicineId" >
                <el-option
                  v-for="dict in baseMedicineList"
                  :key="dict.id"
@@ -87,28 +88,28 @@
          </el-table-column>
          <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
           <template slot-scope="scope">
-             <el-select clearable filterable @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
+             <el-select @change="changeBatchCode(scope.row)"  v-model="medicineDetailList[scope.row.xh-1].batchCode" >
                <el-option
                  v-for="dict in scope.row.batchCodeList"
-                 :key="dict.batchcode"
-                 :label="dict.batchcode"
-                 :value="dict.batchcode"/>
+                 :key="dict.batchCode"
+                 :label="dict.batchCode"
+                 :value="dict.batchCode"/>
              </el-select>
            </template>
          </el-table-column>
          <el-table-column label="规格型号" align="center" prop="specification" width="120">
            <template slot-scope="scope">
-            <el-input  v-model="medicineDetailList[scope.row.xh-1].specification"></el-input>
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].specification" disabled></el-input>
            </template>
          </el-table-column>
          <el-table-column label="药品类型" align="center" prop="categoryId" width="120">
           <template slot-scope="scope">
-            <el-input v-model="medicineDetailList[scope.row.xh-1].categoryName"></el-input>
+            <el-input v-model="medicineDetailList[scope.row.xh-1].categoryName" disabled></el-input>
            </template>
          </el-table-column>
          <el-table-column label="计量单位" align="center" prop="unitId" width="120">
           <template slot-scope="scope">
-            <el-input  v-model="medicineDetailList[scope.row.xh-1].unitName"></el-input>
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].unitName" disabled></el-input>
            </template>
          </el-table-column>
          <el-table-column label="数量" align="center" prop="quantity" width="160">
@@ -118,17 +119,22 @@
          </el-table-column>
          <el-table-column label="单价" align="center" prop="salePrice" width="120">
            <template slot-scope="scope">
-            <el-input  v-model="medicineDetailList[scope.row.xh-1].salePrice"></el-input>
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].salePrice" disabled></el-input>
            </template>
          </el-table-column>
          <el-table-column label="总价" align="center" prop="totalPrice" width="120">
            <template slot-scope="scope">
-            <el-input  v-model="medicineDetailList[scope.row.xh-1].totalPrice"></el-input>
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].totalPrice" disabled></el-input>
            </template>
          </el-table-column>
          <el-table-column label="当前库存" align="center" prop="stock" width="120">
            <template slot-scope="scope">
-            <el-input  v-model="medicineDetailList[scope.row.xh-1].stock"></el-input>
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].stock" disabled></el-input>
+           </template>
+         </el-table-column>
+         <el-table-column label="库存预警值" align="center" prop="warning" width="120">
+           <template slot-scope="scope">
+            <el-input  v-model="medicineDetailList[scope.row.xh-1].warning" disabled></el-input>
            </template>
          </el-table-column>
        </el-table>
@@ -178,10 +184,11 @@ export default {
         createByName:"张三",
         bankAccountId:"",
         remark:'',
-        checkedDetail: [],
+        medicineDetailList:[],
         totalPrice:"",
         totalNumber:""
       },   
+      checkedDetail:[],
       rules:{
         orderNo:[
             { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -204,10 +211,12 @@ export default {
     this.getAllBaseMedicine();
   },
   methods: {
+    //拿到所有的银行账户
     async getAllBankCountList() {
       let data = await getAllBankCountList();
       this.bankAccountList=data.data;
     },
+    //获取所有的基础药品
     async getAllBaseMedicine() {
       let data = await getAllBaseMedicine();
       this.baseMedicineList=data.data;
@@ -215,11 +224,13 @@ export default {
     rowClassName({ row, rowIndex }) {
       row.xh = rowIndex + 1;
     },
+    //当药品信息发生变化，获取当前药品的所有批次号
     async changeMedicine(obj){
      obj.batchCodeList=[]
      let data=await getAllBatchCodeByMedicineId(obj.medicineId);
      obj.batchCodeList=data.data;
     },
+    //当批次号发生变化
     async changeBatchCode(obj){
       let data=await getBaseMedicineById(obj.medicineId,obj.batchCode);
       obj.unitName=data.data.unitName
@@ -229,10 +240,13 @@ export default {
       obj.quantity=data.data.quantity
       obj.salePrice=data.data.salePrice
       obj.totalPrice=data.data.salePrice
+      obj.warning=data.data.warning
     },
+    //数量发生变化
     async changeQuantity(obj){
       obj.totalPrice=parseFloat((obj.salePrice*obj.quantity).toFixed(2))
     },
+    //点击添加
     async handleAddDetails() {
       if (this.medicineDetailList == undefined) {
         this.medicineDetailList = new Array();
@@ -242,58 +256,78 @@ export default {
         medicineId:'',
         batchCode:"",
         unitId:"",
-        unitName:'',
         specification:'',
         categoryId:"",
-        categoryName:"",
         salePrice:'',
         quantity:"",
         stock:"",
         totalPrice:'',
+        warning:"",
       };
       this.medicineDetailList.push(obj);
     },
+    //删除选中的订单明细
     handleDeleteDetails() {
-      if (this.saleOrder.checkedDetail.length == 0) {
+      if (this.checkedDetail.length == 0) {
         this.$alert("请先选择要删除的数据", "提示", {
           confirmButtonText: "确定",
         });
       } else {
-        this.medicineDetailList.splice(this.saleOrder.checkedDetail[0].xh - 1, 1);
+        this.medicineDetailList.splice(this.checkedDetail[0].xh - 1, 1);
       }
     },
+    //清空
     handleDeleteAllDetails() {
       this.medicineDetailList = undefined;
     },
+    //选中
     handleSelectionChange(val) {
-      this.saleOrder.checkedDetail = val;
-      console.log("checkedDetail",this.saleOrder.checkedDetail)
+      this.checkedDetail = val;
+      console.log("checkedDetail",this.checkedDetail)
     },
-    
+    //提交要添加的销售订单
     submitForm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log("length",this.medicineDetailList.length,this.saleOrder.checkedDetail.length)
-          if(this.medicineDetailList.length > 0&&this.saleOrder.checkedDetail!=null){
-            this.saleOrder.totalPrice=this.sumPrice
-            this.saleOrder.totalNumber=this.totalNumber
-            addSaleOrder(this.saleOrder).then((resp) => {
-              if (resp.code == "200") {
-                Message({
-                  message: "添加成功!",
-                  type: "success",
-                  center: "true",
-                });
-                this.$emit("handleDialogFormVisible",false);
-              }         
-            });
-          }else{
+          if (this.medicineDetailList.length==0){
             Message({
-                message: "请输入订单详情!",
+              message: "请输入订单详情",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }else{
+            for (const obj of this.medicineDetailList) {
+            if (obj.medicineId==''||obj.medicineId==undefined||obj.batchCode==''||obj.batchCode==undefined){
+              Message({
+                message: "请输入商品明细",
                 type: "error",
                 center: "true",
               });
-          }         
+              return;
+            }else if (obj.stock<obj.quantity){
+              Message({
+                message: "库存不足，无法购买",
+                type: "error",
+                center: "true",
+              });
+              return;
+            }
+          }
+          }
+          this.saleOrder.medicineDetailList=this.medicineDetailList
+          this.saleOrder.totalPrice=this.sumPrice
+          this.saleOrder.totalNumber=this.totalNumber
+          addSaleOrder(this.saleOrder).then((resp) => {
+            if (resp.code == "200") {
+              Message({
+                message: "添加成功!",
+                type: "success",
+                center: "true",
+              });
+              this.$emit("handleDialogFormVisible",false);
+            }         
+          });   
         } else {
           console.log("error submit!!");
           return false;
@@ -303,6 +337,7 @@ export default {
     saveForm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.saleOrder.medicineDetailList=this.medicineDetailList
           this.saleOrder.totalPrice=this.sumPrice
           this.saleOrder.totalNumber=this.totalNumber
           saveSaleOrder(this.saleOrder).then((resp) => {
@@ -315,7 +350,6 @@ export default {
                 this.$emit("handleDialogFormVisible",false);
               }         
             });
-          this.$emit("handleDialogFormVisible",false);
         } else {
           console.log("error submit!!");
           return false;
@@ -330,17 +364,17 @@ export default {
   computed: {
     sumPrice() {
       // 使用 reduce 方法计算总价
-      if (this.saleOrder.checkedDetail==undefined){
+      if (this.medicineDetailList==undefined){
         return 0
       }
-      return this.saleOrder.checkedDetail.reduce((total, item) => total + item.totalPrice, 0);
+      return this.medicineDetailList.reduce((total, item) => total + item.totalPrice, 0);
     },
     totalNumber() {
       // 使用 reduce 方法计算总数量
-      if (this.saleOrder.checkedDetail==undefined){
+      if (this.medicineDetailList==undefined){
         return 0
       }
-      return this.saleOrder.checkedDetail.reduce((total, item) => total + item.quantity, 0);
+      return this.medicineDetailList.reduce((total, item) => total + item.quantity, 0);
     }
   }
 };

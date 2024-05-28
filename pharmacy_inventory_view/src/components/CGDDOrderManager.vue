@@ -71,11 +71,11 @@
       >
       <el-button type="primary" @click="printExcel">导出</el-button>
     </div>
-    <el-table :data="list.list" border style="width: 100%"
+    <el-table :data="filteredList" border style="width: 1300px"
             @row-click="handleRowClick">
-      <el-table-column label="选择" width="30" align="center">
+      <el-table-column label="选择" width="30" align="center" fixed>
         <template slot-scope="scope">
-          <el-radio v-model="currentSelectedRow" :label="scope.row">选择</el-radio>
+          <el-radio v-model="currentSelectedRow" :label="scope.row"></el-radio>
         </template>
       </el-table-column>
       <el-table-column prop="id" label="订单序号" width="120">
@@ -293,7 +293,6 @@ export default {
       if (this.time.length > 0) {
         this.procPage.beginTime = this.time[0];
         this.procPage.endTime = this.time[1];
-
       }
 
       this.procPage.providerId=this.providerId;
@@ -389,6 +388,13 @@ export default {
     }
 
   },
+  computed: {
+    filteredList() {
+      return this.list.list.filter(item => {
+        // 如果支付类型不是“全款后发货”或者支付类型是“全款后发货”但已经支付，则显示
+        return item.payType !== 1 || (item.payType === 1 && item.isPay===1);
+      });
+    }}
 };
 </script>
 

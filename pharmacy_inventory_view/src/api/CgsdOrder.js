@@ -6,6 +6,10 @@ export function initCgSqOrderList(vo) {
     return request.post(baseUrl + "/getCgSqOrderList", vo);
 }
 
+export function getCgsqOrderByStates(vo) {
+    return request.post(baseUrl + "/getCgsqOrderByStates", vo);
+}
+
 export function delCgsqOrderById(id) {
     return request.get(baseUrl + "/delCgsqOrderById",{
         params:{
@@ -57,4 +61,21 @@ export function getCgsqOrderByCode(code) {
     });
 }
 
+export function cgsqExcel(cgrkOrder) {
+    return request.post(baseUrl + "/cgsqExcel", {
+        cgrkOrder: cgrkOrder,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '采购申请订单.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
 

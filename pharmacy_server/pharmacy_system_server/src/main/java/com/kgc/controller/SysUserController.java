@@ -73,5 +73,11 @@ public class SysUserController {
         Message message = userService.selectUser();
         return message;
     }
+
+    @RequestMapping("/getAllUser")
+    public Message getAllUser() {
+        Message message = userService.getAllUser();
+        return message;
+    }
 }
 

@@ -97,8 +97,8 @@ export default {
             
             if(res.code == "200"){
               this.$store.commit("SET_TOKEN", res.data.tokenValue);
-              
-              console.log(res.data.tokenValue);
+              console.log(res+"1yyyyy");
+              console.log(res);
               this.$router.push("/index");
             this.$message.success('登录成功')
           

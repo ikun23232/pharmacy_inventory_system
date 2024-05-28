@@ -1,6 +1,6 @@
 <template>
   <div id="storeHouse">
-    <h1>调度入库订单</h1>
+    <h1>调度出库订单</h1>
     <p>
       <el-form :inline="true" :model="vo" class="demo-form-inline">
         <el-form-item label="单据编号">
@@ -70,7 +70,7 @@
 
       </el-table-column>
 
-      <el-table-column prop="totalPrice" label="参考金额" width="120">
+      <el-table-column prop="price" label="参考金额" width="120">
       </el-table-column>
 
       <el-table-column prop="approvalstatus
@@ -107,14 +107,6 @@
               <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
-              </el-button></el-dropdown-item>
-
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderStatus==2" type="success" size="small">审核
-              </el-button></el-dropdown-item>
-              <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
-              </el-button></el-dropdown-item>
-
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -133,7 +125,7 @@
     </div>
     <!-- 修改订单状态 -->
     <el-dialog
-        title="查看采购申请单"
+        title="查看采购出库单"
         :visible.sync="viewdialogVisible"
         width="85%"
 

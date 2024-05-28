@@ -77,6 +77,8 @@ public class BaseMedicineCategory implements Serializable {
     private List<BaseMedicineCategory> children;
     @TableField(exist = false)
     private String createUser;
+    @TableField(exist = false)
+    private List<BaseMedicine> Medicine;
 
 
 }

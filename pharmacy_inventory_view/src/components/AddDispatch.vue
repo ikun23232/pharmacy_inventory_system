@@ -39,6 +39,7 @@
           ><div class="grid-content bg-purple">
             <el-form-item label="源仓库" prop="beforeWarehouseId">
               <el-select
+                @change="cleanList"
                 v-model="KcDispatch.beforeWarehouseId"
                 placeholder="请选择原仓库"
                 clearable
@@ -192,7 +193,6 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
-                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].specification"
                   disabled
                 >
@@ -212,7 +212,6 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
-                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].unitName"
                   disabled
                 >
@@ -234,13 +233,11 @@
               <template slot-scope="scope">
                 <el-input-number
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
+                  min="1"
+                  :max="bcglXiangXiList[scope.row.xh - 1].maxStock"
                   controls-position="right"
-                  @change="
-                    handleChange(
-                      bcglXiangXiList[scope.row.xh - 1].quti,
-                      bcglXiangXiList[scope.row.xh - 1].maxStock
-                    )
-                  "
+                  :step="1"
+                  :precision="0"
                 ></el-input-number>
               </template>
             </el-table-column>
@@ -248,13 +245,11 @@
               label="进价"
               align="center"
               prop="price"
-              width="150"
-            >
+              width="150">
               <template slot-scope="scope">
                 <el-input
                   disabled
-                  v-model="bcglXiangXiList[scope.row.xh - 1].purchasePrice"
-                ></el-input>
+                  v-model="bcglXiangXiList[scope.row.xh - 1].purchasePrice"></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -266,15 +261,14 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
-                  @change="changezdts(scope.row)"
+                  @change="changeStoreHouse(scope.row, scope.$index)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].aimStoreHouseId"
                 >
                   <el-option
                     v-for="dict in storeHouseList"
                     :key="dict.id"
                     :label="dict.name"
-                    :value="dict.id"
-                  />
+                    :value="dict.id"/>
                 </el-select>
               </template>
             </el-table-column>
@@ -364,7 +358,6 @@
     </el-dialog>
   </span>
 </template>
-
 <script>
 import wareDetails from "./wareDetails.vue";
 import { Message } from "element-ui";
@@ -400,7 +393,6 @@ export default {
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
-      medicineListTemp: [],
       dispatchRules: {
         beforeWarehouseId: [
           { required: true, message: "请输入源仓库", trigger: "change" },
@@ -421,6 +413,10 @@ export default {
     this.storeHouseList = data.data;
   },
   methods: {
+    cleanList() {
+      this.medicineListTemp = [];
+      this.bcglXiangXiList = [];
+    },
     commit(formName) {
       this.KcDispatch.isCommit = 1;
       this.submitForm(formName);
@@ -432,7 +428,11 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          for (let index = 0; index < this.KcDispatch.medicineList.length; index++) {
+          for (
+            let index = 0;
+            index < this.KcDispatch.medicineList.length;
+            index++
+          ) {
             const element = this.KcDispatch.medicineList[index];
             if (element.aimStoreHouseId == "" || element.aimStoreHouseId == 0) {
               Message({
@@ -502,7 +502,7 @@ export default {
       }
     },
     async getMedicineListDetail() {
-      if (this.medicineListTemp.length == 0) {
+      if (this.changeMedicineList.length == 0) {
         Message({
           message: "请选择药品！",
           type: "error",
@@ -510,24 +510,42 @@ export default {
         });
         return;
       }
-      if (this.medicineListTemp.length > 0) {
-        for (let index = 0; index < this.medicineListTemp.length; index++) {
+      if (this.changeMedicineList.length > 0) {
+        for (let index = 0; index < this.changeMedicineList.length; index++) {
+          if (this.KcDispatch.medicineList.length > 0) {
+            for (let i = 0; i < this.KcDispatch.medicineList.length; i++) {
+              const element = this.KcDispatch.medicineList[i];
+              if (
+                this.changeMedicineList[index].batchCode == element.batchCode &&
+                this.changeMedicineList[index].id == element.medicineId
+              ) {
+                Message({
+                  message:
+                    this.changeMedicineList[index].name +
+                    "药品已经存在！请勿重复添加！",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
+            }
+          }
           if (this.bcglXiangXiList == undefined) {
             this.bcglXiangXiList = new Array();
           }
           let obj = {
             aimStoreHouseList: this.storeHouseList,
-            batchCode: this.medicineListTemp[index].batchCode,
-            name: this.medicineListTemp[index].name,
-            medicineId: this.medicineListTemp[index].id,
-            unitId: this.medicineListTemp[index].unitId,
-            unitName: this.medicineListTemp[index].unitName,
-            specification: this.medicineListTemp[index].specification,
-            purchasePrice: this.medicineListTemp[index].purchasePrice,
+            batchCode: this.changeMedicineList[index].batchCode,
+            name: this.changeMedicineList[index].name,
+            medicineId: this.changeMedicineList[index].id,
+            unitId: this.changeMedicineList[index].unitId,
+            unitName: this.changeMedicineList[index].unitName,
+            specification: this.changeMedicineList[index].specification,
+            purchasePrice: this.changeMedicineList[index].purchasePrice,
             aimStoreHouseId: "",
-            quantity: this.medicineListTemp[index].stock,
-            maxStock: this.medicineListTemp[index].stock,
-            providerId: this.medicineListTemp[index].providerId,
+            quantity: this.changeMedicineList[index].stock,
+            maxStock: this.changeMedicineList[index].stock,
+            providerId: this.changeMedicineList[index].providerId,
             isRight: true,
           };
           obj.dkdd = "1";
@@ -561,25 +579,24 @@ export default {
     cancelKcmx() {
       this.kcmxdialog = false;
     },
-    handleChange(val, maxVal) {
-      if (val > maxVal) {
+    changeStoreHouse(row, index) {
+      if (this.KcDispatch.beforeWarehouseId == row.aimStoreHouseId) {
         this.$message({
-          message: "最大值不超过" + maxVal,
+          message: "目标仓库不能和原仓库相等",
           type: "error",
         });
+        this.KcDispatch.medicineList[index].aimStoreHouseId = "";
       }
     },
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList == undefined) {
+      if (this.bcglXiangXiList === undefined) {
         return 0;
       }
-      return this.bcglXiangXiList.reduce(
-        (total, item) => total + item.totalPrice * item.stock,
-        0
-      );
+      return this.bcglXiangXiList.reduce((total, element) => {
+        return total + element.quantity * element.purchasePrice;
+      }, 0);
     },
     calculatedTotalPrice() {
       return (row) => {

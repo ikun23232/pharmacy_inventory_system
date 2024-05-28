@@ -69,20 +69,20 @@
       <el-tabs v-model="activeName">
 
         <el-tab-pane label="明细" name="first">
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddDetails">添加</el-button>
+<!--          <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddDetails">添加</el-button>-->
 
-			 <el-button
-           type="success"
-           icon="el-icon-delete"
-           size="mini"
-           @click="handleDeleteDetails"
-       >删除</el-button>
-            <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="mini"
-                @click="handleDeleteAllDetails"
-            >清空</el-button>
+<!--			 <el-button-->
+<!--           type="success"-->
+<!--           icon="el-icon-delete"-->
+<!--           size="mini"-->
+<!--           @click="handleDeleteDetails"-->
+<!--       >删除</el-button>-->
+<!--            <el-button-->
+<!--                type="danger"-->
+<!--                icon="el-icon-delete"-->
+<!--                size="mini"-->
+<!--                @click="handleDeleteAllDetails"-->
+<!--            >清空</el-button>-->
 
 
 
@@ -235,14 +235,13 @@
 </div>
 
       <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择">
-
-    <el-option
+        <el-option
         label="未通过"
-        value="0">
+        value="1">
     </el-option>
     <el-option
         label="通过"
-        value="1">
+        value="2">
     </el-option>
   </el-select>
 </div>
@@ -367,8 +366,10 @@ export default {
         remark: "",
         approvement:'',
 
-        medicineList:[]
+        medicineList:[],
+
       },
+      loading:true,
       vo: {
         currentPageNo: 1,
         pageSize: 5,
@@ -408,9 +409,10 @@ export default {
     };
   },
   async mounted() {
-    this.initCgSqOrder(this.id)
+   await this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
+    this.loading=false
   },
   methods: {
     async initCgSqOrder(id){
@@ -582,27 +584,27 @@ export default {
     },
     async changeMedicine(obj){
 
-      if (this.checkFalg) {
-        for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
-          if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-            // alert(i)
-            // alert(this.bcglXiangXiList[i].providerId)
-            // alert(obj.providerId)
-            if (this.bcglXiangXiList[i].providerId != obj.providerId) {
-              break;
-            }
-
-            Message({
-              message: "您重复添加了商品!",
-              type: "error",
-              center: "true",
-            });
-            obj.medicineId = ''
-            this.index=2;
-            return
-          }
-        }
-      }
+      // if (this.checkFalg) {
+      //   for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
+      //     if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
+      //       // alert(i)
+      //       // alert(this.bcglXiangXiList[i].providerId)
+      //       // alert(obj.providerId)
+      //       if (this.bcglXiangXiList[i].providerId != obj.providerId) {
+      //         break;
+      //       }
+      //
+      //       Message({
+      //         message: "您重复添加了商品!",
+      //         type: "error",
+      //         center: "true",
+      //       });
+      //       obj.medicineId = ''
+      //       this.index=2;
+      //       return
+      //     }
+      //   }
+      // }
       this.checkFalg=true
 
       for (const objElement of obj.medicineList) {
@@ -655,11 +657,25 @@ export default {
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList==undefined){
-        return 0
+      // 检查bcglXiangXiList是否存在且不为空
+      if (!this.bcglXiangXiList || this.bcglXiangXiList.length === 0) {
+        return 0;
       }
-      return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice*item.quantity, 0);
+
+      // 使用reduce方法计算总价，并确保price和quantity都是数字
+      return this.bcglXiangXiList.reduce((total, item) => {
+        // 确保price和quantity都是数字
+        const price = Number(item.price);
+        const quantity = Number(item.quantity);
+
+        // 如果price或quantity不是数字，返回0
+        if (isNaN(price) || isNaN(quantity)) {
+          console.error("价格或数量不是数字，无法计算总价。");
+          return this.CgsqOrder.referenceamount;
+        }
+
+        return total + price * quantity;
+      }, 0);
     },
     calculatedTotalPrice() {
       return row => {

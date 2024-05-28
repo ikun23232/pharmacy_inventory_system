@@ -36,4 +36,8 @@ public class Message {
     public static Message error(String message) {
         return new Message("201", message, null);
     }
+
+    public static Message error(String code, String message,Object data) {
+        return new Message(code, message, null);
+    }
 }

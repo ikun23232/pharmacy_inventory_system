@@ -162,7 +162,7 @@
            <template slot-scope="scope">
 
                <el-input-number v-model="bcglXiangXiList[scope.row.xh-1].quantity" controls-position="right"
-                                @change="handleChange" :min="1" :max="10"></el-input-number>
+                                @change="handleChange" :min="1" :max="100"></el-input-number>
            </template>
 
          </el-table-column>
@@ -590,7 +590,7 @@ export default {
         this.tableData = [
           this.changeProvider(row)
         ];
-      }, 500);
+      }, 300);
     },
     handleSelectChange(row) {
       // 这里可以添加逻辑，根据row.selectedValue来更新表格数据
@@ -603,9 +603,9 @@ export default {
       if (this.checkFalg) {
         let isDuplicate = false;
         for (let i = 0; i < this.bcglXiangXiList.length; i++) {
-if (this.bcglXiangXiList[i].xh === obj.xh){
-  continue;
-}
+       if (this.bcglXiangXiList[i].xh === obj.xh){
+      continue;
+      }
           if (this.bcglXiangXiList[i].medicineId === obj.medicineId &&
               this.bcglXiangXiList[i].providerId === obj.providerId
               ) {
@@ -633,7 +633,6 @@ if (this.bcglXiangXiList[i].xh === obj.xh){
           obj.purchasePrice = objElement.purchasePrice
         }
       }
-
     },
     cacltotalPrice(row) {
       alert(row)
@@ -646,11 +645,25 @@ if (this.bcglXiangXiList[i].xh === obj.xh){
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList == undefined) {
-        return 0
+      // 检查bcglXiangXiList是否存在且不为空
+      if (!this.bcglXiangXiList || this.bcglXiangXiList.length === 0) {
+        return 0;
       }
-      return this.bcglXiangXiList.reduce((total, item) => total + item.totalPrice * item.quantity, 0);
+
+      // 使用reduce方法计算总价，并确保price和quantity都是数字
+      return this.bcglXiangXiList.reduce((total, item) => {
+        // 确保price和quantity都是数字
+        const price = Number(item.price);
+        const quantity = Number(item.quantity);
+
+        // 如果price或quantity不是数字，返回0
+        if (isNaN(price) || isNaN(quantity)) {
+          console.error("价格或数量不是数字，无法计算总价。");
+          return this.CgsqOrder.referenceamount;
+        }
+
+        return total + price * quantity;
+      }, 0);
     },
     calculatedTotalPrice() {
       return row => {

@@ -59,7 +59,7 @@ public class CwXsys implements Serializable {
      * 销售员
      */
     @TableField("createBy")
-    private String createBy;
+    private Integer createBy;
     /**
      * 销售员名称
      */

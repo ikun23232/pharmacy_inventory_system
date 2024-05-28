@@ -11,7 +11,7 @@
         </el-form-item>
 
         <el-form-item label="供应商">
-          <el-select v-model="vo.providerId" placeholder="请选择供应商">
+          <el-select v-model="vo.providerId" placeholder="请选择供应商" filterable>
             <el-option label="请选择" value="0"></el-option>
             <el-option v-for="item in providerList" :label="item.name" :value="item.id"  :key="item.id"></el-option>
           </el-select>
@@ -69,10 +69,17 @@
       <el-table-column prop="demanderUserName" label="需求人" width="120">
       </el-table-column>
       <el-table-column prop="count" label="数量" width="120">
-
       </el-table-column>
 
       <el-table-column prop="referenceAmount" label="参考金额" width="120">
+      </el-table-column>
+      <el-table-column prop="formMoney" label="已入库金额" width="120">
+        <template slot-scope="scope">
+          {{scope.row.isaddwarehouse === 0 ? "0.0" : scope.row.medicineprice}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="referenceAmount" label="付款金额" width="120">
+
       </el-table-column>
       <el-table-column prop="effectiveTime" label="生效时间" width="120">
       </el-table-column>
@@ -81,7 +88,7 @@
       <el-table-column prop="approvalstatus
 " label="核批结果" width="120">
         <template slot-scope="scope">
-          {{scope.row.approvalstatus === null ? "未审核" : (scope.row.approvalstatus === 0 ? "未通过" : "通过")}}
+          {{scope.row.approvalstatus === 0 ? "未审核" : (scope.row.approvalstatus === 1 ? "未通过" : "通过")}}
 
         </template>
       </el-table-column>
@@ -106,25 +113,24 @@
               @click="updateOrder(scope.row.id)"
               type="primary"
               size="small"
-              :disabled="scope.row.orderstatus>=2"
+              :disabled="scope.row.orderStatus>2 || scope.row.voidstate==1 || scope.row.approvalstatus==1||scope.row.approvalstatus==2"
           >编辑
           </el-button>
           <el-dropdown>
       <span class="el-dropdown-link">
         更多<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
+            </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
+              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" :disabled="scope.row.voidstate==1" type="info" size="small">作废
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderStatus==2" type="success" size="small">审核
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderStatus==2 && scope.row.approvalstatus==0" type="success" size="small">审核
               </el-button></el-dropdown-item>
               <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
-
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -146,13 +152,10 @@
         title="查看采购申请单"
         :visible.sync="viewdialogVisible"
         width="85%"
-
-        v-if="viewdialogVisible"
-    >
+        v-if="viewdialogVisible">
       <CGRKViewOrder
           :id="this.id"
-          @closeviewOrder="closeviewOrder"
-      ></CGRKViewOrder>
+          @closeviewOrder="closeviewOrder"></CGRKViewOrder>
     </el-dialog>
 
     <el-dialog
@@ -188,7 +191,6 @@
           width="75%"
           :id="id"
           @addSuccess="addSuccess">
-
       </AddCGRKOrder>
     </el-dialog>
   </div>

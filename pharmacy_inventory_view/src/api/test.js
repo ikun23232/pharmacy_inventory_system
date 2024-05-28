@@ -9,6 +9,13 @@ export function getLogin(user) {
       data:user
     })
   }
+  export function checkUsername(username,id) {
+    return request({
+      url: baseUrl+'/checkUserName',
+      method: 'get',
+      params: { username,id}
+    })
+  }
   export function selectUser() {
     return request({
       url: baseUrl+'/selectUser',

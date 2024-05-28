@@ -2,8 +2,8 @@
   <div id="storeHouse">
     <h1>计量单位</h1>
     <div>
-      <el-input v-model="code" style="width: 300px" placeholder=""></el-input>
-      <el-button type="primary" @click="getList(1, 5)">查询</el-button>
+      计量单位名称:<el-input v-model="name" style="width: 300px" placeholder=""></el-input>
+      <el-button type="primary" @click="getList(page)">查询</el-button>
       <el-button type="primary" @click="addOrder">添加</el-button>
     </div>
     <el-table :data="list.list" border style="width: 100%">
@@ -87,6 +87,7 @@ export default {
         pageNum: 1,
         pageSize: 5,
       },
+      name:'',
       serialNumber: "",
       list: {},
       //添加弹框开关
@@ -100,7 +101,7 @@ export default {
   },
   methods: {
     async getList(page) {
-      let data = await initUnit(page.pageNum, page.pageSize);
+      let data = await initUnit(page.pageNum, page.pageSize,this.name);
       console.log(data);
       this.list = data.data;
     },

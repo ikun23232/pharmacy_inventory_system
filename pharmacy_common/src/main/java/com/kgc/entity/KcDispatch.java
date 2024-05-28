@@ -1,16 +1,16 @@
 package com.kgc.entity;
 
-import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +94,7 @@ public class KcDispatch implements Serializable {
      * 作废状态
      */
     @TableField("voidState")
-    @DateTimeFormat("yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Integer voidState;
 
     /**
@@ -111,7 +111,7 @@ public class KcDispatch implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    @DateTimeFormat("yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updateDate;
 
     /**
@@ -128,7 +128,6 @@ public class KcDispatch implements Serializable {
 
     @TableField(exist = false)
     private String orderStatusResult;
-
 
     @TableLogic
     private Integer isDel;//删除id
