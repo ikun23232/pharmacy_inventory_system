@@ -67,7 +67,12 @@ public class BaseMedicineController {
         Message medicineListByCode = baseMedicineService.getMedicineListByCode(code);
         return medicineListByCode;
     }
-
+    @RequestMapping("/getBaseMedicineListByProviderId")
+    @ResponseBody
+    public Message getBaseMedicineListByProviderId(int providerId) {
+        Message baseMedicineList=baseMedicineService.getBaseMedicineListByProviderId(providerId);
+        return Message.success(baseMedicineList);
+    }
     @RequestMapping("/getAllBaseMedicine")
     @ResponseBody
     public Message getAllBaseMedicine() {
@@ -81,7 +86,12 @@ public class BaseMedicineController {
         Message message = baseMedicineService.getAllBatchCodeByMedicineId(medicineId);
         return message;
     }
-
+    @RequestMapping("/getMedicineListByCodeComblie")
+    @ResponseBody
+    public Message getMedicineListByCodeComblie(String code){
+        Message medicineListByCode = baseMedicineService.getMedicineListByCodeComblie(code);
+        return medicineListByCode;
+    }
     @RequestMapping("/getTreeMedicine")
     @ResponseBody
     public Message getTreeMedicine() {

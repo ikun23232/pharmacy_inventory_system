@@ -157,30 +157,5 @@ public class BaseMedicine implements Serializable {
     private Integer fowardWarHouseId;
     @TableField(exist=false)
     private String fowardWarHouseName;
-}
 
-    @TableField(exist=false)
-    private String createByName;
-    @TableField(exist=false)
-    private String updateByName;
-    @TableField(exist=false)
-    private String categoryName;
-    @TableField(exist=false)
-    private String unitName;
-    @TableField(exist=false)
-    private Integer currentPage;
-    @TableField(exist=false)
-    private int quantity;
-    @TableField(exist=false)
-    private double totalPrice;
-    @TableField(exist=false)
-    private int stock;
-    @TableField(exist=false)
-    private String batchCode;
-    @TableField(exist=false)
-    private int medicineId;
-    @TableField(exist=false)
-    private String code;
-    @TableField(exist=false)
-    private String storehouseName;
 }

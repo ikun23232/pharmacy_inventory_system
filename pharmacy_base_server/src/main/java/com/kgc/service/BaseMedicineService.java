@@ -37,7 +37,7 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
     public Message getAllBatchCodeByMedicineId(int medicineId);
 
 
-}
+
 
     public Message getAllBaseMedicine();
 

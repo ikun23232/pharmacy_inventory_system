@@ -85,8 +85,6 @@
             <version>1.2.46</version>
         </dependency>
 
-
-
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>

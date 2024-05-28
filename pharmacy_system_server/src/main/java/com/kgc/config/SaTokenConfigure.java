@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
+
     // 注册拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

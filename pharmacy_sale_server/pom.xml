@@ -122,6 +122,18 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.kgc</groupId>
+            <artifactId>pharmacy_warehouse_server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.kgc</groupId>
+            <artifactId>pharmacy_finance_server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>
