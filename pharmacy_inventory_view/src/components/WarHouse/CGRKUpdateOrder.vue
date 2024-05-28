@@ -644,15 +644,15 @@ export default {
 
     async initCgrkOrder(id){
       let resp = await getCgrkOrderById(id);
-     this.CgddOrder= resp.data
+      this.CgddOrder= resp.data
       this.code=this.CgddOrder.medicineList[0].sourceCode
       let newVar = await getCgddByCode(this.code);
       this.cgsqListTemp.push(newVar.data)
-     await this.getMedicineList()
+      await this.getMedicineList()
       console.log(this.cgsqList)
       this.cgddMedicineionList=this.medicineListTemp
       // alert(this.medicineListTemp.length)
-     await this.getMedicineListDetail()
+      await this.getMedicineListDetail()
       console.log("看看我",this.CgddOrder.medicineList)
       for (let i = 0; i < this.CgddOrder.medicineList.length; i++) {
         this.bcglXiangXiList[i].fowardWarHouseId=this.CgddOrder.medicineList[i].fowardWarHouseId
@@ -1019,7 +1019,7 @@ export default {
           center: "true",
         });
       }
-     this.FirstFalg=true;
+      this.FirstFalg=true;
 
     }
 

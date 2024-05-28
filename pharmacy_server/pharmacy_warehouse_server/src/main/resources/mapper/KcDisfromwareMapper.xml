@@ -10,9 +10,6 @@
         </collection>
     </resultMap>
 
-
-
-
     <select id="getKcDisfromwareList" resultType="com.kgc.entity.KcDisfromware">
         SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
         (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
