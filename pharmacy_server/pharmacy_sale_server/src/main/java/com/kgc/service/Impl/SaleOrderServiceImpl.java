@@ -172,7 +172,6 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
 
     @Override
     public Message updateSaleOrder(XsOrder xsOrder) {
-//       Message message=deleteSaleOrder(xsOrder.getOrderNo());
         //删除
        int count=saleOrderMapper.deleteSaleOrderByOrderNo(xsOrder.getOrderNo());
        int count2=saleOrderMapper.deleteSaleOrderDetailByOrderNo(xsOrder.getOrderNo());
@@ -193,7 +192,6 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
 
     @Override
     public Message saveUpdateSaleOrder(XsOrder xsOrder) {
-//        Message message=deleteSaleOrder(xsOrder.getOrderNo());
         //删除
         int count=saleOrderMapper.deleteSaleOrderByOrderNo(xsOrder.getOrderNo());
         int count2=saleOrderMapper.deleteSaleOrderDetailByOrderNo(xsOrder.getOrderNo());
@@ -250,6 +248,42 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
             ExeclUtil.write(xsOrderList, XsOrder.class,response,"销售订单");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 给销售订单添加退货标识
+     * @param orderNo
+     * @return
+     */
+    @Override
+    public Message updateSaleOrderByOrderNo(String orderNo) {
+        UpdateWrapper<XsOrder> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("orderNo",orderNo);
+        updateWrapper.set("isCheck", 1);
+        int count=saleOrderMapper.update(null, updateWrapper);
+        if(count>0) {
+            return Message.success();
+        }else{
+            return Message.error();
+        }
+    }
+
+    /**
+     * 删除销售订单的退货标识
+     * @param orderNo
+     * @return
+     */
+    @Override
+    public Message recoverSaleOrderByOrderNo(String orderNo) {
+        UpdateWrapper<XsOrder> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("orderNo",orderNo);
+        updateWrapper.set("isCheck", 0);
+        int count=saleOrderMapper.update(null, updateWrapper);
+        if(count>0) {
+            return Message.success();
+        }else{
+            return Message.error();
         }
     }
 

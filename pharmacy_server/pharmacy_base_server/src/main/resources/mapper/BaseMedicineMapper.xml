@@ -66,7 +66,7 @@
         select DISTINCT base_medicine.* FROM base_medicine,kc_medicine where kc_medicine.medicineId=base_medicine.id and storehouseId=1
     </select>
 
-    <select id="getAllBatchCodeByMedicineId" resultType="com.kgc.entity.BaseMedicine">
+    <select id="getAllBatchCodeByMedicineId" resultType="com.kgc.entity.KcMedicine">
         select kc_medicine.* FROM kc_medicine where medicineId=#{medicineId}
     </select>
 

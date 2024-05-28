@@ -12,11 +12,14 @@ import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.RefundOrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 @Service
+@Transactional
 public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrder> implements RefundOrderService {
 
     @Autowired
@@ -57,8 +60,8 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
     public Message addRefundOrder(XsOrder xsOrder) {
         xsOrder.setCreateBy(1);
         xsOrder.setUpdateBy(1);
+        xsOrder.setUpdateDate(new Date());
         xsOrder.setType(1);
-        xsOrder.setUpdateDate(xsOrder.getOrderDate());
         xsOrder.setEditStatus(1);
         xsOrder.setIsCheck(0);
         int count=refundOrderMapper.insert(xsOrder);
@@ -82,10 +85,10 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
     public Message saveRefundOrder(XsOrder xsOrder) {
         xsOrder.setCreateBy(1);
         xsOrder.setUpdateBy(1);
+        xsOrder.setUpdateDate(new Date());
         xsOrder.setType(1);
-        xsOrder.setUpdateDate(xsOrder.getOrderDate());
         xsOrder.setEditStatus(0);
-        int count=saleOrderMapper.insert(xsOrder);
+        int count=refundOrderMapper.insert(xsOrder);
         boolean result=true;
         List<OrderMedicine> checkedDetail=xsOrder.getCheckedDetail();
         if(checkedDetail!=null){
@@ -105,6 +108,58 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
     }
 
     @Override
+    public Message updateRefundOrder(XsOrder xsOrder) {
+        xsOrder.setUpdateBy(1);
+        xsOrder.setUpdateDate(new Date());
+        xsOrder.setEditStatus(1);
+        UpdateWrapper<XsOrder> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("orderNo",xsOrder.getOrderNo());
+        int count=refundOrderMapper.update(xsOrder, updateWrapper);
+        //删除
+        int count2=saleOrderMapper.deleteSaleOrderDetailByOrderNo(xsOrder.getOrderNo());
+        List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
+        boolean result=true;
+        for(OrderMedicine orderMedicine:medicineDetailList){
+            orderMedicine.setCode(xsOrder.getOrderNo());
+            int count3=saleOrderMapper.addSaleOrderDetail(orderMedicine);
+            if(count3<0){
+                result=false;
+            }
+        }
+        if(result){
+            return Message.success();
+        }else{
+            return Message.error();
+        }
+    }
+
+    @Override
+    public Message saveUpdateRefundOrder(XsOrder xsOrder) {
+        xsOrder.setUpdateBy(1);
+        xsOrder.setUpdateDate(new Date());
+        xsOrder.setEditStatus(0);
+        UpdateWrapper<XsOrder> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("orderNo",xsOrder.getOrderNo());
+        int count=refundOrderMapper.update(xsOrder, updateWrapper);
+        //删除
+        int count2=saleOrderMapper.deleteSaleOrderDetailByOrderNo(xsOrder.getOrderNo());
+        List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
+        boolean result=true;
+        for(OrderMedicine orderMedicine:medicineDetailList){
+            orderMedicine.setCode(xsOrder.getOrderNo());
+            int count3=saleOrderMapper.addSaleOrderDetail(orderMedicine);
+            if(count3<0){
+                result=false;
+            }
+        }
+        if(result){
+            return Message.success();
+        }else{
+            return Message.error();
+        }
+    }
+
+    @Override
     public Message checkedRefundOrder(XsOrder xsOrder) {
         if(xsOrder.getIsCheck()==1){
             xsOrder.setEditStatus(2);
@@ -115,7 +170,8 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
         if(count>0){
             if(xsOrder.getIsCheck()==1){
                 //获取订单详情
-                List<OrderMedicine> checkedDetail=xsOrder.getCheckedDetail();
+                List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
+                //判断订单是否报损
                 if(xsOrder.getRefundTypeId()==1||xsOrder.getRefundTypeId()==2){
                     //添加报损申请单
                     KcReported kcReported=new KcReported();
@@ -127,7 +183,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                     kcReported.setCreateBy(1);
                     kcReported.setCreateTime(xsOrder.getOrderDate());
                     kcReportedMapper.insert(kcReported);
-                    for(OrderMedicine orderMedicine:checkedDetail){
+                    for(OrderMedicine orderMedicine:medicineDetailList){
                         //添加报损明细单
                         KcReporteddetail kcReporteddetail=new KcReporteddetail();
                         kcReporteddetail.setReportedCode(reportedCode);
@@ -145,7 +201,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                     int saleOutCount=refundInWarehouseMapper.insert(kcSalefromware);
                 }
                 boolean result=true;
-                for(OrderMedicine orderMedicine:checkedDetail){
+                for(OrderMedicine orderMedicine:medicineDetailList){
                     if(xsOrder.getRefundTypeId()!=1&&xsOrder.getRefundTypeId()!=2){
                         //更新库存明细
                         int stockDetailCount=stockDetailMapper.addStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());

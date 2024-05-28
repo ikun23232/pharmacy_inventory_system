@@ -5,6 +5,7 @@ import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.RescaleOp;
@@ -32,4 +33,7 @@ public interface SaleOrderService extends IService<XsOrder> {
 
     public void saleOrderExcel(XsOrder xsOrder, HttpServletResponse response);
 
+    public Message updateSaleOrderByOrderNo(String orderNo);
+
+    public Message recoverSaleOrderByOrderNo(String orderNo);
 }

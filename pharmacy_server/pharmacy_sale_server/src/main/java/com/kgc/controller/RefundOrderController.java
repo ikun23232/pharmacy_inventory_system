@@ -43,6 +43,21 @@ public class RefundOrderController {
         return message;
     }
 
+    @RequestMapping("/updateRefundOrder")
+    @ResponseBody
+    public Message updateRefundOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = refundOrderService.updateRefundOrder(xsOrder);
+        return message;
+    }
+    @RequestMapping("/saveUpdateRefundOrder")
+    @ResponseBody
+    public Message saveUpdateRefundOrder(@RequestBody Map<String,Object> map) {
+        XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
+        Message message = refundOrderService.saveUpdateRefundOrder(xsOrder);
+        return message;
+    }
+
     @RequestMapping("/checkedRefundOrder")
     @ResponseBody
     public Message checkedRefundOrder(@RequestBody Map<String,Object> map) {

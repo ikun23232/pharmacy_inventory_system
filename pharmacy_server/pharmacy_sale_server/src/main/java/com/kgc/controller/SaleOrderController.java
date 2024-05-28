@@ -89,4 +89,18 @@ public class SaleOrderController {
     public void saleOrderExcel(@RequestBody XsOrder xsOrder, HttpServletResponse response) {
         saleOrderService.saleOrderExcel(xsOrder,response);
     }
+
+    @RequestMapping("/updateSaleOrderByOrderNo")
+    @ResponseBody
+    public Message updateSaleOrderByOrderNo(@RequestParam("orderNo") String orderNo) {
+        Message message=saleOrderService.updateSaleOrderByOrderNo(orderNo);
+        return message;
+    }
+
+    @RequestMapping("/recoverSaleOrderByOrderNo")
+    @ResponseBody
+    public Message recoverSaleOrderByOrderNo(@RequestParam("orderNo") String orderNo) {
+        Message message=saleOrderService.recoverSaleOrderByOrderNo(orderNo);
+        return message;
+    }
 }
