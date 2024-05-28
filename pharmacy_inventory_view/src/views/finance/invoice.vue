@@ -73,10 +73,10 @@ export default {
 
 <template>
   <div>
-    <h1>发票详情</h1>
+    <h1>销售发票</h1>
     <div>
       <el-row :gutter="20">
-        <el-col :span="8"
+        <el-col :span="11"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -85,7 +85,7 @@ export default {
               placeholder="请输入单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="8"
+        <el-col :span="11"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -94,19 +94,19 @@ export default {
               placeholder="请输入原单据编号"
           ></el-input></div
         ></el-col>
-        <el-col :span="8"
-        ><div class="grid-content bg-purple">
-          类型：
-          <el-select v-model="cwInvoice.categoryId" placeholder="请选择类型">
-            <el-option label="全部类型" :value=0></el-option>
-            <el-option
-                v-for="item in category"
-                :key="item.id"
-                :label="item.accountsCategoryName"
-                :value="item.id"
-            ></el-option>
-          </el-select></div
-        ></el-col>
+<!--        <el-col :span="8"-->
+<!--        ><div class="grid-content bg-purple">-->
+<!--          类型：-->
+<!--          <el-select v-model="cwInvoice.categoryId" placeholder="请选择类型">-->
+<!--            <el-option label="全部类型" :value=0></el-option>-->
+<!--            <el-option-->
+<!--                v-for="item in category"-->
+<!--                :key="item.id"-->
+<!--                :label="item.accountsCategoryName"-->
+<!--                :value="item.id"-->
+<!--            ></el-option>-->
+<!--          </el-select></div-->
+<!--        ></el-col>-->
       </el-row>
         发票日期：
         <el-date-picker
@@ -126,14 +126,14 @@ export default {
       <el-table :data="cwInvoicePage.list" border style="width: 100%">
         <el-table-column prop="categoryId" label="发票id" />
         <el-table-column prop="code" label="发票单据"  fixed/>
-        <el-table-column prop="categoryName" label="类型" />
+<!--        <el-table-column prop="categoryName" label="类型" />-->
         <el-table-column prop="orderNumber" label="订单编号" />
         <el-table-column prop="createName" label="创建人" />
         <el-table-column prop="createTime" label="创建时间" />
         <el-table-column prop="modificationName" label="修改人" />
         <el-table-column prop="modificationTime" label="修改时间" />
-        <el-table-column prop="cost" label="发票总金额" width="120"/>
-        <el-table-column align="center" label="操作" fixed="right">
+        <el-table-column prop="cost" label="发票总金额" />
+        <el-table-column align="center" label="操作"  width="200">
           <template #default="{ row }">
             <el-button type="primary" plain @click="print(row.code)">打印</el-button>&nbsp;
             <el-button type="primary" plain>详情</el-button>&nbsp;

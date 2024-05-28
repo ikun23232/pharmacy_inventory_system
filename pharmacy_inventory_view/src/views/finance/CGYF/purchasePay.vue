@@ -130,23 +130,21 @@ export default {
       window.open(newPage.href, "_blank");
     },
     pay(row) {
-      updateCwCgyf(row).then(resp=>{
-        console.log(resp)
-        if (resp.code!=200){
-          Message({
-            message: '付款失败',
-            type: 'error',
-            duration: 5 * 1000
-          })
-          return
-        }
-        Message({
-          message: '付款成功',
-          type: 'success',
-          duration: 5 * 1000
-        })
-        this.getCwCgyfLists();
-      })
+      if (confirm('确认要进行付款操作吗？')) {
+        updateCwCgyf(row).then(resp => {
+          console.log(resp);
+          if (resp.code != 200) {
+            Message.error('付款失败');
+            return;
+          }
+          Message.success('付款成功');
+          this.getCwCgyfLists();
+        }).catch(() => {
+          Message.error('付款操作遇到错误');
+        });
+      } else {
+        Message.info('已取消付款操作');
+      }
     }
   }
 }
@@ -218,7 +216,7 @@ export default {
         <el-table-column prop="paymentTime" label="付款时间" width="120"/>
         <el-table-column prop="cost" label="应付金额" width="120"/>
         <el-table-column prop="isPay" label="是否支付" width="120" :formatter="formatPayStatus"/>
-        <el-table-column align="center" label="操作" fixed="right" width="200">
+        <el-table-column align="center" label="操作"  width="200">
           <template #default="{ row }">
             <el-button type="primary" plain @click="getCgddByCodes(row)">详情</el-button>&nbsp;
             <el-dropdown>

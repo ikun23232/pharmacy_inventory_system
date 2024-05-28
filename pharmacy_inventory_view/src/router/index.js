@@ -298,6 +298,12 @@ const routes = [
     name: 'PrintCGSQOrder',
     component: () => import('@/views/procurement/CGSQ/PrintCGSQOrder')
   },
+  {
+    //首页
+    path:'/HomePage',
+    name: 'HomePage',
+    component: () => import('@/views/index/HomePage.vue')
+  }
 ]
 
 const router = new VueRouter({
