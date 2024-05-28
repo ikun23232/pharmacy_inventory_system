@@ -30,8 +30,9 @@ export default {
 
 		addTab(state, tab) {
 			console.log(88888);
-			console.log(tab);
+			console.log(state.editableTabs);
 			let index = state.editableTabs.findIndex(e => e.name === tab.name)
+			console.log(index);
 			if (index === -1) {
 				state.editableTabs.push({
 					title: tab.title,

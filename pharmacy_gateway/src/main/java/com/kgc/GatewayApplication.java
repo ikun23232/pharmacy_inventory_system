@@ -10,7 +10,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @Author: 魏小可
  * @Date: 2024-05-07-14:33
  */
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @SpringBootApplication
 public class GatewayApplication {
 

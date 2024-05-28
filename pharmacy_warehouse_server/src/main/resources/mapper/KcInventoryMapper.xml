@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcInventoryMapper">
+
+
+    <select id="getAllCheckByPage" resultType="com.kgc.entity.KcInventory">
+        SELECT k.*,s.name as warehouseName,m.name as materialCategoryName,o.type as orderStatusName,
+        (SELECT userName FROM sys_user u WHERE k.checkerBy=u.userId) AS checkerByName,
+        (SELECT userName FROM sys_user u WHERE k.approverBy=u.userId) AS approverByName,
+        (SELECT userName FROM sys_user u WHERE k.createBy=u.userId) AS createByName,
+        (SELECT userName FROM sys_user u WHERE k.updateBy=u.userId) AS updateByName
+        FROM kc_inventory k
+        left JOIN  base_storehouse s ON k.warehouseId=s.id
+        left JOIN  sys_user u ON k.createBy=u.userId
+        left JOIN  base_medicine m ON k.materialCategoryId=m.id
+        left JOIN  order_statue o ON k.orderStatus=o.id
+        <where>
+            <if test="code!=null and code!=''">
+                and k.code like concat('%',#{code},'%')
+            </if>
+            <if test="subject!=null and subject!=''">
+                and k.subject like concat('%',#{subject},'%')
+            </if>
+            <if test="warehouseId>0">
+                and k.warehouseId=#{warehouseId}
+            </if>
+            <if test="orderStatus>0">
+                and k.orderStatus=#{orderStatus}
+            </if>
+            <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+                and k.createTime BETWEEN #{startTime} AND #{endTime}
+            </if>
+            AND k.isdel=0
+            <if test="isVoided>0">
+                AND k.isVoided=#{isVoided}
+            </if>
+            <if test="isApproved>0">
+                AND k.isApproved=#{isApproved}
+            </if>
+
+        </where>
+        order by k.billDate Desc
+    </select>
+
+    <select id="getAllCheck" resultType="com.kgc.vo.PandianDetailVo">
+        SELECT k.*,s.name as warehouseName,m.name as materialCategoryName,o.type as orderStatusName,
+        (SELECT userName FROM sys_user u WHERE k.checkerBy=u.userId) AS checkerByName,
+        (SELECT userName FROM sys_user u WHERE k.approverBy=u.userId) AS approverByName,
+        (SELECT userName FROM sys_user u WHERE k.createBy=u.userId) AS createByName,
+        (SELECT userName FROM sys_user u WHERE k.updateBy=u.userId) AS updateByName
+        FROM kc_inventory k
+        left JOIN  base_storehouse s ON k.warehouseId=s.id
+        left JOIN  sys_user u ON k.createBy=u.userId
+        left JOIN  base_medicine m ON k.materialCategoryId=m.id
+        left JOIN  order_statue o ON k.orderStatus=o.id
+    </select>
+    <select id="getKcMedicineByMedicine" resultType="com.kgc.entity.KcInventorydetail">
+        SELECT *,
+        SUM(quantity) as totalQuantity
+        FROM (
+        SELECT *,
+        (select name from base_storehouse s WHERE s.id=m.storehouseId) as warehouseName,
+        (select name from base_medicine c WHERE c.id=m.medicineId ) as medecineName,
+        (select name from base_provider b WHERE b.id=m.providerId ) as providername ,
+        (SELECT c.specification from base_medicine c WHERE m.medicineId =c.id) as unitName
+        FROM kc_medicine m where  m.isdel=0
+        <if test="storehouseId>0">
+            and m.storehouseId=#{storehouseId}
+        </if>
+        <if test="materialCategoryId>0">
+            and m.medicineId=#{materialCategoryId}
+        </if>
+
+        ) subquery
+        GROUP BY warehouseName, medecineName, providername, unitName
+
+    </select>
+
+    <select id="getKcInventoryVoById" resultType="com.kgc.vo.KcInventoryVo">
+        SELECT * ,
+        (select name from base_storehouse s WHERE s.id=m.warehouseId) as warehouseName,
+        (select name from base_medicine c WHERE c.id=m.materialCategoryId ) as materialCategoryName,
+        (select type from order_statue a where a.id=m.orderStatus) as orderStatusName,
+        (SELECT userName FROM sys_user u WHERE m.checkerBy=u.userId) AS checkerByName,
+        (SELECT userName FROM sys_user u WHERE m.approverBy=u.userId) AS approverByName,
+        (SELECT userName FROM sys_user u WHERE m.createBy=u.userId) AS createByName,
+        (SELECT userName FROM sys_user u WHERE m.updateBy=u.userId) AS updateByName
+        from kc_inventory m where m.id=#{id} and m.isdel=0
+
+
+    </select>
+
+    <update id="updateorderStatus" >
+        update kc_inventory set  orderStatus=2 where  id=#{id}
+    </update>
+    <update id="updateisVoid" >
+        update kc_inventory set  isVoided=1 where  id=#{id}
+    </update>
+</mapper>

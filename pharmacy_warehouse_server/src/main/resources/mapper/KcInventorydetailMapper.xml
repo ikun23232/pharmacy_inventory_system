@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcInventorydetailMapper">
+    <select id="getKcMedicineByMedicine" resultType="com.kgc.entity.KcInventorydetail">
+        SELECT *,
+        SUM(quantity) as totalQuantity
+        FROM (
+        SELECT *,
+        (select name from base_storehouse s WHERE s.id=m.storehouseId) as warehouseName,
+        (select name from base_medicine c WHERE c.id=m.medicineId ) as medecineName,
+        (select name from base_provider b WHERE b.id=m.providerId ) as providername ,
+        (SELECT c.specification from base_medicine c WHERE m.medicineId =c.id) as unitName
+        FROM kc_medicine m where  m.isdel=0
+        <if test="storehouseId>0">
+            and m.storehouseId=#{storehouseId}
+        </if>
+        <if test="materialCategoryId>0">
+            and m.medicineId=#{materialCategoryId}
+        </if>
+
+        ) subquery
+        GROUP BY warehouseName, medecineName, providername, unitName
+
+
+    </select>
+
+    <select id="getAllKcInventoryDetailById" resultType="com.kgc.vo.PandianMedicineVo">
+
+        SELECT m.*,
+               s.name AS warehouseName,
+               c.name AS medecineName,
+               b.name AS providername,
+               c.specification AS unitName,
+               SUM(mc.quantity) AS totalQuantity
+        FROM kc_inventorydetail m
+                 LEFT JOIN base_storehouse s ON m.storehouseId = s.id
+                 LEFT JOIN base_medicine c ON m.medicineId = c.id
+                 LEFT JOIN base_provider b ON m.providerId = b.id
+                 LEFT JOIN (
+            SELECT c.medicineId, c.storehouseId, c.providerId, c.quantity
+            FROM kc_medicine c
+        ) mc ON m.medicineId = mc.medicineId AND m.storehouseId = mc.storehouseId AND m.providerId = mc.providerId
+        WHERE m.inventoryId = #{id}  AND m.isdel=0
+        GROUP BY m.inventoryId, warehouseName, medecineName, providername, unitName
+
+
+    </select>
+    <select id="getKcInventoryDetailById" resultType="com.kgc.entity.KcInventorydetail">
+
+        SELECT m.*,
+               s.name AS warehouseName,
+               c.name AS medecineName,
+               b.name AS providername,
+               c.specification AS unitName,
+               SUM(mc.quantity) AS totalQuantity
+        FROM kc_inventorydetail m
+                 LEFT JOIN base_storehouse s ON m.storehouseId = s.id
+                 LEFT JOIN base_medicine c ON m.medicineId = c.id
+                 LEFT JOIN base_provider b ON m.providerId = b.id
+                 LEFT JOIN (
+            SELECT c.medicineId, c.storehouseId, c.providerId, c.quantity
+            FROM kc_medicine c
+        ) mc ON m.medicineId = mc.medicineId AND m.storehouseId = mc.storehouseId AND m.providerId = mc.providerId
+        WHERE m.inventoryId = #{id} AND isOther=0 AND m.isdel=0
+        GROUP BY m.inventoryId, warehouseName, medecineName, providername, unitName
+
+
+    </select>
+    <select id="getKcInventoryDetailByIdwithother" resultType="com.kgc.entity.KcInventorydetail">
+        SELECT m.*,
+               s.name AS warehouseName,
+               c.name AS medecineName,
+               b.name AS providername,
+               c.specification AS unitName,
+               SUM(mc.quantity) AS totalQuantity
+        FROM kc_inventorydetail m
+                 LEFT JOIN base_storehouse s ON m.storehouseId = s.id
+                 LEFT JOIN base_medicine c ON m.medicineId = c.id
+                 LEFT JOIN base_provider b ON m.providerId = b.id
+                 LEFT JOIN (
+            SELECT c.medicineId, c.storehouseId, c.providerId, c.quantity
+            FROM kc_medicine c
+        ) mc ON m.medicineId = mc.medicineId AND m.storehouseId = mc.storehouseId AND m.providerId = mc.providerId
+        WHERE m.inventoryId = #{id} AND isOther=1 AND m.isdel=0
+        GROUP BY m.inventoryId, warehouseName, medecineName, providername, unitName
+
+
+    </select>
+
+    <select id="getKcInventoryUnitName" resultType="java.lang.String">
+        SELECT specification as unitName from  base_medicine m , kc_medicine k where m.id=k.medicineId  and k.storehouseId=#{warehouseId} and k.medicineId=#{medecineId} and k.isdel=0
+    </select>
+
+    <select id="getKcInventoryByMeandwaandpro" resultType="com.kgc.entity.KcInventorydetail">
+        SELECT * from kc_inventorydetail where storehouseId=#{warehouseId} and medicineId=#{medecineId} and providerId=#{providerId} and inventoryId=#{id} and isdel=0
+    </select>
+    <delete id="deleteKcInventory">
+        delete from kc_inventorydetail where isOther=1 and inventoryId=#{id}
+    </delete>
+</mapper>

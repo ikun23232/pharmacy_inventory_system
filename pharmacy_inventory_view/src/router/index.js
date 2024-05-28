@@ -53,11 +53,21 @@ const routes = [
     ]
   },
 
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('../views/operate/Login.vue')
-  },
+	{
+		path: '/login',
+		name: 'Login',
+		component: () => import('../views/operate/Login.vue')
+	},
+	{
+		path: '/printcheck',
+		name: 'Printcheck',
+		component: () => import('../views/stocktake/PrintCheckList.vue')
+	},
+	{
+		path: '/printcheckRK',
+		name: 'PrintcheckRK',
+		component: () => import('../views/stocktake/PrintCheckRK.vue')
+	},
   {
     //仓库管理
     path: '/indexHome',
@@ -363,97 +373,98 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes
+	mode: 'history',
+	base: process.env.BASE_URL,
+	routes
 })
 
 router.beforeEach((to, from, next) => {
 
-  let hasRoute = store.state.menus.hasRoutes
+let hasRoute = store.state.menus.hasRoutes
 
-  let token = localStorage.getItem("token")
+let token = localStorage.getItem("token")
 
-  if (to.path == '/login') {
-    next()
+if (to.path == '/login') {
+	next()
 
-  } else if (!token) {
-    next({ path: '/login' })
+} else if (!token) {
+	next({path: '/login'})
 
 
-  } else if (token && !hasRoute) {
-    axios.get("/user/menu/nav", {
-      headers: {
-        Authorization: localStorage.getItem("token")
-      }
-    }).then(res => {
+} else if(token && !hasRoute) {
+	axios.get("/user/menu/nav", {
+		headers: {
+			Authorization: localStorage.getItem("token")
+		}
+	}).then(res => {
+		console.log(res.data.nav)
 
-      console.log(res.data.nav)
 
-      // 拿到menuList
-      store.commit("setMenuList", res.data.nav)
+		// 拿到menuList
+		store.commit("setMenuList", res.data.nav)
 
-      // 拿到用户权限
-      store.commit("setPermList", res.data.authoritys)
+		// 拿到用户权限
+		store.commit("setPermList", res.data.authoritys)
 
-      console.log(store.state.menus.menuList)
+		console.log(store.state.menus.menuList)
 
-      // 动态绑定路由
-      let newRoutes = router.options.routes
+		// 动态绑定路由
+		let newRoutes = router.options.routes
 
-      res.data.nav.forEach(menu => {
-        if (menu.children && menu.children.length > 0) {
-          menu.children.forEach(e => {
+		res.data.nav.forEach(menu => {
+			if (menu.children && menu.children.length > 0) {
+				menu.children.forEach(e => {
 
-            if (e.children && e.children.length > 0) {
-              e.children.forEach(child => {
-                // 转成路由
-                let route = menuToRoute(child)
+					if (e.children && e.children.length > 0) {
+						e.children.forEach(child => {
+							// 转成路由
+							let route = menuToRoute(child)
 
-                // 吧路由添加到路由管理中
-                if (route) {
-                  newRoutes[0].children.push(route)
-                }
-              })
-            } else {
-              // 转成路由
-              let route = menuToRoute(e)
+							// 吧路由添加到路由管理中
+							if (route) {
+								newRoutes[0].children.push(route)
+							}
+						})
+					} else {
+						// 转成路由
+						let route = menuToRoute(e)
 
-              // 吧路由添加到路由管理中
-              if (route) {
-                newRoutes[0].children.push(route)
-              }
-            }
+						// 吧路由添加到路由管理中
+						if (route) {
+							newRoutes[0].children.push(route)
+						}
+					}
 
-          })
-        }
+				})
+			}
+		
+		})
+		router.addRoutes(newRoutes)
 
-      })
-      router.addRoutes(newRoutes)
-
-      hasRoute = true
-      store.commit("changeRouteStatus", hasRoute)
-    })
-  }
-  next()
+		hasRoute = true
+		store.commit("changeRouteStatus", hasRoute)
+	})
+}
+next()
 })
 
 
 // 导航转成路由
 const menuToRoute = (menu) => {
+	
+	if (!menu.component) {
+		return null
+	}
+	let route = {
+		name: menu.perms,
+		path: menu.path,
+		meta: {
+			title: menu.title
+		}
+	}
+	route.component = () => import('../views/' + menu.component +'.vue')
 
-  if (!menu.component) {
-    return null
-  }
-
-  let route = {
-    name: menu.perms,
-    path: menu.path,
-    meta: {
-      title: menu.title
-    }
-  }
-  route.component = () => import('../views/' + menu.component + '.vue')
-
-  return route
+	return route
 }
 
 export default router

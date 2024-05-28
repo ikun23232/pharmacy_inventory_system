@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -156,4 +157,5 @@ public class BaseMedicine implements Serializable {
     private Integer fowardWarHouseId;
     @TableField(exist=false)
     private String fowardWarHouseName;
+
 }

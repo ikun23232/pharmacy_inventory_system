@@ -13,6 +13,4 @@ public class Page {
     private Integer currentPageNo;
     private Integer pageSize;
 
-
-
 }
