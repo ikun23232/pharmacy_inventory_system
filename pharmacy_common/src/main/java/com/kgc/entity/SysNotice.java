@@ -3,6 +3,8 @@ package com.kgc.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,24 +36,25 @@ public class SysNotice implements Serializable {
      * 公告标题
      */
     @TableField("noticeTitle")
+    @ExcelFiled("公告标题")
     private String noticetitle;
 
     /**
      * 公告内容
      */
     @TableField("noticeContent")
+    @ExcelFiled("公告内容")
     private String noticecontent;
 
     /**
      * 发布人
      */
-    @TableField("userId")
-    private Integer userid;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
+    @ExcelFiled("创造时间")
     private Date createdate;
 
     /**
@@ -64,6 +67,7 @@ public class SysNotice implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
+    @ExcelFiled("修改时间")
     private Date updatedate;
 
     /**
@@ -75,6 +79,7 @@ public class SysNotice implements Serializable {
     /**
      * 删除标识
      */
+    @TableLogic
     @TableField("isDel")
     private Integer isdel;
 

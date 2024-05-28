@@ -23,7 +23,7 @@
 	  </router-link>
   
 	  <template v-for="menu in menuList">
-		<el-submenu :index="menu.name" :key="menu.id">
+		<el-submenu :index="menu.menuname" :key="menu.id">
 		  <template slot="title">
 			<i :class="iconsObj[menu.id]"></i>
 			<span class="level-1">{{ menu.title }}</span>
@@ -31,14 +31,14 @@
   
 		  <template v-for="item in menu.children">
 			<template v-if="item.children && item.children.length">
-			  <el-submenu :index="item.name" :key="item.id">
+			  <el-submenu :index="item.menuname" :key="item.id">
 				<template slot="title">
 				  <i class="el-icon-s-home"></i>
 				  <span class="level-2">{{ item.title }}</span>
 				</template>
 				<template v-for="child in item.children">
 				  <router-link :to="child.path" :key="child.id">
-					<el-menu-item :index="child.name" @click="selectMenu(child)">
+					<el-menu-item :index="child.menuname" @click="selectMenu(child)">
 					  <template slot="title">
 						<span class="level-3">{{ child.title }}</span>
 					  </template>
@@ -49,7 +49,7 @@
 			</template>
 			<template v-else>
 			  <router-link :to="item.path" :key="item.id">
-				<el-menu-item :index="item.name" @click="selectMenu(item)">
+				<el-menu-item :index="item.menuname" @click="selectMenu(item)">
 				  <template slot="title">
 					<span class="level-4">{{ item.title }}</span>
 				  </template>
@@ -67,6 +67,7 @@
   </template>
   
   <script>
+import { logout } from '@/api/test';
   export default {
 	name: "SideMenu",
 	data() {
@@ -96,6 +97,7 @@
 		  this.$emit('collapse-change', this.isCollapse);
 		},
 	  selectMenu(item) {
+
 		this.$store.commit("addTab", item);
 	  },
 	},

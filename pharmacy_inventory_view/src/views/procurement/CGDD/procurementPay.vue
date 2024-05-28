@@ -2,7 +2,7 @@
 import { getProcList, deleteById, setVoidState,cgddExcel } from "@/api/procurementOrder";
 import addProcOrder from "../../../components/addProcOrder.vue";
 import updateProOrder from "./../../../components/updateProOrder.vue";
-import auditingProOrder from "./../../../components/AuditingProOrder.vue";
+import auditingProOrder from "./../../../components/auditingProOrder.vue";
 import { Message } from "element-ui";
 import { getPayType } from "./../../../api/public.js";
 import { getAllBaseProvider } from "@/api/BaseProvider.js";

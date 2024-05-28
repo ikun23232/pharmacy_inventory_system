@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.SysLogManageMapper">
+
+    <sql id="querySql">
+        select <include refid="allField"/>
+        from sys_operation_log A
+        <include refid="search"/>
+    </sql>
+
+    <select id="queryList" resultType="com.kgc.vo.SysOperationLogVo">
+        select id,user_id as userId,user_name as username,title,operation_ip as ip,usage_time as usageTime,request_url as requestUrl ,request_method as requestMethod,request_params as requestParams ,response_result as responseResult,operation_time as operationTime from  sys_log_manage A
+        where isdel=0
+        <if test="username != null and username != ''">
+            and A.user_name like concat('%', #{username}, '%')
+        </if>
+        <if test="ip != null and ip != ''">
+            and A.operation_ip like concat('%', #{ip}, '%')
+        </if>
+        <if test="title != null and title != ''">
+            and A.title like concat('%', #{title}, '%')
+        </if>
+        <if test="startTime!=null and endTime!=null and startTime!='' and endTime!=''">
+            and A.operation_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        order by A.operation_time desc
+    </select>
+
+    <select id="queryById" resultType="com.kgc.vo.SysOperationLogVo">
+        <include refid="querySql"/>
+        and A.id = #{id}
+    </select>
+
+    <sql id="allField">
+        A.id,
+        A.user_id,
+        A.user_name,
+        A.operation_ip,
+        A.title,
+        A.usage_time,
+        A.request_url,
+        A.request_method,
+        A.request_params,
+        A.response_result,
+        A.operation_time
+    </sql>
+
+    <sql id="search">
+        where 1 = 1
+    </sql>
+
+</mapper>

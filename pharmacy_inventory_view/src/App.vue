@@ -1,30 +1,46 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div id="app" v-if="isRouterAlive">
+    <router-view />
   </div>
 </template>
 <script>
-	export default {
-		name: "App",
-		watch: {
-			$route(to, from) {
+export default {
+  name: "App",
+  provide() {
+    return {
+      reload: this.reload,
+    };
+  },
+  data() {
+    return {
+      isRouterAlive: true,
+    };
+  },
+  watch: {
+    $route(to, from) {
+      console.log("to");
+      console.log(to);
 
-				console.log("to")
-				console.log(to)
-
-				if (to.path != '/login') {
-					let obj = {
-						name: to.name,
-						title: to.meta.title
-					}
-					
-					this.$store.commit("addTab", obj)
-				}
-
-			}
-		}
-	}
-
+      if (to.path != "/login") {
+        let obj = {
+          name: to.name,
+          title: to.meta.title,
+        };
+        console.log("ggggggggggggggggggggg");
+        console.log(obj);
+        this.$store.commit("addTab", obj);
+      }
+    },
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function () {
+        this.isRouterAlive = true;
+      });
+    },
+  },
+};
 </script>
 <style lang="scss">
 #app {
@@ -47,11 +63,14 @@ nav {
     }
   }
 }
-html, body, #app {
-		font-family: 'Helvetica Neue', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Microsoft Yahei', sans-serif;
-		height: 100%;
-		padding: 0;
-		margin: 0;
-		font-size: 15px;
-	}
+html,
+body,
+#app {
+  font-family: "Helvetica Neue", "Hiragino Sans GB", "WenQuanYi Micro Hei",
+    "Microsoft Yahei", sans-serif;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+}
 </style>

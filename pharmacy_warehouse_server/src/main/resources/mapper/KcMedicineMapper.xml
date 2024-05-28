@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.KcMedicineMapper">
+    <!--    查询库存药品-->
+    <select id="getKcMedicine" resultType="com.kgc.entity.KcMedicine">
+        SELECT a.id,a.batchCode,a.storehouseId,a.medicineId,a.quantity,
+        a.money,a.providerId,b.`name` medicineName,c.`name` providerName
+        FROM kc_medicine a
+        LEFT JOIN base_medicine b ON a.medicineId=b.id
+        LEFT JOIN base_provider c ON a.providerId=c.id
+        WHERE a.storehouseId=#{storehouseId}
+        <if test="medicineName!=null and medicineName!=''">
+            and b.`name` like concat('%',#{medicineName},'%')
+        </if>
+    </select>
+
+    <select id="getKcMedicineByReportedCode" resultType="com.kgc.entity.KcMedicine">
+        SELECT a.id,a.batchCode,a.storehouseId,e.`name` storehouseName,a.medicineId,a.quantity,d.quantity reportedNum,
+               a.money,a.providerId,b.`name` medicineName,c.`name` providerName,d.id reporteddetailId
+        FROM kc_medicine a
+                 LEFT JOIN base_medicine b ON a.medicineId=b.id
+                 LEFT JOIN base_provider c ON a.providerId=c.id
+                 LEFT JOIN kc_reporteddetail d ON a.batchCode=d.batchCode
+                 LEFT JOIN base_storehouse e ON a.storehouseId=e.id
+        WHERE  d.reportedCode=#{reportedCode} AND d.isDel=0
+    </select>
+
+    <select id="getKcMedicineVOByReportedCode" resultType="com.kgc.vo.KcMedicineBSVO">
+        SELECT a.id,a.batchCode,a.storehouseId,e.`name` storehouseName,a.medicineId,a.quantity,d.quantity reportedNum,
+               a.money,a.providerId,b.`name` medicineName,c.`name` providerName,d.id reporteddetailId
+        FROM kc_medicine a
+                 LEFT JOIN base_medicine b ON a.medicineId=b.id
+                 LEFT JOIN base_provider c ON a.providerId=c.id
+                 LEFT JOIN kc_reporteddetail d ON a.batchCode=d.batchCode
+                 LEFT JOIN base_storehouse e ON a.storehouseId=e.id
+        WHERE  d.reportedCode=#{reportedCode} AND d.isDel=0
+    </select>
+
+    <update id="updateQuantityById" parameterType="com.kgc.entity.KcMedicine">
+        UPDATE kc_medicine
+        SET quantity=#{quantity}
+        WHERE id=#{id}
+    </update>
+
+    <select id="getMedicineByBatchCode" resultType="KcMedicine">
+        select id, batchCode, storehouseId, medicineId, providerId, quantity, money, isDel, totalPrice
+        from kc_medicine
+        where batchCode = #{batchCode} and storehouseId = #{storehouseId}
+    </select>
+
+    <select id="getWarningByLocalHouse" resultType="KcMedicine">
+        select id, batchCode, storehouseId, medicineId, providerId, quantity, money, isDel, totalPrice
+        from kc_medicine
+        where storehouseId = 1 and medicineId in (select base_medicine.id from base_medicine where warning > kc_medicine.quantity)
+    </select>
+
+    <select id="getWarningByTotalCount" resultType="baseMedicine">
+        select medicineId as id,sum(quantity) as stock from kc_medicine
+        group by medicineId HAVING (select totalWarning from base_medicine where medicineId = base_medicine.id) > sum(quantity)
+    </select>
+
+    <select id="getMedicineByStorehouseIdMedicineId" resultType="KcMedicine">
+        select id, batchCode, storehouseId, medicineId, providerId, quantity, money, isDel, totalPrice
+        from kc_medicine
+        where storehouseId = #{storehouseId} and medicineId = #{medicineId}
+    </select>
+</mapper>

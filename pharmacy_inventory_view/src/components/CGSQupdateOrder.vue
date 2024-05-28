@@ -633,7 +633,6 @@ export default {
           obj.purchasePrice = objElement.purchasePrice
         }
       }
-
     },
     cacltotalPrice(row) {
       alert(row)

@@ -60,7 +60,7 @@ public class CwAccounts implements Serializable {
      * 修改时间
      */
     @TableField("modificationTime")
-    private LocalDateTime modificationTime;
+    private Date modificationTime;
     /**
      * 创建人
      */
