@@ -9,5 +9,5 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @create 2024/5/28 15:36
  */
 @FeignClient(value = "baseApplication",contextId = "second")
-public interface PublicBaseMedicineService extends BaseMedineRemote {
+public interface PublicBaseMedicineFegin extends BaseMedineRemote {
 }
