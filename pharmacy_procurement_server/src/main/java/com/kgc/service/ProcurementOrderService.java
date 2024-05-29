@@ -43,5 +43,5 @@ public interface ProcurementOrderService extends IService<CgddOrder> {
 
     Message addcgyf(CwCgyf cwCgyf);
 
-    int updateCgddIsPayById(CgddOrder cgddOrder);
+    Message updateCgddIsPayById(CgddOrder cgddOrder);
 }

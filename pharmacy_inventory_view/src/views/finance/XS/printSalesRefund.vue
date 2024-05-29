@@ -1,11 +1,65 @@
+<template>
+  <div class="print-sales-refund">
+    <div class="print-view" style="padding: 20px;">
+      <h2 class="title">销售退款</h2>
+      <table class="info-table">
+        <tr>
+          <td class="label">退款单号:</td>
+          <td>{{ cwXstk.code }}</td>
+          <td class="label">原单号:</td>
+          <td>{{ cwXstk.originalOrder }}</td>
+        </tr>
+
+        <tr>
+          <td class="label">银行账号:</td>
+          <td>{{ cwXstk.bandCount }}</td>
+          <td class="label">单号生成时间:</td>
+          <td>{{ formatDate(cwXstk.createTime) }}</td>
+        </tr>
+
+      </table>
+
+      <div class="section-title">订单明细:</div>
+      <table class="order-details-table">
+        <thead>
+        <tr>
+          <th>商品名称</th>
+          <th>数量</th>
+          <th>单价</th>
+          <th>小计</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in cwXstk.items" :key="item.id">
+          <td>{{ item.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ formatCurrency(item.salePrice) }}</td>
+          <td>{{ formatCurrency(item.quantity * item.salePrice) }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="total-section">
+        <div class="total-label">退款金额:</div>
+        <div class="total-value">{{ formatCurrency(cwXstk.cost) }}</div>
+      </div>
+
+      <div class="drawer-bottom-bar">
+        <el-button @click="print" type="primary" size="small">打印</el-button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 import { getCwXstkByCode } from '@/api/finance'
+import {getSaleOrderByOrderNo} from "@/api/saleOrder";
+
 export default {
   name: "printSalesRefund",
   data() {
     return {
       cwXstk: {},
-      commonStyle: { width: '100%' }
     }
   },
   mounted() {
@@ -18,57 +72,107 @@ export default {
           return
         }
         this.cwXstk = resp.data
-        console.log("11111")
-        console.log(this.cwXstk)
+        getSaleOrderByOrderNo(this.cwXstk.originalOrder).then(resp => {
+          if (resp.code != 200) {
+            return;
+          }
+          // 使用 Vue.set 来设置 items 数组
+          this.$set(this.cwXstk, 'items', resp.data.baseMedicineList);
+          console.log(this.cwXstk.items);
+        });
       })
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString()
+    },
+    formatCurrency(amount) {
+      return amount.toFixed(2)
+    },
+    print() {
+      window.print()
     }
   }
 }
 </script>
 
-<template>
-  <div>
-    <div  style="padding: 10px;">
-      <div id="printView" style="padding-left: 90px; padding-right: 20px;">
-        <h2 style="text-align: center;margin: 30px 0 10px 0;font-family: SimSun;">销售退款</h2>
-        <table class="table" border="0pm" cellspacing="0" align="left" width="100%" style="font-size: 12px;font-family: SimSun;margin-bottom: 10px; table-layout:fixed;word-wrap:break-word;word-break:break-all">
-          <tr>
-            <td style="padding:5px;" align="left">退款单号:{{ cwXstk.code }}</td>
-            <td style="padding:5px;" align="left">原单号:{{ cwXstk.originalOrder }}</td>
-          </tr>
-          <tr style="margin:0;padding:0;">
-
-            <td style="padding:5px;" align="left">银行账号:{{ cwXstk.bandCount}}</td>
-            <td style="padding:5px;" align="left">单号生成时间:{{ cwXstk.createTime}}</td>
-
-          </tr>
-        </table>
-
-        <div style="font-size: 12px;font-family: SimSun;font-weight: bolder;margin: 0 0 10px 5px;float: left;">订单明细:</div>
-        <table class="yk-table" border="1pm" cellspacing="0" align="center" width="100%" style="font-size: 12px;font-family: SimSun; table-layout:fixed;word-wrap:break-word;word-break:break-all">
-          <tr>
-            <th>退款金额</th>
-            <th colspan="4">{{cwXstk.cost }}</th>
-
-
-          </tr>
-          <tr  align="center">
-            <td>备注</td>
-            <td colspan="4"></td>
-
-
-          </tr>
-
-        </table>
-      </div>
-
-      <div class="drawer-bottom-bar">
-        <el-button v-print="'#printView'" type="primary" size="small">打印</el-button>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style scoped>
+.print-sales-refund {
+  padding: 10px;
+}
 
+.print-view {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'SimSun', sans-serif;
+}
+
+.info-table {
+  width: 100%;
+  font-size: 14px;
+  font-family: 'SimSun', sans-serif;
+  margin-bottom: 20px;
+}
+
+.info-table td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+.info-table .label {
+  font-weight: bold;
+}
+
+.section-title {
+  font-size: 14px;
+  font-family: 'SimSun', sans-serif;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.order-details-table {
+  width: 100%;
+  font-size: 12px;
+  font-family: 'SimSun', sans-serif;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.order-details-table th,
+.order-details-table td {
+  padding: 5px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.order-details-table th {
+  background-color: #f5f5f5;
+}
+
+.total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-family: 'SimSun', sans-serif;
+  margin-bottom: 20px;
+}
+
+.total-label {
+  font-weight: bold;
+}
+
+.total-value {
+  font-weight: bold;
+}
+
+.drawer-bottom-bar {
+  text-align: right;
+}
 </style>

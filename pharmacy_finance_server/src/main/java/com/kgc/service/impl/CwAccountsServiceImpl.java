@@ -70,9 +70,12 @@ public class CwAccountsServiceImpl extends ServiceImpl<CwAccountsDao, CwAccounts
 
     @Override
     public Message addCwAccounts(CwAccounts cwAccounts) {
+        System.out.println(cwAccounts);
+        log.debug("cwAccountssss:"+cwAccounts);
         int isAdd = cwAccountsDao.insert(cwAccounts);
         if (isAdd > 0){
-            return Message.success();
+            return Message.success(isAdd);
+
         }
         return Message.error();
     }

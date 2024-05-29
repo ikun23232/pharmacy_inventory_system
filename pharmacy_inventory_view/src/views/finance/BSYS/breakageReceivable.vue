@@ -1,7 +1,10 @@
 <script>
 import {getCwbsysList,getStorehouseList,cwbsysExcel} from '@/api/finance';
+import {getKcReportedByCode} from '@/api/KcReported';
+import DetailsReported from "@/components/DetailsReported.vue";
 export default {
   name: "breakageReceivable",
+  components: {DetailsReported},
   data() {
     return {
       cwBsysPage: {
@@ -16,7 +19,10 @@ export default {
         storehouseId:0
       },
       time:{},
-      storehouseList:[]
+      storehouseList:[],
+      // 详情库存报损对话框
+      detailsReportedVisible:false,
+      theData:{}
     }
   },
   mounted() {
@@ -68,7 +74,25 @@ export default {
         }
       })
       window.open(newPage.href, '_blank')
-    }
+    },
+    detailsReporteds(code) {
+      console.log("this.cwBsys")
+      console.log(code)
+      this.theData = {}
+      getKcReportedByCode(code).then(resp => {
+        if (resp.code != 200) {// 失败
+          return
+        }
+        console.log("this.cwBsysssss")
+        console.log(resp.data)
+        // row = resp.data
+        this.theData = resp.data
+        console.log("222")
+      })
+      // console.log(row)
+      this.updateReported = Object.assign({}, this.theData); // 深度复制 row 对象，以避免引用相同的对象
+      this.detailsReportedVisible = true;
+    },
   }
 }
 </script>
@@ -135,10 +159,10 @@ export default {
         <el-table-column prop="reportedTypeName" label="报损原因"/>
         <el-table-column prop="approverByName" label="审批人"/>
         <el-table-column prop="createByName" label="报损人"/>
-        <el-table-column align="center" label="操作" fixed="right" >
+        <el-table-column align="center" label="操作" width="200" >
           <template #default="{ row }">
-<!--            <el-button type="primary" plain>详情</el-button>&nbsp;-->
-            <el-button type="primary" plain @click.native="print(row.code)">打印</el-button>
+            <el-button type="primary" plain @click.native="print(row.code)">打印</el-button><el-button type="primary" @click="detailsReporteds(row.originalOrder)" plain>详情</el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -152,6 +176,13 @@ export default {
           :total="cwBsysPage.total"
       >
       </el-pagination>
+    </div>
+
+    <div>
+      <el-dialog title="详情报损" :visible.sync="detailsReportedVisible" width="1500px">
+        <DetailsReported :row-data="theData"
+                         @cancel="detailsReportedVisible=false"/>
+      </el-dialog>
     </div>
 
   </div>

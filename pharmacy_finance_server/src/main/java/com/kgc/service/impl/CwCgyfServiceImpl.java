@@ -6,11 +6,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.entity.*;
 import com.kgc.dao.CwCgyfDao;
+import com.kgc.feign.ProcurementOrderFeign;
 import com.kgc.service.CwAccountsService;
 import com.kgc.service.CwCgyfService;
-import com.kgc.service.ProcurementOrderService;
+//import com.kgc.service.ProcurementOrderService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwCgyfVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,8 +35,12 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
 
     @Resource
     private CwAccountsService cwAccountsService;
+//    @Resource
+//    private ProcurementOrderService procurementOrderService;
+
+
     @Resource
-    private ProcurementOrderService procurementOrderService;
+    private ProcurementOrderFeign procurementOrderFeign;
 
     @Override
     public Message getCwCgyfList(CwCgyf cwCgyf,int pageNum,int pageSize) {
@@ -60,7 +66,7 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         cgddOrder.setId(cwCgyf.getCgddId());
         cgddOrder.setIsPay(1);
         cgddOrder.setPayTime(new Date());
-        int isPay1 = procurementOrderService.updateCgddIsPayById(cgddOrder);
+        int isPay1 = (int) procurementOrderFeign.updateCgddIsPayById(cgddOrder).getData();
         if (isPay1 <= 0){
             return Message.error();
         }

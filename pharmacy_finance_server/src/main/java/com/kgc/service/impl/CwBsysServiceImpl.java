@@ -67,9 +67,12 @@ public class CwBsysServiceImpl extends ServiceImpl<CwBsysDao, CwBsys> implements
     }
 
     @Override
-    public int addCwbsys(CwBsys cwBsys) {
+    public Message addCwbsys(CwBsys cwBsys) {
         int isAdd = cwBsysDao.insert(cwBsys);
-        return isAdd;
+        if (isAdd>0){
+            return Message.success(isAdd);
+        }
+        return Message.error();
     }
 
     @Override
