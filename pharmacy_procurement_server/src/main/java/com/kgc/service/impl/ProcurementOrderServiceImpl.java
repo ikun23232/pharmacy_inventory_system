@@ -6,8 +6,8 @@ import com.github.pagehelper.PageInfo;
 import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
-import com.kgc.feign.PublicBaseMedicineService;
-import com.kgc.feign.PublicOMedicineService;
+import com.kgc.feign.PublicBaseMedicineFegin;
+import com.kgc.feign.PublicOMedicineFegin;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgddVO;
 import com.kgc.vo.MedicineVO;
@@ -35,9 +35,9 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     @Autowired
     private ProcurementOrderMapper mapper;
     @Autowired
-    private PublicOMedicineService orderService;
+    private PublicOMedicineFegin orderService;
     @Autowired
-    private PublicBaseMedicineService baseMedicineService;
+    private PublicBaseMedicineFegin baseMedicineService;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {

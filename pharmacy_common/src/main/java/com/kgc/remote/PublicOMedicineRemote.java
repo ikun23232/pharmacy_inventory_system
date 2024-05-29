@@ -15,14 +15,14 @@ import java.util.Map;
  * @create 2024/5/28 14:52
  */
 public interface PublicOMedicineRemote {
-    @RequestMapping("/addMedicineOrder")
+    @RequestMapping("addMedicineOrder")
     @ResponseBody
     public Message addMedicineOrder(@RequestBody OrderMedicine orderMedicine);
 
-    @RequestMapping("/deleteMediciOrder")
+    @RequestMapping("deleteMediciOrder")
     @ResponseBody
     Message deleteMediciOrder(@RequestBody Map map);
-    @RequestMapping("/selectMaxYourField")
+    @RequestMapping("selectMaxYourField")
     @ResponseBody
     Message selectMaxYourField();
 }

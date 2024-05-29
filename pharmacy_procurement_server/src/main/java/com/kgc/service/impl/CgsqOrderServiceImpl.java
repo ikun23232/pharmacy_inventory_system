@@ -7,7 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CgsqOrderMapper;
 import com.kgc.entity.*;
 import com.kgc.service.CgsqOrderService;
-import com.kgc.feign.PublicOMedicineService;
+import com.kgc.feign.PublicOMedicineFegin;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     @Autowired
     private CgsqOrderMapper cgsqOrderMapper;
     @Autowired
-    private PublicOMedicineService orderMapper;
+    private PublicOMedicineFegin orderMapper;
 
     @Override
     public Message getCgsqOrderList(CgVO vo) {
