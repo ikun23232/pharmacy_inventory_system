@@ -7,6 +7,7 @@ import com.kgc.entity.OrderMedicine;
 import com.kgc.service.PublicOMedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import java.util.Map;
  * @create 2024/5/10 11:51
  */
 @Service
+@Transactional
 public class publicOMedicineServiceImpl extends ServiceImpl<PublicOMedicineMapper,OrderMedicine> implements PublicOMedicineService {
     @Autowired
     private PublicOMedicineMapper mapper;
@@ -35,5 +37,11 @@ public class publicOMedicineServiceImpl extends ServiceImpl<PublicOMedicineMappe
             return Message.success(i);
         }
         return Message.error("删除失败");
+    }
+
+    @Override
+    public Message selectMaxYourField() {
+        Integer i = mapper.selectMaxYourField();
+        return Message.success(i);
     }
 }

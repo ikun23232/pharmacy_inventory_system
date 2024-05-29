@@ -1,4 +1,4 @@
-package com.kgc.controller;
+package com.kgc.providerContorller;
 
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderMedicine;
@@ -20,13 +20,22 @@ public class PublicOMedicineController implements PublicOMedicineRemote {
 
     @Autowired
     private PublicOMedicineService publicOMedicineService;
+
+    @Override
     public Message addMedicineOrder(OrderMedicine orderMedicine){
         Message message = publicOMedicineService.addMedicineOrder(orderMedicine);
         return message;
     }
 
+    @Override
     public Message deleteMediciOrder(Map map){
         Message message = publicOMedicineService.deleteMediciOrder(map);
+        return message;
+    }
+
+    @Override
+    public Message selectMaxYourField() {
+        Message message = publicOMedicineService.selectMaxYourField();
         return message;
     }
 }

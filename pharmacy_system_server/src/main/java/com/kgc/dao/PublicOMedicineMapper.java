@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface PublicOMedicineMapper extends BaseMapper<OrderMedicine> {
-    @Select("SELECT MAX(batchCode) FROM order_medicine")
+    @Select("SELECT MAX(batchCode) FROM  order_medicine")
     Integer selectMaxYourField();
 
 }

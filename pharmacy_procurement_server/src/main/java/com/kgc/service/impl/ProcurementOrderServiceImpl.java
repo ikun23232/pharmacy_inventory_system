@@ -1,14 +1,13 @@
 package com.kgc.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
-import com.kgc.service.PublicBaseMedicineService;
-import com.kgc.service.PublicOMedicineService;
+import com.kgc.feign.PublicBaseMedicineService;
+import com.kgc.feign.PublicOMedicineService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgddVO;
 import com.kgc.vo.MedicineVO;
@@ -165,7 +164,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             cgddOrder.setOrderStatus(2);
         }else {
             cgddOrder.setOrderStatus(1);
-        }        int count = mapper.updateById(cgddOrder);
+        }
+        int count = mapper.updateById(cgddOrder);
         if (count > 0){
             return Message.success();
         }
@@ -278,6 +278,4 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     public int updateCgddIsPayById(CgddOrder cgddOrder) {
         return mapper.updateById(cgddOrder);
     }
-
-
 }

@@ -15,4 +15,6 @@ public interface PublicOMedicineService extends IService<OrderMedicine>  {
     public Message addMedicineOrder(OrderMedicine orderMedicine);
 
     Message deleteMediciOrder(Map map);
+
+    Message selectMaxYourField();
 }

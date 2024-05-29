@@ -182,8 +182,7 @@
               show-summary
               border
               style="width: 1200px"
-              @selection-change="handleCgsqChange"
-            >
+              @selection-change="handleCgsqChange">
               <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column prop="code" label="订单编码" width="150" fixed>
               </el-table-column>
@@ -366,8 +365,6 @@
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="handleChange"
-                  :min="1"
-                  :max="10"
                 ></el-input-number>
               </template>
             </el-table-column>
@@ -375,21 +372,18 @@
               label="单价"
               align="center"
               prop="price"
-              width="150"
-            >
+              width="150">
               <template slot-scope="scope">
                 <el-select
                   clearable
                   @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].price"
-                  disabled
-                >
+                  disabled>
                   <el-option
                     v-for="dict in zdtsOptions"
                     :key="dict.dictValue"
                     :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  />
+                    :value="dict.dictValue"/>
                 </el-select>
               </template>
             </el-table-column>

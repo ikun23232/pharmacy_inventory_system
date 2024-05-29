@@ -1,4 +1,4 @@
-package com.kgc.service;
+package com.kgc.feign;
 
 import com.kgc.remote.PublicOMedicineRemote;
 import org.springframework.cloud.openfeign.FeignClient;

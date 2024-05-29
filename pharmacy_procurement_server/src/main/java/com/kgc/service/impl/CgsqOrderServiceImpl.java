@@ -1,6 +1,5 @@
 package com.kgc.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -8,11 +7,9 @@ import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CgsqOrderMapper;
 import com.kgc.entity.*;
 import com.kgc.service.CgsqOrderService;
-import com.kgc.service.PublicOMedicineService;
-import com.kgc.utils.BigDecimalUtils;
+import com.kgc.feign.PublicOMedicineService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgVO;
-import com.kgc.vo.CgddVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

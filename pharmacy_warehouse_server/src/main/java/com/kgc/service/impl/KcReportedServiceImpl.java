@@ -32,11 +32,11 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
     @Autowired
     private KcMedicineService kcMedicineService;
 
-    @Autowired
-    private CwBsysService cwBsysService;
-
-    @Autowired
-    private CwAccountsService cwAccountsService;
+//    @Autowired
+//    private CwBsysService cwBsysService;
+//
+//    @Autowired
+//    private CwAccountsService cwAccountsService;
 
     private KcOutintodetialService kcOutintodetialService;
     /**
@@ -295,7 +295,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 cwBsys.setOriginalOrder(kcReported.getCode());
                 cwBsys.setCost(allCost);
                 cwBsys.setCreateTime(LocalDateTime.now());
-                cwBsysService.addCwbsys(cwBsys);
+//                cwBsysService.addCwbsys(cwBsys);
 
                 CwAccounts cwAccounts = new CwAccounts();
                 String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
@@ -306,7 +306,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 cwAccounts.setCreateTime(new Date());
                 cwAccounts.setOrderCode(kcReported.getCode());
                 cwAccounts.setCreateBy(kcReported.getModificationBy());
-                cwAccountsService.addCwAccounts(cwAccounts);
+//                cwAccountsService.addCwAccounts(cwAccounts);
             }
 
 

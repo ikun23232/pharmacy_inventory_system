@@ -388,8 +388,6 @@
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="handleChange"
-                  :min="1"
-                  :max="10"
                 ></el-input-number>
               </template>
             </el-table-column>
@@ -734,7 +732,7 @@ export default {
     }
     this.medicineListTemp = medicineList.data;
     this.cgddMedicineionList = this.medicineListTemp;
-    this.getMedicineListDetail();
+   await this.getMedicineListDetail();
     await this.initCgSqOrderList();
     this.initProvider();
     let data = await getPayType();

@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
+@MapperScan(basePackages = "com.kgc.dao")
 public class SystemApplication {
 
     public static void main(String[] args) {
