@@ -62,3 +62,64 @@ export function delKcReportedAndDetailByCode(code) {
         }
     });
 }
+
+export function getKcReportedfromware(kcReportedfromware,pageNum,pageSize) {
+    return request.post(baseUrl + "/getKcReportedfromware",kcReportedfromware,{
+        params:{
+            pageNum:pageNum,
+            pageSize:pageSize
+        }
+    });
+}
+
+export function getKcReportedListById(id) {
+    return request.get(baseUrl + "/getKcReportedListById",{
+        params:{
+            id:id
+        }
+    });
+
+}
+
+
+export function kcReportedExcel(kcReportedVO) {
+    return request.post(baseUrl + "/kcReportedExcel", {
+        kcReportedVO: kcReportedVO,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '库存报损.xlsx';
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+export function kcReportedfromwareExcel(){
+    return request.get(baseUrl + "/kcReportedfromwareExcel",{
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = '报损出库.xlsx';
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
+}
+
+export function getKcReportedByCode(code) {
+    return request.get(baseUrl + "/getKcReportedByCode",{
+        params:{
+            code:code
+        }
+    });
+}

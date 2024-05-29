@@ -1,72 +1,104 @@
 package com.kgc.entity;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
- * <p>
- * 
- * </p>
  *
+ * 采购应付表(CwCgyf)实体类
+ * 完整版(1.0)
  * @author lemon
- * @since 2024-04-30
+ * @since 2024-05-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CwCgyf implements Serializable {
-
     private static final long serialVersionUID = 1L;
-
     /**
-     * id
+     * 采购应付id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-
     /**
-     * 单据编号
+     * 采购应付编号
      */
+    @TableField("code")
     private String code;
-
     /**
-     * 单据日期
+     * 采购订单编号
      */
-    @TableField("createTime")
-    private LocalDateTime createtime;
-
+    @TableField("cgddCode")
+    private String cgddCode;
     /**
-     * 原单号
+     * 供应商id
      */
-    @TableField("originalOrder")
-    private String originalorder;
-
+    @TableField("provider_id")
+    private Integer providerId;
     /**
-     * 应付金额
+     * 采购应付状态(付款状态(0未知,1待付款,已付款))
      */
+    @TableField("isPay")
+    private Integer isPay;
+    /**
+     * 采购应付金额
+     */
+    @TableField("cost")
     private BigDecimal cost;
+    /**
+     * 采购应付生成时间
+     */
+    @TableField("create_time")
+    private LocalDateTime createTime;
+    /**
+     * 付款时间
+     */
+    @TableField("payment_time")
+    private LocalDateTime paymentTime;
+    /**
+     * 供应商名称
+     */
+    @TableField(exist = false)
+    private String providerName;
+    /**
+     * 开始时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String beginTime;
+    /**
+     * 结束时间(模糊查询createTime)
+     */
+    @TableField(exist = false)
+    private String endTime;
 
     /**
-     * 供应商
+     * 采购订单id
      */
-    private String provider;
-
+    @TableField(exist = false)
+    private Integer cgddId;
     /**
-     * 采购员
+     * 采购订单创建人
      */
-    @TableField("createBy")
-    private String createby;
-
+    @TableField(exist = false)
+    private String demanderName;
     /**
-     * 逻辑删除
+     * 采购订单创建时间
      */
-    private String isdel;
-
-
+    @TableField(exist = false)
+    private Date demandTime;
+    /**
+     * 采购订单主题
+     */
+    @TableField(exist = false)
+    private String subject;
+    /**
+     * 付款人id
+     */
+    @TableField(exist = false)
+    private Integer payUserId;
 }

@@ -1,11 +1,12 @@
 <script>
-import {getKcReportedList,getStorehouseList,getReportedType,delKcReportedAndDetailByCode} from '@/api/KcReported';
+import {getKcReportedList,getStorehouseList,getReportedType,delKcReportedAndDetailByCode,kcReportedExcel} from '@/api/KcReported';
 import AddReported from "@/components/AddReported.vue";
 import { Message } from "element-ui";
 import UpdateReported from "@/components/UpdateReported.vue";
+import DetailsReported from "@/components/DetailsReported.vue";
 export default {
   name: "KcReported",
-  components: {UpdateReported, AddReported},
+  components: {DetailsReported, UpdateReported, AddReported},
   data() {
     return {
       // 登录用户
@@ -81,6 +82,9 @@ export default {
       updateReported:{
 
       },
+      // 详情库存报损对话框
+      detailsReportedVisible:false,
+
     }
   },
   mounted() {
@@ -97,15 +101,10 @@ export default {
       if (val){
         this.kcReportedPage.pageNum=val
       }
-      // console.log(this.kcReportedPage.pageNum)
-
       if (Array.isArray(this.time) && this.time.length > 0) {
-        // time 是一个非空数组
         this.kcReportedSelect.beginTime = this.time[0];
         this.kcReportedSelect.endTime = this.time[1];
       } else {
-        // time 是空数组、null 或 undefined
-        // 这里可以添加适当的处理逻辑，例如重置 beginTime 和 endTime
         this.kcReportedSelect.beginTime = null;
         this.kcReportedSelect.endTime = null;
       }
@@ -146,9 +145,12 @@ export default {
       })
     },
     updateReporteds(row) {
-      // console.log(row);
       this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
       this.updateReportedVisible = true;
+    },
+    detailsReporteds(row) {
+      this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
+      this.detailsReportedVisible = true;
     },
     deleteReported(row) {
       if (row.approvalStatus==2){
@@ -171,6 +173,17 @@ export default {
         this.getKcReportedLists()
       })
     },
+    async printExcel(){
+      await kcReportedExcel();
+    },
+    print(code){
+      const newPage= this.$router.resolve({
+        path: "/PrintKcReported",
+        query:{ //要传的参数 可传多个
+        code:code
+      }})
+      window.open(newPage.href,'_blank')
+    }
   }
 
 }
@@ -217,7 +230,7 @@ export default {
         <el-option
             v-for="item in reportedTypeList"
             :key="item.id"
-            :label="item.reportedname"
+            :label="item.reportedName"
             :value="item.id"
         />
       </el-select><br/><br/>
@@ -234,6 +247,7 @@ export default {
       />&nbsp;&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getKcReportedLists()">查询</el-button>
       <el-button type="primary" @click="addReportedVisible=true">添加</el-button>
+      <el-button type="primary" @click="printExcel">导出</el-button>
     </div><br/>
     <!--表格内容-->
     <div class="table">
@@ -254,25 +268,27 @@ export default {
         <el-table-column prop="documenterName" label="制单人" width="120"/>
         <el-table-column prop="approverName" label="审批人" width="120"/>
         <el-table-column prop="modificationName" label="修改人" width="120"/>
-        <!--      <el-table-column prop="approvalStatus" label="审批结果" width="120"/>-->
-        <!--      <el-table-column prop="storehouseId" label="仓库id" width="120"/>-->
-        <!--      <el-table-column prop="reportedTypeId" label="报损类型id" width="120"/>-->
-        <!--      <el-table-column prop="approverBy" label="审批人id" width="120"/>-->
-        <!--      <el-table-column prop="modificationBy" label="修改人id" width="120"/>-->
-        <!--      <el-table-column prop="createBy" label="创建人id" width="120"/>-->
-        <!--      <el-table-column prop="documenterBy" label="制单人id" width="120"/>-->
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="updateReporteds(row)">修改</el-button>&nbsp;
-            <el-popconfirm
-                title="确定要删除吗？"
-                confirmButtonText="确定"
-                cancelButtonText="取消"
-                @confirm="deleteReported(row)">
-              <template #reference>
-                <el-button type="danger" plain >删除</el-button>
-              </template>
-            </el-popconfirm>
+            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus!=2">修改</el-button>&nbsp;
+            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus==2">详情</el-button>&nbsp;
+            <el-dropdown>
+          <span class="el-dropdown-link">
+            更多<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="print(row.code)">打印</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+<!--            <el-popconfirm-->
+<!--                title="确定要删除吗？"-->
+<!--                confirmButtonText="确定"-->
+<!--                cancelButtonText="取消"-->
+<!--                @confirm="deleteReported(row)">-->
+<!--              <template #reference>-->
+<!--                <el-button type="danger" plain >删除</el-button>-->
+<!--              </template>-->
+<!--            </el-popconfirm>-->
           </template>
         </el-table-column>
       </el-table>
@@ -298,6 +314,12 @@ export default {
       <el-dialog title="修改报损" :visible.sync="updateReportedVisible" width="1500px">
         <UpdateReported :row-data="updateReported" @handleAddSuccess="updateReportedVisible=false;;getKcReportedLists(1)"
                         @cancel="updateReportedVisible=false" />
+      </el-dialog>
+    </div>
+    <div>
+      <el-dialog title="详情报损" :visible.sync="detailsReportedVisible" width="1500px">
+        <DetailsReported :row-data="updateReported"
+                         @cancel="detailsReportedVisible=false"/>
       </el-dialog>
     </div>
   </div>

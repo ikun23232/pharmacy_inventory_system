@@ -23,23 +23,25 @@
 		computed: {
 			editableTabs: {
 				get() {
-					
+					console.log("11111111111");
+					console.log(this.$store.state.menus.editableTabs);
 					return this.$store.state.menus.editableTabs
 				},
 				set(val) {
-					console.log(22323);
+					console.log("22222222222");
 					console.log(val);
 					this.$store.state.menus.editableTabs = val
 				}
 			},
 			editableTabsValue: {
 				get() {
-					
+					console.log("33333333333");
+					console.log(this.$store.state.menus.editableTabsValue);
 					return this.$store.state.menus.editableTabsValue
 				},
 				set(val) {
-					console.log(5322123);
-					console.log(this.$store.state.menus.editableTabsValue);
+					console.log("4444444444");
+					console.log(val);
 					this.$store.state.menus.editableTabsValue = val
 				}
 			}
@@ -47,6 +49,10 @@
 		methods: {
 
 			removeTab(targetName) {
+				console.log("55555555");
+				console.log(targetName);
+				console.log(this.editableTabs);
+				console.log(this.editableTabsValue);
 				let tabs = this.editableTabs;
 				let activeName = this.editableTabsValue;
 				console.log(2322123);

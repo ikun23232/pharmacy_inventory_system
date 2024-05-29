@@ -45,7 +45,7 @@ public class SysMenu implements Serializable {
     /**
      * 菜单名称
      */
-    private String name;
+    private String menuname;
 
     /**
      * 启用id默认1启用，2禁用
@@ -88,6 +88,7 @@ public class SysMenu implements Serializable {
     @TableField("parentId")
     private Integer parentid;
 
+
     /**
      * 权限字段
      */
@@ -95,6 +96,8 @@ public class SysMenu implements Serializable {
     private String component;
     @TableField(exist = false)
     private String title;
+    @TableField(exist = false)
+    private String name;
 
     @TableField(exist = false)
     private List<SysMenu> children;

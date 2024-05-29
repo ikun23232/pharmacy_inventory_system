@@ -6,11 +6,11 @@
     <el-container>
       <el-header>
         <i style="float: left">医药商品进销存管理系统</i>
-        
-        <el-button style="position: absolute;top: 9px;right: 235px">
-            <span >{{ dateFormat(newDate) }}</span>
-          </el-button>
-        <div class="header-avatar" style="position: relative;">
+
+        <el-button style="position: absolute; top: 9px; right: 235px">
+          <span>{{ dateFormat(newDate) }}</span>
+        </el-button>
+        <div class="header-avatar" style="position: relative">
           <el-avatar
             size="medium"
             :src="require('@/assets/favicon.png')"
@@ -26,7 +26,9 @@
               <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-link href="https://kdocs.cn/l/cgFcNROVB65l" target="_blank">日报</el-link>
+          <el-link href="https://kdocs.cn/l/cgFcNROVB65l" target="_blank"
+            >日报</el-link
+          >
         </div>
       </el-header>
       <el-main>
@@ -53,6 +55,7 @@ export default {
   },
   data() {
     return {
+      newDate: new Date(),
       isCollapseValue: false,
       sideMenuWidth: "230px",
       userInfo: {
@@ -64,7 +67,18 @@ export default {
   created() {
     this.getUserInfo();
   },
-
+  mounted() {
+    let that = this;
+    this.timer = setInterval(function () {
+      that.newDate = new Date().toLocaleString();
+    });
+  },
+  // 销毁时清除计时器
+  beforeDestroy: function () {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  },
   methods: {
     dateFormat() {
       var date = new Date();

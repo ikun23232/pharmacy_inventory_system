@@ -10,13 +10,15 @@
     "ant-design-vue": "1.7",
     "axios": "^1.6.8",
     "core-js": "^3.8.3",
+    "dayjs": "^1.11.11",
     "echarts": "^5.5.0",
     "element-ui": "^2.15.14",
-    "print-js": "^1.6.0",
     "qs": "^6.12.1",
     "vue": "^2.6.14",
+    "vue-mini-weather": "^0.3.8",
     "vue-print-nb": "^1.7.5",
     "vue-router": "^3.5.1",
+    "vue-seamless-scroll": "^1.1.23",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -25,7 +27,7 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "sass": "^1.32.7",
-    "sass-loader": "^12.6.0",
+    "sass-loader": "^12.0.0",
     "vue-template-compiler": "^2.6.14"
   }
 }

@@ -7,6 +7,13 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_common/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_nacos/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_base_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_finance_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_procurement_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_sale_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_system_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_warehouse_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_gateway/pom.xml" />
       </list>
     </option>
   </component>

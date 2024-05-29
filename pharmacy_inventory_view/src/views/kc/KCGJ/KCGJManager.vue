@@ -7,7 +7,7 @@
           <el-input v-model="vo.code" placeholder="请输入单据编号"></el-input>
         </el-form-item>
         <el-form-item label="药品">
-          <el-select v-model="vo.beforeWarehouseId" placeholder="请选择药品">
+          <el-select v-model="vo.medicineId" placeholder="请选择药品">
             <el-option label="请选择" value="0"></el-option>
             <el-option
               v-for="item in medicineList"
@@ -18,21 +18,10 @@
           </el-select>
         </el-form-item>
                 <el-form-item label="告警类型">
-          <el-select v-model="vo.warningType" placeholder="请选择药品">
+          <el-select v-model="vo.warningType" placeholder="请选择告警类型">
             <el-option label="全部" value="0"></el-option>
-             <el-option label="全部" value="0"></el-option>
-            <el-option label="全部" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-                <el-form-item label="药品">
-          <el-select v-model="vo.beforeWarehouseId" placeholder="请选择药品">
-            <el-option label="请选择" value="0"></el-option>
-            <el-option
-              v-for="item in medicineList"
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-            ></el-option>
+             <el-option label="本地仓库告警" value="1"></el-option>
+            <el-option label="库存总数告警" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
@@ -50,92 +39,54 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="initList();">查询</el-button>
-          <el-button type="success" @click="printExcel">导出</el-button>
+          <el-button type="success" @click="excel">导出</el-button>
         </el-form-item>
       </el-form>
     </p>
 
-    <el-table :data="list.list" border style="width: 100%">
+    <el-table   header-cell-style="text-align:center" cell-style="text-align:center" :data="list.list" border style="width: 100%;text-align: center;">
       <el-table-column type="selection" width="55" fixed></el-table-column>
-      <el-table-column prop="id" label="序号" width="75" fixed>
+      <el-table-column prop="id" label="序号" fixed>
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="code" label="告警编号" width="120" fixed>
+      <el-table-column prop="code" label="告警编号" fixed>
         <template slot-scope="scope">
           <a href="#" @click="viewOrder(scope.row.id)">{{ scope.row.code }}</a>
         </template>
       </el-table-column>
-      <el-table-column prop="warningType" label="告警类型" width="120">
+      <el-table-column prop="warningType" label="告警类型">
         <template slot-scope="scope">
-          {{scope.row.warningType == 0 ? "本地仓库预警":"库存总数预警"}}
+          {{scope.row.warningType == 1 ? "本地仓库预警":"库存总数预警"}}
         </template>
       </el-table-column>
-      <el-table-column prop="warningCount" label="当前库存值" width="120">
+      <el-table-column prop="warningCount" label="当前库存值">
       </el-table-column>
-      <el-table-column prop="medicineName" label="告警药品" width="120">
+      <el-table-column prop="medicineName" label="告警药品">
       </el-table-column>
-
-      <el-table-column prop="isKnow" label="是否处理" width="120">
+      <el-table-column prop="isKnow" label="是否处理">
         <template slot-scope="scope">
           {{scope.row.isKnow == 0 ? "未处理" :"已处理"}}
         </template>
       </el-table-column>
-      <el-table-column prop="createDate" label="创造时间" width="200">
+      <el-table-column prop="createDate" label="创造时间">
       </el-table-column>
-      <el-table-column prop="handleDate" label="处理时间" width="200">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column  label="操作">
         <template slot-scope="scope">
-          <el-button
-            @click="updateOrder(scope.row.id)"
-            type="primary"
-            size="small"
-            :disabled="scope.row.orderstatus >= 2">编辑
-          </el-button>
-          <el-dropdown>
-            <span class="el-dropdown-link">
-              更多<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                ><el-button
+       <el-button
                   @click="handleDelete(scope.row)"
                   type="danger"
                   size="small"
                   >删除
-                </el-button></el-dropdown-item
-              >
-
-              <el-dropdown-item
-                ><el-button
+                </el-button>
+         <!-- <el-button
+                :disabled = "scope.row.isKnow == 1"
                   @click="voidOrder(scope.row)"
                   type="info"
                   size="small"
-                  >作废
-                </el-button></el-dropdown-item
-              >
-
-              <el-dropdown-item
-                ><el-button
-                  @click="approveOrder(scope.row.id)"
-                  v-if="scope.row.orderStatus == 2"
-                  type="success"
-                  size="small"
-                  >审核
-                </el-button></el-dropdown-item
-              >
-              <el-dropdown-item
-                ><el-button
-                  @click="printSaleOrder(scope.row.id)"
-                  type="primary"
-                  size="small"
-                  >打印
-                </el-button></el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </el-dropdown>
+                  >处理
+                </el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -155,7 +106,7 @@
 <script>
 import { Message } from "element-ui";
 import { getAllBaseMedicine } from "@/api/baseMedicine";
-import {initKcAlarmList,deleteAlarmList,updateRemind,} from "@/api/KcWarning";
+import {initKcAlarmList,deleteAlarmList,updateRemind,excelKcAlarm,checkWarning} from "@/api/KcWarning";
 
 export default {
   name: "DDRKManager",
@@ -212,7 +163,8 @@ export default {
       medicineList: [],
     };
   },
-  mounted() {
+  async mounted() {
+    await checkWarning();
     this.initList(1);
     this.initMedicineList();
   },
@@ -229,8 +181,8 @@ export default {
       console.log(data);
       this.list = data.data;
     },
-    async printExcel() {
-      await ddckExcel();
+    async excel() {
+      await excelKcAlarm();
     },
     async initMedicineList() {
       let resp = await getAllBaseMedicine();
@@ -251,36 +203,27 @@ export default {
           type: "success",
           message: "删除成功",
         });
-        this.initKcAlarmList(1);
+        this.initList(1);
       }
     },
     async voidOrder(row) {
-      if (!confirm("你确定要作废吗？")) {
+      if (!confirm("你确定要处理吗？")) {
         return;
       }
-      let resp = await voidCgrkOrderById(row.id);
+      let resp = await updateRemind(row.id);
       console.log(resp);
       if (resp.code == "200") {
         Message({
           type: "success",
-          message: "作废成功",
+          message: "处理成功",
         });
         this.initList(1);
       }
-    },
-    printSaleOrder(orderNo) {
-      const newPage = this.$router.resolve({
-        path: "/printDDRKOrder",
-        query: {
-          //要传的参数 可传多个
-          orderNo: orderNo,
-        },
-      });
-      window.open(newPage.href, "_blank");
     },
   },
 };
 </script>
 
 <style>
+
 </style>

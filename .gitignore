@@ -59,3 +59,9 @@ build/
 
 # virtual machine crash logs
 hs_err_pid*
+!/pharmacy_common/target/
+!/pharmacy_server/pharmacy_base_server/target/
+!/pharmacy_server/pharmacy_procurement_server/target/
+!/pharmacy_server/pharmacy_sale_server/target/
+!/pharmacy_server/pharmacy_system_server/target/
+!/pharmacy_server/pharmacy_warehouse_server/target/

@@ -41,18 +41,7 @@
       </el-row>
       <el-row :gutter="20">
 
-        <el-col :span="6"
-        ><div class="grid-content bg-purple">
-            <el-form-item label="交货日期" prop="deliveryDate">
-              <el-date-picker
-                  v-model="CgddOrder.deliveryDate"
-                  type="date"
-                  placeholder="选择日期"
-                  format="yyyy 年 MM 月 dd 日"
-              >
-              </el-date-picker>
-            </el-form-item></div
-        ></el-col>
+
 
         <el-col :span="6"
         ><div class="grid-content bg-purple">
@@ -285,20 +274,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="明细" name="second">
-          <el-button
-              type="primary"
-              icon="el-icon-plus"
-              size="mini"
-              @click="handleAddDetails"
-          >添加</el-button
-          >
-          <el-button
-              type="success"
-              icon="el-icon-delete"
-              size="mini"
-              @click="handleDeleteDetails"
-          >删除</el-button
-          >
+
           <el-button
               type="danger"
               icon="el-icon-delete"
@@ -328,12 +304,14 @@
                 align="center"
                 prop="medicineId"
                 width="150"
+
             >
               <template slot-scope="scope">
                 <el-select
                     clearable
                     @change="changeMedicine(scope.row)"
                     v-model="bcglXiangXiList[scope.row.xh - 1].medicineId"
+                    disabled
                 >
                   <el-option
                       v-for="dict in scope.row.medicineList"
@@ -634,6 +612,7 @@ export default {
       changeMedicineList: [],
       providerList: [],
       cgddMedicineionList: [],
+      FirstFalg:false,
       cgddRules: {
         type: [
           {required: true, message: "请输入采购类型", trigger: "change"},
@@ -674,8 +653,10 @@ export default {
       this.cgddMedicineionList=this.medicineListTemp
       // alert(this.medicineListTemp.length)
      await this.getMedicineListDetail()
+      console.log("看看我",this.CgddOrder.medicineList)
       for (let i = 0; i < this.CgddOrder.medicineList.length; i++) {
         this.bcglXiangXiList[i].fowardWarHouseId=this.CgddOrder.medicineList[i].fowardWarHouseId
+
       }
 
 
@@ -794,15 +775,22 @@ export default {
       // this.initCgSqOrderList();
     },
     async deleteCgsq() {
+      console.log("我在这",this.cgsqListTemp)
+      if (this.cgsqListTemp.length==0){
+        Message({
+          message: "请选择指定采购订单",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
       if (this.cgsqListTemp.length >= 0) {
         var data = [];
         for (let index = 0; index < this.cgsqListTemp.length; index++) {
           for (let i = 0; i < this.medicineListTemp.length; i++) {
             var temp = [];
             temp.push(this.medicineListTemp[i]);
-            alert(
-                this.cgsqListTemp[index].code == this.medicineListTemp[i].code
-            );
+
             console.log("medicineListTemp:", this.medicineListTemp);
             console.log("temp:", temp);
             if (
@@ -831,6 +819,8 @@ export default {
       );
       console.log("newData", newData);
       this.cgsqList = newData;
+      this.medicineListTemp=[]
+      this.bcglXiangXiList=[]
     },
     deleteMedicine() {
       const newData = this.medicineListTemp.filter(
@@ -976,6 +966,15 @@ export default {
         });
         return;
       }
+      if (this.cgddMedicineionList.length != this.medicineListTemp.length) {
+        Message({
+          message: "请勾选全部！",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
+      this.bcglXiangXiList=[]
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
           if (this.bcglXiangXiList == undefined) {
@@ -993,7 +992,8 @@ export default {
             totalPrice: this.cgddMedicineionList[index].totalPrice,
             quantity: this.cgddMedicineionList[index].quantity,
             sourceCode: this.cgddMedicineionList[index].code,
-            fowardWarHouseId:''
+            fowardWarHouseId:'',
+            purchasePrice:this.cgddMedicineionList[index].purchasePrice
           };
           let falg = true;
           for (let i = 0; i < this.bcglXiangXiList.length; i++) {
@@ -1012,12 +1012,17 @@ export default {
 
         }
       }
-      // alert(this.code)
-      // let resp =await getMedicineListByCodeComblie(this.code);
-      // console.log(resp)
-      // this.bcglXiangXiList=resp.data
-      // this.CgddOrder.medicineList=resp.data;
+      if (this.FirstFalg){
+        Message({
+          message: "添加成功！",
+          type: "success",
+          center: "true",
+        });
+      }
+     this.FirstFalg=true;
+
     }
+
 
   },
   computed: {

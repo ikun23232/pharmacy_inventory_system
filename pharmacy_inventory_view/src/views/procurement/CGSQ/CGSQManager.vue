@@ -43,7 +43,7 @@
     <el-form-item>
       <el-button type="primary" @click="initCgSqOrderList();">查询</el-button>
       <el-button type="primary" @click="addOrder">添加</el-button>
-      <el-button type="success">导出</el-button>
+      <el-button type="success" @click="printExcel">导出</el-button>
 
     </el-form-item>
     </el-form>
@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column prop="demanderUserName" label="需求人" width="120">
       </el-table-column>
-      <el-table-column prop="count" label="数量" width="120">
+      <el-table-column prop="count" label="采购数量" width="120">
 
       </el-table-column>
       <el-table-column prop="effectivetime" label="生效时间" width="120">
@@ -81,7 +81,7 @@
       <el-table-column prop="approvalstatus
 " label="核批结果" width="120">
         <template slot-scope="scope">
-          {{scope.row.approvalstatus === null ? "未审核" : (scope.row.approvalstatus === 0 ? "未通过" : "通过")}}
+          {{scope.row.approvalstatus === 0 ? "未审核" : (scope.row.approvalstatus === 1 ? "未通过" : "通过")}}
 
         </template>
       </el-table-column>
@@ -106,7 +106,7 @@
               @click="updateOrder(scope.row.id)"
               type="primary"
               size="small"
-              :disabled="scope.row.orderstatus>=2"
+              :disabled="scope.row.orderstatus>2 || scope.row.voidstate==1"
           >编辑
           </el-button>
           <el-dropdown>
@@ -117,12 +117,12 @@
               <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" type="info" size="small">作废
+              <el-dropdown-item ><el-button @click="voidOrder(scope.row)" :disabled="scope.row.voidstate==1" type="info" size="small">作废
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" v-if="scope.row.orderstatus==2" type="success" size="small">审核
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderstatus==2&& scope.row.approvalstatus==1" type="success" size="small">审核
               </el-button></el-dropdown-item>
-              <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="primary" size="small">打印
+              <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
 
             </el-dropdown-menu>
@@ -196,13 +196,14 @@
 
 <script>
 // import { delUnit, initUnit } from "@/api/BaseUnit";
-import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById} from '@/api/CgsdOrder'
+import {initCgSqOrderList, delCgsqOrderById, voidCgsqOrderById, cgsqExcel} from '@/api/CgsdOrder'
 import {Message} from "element-ui";
 import CGSQaddOrder from "../../../components/CGSQaddOrder.vue";
 import CGSQupdateOrder from "@/components/CGSQupdateOrder";
 import CGSQapproveOrder from "@/components/CGSQapproveOrder";
 import CGSQviewOrder from "@/components/CGSQviewOrder";
 import {getPayType} from "@/api/public";
+import {cgddExcel} from "@/api/procurementOrder";
 
 // import AddUnit from "./AddUnit.vue";
 
@@ -293,6 +294,14 @@ export default {
       this.list = data.data;
 
     },
+    printSaleOrder(orderNo){
+      const newPage= this.$router.resolve({
+        path: "/printCGSQOrder",
+        query:{ //要传的参数 可传多个
+          orderNo:orderNo
+        }})
+      window.open(newPage.href,'_blank')
+    },
     async initCgType(){
       let resp = await getPayType();
       this.cgTypeList=resp.data
@@ -349,6 +358,9 @@ export default {
       this.$router.push({
         name: path,
       });
+    },
+    async printExcel() {
+      await cgsqExcel();
     },
     async voidOrder(row) {
       if (!confirm("你确定要作废吗？")) {

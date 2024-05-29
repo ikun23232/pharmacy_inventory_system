@@ -28,10 +28,6 @@ export default {
         total:0,
         list:[]
       },
-      // 修改按键是否能点击
-      isDisabled:false,
-
-
 
     }
   },
@@ -45,13 +41,11 @@ export default {
   // 使用 mounted 生命周期钩子来在组件挂载后打印 rowData
   mounted() {
     this.reportedData = this.rowData;
-    // console.log('Received row data:', this.reportedData);
     getStorehouseList().then(resp=>{
       if (resp.code!=200){
         return
       }
       this.storehouseList=resp.data
-      // console.log(this.storehouseList)
     })
     getReportedType().then(resp=>{
       if (resp.code!=200){
@@ -60,12 +54,7 @@ export default {
       this.reportedTypeList=resp.data
     })
     this.getKcMedicineByReportedCodes()
-    console.log(this.reportedData)
 
-    if (this.reportedData.approvalStatus == 2){
-      console.log(this.reportedData.approvalStatus)
-      this.isDisabled=true
-    }
   },
   watch: {
     // 观察 rowData 属性的变化
@@ -75,11 +64,6 @@ export default {
         this.reportedData = Object.assign({}, newValue);
         this.wereAddList= []
         this.getKcMedicineByReportedCodes()
-        if (this.reportedData.approvalStatus==2){
-          this.isDisabled=true
-        }else {
-          this.isDisabled=false
-        }
 
       },
       deep: true // 使用深度观察来检测嵌套数据的变化
@@ -105,7 +89,6 @@ export default {
         medicineName:this.medicineName,
       }
       getKcMedicine(kcMedicine,this.medicineList.pageNum,this.medicineList.pageSize).then(resp=>{
-        // console.log(resp.data)
         if (resp.code==200){
 
           this.medicineList=resp.data
@@ -116,10 +99,16 @@ export default {
     },
     // 添加报损详情到待添加列表
     addReportedDetails(row){
+      if (row.quantity<=0){
+        Message({
+          message: '该药品库存不足',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
       row.reportedNum=1
-      row.onePrice=row.money/row.quantity
-      row.allPrice=row.onePrice
-      // console.log(row)
+      row.allPrice=row.money * row.reportedNum
       if (this.wereAddList.length==0){
         this.wereAddList.push(row)
       }else if (this.wereAddList.length>4){
@@ -154,7 +143,7 @@ export default {
       // 确保报损数量不大于库存数量
       row.reportedNum = Math.min(row.reportedNum, row.quantity);
       // 计算总价，这里假设row.onePrice是药品的单价
-      row.allPrice = row.reportedNum * row.onePrice;
+      row.allPrice=row.money*row.reportedNum;
     },
     // 删除报损详情
     removeReportedDetails(row){
@@ -172,13 +161,11 @@ export default {
         }
         this.wereAddList=resp.data
         this.getNumByReported()
-        // console.log(resp)
       })
     },
     getNumByReported(){
       for (let i=0;i<this.wereAddList.length;i++){
-        this.wereAddList[i].onePrice=this.wereAddList[i].money/this.wereAddList[i].quantity
-        this.wereAddList[i].allPrice=this.wereAddList[i].quantity*this.wereAddList[i].onePrice
+        this.wereAddList[i].allPrice=this.wereAddList[i].quantity*this.wereAddList[i].money
       }
     },
     updateReporteds(){
@@ -189,6 +176,17 @@ export default {
           duration: 5 * 1000
         })
         return
+      }
+      for (let i = 0; i < this.wereAddList.length; i++) {
+        const item = this.wereAddList[i];
+        if (item.quantity === 0) {
+          Message({
+            message: item.medicineName + '库存不足请移除该报损',
+            type: 'error',
+            duration: 5 * 1000
+          });
+          return; // 退出方法
+        }
       }
       this.reportedData.modificationBy=this.loginUser;
       const theData = {
@@ -316,6 +314,8 @@ export default {
       </el-table-column>
       <el-table-column prop="medicineName" label="药品名称" width="150">
       </el-table-column>
+      <el-table-column prop="batchCode" label="批次编号" width="150">
+      </el-table-column>
       <el-table-column prop="quantity" label="报损数量" width="110">
         <template slot-scope="scope">
           <el-input-number
@@ -329,15 +329,11 @@ export default {
           />
         </template>
       </el-table-column>
-      <el-table-column prop="allPrice" label="药品总价" width="90">
+      <el-table-column prop="allPrice" label="药品总价" width="120">
       </el-table-column>
-      <el-table-column prop="onePrice" label="药品单价" width="90">
+      <el-table-column prop="money" label="药品单价" width="90">
       </el-table-column>
       <el-table-column prop="quantity" label="药品库存" width="90">
-      </el-table-column>
-      <el-table-column prop="money" label="库存价值" width="120">
-      </el-table-column>
-      <el-table-column prop="money" label="库存价值" width="120">
       </el-table-column>
       <el-table-column align="center" label="操作" fixed="right" width="150" >
         <template #default="{ row }">
@@ -350,7 +346,7 @@ export default {
     <el-form>
       <br/><br/>
       <el-form-item>
-        <el-button type="primary" :disabled="isDisabled" @click="updateReporteds()">保存</el-button>
+        <el-button type="primary" @click="updateReporteds()">保存</el-button>
         <el-button @click="cancel()">取消</el-button>
       </el-form-item>
     </el-form>

@@ -19,6 +19,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="pharmacy_nacos" target="1.8" />
+      <module name="pharmacy_server" target="1.8" />
       <module name="pharmacy_system" target="1.8" />
     </bytecodeTargetLevel>
   </component>

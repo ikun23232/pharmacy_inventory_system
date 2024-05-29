@@ -49,7 +49,8 @@
                   v-for="item in storeHouseList"
                   :key="item.id"
                   :label="item.name"
-                  :value="item.id">
+                  :value="item.id"
+                >
                 </el-option>
               </el-select>
             </el-form-item></div
@@ -192,7 +193,6 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
-                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].specification"
                   disabled
                 >
@@ -212,7 +212,6 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
-                  @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].unitName"
                   disabled
                 >
@@ -229,16 +228,17 @@
               label="调度数量"
               align="center"
               prop="quantity"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 <el-input-number
+                  type="number"
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
-                  @change="
-                    handleChange(
-                      bcglXiangXiList[scope.row.xh - 1].quantity,
-                      bcglXiangXiList[scope.row.xh - 1].maxStock
-                    )"
+                  min="1"
+                  :max="bcglXiangXiList[scope.row.xh - 1].maxStock"
+                  :step="1"
+                  :precision="0"
                 ></el-input-number>
               </template>
             </el-table-column>
@@ -264,7 +264,7 @@
               <template slot-scope="scope">
                 <el-select
                   clearable
-                  @change="changezdts(scope.row)"
+                  @change="changeStoreHouse(scope.row, scope.$index)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].aimStoreHouseId"
                 >
                   <el-option
@@ -367,8 +367,8 @@
 <script>
 import wareDetails from "./wareDetails.vue";
 import { Message } from "element-ui";
-import { updateDispatchBy,getKcDispatchById } from "./../api/KcDispatch";
-import {getKcDetailsList} from "@/api/kcDisparchDetails"
+import { updateDispatchBy, getKcDispatchById } from "./../api/KcDispatch";
+import { getKcDetailsList } from "@/api/kcDisparchDetails";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
   name: "updateDispatch",
@@ -389,15 +389,15 @@ export default {
     return {
       bcglXiangXiList: [],
       KcDispatch: {
-        id:this.id,
+        id: this.id,
         remark: "",
         orderStatus: "1",
         code: this.code,
         beforeWarehouseId: "",
-        createDate:"",
+        createDate: "",
         subject: "",
         isCommit: "",
-        dispatchTime:"",
+        dispatchTime: "",
         medicineList: [],
       },
       storeHouseList: [],
@@ -428,9 +428,9 @@ export default {
     console.log("data:", data);
     this.storeHouseList = data.data;
     let dispatch = await getKcDispatchById(this.id);
-    this.KcDispatch = dispatch.data
+    this.KcDispatch = dispatch.data;
     let kcDetailsList = await getKcDetailsList(this.KcDispatch.code);
-    this.medicineListTemp = kcDetailsList.data
+    this.medicineListTemp = kcDetailsList.data;
     await this.showMedicineListDetail();
   },
   methods: {
@@ -519,7 +519,7 @@ export default {
       }
     },
     async getMedicineListDetail() {
-      if (this.medicineListTemp.length == 0) {
+      if (this.changeMedicineList.length == 0) {
         Message({
           message: "请选择药品！",
           type: "error",
@@ -527,26 +527,44 @@ export default {
         });
         return;
       }
-      if (this.medicineListTemp.length > 0) {
-        for (let index = 0; index < this.medicineListTemp.length; index++) {
+      if (this.changeMedicineList.length > 0) {
+        for (let index = 0; index < this.changeMedicineList.length; index++) {
+          if (this.KcDispatch.medicineList.length > 0) {
+            for (let i = 0; i < this.KcDispatch.medicineList.length; i++) {
+              const element = this.KcDispatch.medicineList[i];
+              if (
+                this.changeMedicineList[index].batchCode == element.batchCode &&
+                this.changeMedicineList[index].medicineId == element.medicineId
+              ) {
+                Message({
+                  message:
+                    this.changeMedicineList[index].name +
+                    "药品已经存在！请勿重复添加！",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
+            }
+          }
           if (this.bcglXiangXiList == undefined) {
             this.bcglXiangXiList = new Array();
           }
-          if(this.medicineListTemp[index].aimStoreHouseId == 0){
-            this.medicineListTemp[index].aimStoreHouseId = ""
+          if (this.changeMedicineList[index].aimStoreHouseId == 0) {
+            this.changeMedicineList[index].aimStoreHouseId = "";
           }
           let obj = {
             aimStoreHouseList: this.storeHouseList,
-            batchCode: this.medicineListTemp[index].batchCode,
-            name: this.medicineListTemp[index].name,
-            medicineId: this.medicineListTemp[index].id,
-            unitId: this.medicineListTemp[index].unitId,
-            unitName: this.medicineListTemp[index].unitName,
-            specification: this.medicineListTemp[index].specification,
-            purchasePrice: this.medicineListTemp[index].purchasePrice,
-            aimStoreHouseId: this.medicineListTemp[index].aimStoreHouseId,
-            quantity: this.medicineListTemp[index].stock,
-            maxStock: this.medicineListTemp[index].stock,
+            batchCode: this.changeMedicineList[index].batchCode,
+            name: this.changeMedicineList[index].name,
+            medicineId: this.changeMedicineList[index].id,
+            unitId: this.changeMedicineList[index].unitId,
+            unitName: this.changeMedicineList[index].unitName,
+            specification: this.changeMedicineList[index].specification,
+            purchasePrice: this.changeMedicineList[index].purchasePrice,
+            aimStoreHouseId: this.changeMedicineList[index].aimStoreHouseId,
+            quantity: this.changeMedicineList[index].stock,
+            maxStock: this.changeMedicineList[index].stock,
             isRight: true,
           };
           obj.dkdd = "1";
@@ -617,29 +635,28 @@ export default {
     cancelKcmx() {
       this.kcmxdialog = false;
     },
-    handleChange(val, maxVal) {
-      if (val > maxVal) {
+    updateDispatchDetails() {
+      this.medicineListTemp = [];
+      this.bcglXiangXiList = [];
+    },
+    changeStoreHouse(row, index) {
+      if (this.KcDispatch.beforeWarehouseId == row.aimStoreHouseId) {
         this.$message({
-          message: "最大值不超过" + maxVal,
+          message: "目标仓库不能和原仓库相等",
           type: "error",
         });
+        this.KcDispatch.medicineList[index].aimStoreHouseId = "";
       }
     },
-    updateDispatchDetails(){
-        this.medicineListTemp= []
-        this.bcglXiangXiList = []
-    }
   },
   computed: {
     totalPrice() {
-      // 使用 reduce 方法计算总价
-      if (this.bcglXiangXiList == undefined) {
+      if (this.bcglXiangXiList === undefined) {
         return 0;
       }
-      return this.bcglXiangXiList.reduce(
-        (total, item) => total + item.totalPrice * item.stock,
-        0
-      );
+      return this.bcglXiangXiList.reduce((total, element) => {
+        return total + element.quantity * element.purchasePrice;
+      }, 0);
     },
     calculatedTotalPrice() {
       return (row) => {

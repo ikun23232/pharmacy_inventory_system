@@ -1,12 +1,6 @@
 package com.kgc.vo;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
-import com.alibaba.excel.annotation.format.DateTimeFormat;
-import com.alibaba.excel.annotation.format.NumberFormat;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.kgc.annotation.ExcelFiled;
-import com.kgc.entity.BaseMedicine;
 import lombok.Data;
 
 import java.io.Serializable;

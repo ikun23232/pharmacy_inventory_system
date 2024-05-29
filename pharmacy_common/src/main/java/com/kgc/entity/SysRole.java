@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -37,6 +38,7 @@ public class SysRole implements Serializable {
      * 角色名字
      */
     @TableField("roleName")
+    @ExcelFiled("角色名称")
     private String rolename;
 
     /**
@@ -48,6 +50,7 @@ public class SysRole implements Serializable {
      * 创造时间
      */
     @TableField("createTime")
+    @ExcelFiled("创建时间")
     private Date createtime;
 
     /**
@@ -60,6 +63,7 @@ public class SysRole implements Serializable {
      * 修改时间
      */
     @TableField("updateTime")
+    @ExcelFiled("修改时间")
     private Date updatetime;
 
     /**
@@ -74,6 +78,7 @@ public class SysRole implements Serializable {
     @TableField("isDel")
     private Integer isdel;
 
+    @ExcelFiled("角色权限码")
     private String code;
 
     @TableField(exist = false)

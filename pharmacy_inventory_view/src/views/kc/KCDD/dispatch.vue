@@ -2,7 +2,7 @@
   <div>
     <h1>库存调度</h1>
     <div>
-      <el-row :gutter="24" style="margin-bottom: 10px;">
+      <el-row :gutter="24" style="margin-bottom: 10px">
         <el-col :span="7"
           ><div class="grid-content bg-purple">
             单据编号：
@@ -26,7 +26,8 @@
               :picker-options="pickerOptions"
               @change="test"
             >
-            </el-date-picker></div></el-col>
+            </el-date-picker></div
+        ></el-col>
         <el-col :span="7"
           ><div class="grid-content bg-purple">
             源仓库：
@@ -47,7 +48,7 @@
             </el-select></div
         ></el-col>
       </el-row>
-      <el-row :gutter="24"  style="margin-bottom: 10px;">
+      <el-row :gutter="24" style="margin-bottom: 10px">
         <el-col :span="8"
           ><div class="grid-content bg-purple">
             主题：
@@ -65,46 +66,53 @@
               placeholder="请选择审批状态"
               filterable
             >
-            <el-option label="全部" :value="0"></el-option>
-            <el-option label="未通过" :value="1"></el-option>
-            <el-option label="通过" :value="2"></el-option>
+              <el-option label="全部" :value="0"></el-option>
+              <el-option label="未通过" :value="1"></el-option>
+              <el-option label="通过" :value="2"></el-option>
             </el-select></div
         ></el-col>
-      </el-row>
-      <el-row :gutter="24"  style="margin-bottom: 10px;">
-           <el-col :span="8"
+        <el-col :span="8"
           ><div class="grid-content bg-purple">
-           单据状态：
+            单据状态：
             <el-select
               v-model="DispatchVO.orderStatus"
               filterable
               placeholder=""
             >
-            <el-option label="未编制" :value="1"></el-option>
-            <el-option label="编制完" :value="2"></el-option>
-            <el-option label="执行中" :value="3"></el-option>
-            <el-option label="执行完" :value="4"></el-option>
+              <el-option label="全部" :value="0"></el-option>
+              <el-option label="未编制" :value="1"></el-option>
+              <el-option label="编制完" :value="2"></el-option>
+              <el-option label="执行中" :value="3"></el-option>
+              <el-option label="执行完" :value="4"></el-option>
             </el-select></div
         ></el-col>
-            <el-col :span="8"
+      </el-row>
+      <el-row :gutter="24" style="margin-bottom: 10px">
+        <el-col :span="8"
           ><div class="grid-content bg-purple">
-           作废状态：
+            作废状态：
             <el-select
               v-model="DispatchVO.voidState"
               filterable
               placeholder="请选择作废状态"
             >
-            <el-option label="全部" :value="-1"></el-option>
-            <el-option label="未作废" :value="0"></el-option>
-            <el-option label="已作废" :value="1"></el-option>
+              <el-option label="全部" :value="-1"></el-option>
+              <el-option label="未作废" :value="0"></el-option>
+              <el-option label="已作废" :value="1"></el-option>
             </el-select></div
         ></el-col>
+        <el-col :span="8"
+          ><div class="grid-content bg-purple">
+            <el-button type="primary" @click="getOrderList(1, 5)"
+              >查询</el-button
+            >
+            <el-button type="primary" @click="adddialogVisible = true"
+              >添加</el-button
+            >
+            <el-button type="primary" @click="excel">导出</el-button>
+          </div></el-col
+        >
       </el-row>
-      <el-button type="primary" @click="getOrderList(1, 5)">查询</el-button>
-      <el-button type="primary" @click="adddialogVisible = true"
-        >添加</el-button
-      >
-      <el-button type="primary" @click="printExcel">导出</el-button>
     </div>
     <el-table :data="list.list" border style="width: 100%">
       <el-table-column prop="id" label="调度单序号" width="120">
@@ -113,6 +121,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="code" label="调度单编号" width="150" fixed>
+        <template slot-scope="scope">
+          <a href="#" @click="viewOrder(scope.row)">{{
+            scope.row.code
+          }}</a>
+        </template>
       </el-table-column>
       <el-table-column prop="subject" label="调度主题" width="120">
       </el-table-column>
@@ -120,11 +133,7 @@
       </el-table-column>
       <el-table-column prop="beforeWareName" label="原仓库" width="120">
       </el-table-column>
-      <el-table-column
-        prop="remark"
-        label="备注"
-        width="120"
-      ></el-table-column>
+      <el-table-column prop="remark" label="备注" width="120"></el-table-column>
       <el-table-column
         prop="approverName"
         label="核批人"
@@ -137,7 +146,11 @@
           <div v-if="scope.row.approvalStatus == 2">通过</div>
         </template>
       </el-table-column>
-      <el-table-column prop="approverRemark" label="核批备注" width="120"></el-table-column>
+      <el-table-column
+        prop="approverRemark"
+        label="核批备注"
+        width="120"
+      ></el-table-column>
       <el-table-column prop="createDate" label="制单时间" width="120">
       </el-table-column>
       <el-table-column prop="orderStatusResult" label="单据状态" width="120">
@@ -175,8 +188,9 @@
               <el-dropdown-item @click.native="printDispatch(scope.row)"
                 >打印</el-dropdown-item
               >
-              <el-dropdown-item @click.native="handleAuditing(scope.row)"
-              :disabled="scope.row.orderStatus != 2"
+              <el-dropdown-item
+                @click.native="handleAuditing(scope.row)"
+                :disabled="scope.row.orderStatus != 2"
                 >审核</el-dropdown-item
               >
             </el-dropdown-menu>
@@ -194,7 +208,7 @@
       >
       </el-pagination>
     </div>
-     <el-dialog
+    <el-dialog
       title="调度单添加"
       :visible.sync="adddialogVisible"
       width="1300px"
@@ -214,7 +228,8 @@
         :code="this.code"
         :id="this.id"
         @handleUpdateSuccess="handleUpdateSuccess"
-        @cancelUpdate="cancelUpdate"></updateDispatch>
+        @cancelUpdate="cancelUpdate"
+      ></updateDispatch>
     </el-dialog>
     <el-dialog
       title="调度单审核"
@@ -230,22 +245,42 @@
       >
       </AuditingDispatch>
     </el-dialog>
-  </div> 
+    <el-dialog
+      title="查看调度单"
+      :visible.sync="viewdialogVisible"
+      width="85%"
+      v-if="viewdialogVisible"
+    >
+      <DispatchViewOrder
+        :code="this.code"
+        :id="this.id"
+        @closeviewOrder="closeviewOrder"
+      ></DispatchViewOrder>
+    </el-dialog>
+  </div>
 </template>
 <script>
 import { setExcel } from "@/api/public.js";
-import { deleteById, setVoidState } from "@/api/procurementOrder";
-import { getKcDispathList,deleteDispatch,updateVoidStatus } from "@/api/KcDispatch";
+import {
+  getKcDispathList,
+  deleteDispatch,
+  updateVoidStatus,
+  excelDispatch
+} from "@/api/KcDispatch";
 import { Message } from "element-ui";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
-import AddDispatch from '../../../components/AddDispatch.vue'
-import updateDispatch from './../../../components/updateDispatch.vue'
-import AuditingDispatch from './../../../components/AuditingDispatch.vue'
+import AddDispatch from "../../../components/AddDispatch.vue";
+import updateDispatch from "./../../../components/updateDispatch.vue";
+import AuditingDispatch from "./../../../components/AuditingDispatch.vue";
+import DispatchViewOrder from "./../../../components/DispatchViewOrder .vue";
 export default {
   name: "dispatch",
-    components: {
-      AddDispatch,updateDispatch,AuditingDispatch
-    },
+  components: {
+    AddDispatch,
+    updateDispatch,
+    AuditingDispatch,
+    DispatchViewOrder,
+  },
   data() {
     return {
       pickerOptions: {
@@ -285,16 +320,17 @@ export default {
         endTime: "",
         orderStatus: 0,
         beforeWarehouseId: 0,
-        currentPageNo:"",
+        currentPageNo: "",
         pageSize: "",
         approvalStatus: 0,
         subject: "",
-        voidState:-1
+        voidState: -1,
       },
       voidState: false,
       adddialogVisible: false,
       updatedialogVisible: false,
       auditingdialogVisible: false,
+      viewdialogVisible: false,
       storeHouseList: [],
       time: {},
       list: {},
@@ -309,6 +345,17 @@ export default {
     this.storeHouseList = data.data;
   },
   methods: {
+      async excel(){
+        await excelDispatch();
+    },
+    viewOrder(row) {
+      this.code = row.code;
+      this.id = row.id
+      this.viewdialogVisible = true;
+    },
+    closeviewOrder() {
+      this.viewdialogVisible = false;
+    },
     getOrderList(currentPageNo, pageSize) {
       this.DispatchVO.currentPageNo = currentPageNo;
       this.DispatchVO.pageSize = pageSize;
@@ -410,14 +457,16 @@ export default {
       this.id = row.id;
       this.auditingdialogVisible = true;
     },
-    printDispatch(row){
-      const newPage= this.$router.resolve({ 
+    printDispatch(row) {
+      const newPage = this.$router.resolve({
         path: "/printDispatchOrder",
-        query:{ //要传的参数 可传多个
-        id:row.id
-      }})
-      window.open(newPage.href,'_blank')
-    }
+        query: {
+          //要传的参数 可传多个
+          id: row.id,
+        },
+      });
+      window.open(newPage.href, "_blank");
+    },
   },
 };
 </script>

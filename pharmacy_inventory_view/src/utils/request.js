@@ -1,6 +1,6 @@
 import axios from "axios";
 import router from "@/router/index";
-import Element from "element-ui";
+import Element from "element-ui"
 const instance = axios.create({
     baseURL: '/',
     // timeout: 5000
@@ -9,7 +9,7 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use(async (request) => {
     // // 添加签名和时间戳
-    // let resp=await axios.get('/system/getUUID')
+    // let resp=await axios.get('/api/getUUID')
     // console.log(resp.data)
     // request.headers['signature'] = resp.data;
     // request.headers['timestamp'] = Date.now();
@@ -27,28 +27,28 @@ instance.interceptors.request.use(async (request) => {
 instance.interceptors.response.use(
 	response => {
 
-		console.log("response ->" + response)
-
 		let res = response.data
-
+		console.log(res+"1111")
+		console.log(res)
 		if (res.code === "200") {
 			return response.data
-		} else if(response.status===200){
+		} else if (res.code === "202") {
 			return response.data
-		} else{
+		}else if(response.status===200){
+			return response.data
+		} else {
 			console.log(response+"111");
 			console.log(res);
-			Element.Message.error(!res.msg ? '系统异常' : res.msg)
-			return Promise.reject(response.data.msg)
+			Element.Message.error(!res.message ? '系统异常' : res.message)
+			return Promise.reject(response)
 		}
 	},
 	error => {
 
-		console.log(error+"1111")
-		console.log(error.response)
+		
 
 		if (error.response.data) {
-			error.massage = error.response.data.msg
+			error.massage = error.response.data.message
 		}
 
 		if (error.response.status === 500) {
