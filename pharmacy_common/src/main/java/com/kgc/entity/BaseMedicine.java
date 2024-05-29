@@ -103,20 +103,10 @@ public class BaseMedicine implements Serializable {
     @ExcelFiled("修改时间")
     private Date updateTime;
 
-    @ExcelIgnore
     private Integer createBy;
-    @ExcelIgnore
     private Integer updateBy;
 
-
-
-
     @TableField(exist=false)
-    @ExcelIgnore
-    private Integer currentPage;
-
-    @TableField(exist=false)
-    @ExcelIgnore
     private BigDecimal totalPrice;
 
     @TableField(exist=false)
