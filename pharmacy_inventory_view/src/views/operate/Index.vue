@@ -96,28 +96,7 @@
             <div class="statistic-label">本周金额:{{ SalesStatistics.weekSalesPrice }}</div>
           </div>
         </div>
-        <div class="statistics">
-          <div class="statistic-item">
-            <div class="statistic-label">今日笔数</div>
-            <div class="statistic-value">{{ SalesStatistics.daySalesNum }}</div>
-          </div>
-          <div class="statistic-item">
-            <div class="statistic-label">今日金额</div>
-            <div class="statistic-value">{{ SalesStatistics.daySalesPrice }}</div>
-          </div>
-          <div class="statistic-item">
-            <div class="statistic-label">本月笔数:{{ SalesStatistics.monthsSalesNum }}</div>
-          </div>
-          <div class="statistic-item">
-            <div class="statistic-label">本月金额:{{ SalesStatistics.monthSalesPrice }}</div>
-          </div>
-          <div class="statistic-item">
-            <div class="statistic-label">本周笔数:{{ SalesStatistics.weekSalesNum }}</div>
-          </div>
-          <div class="statistic-item">
-            <div class="statistic-label">本周金额:{{ SalesStatistics.weekSalesPrice }}</div>
-          </div>
-        </div>
+
       </div>
     </el-card>
 
