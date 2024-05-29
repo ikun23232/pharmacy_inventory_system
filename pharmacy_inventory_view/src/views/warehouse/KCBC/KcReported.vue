@@ -149,10 +149,26 @@ export default {
       this.updateReportedVisible = true;
     },
     detailsReporteds(row) {
+      console.log(row)
       this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
       this.detailsReportedVisible = true;
     },
     deleteReported(row) {
+
+      const confirmDelete = confirm('确定要删除这条报损记录吗？');
+
+      if (!confirmDelete) {
+        // 如果用户点击“取消”，则不执行删除操作
+        return;
+      }
+      if (row.approvalStatus==1){
+        Message({
+          message: '已审批的报损不能删除',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
       if (row.approvalStatus==2){
         Message({
           message: '已审批的报损不能删除',
@@ -278,17 +294,9 @@ export default {
           </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="print(row.code)">打印</el-dropdown-item>
+                <el-dropdown-item @click.native="deleteReported(row)">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-<!--            <el-popconfirm-->
-<!--                title="确定要删除吗？"-->
-<!--                confirmButtonText="确定"-->
-<!--                cancelButtonText="取消"-->
-<!--                @confirm="deleteReported(row)">-->
-<!--              <template #reference>-->
-<!--                <el-button type="danger" plain >删除</el-button>-->
-<!--              </template>-->
-<!--            </el-popconfirm>-->
           </template>
         </el-table-column>
       </el-table>

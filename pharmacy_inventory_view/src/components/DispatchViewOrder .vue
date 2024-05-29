@@ -442,7 +442,6 @@ export default {
     this.storeHouseList = data.data;
     let dispatch = await getKcDispatchById(this.id);
     this.KcDispatch = dispatch.data;
-    this.KcDispatch.approvalStatus = "";
     let kcDetailsList = await getKcDetailsList(this.KcDispatch.code);
     this.medicineListTemp = kcDetailsList.data;
     await this.getMedicineListDetail();

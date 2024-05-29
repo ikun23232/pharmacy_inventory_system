@@ -1,18 +1,15 @@
 package com.kgc.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CgsqOrderMapper;
-import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
 import com.kgc.service.CgsqOrderService;
-import com.kgc.utils.BigDecimalUtils;
+import com.kgc.feign.PublicOMedicineFegin;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgVO;
-import com.kgc.vo.CgddVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +36,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
     @Autowired
     private CgsqOrderMapper cgsqOrderMapper;
     @Autowired
-    private PublicOMedicineMapper orderMapper;
+    private PublicOMedicineFegin orderMapper;
 
     @Override
     public Message getCgsqOrderList(CgVO vo) {
@@ -121,7 +118,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMapper.insert(orderMedicine);
+            orderMapper.addMedicineOrder(orderMedicine);
         }
         return Message.success();
     }
@@ -153,7 +150,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         Map<String, Object> columnMap = new HashMap<>();
         columnMap.put("code", cgsqOrder.getCode());
         // 调用 deleteByMap 方法，传入 Map 对象删除满足条件的数据
-        orderMapper.deleteByMap(columnMap);
+        orderMapper.deleteMediciOrder(columnMap);
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgsqOrder.getCode());
@@ -161,7 +158,7 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             orderMedicine.setQuantity(baseMedicine.getQuantity());
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
-            orderMapper.insert(orderMedicine);
+            orderMapper.addMedicineOrder(orderMedicine);
         }
         return Message.success();
     }

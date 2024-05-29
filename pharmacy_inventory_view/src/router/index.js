@@ -117,8 +117,8 @@ const routes = [
   },
   {
     //采购订单
-    path: '/procurementOrder',
-    name: 'procurementOrder',
+    path: '/CGDDOrder',
+    name: 'CGDDOrder',
     component: procurementOrder
   },
   {
@@ -220,8 +220,8 @@ const routes = [
   },
   {
     //销售应收
-    path:'/salesReceivable',
-    name: 'salesReceivable',
+    path:'/XSYS',
+    name: 'XSYS',
     component: () => import('../views/finance/XS/salesReceivable.vue')
   },
   {
@@ -232,8 +232,8 @@ const routes = [
   },
   {
     //销售退款
-    path:'/salesRefund',
-    name: 'salesRefund',
+    path:'/XSTK',
+    name: 'XSTk',
     component: () => import('../views/finance/XS/salesRefund.vue')
   },
   {
@@ -278,20 +278,22 @@ const routes = [
     name: 'PrintCGRKOrder',
     component: PrintCGRKOrder
 
-    },
-    {
-        path:'/ddckManager',
-        name: 'DDCKManager',
-        component: () => import('@/views/kc/DDCK/DDCKManager')
-    },{
-        path:'/printDDCKOrder',
-        name: 'PrintDDCKOrder',
-        component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
-    },{
-        path:'/crkmxManager',
-        name: 'CRKMXManager',
-        component: () => import('@/views/kc/CRKMX/CRKMXManager')
-    },
+  },
+  {
+    path:'/ddckManager',
+    name: 'DDCKManager',
+    component: () => import('@/views/kc/DDCK/DDCKManager')
+  },
+  {
+    path:'/printDDCKOrder',
+    name: 'PrintDDCKOrder',
+     component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
+  },
+  {
+    path:'/crkmxManager',
+    name: 'CRKMXManager',
+    component: () => import('@/views/kc/CRKMX/CRKMXManager')
+  },
   {
     path: '/refundInWarehouse',
     name: 'refundInWarehouse',
@@ -335,7 +337,7 @@ const routes = [
     component: PrintDDRKOrder
   },
   {
-    //库存告警半成品(史)
+    //库存告警
     path: '/KCGJManager',
     name: 'KCGJManager',
     component: () => import('@/views/kc/KCGJ/KCGJManager')
@@ -370,6 +372,12 @@ const routes = [
     name: 'PrintCGSQOrder',
     component: () => import('@/views/procurement/CGSQ/PrintCGSQOrder')
   },
+  {
+    //首页
+    path:'/HomePage',
+    name: 'HomePage',
+    component: () => import('@/views/index/HomePage.vue')
+  }
 ]
 
 const router = new VueRouter({
