@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.SalesStatisticsMapper">
+    <select id="getSalesStatistics" resultType="com.kgc.entity.SalesStatistics">
+        SELECT
+            SUM(CASE WHEN MONTH(a.orderDate) = MONTH(CURDATE()) AND YEAR(a.orderDate) = YEAR(CURDATE()) THEN 1 ELSE 0 END) AS monthsSalesNum,
+            SUM(CASE WHEN MONTH(a.orderDate) = MONTH(CURDATE()) AND YEAR(a.orderDate) = YEAR(CURDATE()) THEN a.totalPrice ELSE 0 END) AS monthSalesPrice,
+            SUM(CASE WHEN YEAR(a.orderDate) = YEAR(CURDATE()) AND WEEK(a.orderDate, 1) = WEEK(CURDATE(), 1) THEN 1 ELSE 0 END) AS weekSalesNum,
+            SUM(CASE WHEN YEAR(a.orderDate) = YEAR(CURDATE()) AND WEEK(a.orderDate, 1) = WEEK(CURDATE(), 1) THEN a.totalPrice ELSE 0 END) AS weekSalesPrice,
+            SUM(CASE WHEN DATE(a.orderDate) = CURDATE() THEN 1 ELSE 0 END) AS daySalesNum,
+            SUM(CASE WHEN DATE(a.orderDate) = CURDATE() THEN a.totalPrice ELSE 0 END) AS daySalesPrice
+        FROM xs_order a
+        WHERE a.isDelete = 0 AND a.type = 0;
+    </select>
+</mapper>

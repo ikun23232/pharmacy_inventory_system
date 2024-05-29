@@ -275,8 +275,13 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     }
 
     @Override
-    public int updateCgddIsPayById(CgddOrder cgddOrder) {
-        return mapper.updateById(cgddOrder);
+    public Message updateCgddIsPayById(CgddOrder cgddOrder) {
+        int update=mapper.updateById(cgddOrder);
+        if (update > 0){
+            return Message.success(update);
+        }
+        return Message.error("修改失败");
+
     }
 
 

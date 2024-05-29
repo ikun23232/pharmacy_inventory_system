@@ -41,10 +41,10 @@
         </thead>
         <tbody>
         <tr v-for="item in cwCgyf.items" :key="item.id">
-          <td>{{ item.drugName }}</td>
+          <td>{{ item.name }}</td>
           <td>{{ item.quantity }}</td>
-          <td>{{ formatCurrency(item.price) }}</td>
-          <td>{{ formatCurrency(item.quantity * item.price) }}</td>
+          <td>{{ formatCurrency(item.purchasePrice) }}</td>
+          <td>{{ formatCurrency(item.quantity * item.purchasePrice)}}</td>
         </tr>
         </tbody>
       </table>
@@ -63,15 +63,18 @@
 
 <script>
 import { getCwCgyfByCode } from '@/api/finance';
-
+import {getMedicineListByCode} from '@/api/baseMedicine';
+import Vue from "vue";
 export default {
   name: "printPurchasePay",
   data() {
     return {
       cwCgyf: {
         items: [],
-        cost: 0 // 确保 cost 被初始化为一个数字
-      }
+        cost: 0 ,// 确保 cost 被初始化为一个数字
+
+      },
+      theData:[]
     }
   },
   mounted() {
@@ -85,6 +88,14 @@ export default {
         }
         this.cwCgyf = resp.data
         console.log(resp.data)
+        getMedicineListByCode(this.cwCgyf.cgddCode).then(resp => {
+          // 假设resp.data是你要添加到items数组中的数据
+          Vue.set(this.cwCgyf, 'items', resp.data);
+          console.log("11111");
+          console.log(this.cwCgyf.items);
+        })
+
+
       })
     },
     formatDate(dateString) {

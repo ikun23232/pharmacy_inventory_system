@@ -1,7 +1,9 @@
 <script>
 import { getCwInvoice,getCategoryString,cwInvoiceExcel } from '@/api/finance'
+import SaleOrderDetail from "@/views/sale/SaleOrderDetail.vue";
 export default {
   name: "invoice",
+  components: {SaleOrderDetail},
   data() {
     return {
       cwInvoicePage: {
@@ -16,7 +18,8 @@ export default {
         categoryId:0,
       },
       category:[],
-      time:{}
+      time:{},
+      detailDialogFormVisible:false,
     }
   },
   mounted() {
@@ -66,6 +69,16 @@ export default {
         },
       });
       window.open(newPage.href, "_blank");
+    },
+    lookSaleOrderDetail(orderNo){
+      this.detailDialogFormVisible=true;
+      this.orderNo=orderNo;
+    },
+    changeDialogFormVisible(val){
+      // this.addDialogFormVisible=val;
+      // this.updateDialogFormVisible=val;
+      this.detailDialogFormVisible=val;
+      // this.initSaleOrderByPage(this.object.currentPage);
     },
   }
 }
@@ -136,7 +149,7 @@ export default {
         <el-table-column align="center" label="操作"  width="200">
           <template #default="{ row }">
             <el-button type="primary" plain @click="print(row.code)">打印</el-button>&nbsp;
-            <el-button type="primary" plain>详情</el-button>&nbsp;
+            <el-button type="primary" plain @click="lookSaleOrderDetail(row.orderNumber)">详情</el-button>&nbsp;
           </template>
         </el-table-column>
       </el-table>
@@ -150,6 +163,15 @@ export default {
           :total="cwInvoicePage.total"
       />
     </div>
+
+    <el-dialog
+        title="销售订单-详情"
+        :visible.sync="detailDialogFormVisible"
+        width="1000px"
+        v-if="detailDialogFormVisible"
+    >
+      <SaleOrderDetail @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></SaleOrderDetail>
+    </el-dialog>
   </div>
 </template>
 

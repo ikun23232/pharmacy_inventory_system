@@ -1,9 +1,12 @@
 <script>
 import { getXsysList ,cwXsysExcel} from '@/api/finance'
+import SaleOrderDetail from "@/views/sale/SaleOrderDetail.vue";
 export default {
   name: "salesReceivable",
+  components: {SaleOrderDetail},
   data() {
     return {
+      orderNo:'',
       cwXsysPage: {
         pageNum: 1,
         pageSize: 3,
@@ -14,7 +17,8 @@ export default {
         code: '',
         originalOrder: ''
       },
-      time:{}
+      time:{},
+      detailDialogFormVisible:false,
     }
   },
   mounted() {
@@ -57,6 +61,16 @@ export default {
         },
       });
       window.open(newPage.href, "_blank");
+    },
+    lookSaleOrderDetail(orderNo){
+      this.detailDialogFormVisible=true;
+      this.orderNo=orderNo;
+    },
+    changeDialogFormVisible(val){
+      // this.addDialogFormVisible=val;
+      // this.updateDialogFormVisible=val;
+      this.detailDialogFormVisible=val;
+      // this.initSaleOrderByPage(this.object.currentPage);
     },
   }
 }
@@ -117,7 +131,7 @@ export default {
         <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
             <el-button type="primary" plain @click="print(row.code)">打印</el-button>
-            <el-button type="primary" plain>详情</el-button>
+            <el-button type="primary" plain @click="lookSaleOrderDetail(row.originalOrder)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,6 +146,15 @@ export default {
       >
       </el-pagination>
     </div>
+
+    <el-dialog
+        title="销售订单-详情"
+        :visible.sync="detailDialogFormVisible"
+        width="1000px"
+        v-if="detailDialogFormVisible"
+    >
+      <SaleOrderDetail @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></SaleOrderDetail>
+    </el-dialog>
   </div>
 </template>
 

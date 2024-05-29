@@ -29,8 +29,8 @@
           <tr v-for="(item, index) in cwXsys.items" :key="index">
             <td>{{ item.name }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.quantity * item.price }}</td>
+            <td>{{ item.salePrice }}</td>
+            <td>{{ item.quantity * item.salePrice }}</td>
           </tr>
           </tbody>
         </table>
@@ -49,6 +49,7 @@
 
 <script>
 import { getCwXsysByCode } from '@/api/finance';
+import { getSaleOrderByOrderNo } from '@/api/saleOrder';
 
 export default {
   name: "printSalesReceivable",
@@ -69,8 +70,14 @@ export default {
           return;
         }
         this.cwXsys = resp.data;
-        console.log("11111");
-        console.log(this.cwXsys);
+        getSaleOrderByOrderNo(this.cwXsys.originalOrder).then(resp => {
+          if (resp.code != 200) {
+            return;
+          }
+          // 使用 Vue.set 来设置 items 数组
+          this.$set(this.cwXsys, 'items', resp.data.baseMedicineList);
+          console.log(this.cwXsys.items);
+        });
       });
     },
     printInvoice() {

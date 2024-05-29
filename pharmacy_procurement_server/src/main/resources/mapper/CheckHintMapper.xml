@@ -15,7 +15,7 @@
             cgdd_order a
                 LEFT JOIN sys_user su ON a.documenterBy = su.userId
                 CROSS JOIN (
-                SELECT id, path, component FROM sys_menu WHERE name = '采购订单' AND type = 1 AND isDel = 0
+                SELECT id, path, component FROM sys_menu WHERE menuname = '采购订单' AND type = 1 AND isDel = 0
             ) b
         WHERE
             a.isDel = 0 AND a.approvalStatus IS NULL
@@ -38,7 +38,7 @@
                  CROSS JOIN (
             SELECT path, component
             FROM sys_menu
-            WHERE name = '采购入库' AND type = 1 AND isDel = 0
+            WHERE menuname = '采购入库' AND type = 1 AND isDel = 0
         ) m
         WHERE a.isDel = 0 AND a.approvalStatus = 0
         ORDER BY a.createTime ASC
@@ -58,9 +58,9 @@
                  CROSS JOIN (
             SELECT path, component
             FROM sys_menu
-            WHERE name = '采购申请' AND isDel = 0
+            WHERE menuname = '采购申请' AND isDel = 0
         ) m
-        WHERE a.isDel = 0 AND a.approvalStatus IS NULL
+        WHERE a.isDel = 0 AND a.approvalStatus =0
         ORDER BY a.createTime ASC
         LIMIT 1;
     </select>
@@ -78,7 +78,7 @@
                  CROSS JOIN (
             SELECT path, component
             FROM sys_menu
-            WHERE name = '库存调度' AND isDel = 0
+            WHERE menuname = '库存调度' AND isDel = 0
         ) m
         WHERE a.isDel = 0 AND a.approvalStatus = 0
         ORDER BY a.createDate ASC
@@ -95,7 +95,7 @@
             m.component
         FROM kc_reported a
                  LEFT JOIN sys_user su ON a.documenterBy = su.userId
-                 LEFT JOIN sys_menu m ON m.name = '库存报损' AND m.isDel = 0
+                 LEFT JOIN sys_menu m ON m.menuname = '库存报损' AND m.isDel = 0
         WHERE a.isDel = 0 AND a.approvalStatus = 0
         ORDER BY a.createTime ASC
         LIMIT 1;
@@ -112,7 +112,7 @@
             m.component
         FROM xs_order a
                  LEFT JOIN sys_user su ON a.createBy = su.userId
-                 LEFT JOIN sys_menu m ON m.name = '销售订单'
+                 LEFT JOIN sys_menu m ON m.menuname = '销售订单'
         WHERE a.isDelete = 0 AND a.isCheck = 0
         ORDER BY a.orderDate ASC
         LIMIT 1;

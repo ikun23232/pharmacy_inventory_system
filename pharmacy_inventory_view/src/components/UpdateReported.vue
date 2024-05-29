@@ -231,7 +231,7 @@ export default {
               <el-option
                   v-for="item in reportedTypeList"
                   :key="item.id"
-                  :label="item.reportedname"
+                  :label="item.reportedName"
                   :value="item.id">
               </el-option>
             </el-select>

@@ -30,8 +30,8 @@
           <tr v-for="(item, index) in cwInvoice.items" :key="index">
             <td>{{ item.name }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.price }}</td>
-            <td>{{ item.quantity * item.price }}</td>
+            <td>{{ item.salePrice }}</td>
+            <td>{{ item.quantity * item.salePrice }}</td>
           </tr>
           </tbody>
         </table>
@@ -51,6 +51,7 @@
 
 <script>
 import { getCwInvoiceByCode } from '@/api/finance';
+import {getSaleOrderByOrderNo} from "@/api/saleOrder";
 
 export default {
   name: "printInvoice",
@@ -67,7 +68,7 @@ export default {
         return 0; // 如果 cwInvoice 或 items 未定义，则返回 0
       }
       return this.cwInvoice.items.reduce((total, item) => {
-        return total + (item.quantity * item.price);
+        return total + (item.quantity * item.salePrice);
       }, 0);
     }
   },
@@ -80,6 +81,14 @@ export default {
       this.cwInvoice = resp.data;
       console.log("11111");
       console.log(this.cwInvoice);
+      getSaleOrderByOrderNo(this.cwInvoice.orderNumber).then(resp => {
+        if (resp.code != 200) {
+          return;
+        }
+        // 使用 Vue.set 来设置 items 数组
+        this.$set(this.cwInvoice, 'items', resp.data.baseMedicineList);
+        console.log(this.cwInvoice.items);
+      });
     });
   },
   methods: {

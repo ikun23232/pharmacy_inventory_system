@@ -33,8 +33,8 @@
         <tr v-for="item in cwXstk.items" :key="item.id">
           <td>{{ item.name }}</td>
           <td>{{ item.quantity }}</td>
-          <td>{{ formatCurrency(item.price) }}</td>
-          <td>{{ formatCurrency(item.quantity * item.price) }}</td>
+          <td>{{ formatCurrency(item.salePrice) }}</td>
+          <td>{{ formatCurrency(item.quantity * item.salePrice) }}</td>
         </tr>
         </tbody>
       </table>
@@ -53,6 +53,7 @@
 
 <script>
 import { getCwXstkByCode } from '@/api/finance'
+import {getSaleOrderByOrderNo} from "@/api/saleOrder";
 
 export default {
   name: "printSalesRefund",
@@ -71,6 +72,14 @@ export default {
           return
         }
         this.cwXstk = resp.data
+        getSaleOrderByOrderNo(this.cwXstk.originalOrder).then(resp => {
+          if (resp.code != 200) {
+            return;
+          }
+          // 使用 Vue.set 来设置 items 数组
+          this.$set(this.cwXstk, 'items', resp.data.baseMedicineList);
+          console.log(this.cwXstk.items);
+        });
       })
     },
     formatDate(dateString) {

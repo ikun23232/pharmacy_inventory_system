@@ -121,7 +121,7 @@
            </div>   
           <el-divider></el-divider>
          <div style="text-align: left;">
-          <span>备注: </span><el-input size="small" v-model="saleOrder.remark" placeholder="请输入备注" style="width: 860px;"></el-input>
+          <span>备注: </span><el-input size="small" v-model="saleOrder.remark" placeholder="请输入备注" disabled style="width: 860px;"></el-input>
         </div>
    
        <el-row type="flex" justify="end" style="margin-top: 20px;">

@@ -41,16 +41,16 @@
         </thead>
         <tbody>
         <tr v-for="item in cwBsys.items" :key="item.id">
-          <td>{{ item.drugName }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>{{ formatCurrency(item.price) }}</td>
-          <td>{{ formatCurrency(item.quantity * item.price) }}</td>
+          <td>{{ item.medicineName }}</td>
+          <td>{{ item.reportedNum }}</td>
+          <td>{{ formatCurrency(item.money) }}</td>
+          <td>{{ formatCurrency(item.reportedNum * item.money) }}</td>
         </tr>
         </tbody>
       </table>
 
       <div class="total-section">
-        <div class="total-label">应收金额:</div>
+        <div class="total-label">报损金额:</div>
         <div class="total-value">{{ formatCurrency(cwBsys.cost) }}</div>
       </div>
 
@@ -63,6 +63,8 @@
 
 <script>
 import { getCwbsysByCode } from '@/api/finance';
+import {getKcReportedByCode} from '@/api/KcReported';
+import Vue from "vue";
 
 export default {
   name: "printBreakageReceivable",
@@ -71,11 +73,14 @@ export default {
       cwBsys: {
         items: [],
         cost: 0 // 确保 cost 被初始化为一个数字
-      }
+      },
+      theData:{},
+      theList:[]
     }
   },
   mounted() {
     this.getCwbsysByCodes(this.$route.query.code)
+
   },
   methods: {
     getCwbsysByCodes(code) {
@@ -84,6 +89,7 @@ export default {
           return
         }
         this.cwBsys = resp.data
+        this.detailsReporteds(this.cwBsys.originalOrder)
       })
     },
     formatDate(dateString) {
@@ -103,7 +109,19 @@ export default {
     },
     print() {
       window.print()
-    }
+    },
+    detailsReporteds(code) {
+      getKcReportedByCode(code).then(resp => {
+        if (resp.code != 200) {
+          return;
+        }
+        this.theData = resp.data;
+        Vue.set(this.cwBsys, 'items', resp.data.medicineList);
+        console.log(this.cwBsys.items);
+        console.log(this.cwBsys);
+      });
+    },
+
   }
 }
 </script>
