@@ -3,22 +3,24 @@
 <mapper namespace="com.kgc.dao.CwAccountsDao">
     <select id="getCwAccountsList" resultType="com.kgc.entity.CwAccounts">
         SELECT
-            a.id,
-            a.code,
-            a.categoryId,
-            (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId = id) accountsCategoryName,
-            a.orderCode,
-            a.cost,
-            a.bankAcountId,
-            (SELECT bandCount FROM bank_account WHERE a.bankAcountId=id) bandCount,
-            a.description,
-            a.createTime,
-            a.modificationTime,
-            a.createBy,
-            (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
-            a.modificationBy,
-            (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName
-        FROM cw_accounts a where isDel=0
+        a.id,
+        a.code,
+        a.categoryId,
+        (SELECT accountsCategoryName FROM cw_category WHERE a.categoryId = id) accountsCategoryName,
+        a.orderCode,
+        a.cost,
+        a.bankAcountId,
+        (SELECT bandCount FROM bank_account WHERE a.bankAcountId=id) bandCount,
+        a.description,
+        a.createTime,
+        a.modificationTime,
+        a.createBy,
+        (SELECT userName FROM sys_user WHERE a.createBy = userId) createName,
+        a.modificationBy,
+        (SELECT userName FROM sys_user WHERE a.modificationBy = userId) modificationName
+        FROM cw_accounts a
+        LEFT JOIN bank_account b ON a.bankAcountId=b.id
+        where a.isDel=0
         <if test="code!=null and code!=''">
             and a.code like concat('%',#{code},'%')
         </if>
@@ -30,6 +32,9 @@
         </if>
         <if test="beginTime != null and beginTime != ''">
             and a.createTime BETWEEN #{beginTime} and #{endTime}
+        </if>
+        <if test="bandCount!=null and bandCount!=''">
+            AND b.bandCount LIKE concat('%',#{bandCount},'%')
         </if>
 
     </select>
