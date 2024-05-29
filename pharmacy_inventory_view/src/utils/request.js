@@ -9,7 +9,7 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use(async (request) => {
     // // 添加签名和时间戳
-    // let resp=await axios.get('/api/getUUID')
+    // let resp=await axios.get('/user/sysCommon/getUUID')
     // console.log(resp.data)
     // request.headers['signature'] = resp.data;
     // request.headers['timestamp'] = Date.now();

@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/pharmacy_sale_server/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_system_server/pom.xml" />
         <option value="$PROJECT_DIR$/pharmacy_warehouse_server/pom.xml" />
+        <option value="$PROJECT_DIR$/pharmacy_gateway/pom.xml" />
       </list>
     </option>
   </component>
