@@ -54,12 +54,12 @@ public class CwCgyf implements Serializable {
      * 采购应付生成时间
      */
     @TableField("create_time")
-    private LocalDateTime createTime;
+    private Date createTime;
     /**
      * 付款时间
      */
     @TableField("payment_time")
-    private LocalDateTime paymentTime;
+    private Date paymentTime;
     /**
      * 供应商名称
      */

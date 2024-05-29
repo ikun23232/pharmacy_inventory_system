@@ -69,9 +69,12 @@ public class CwAccountsServiceImpl extends ServiceImpl<CwAccountsDao, CwAccounts
     }
 
     @Override
-    public int addCwAccounts(CwAccounts cwAccounts) {
+    public Message addCwAccounts(CwAccounts cwAccounts) {
         int isAdd = cwAccountsDao.insert(cwAccounts);
-        return isAdd;
+        if (isAdd > 0){
+            return Message.success();
+        }
+        return Message.error();
     }
 
     @Override

@@ -218,6 +218,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         if (updateRow > 0) {
             return Message.success();
         }
+        //变更采购订单的单据状态变为4
         return Message.error("审核失败");
     }
 

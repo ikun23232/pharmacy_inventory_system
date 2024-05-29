@@ -5,9 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.entity.*;
+import com.kgc.feign.CwAccountsFegin;
+import com.kgc.feign.CwCgyfFeign;
 import com.kgc.service.ProcurementOrderService;
 import com.kgc.feign.PublicBaseMedicineFegin;
 import com.kgc.feign.PublicOMedicineFegin;
+import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CgddVO;
 import com.kgc.vo.MedicineVO;
@@ -38,6 +41,10 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     private PublicOMedicineFegin orderService;
     @Autowired
     private PublicBaseMedicineFegin baseMedicineService;
+    @Autowired
+    private CwAccountsFegin cwAccountsFegin;
+    @Autowired
+    private CwCgyfFeign cwCgyfFeign;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {
@@ -134,6 +141,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         Map<String,Object> map = new HashMap<>();
         map.put("code",cgddOrder.getCode());
         Message message1 = orderService.deleteMediciOrder(map);
+        logger.debug("ProcurementOrderServiceImpl updateCgddById message1:"+message1);
         if (message1.getCode().equals("201")){
             return Message.error("删除订单药品详情失败！");
         }
@@ -180,7 +188,31 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         if (cgddOrder.getApprovalStatus() == 2){
             if (cgddOrder.getPayType() == 2){
                 cgddOrder.setIsPay(1);
-                //添加流水
+                //添加采购订单流水
+                CwAccounts cwAccounts = new CwAccounts();
+                cwAccounts.setCode(CodeUtil.createCode("CGDDLS"));
+                cwAccounts.setCategoryId(5);
+                cwAccounts.setOrderCode(cgddOrder.getCode());
+                cwAccounts.setCost(cgddOrder.getReferenceAmount());
+                cwAccounts.setDescription("采购订单直接付款流水");
+                cwAccounts.setCreateTime(new Date());
+                cwAccounts.setCreateBy(1); //修改创建人和修改人
+                Message message = cwAccountsFegin.addCwAccounts(cwAccounts);
+                if (!message.getCode().equals("200")){
+                    throw new RuntimeException("添加流水成失败！");
+                }
+                //添加采购订单采购应付记录
+                CwCgyf cwCgyf = new CwCgyf();
+                cwCgyf.setCode(CodeUtil.createCode("CGYF"));
+                cwCgyf.setProviderId(cgddOrder.getProviderId());
+                cwCgyf.setIsPay(1);
+                cwCgyf.setCost(cgddOrder.getReferenceAmount());
+                cwCgyf.setCreateTime(new Date());
+                cwCgyf.setPaymentTime(new Date());
+                Message message1 = cwCgyfFeign.addCgyf(cwCgyf);
+                if (!message1.getCode().equals("200")){
+                    throw new RuntimeException("添加采购应付失败！");
+                }
             }
             cgddOrder.setPayTime(new Date());
             cgddOrder.setOrderStatus(3);

@@ -122,47 +122,11 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
     }
 
     @Override
-    public boolean saveBatch(Collection<CwCgyf> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdateBatch(Collection<CwCgyf> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean updateBatchById(Collection<CwCgyf> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdate(CwCgyf entity) {
-        return false;
-    }
-
-    @Override
-    public CwCgyf getOne(Wrapper<CwCgyf> queryWrapper, boolean throwEx) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> getMap(Wrapper<CwCgyf> queryWrapper) {
-        return null;
-    }
-
-    @Override
-    public <V> V getObj(Wrapper<CwCgyf> queryWrapper, Function<? super Object, V> mapper) {
-        return null;
-    }
-
-    @Override
-    public CwCgyfDao getBaseMapper() {
-        return null;
-    }
-
-    @Override
-    public Class<CwCgyf> getEntityClass() {
-        return null;
+    public Message addCgyf(CwCgyf cwCgyf) {
+        int insert = cwCgyfDao.insert(cwCgyf);
+        if (insert >0){
+            return Message.success();
+        }
+        return Message.error("添加失败");
     }
 }
