@@ -155,4 +155,10 @@ public class BaseMedicine implements Serializable {
     @TableField(exist=false)
     private String fowardWarHouseName;
 
+    @TableField(exist=false)
+    private String orderDateBegin;
+    @TableField(exist=false)
+    private String orderDateEnd;
+
+
 }

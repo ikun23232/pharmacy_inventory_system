@@ -30,4 +30,6 @@ public interface SaleOrderService extends IService<XsOrder> {
     public Message updateSaleOrderByOrderNo(String orderNo);
 
     public Message recoverSaleOrderByOrderNo(String orderNo);
+
+    public Message getSaleOrderDetailByOrderNo(String orderNo);
 }

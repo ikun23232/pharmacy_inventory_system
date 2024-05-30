@@ -6,6 +6,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.*;
 import com.kgc.entity.*;
+import com.kgc.feign.*;
+import com.kgc.remote.KcReportedRemote;
 import com.kgc.service.RefundOrderService;
 import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
@@ -27,21 +29,21 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
     @Autowired
     private SaleOrderMapper saleOrderMapper;
     @Autowired
-    private KcReportedMapper kcReportedMapper;
+    private KcReportedFeign kcReportedFeign;
     @Autowired
-    private KcReporteddetailMapper kcReporteddetailMapper;
+    private KcReporteddetailFeign kcReporteddetailFeign;
     @Autowired
-    private StockDetailMapper stockDetailMapper;
+    private StockDetailFeign stockDetailFeign;
     @Autowired
-    private RefundInWarehouseMapper refundInWarehouseMapper;
+    private RefundInWarehouseFeign refundInWarehouseFeign;
     @Autowired
-    private KcOutintodetialMapper kcOutintodetialMapper;
+    private KcOutintodetialFeign kcOutintodetialFeign;
     @Autowired
-    private CwXstkMapper cwXstkMapper;
+    private CwXstkFeign cwXstkFeign;
     @Autowired
-    private CwAccountsMapper cwAccountsMapper;
+    private CwAccountsFeign cwAccountsFeign;
     @Autowired
-    private CwInvoiceMapper cwInvoiceMapper;
+    private CwInvoiceFeign cwInvoiceFeign;
 
     @Override
     public Message getRefundOrderListByPage(XsOrder xsOrder) {
@@ -182,7 +184,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                     kcReported.setDocumenterBy(1);
                     kcReported.setCreateBy(1);
                     kcReported.setCreateTime(xsOrder.getOrderDate());
-                    kcReportedMapper.insert(kcReported);
+                    Message kcReportedMessage=kcReportedFeign.insertKcReported(kcReported);
                     for(OrderMedicine orderMedicine:medicineDetailList){
                         //添加报损明细单
                         KcReporteddetail kcReporteddetail=new KcReporteddetail();
@@ -190,7 +192,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                         kcReporteddetail.setMedicineId(orderMedicine.getMedicineId());
                         kcReporteddetail.setQuantity(orderMedicine.getQuantity());
                         kcReporteddetail.setBatchCode(orderMedicine.getBatchCode());
-                        kcReporteddetailMapper.insert(kcReporteddetail);
+                        Message kcReporteddetailMessage=kcReporteddetailFeign.insertKcReporteddetail(kcReporteddetail);
                     }
                 }else{
                     //生成销售退货入库单
@@ -198,13 +200,13 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                     KcSalefromware kcSalefromware=new KcSalefromware();
                     kcSalefromware.setCode(code);
                     kcSalefromware.setOrderNo(xsOrder.getOrderNo());
-                    int saleOutCount=refundInWarehouseMapper.insert(kcSalefromware);
+                    Message refundInWarehouseMessage=refundInWarehouseFeign.addRefundInWarehouse(kcSalefromware);
                 }
                 boolean result=true;
                 for(OrderMedicine orderMedicine:medicineDetailList){
                     if(xsOrder.getRefundTypeId()!=1&&xsOrder.getRefundTypeId()!=2){
                         //更新库存明细
-                        int stockDetailCount=stockDetailMapper.addStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
+                        Message stockDetailMessage=stockDetailFeign.addStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
                         //生成退货入库明细单
                         String code2=CodeUtil.createCode("XSTHRKMX");
                         KcOutintodetial kcOutintodetial=new KcOutintodetial();
@@ -218,8 +220,8 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                         kcOutintodetial.setBatchCode(orderMedicine.getBatchCode());
                         kcOutintodetial.setToStockQuantity(orderMedicine.getQuantity());
                         kcOutintodetial.setPrice(orderMedicine.getSalePrice());
-                        int count3=kcOutintodetialMapper.insert(kcOutintodetial);
-//                        if(stockDetailCount<0&&count3<0){
+                        Message kcOutintodetialMessage=kcOutintodetialFeign.addKcOutintodetial(kcOutintodetial);
+//                        if(stockDetailMessage<0&&count3<0){
 //                            result=false;
 //                        }
                     }
@@ -232,7 +234,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                 cwXstk.setCreateTime(xsOrder.getOrderDate());
                 cwXstk.setCost(xsOrder.getTotalPrice());
                 cwXstk.setCreateBy(1);
-                int count4=cwXstkMapper.insert(cwXstk);
+                Message cwXstkMessage=cwXstkFeign.addCwXstk(cwXstk);
                 //生成销售退货应付流水
                 CwAccounts cwAccounts=new CwAccounts();
                 String code4=CodeUtil.createCode("XSTHYFLS");
@@ -244,7 +246,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                 cwAccounts.setDescription(xsOrder.getRemark());
                 cwAccounts.setCreateTime(xsOrder.getOrderDate());
                 cwAccounts.setCreateBy(1);
-                int count5=cwAccountsMapper.insert(cwAccounts);
+                Message cwAccountsMessage=cwAccountsFeign.insertCwAccounts(cwAccounts);
                 //生成销售退货应付发票
                 CwInvoice cwInvoice=new CwInvoice();
                 String code5=CodeUtil.createCode("XSTHYFFP");
@@ -254,7 +256,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
                 cwInvoice.setCreateTime(xsOrder.getOrderDate());
                 cwInvoice.setCreateBy(1);
                 cwInvoice.setCost(xsOrder.getTotalPrice());
-                int count6=cwInvoiceMapper.insert(cwInvoice);
+                Message cwInvoiceMessage=cwInvoiceFeign.addCwInvoice(cwInvoice);
             }
             return Message.success();
         }else{

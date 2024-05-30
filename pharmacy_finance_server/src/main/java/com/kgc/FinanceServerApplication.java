@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.kgc.dao")
-@EnableFeignClients
+//@EnableFeignClients
 public class FinanceServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(FinanceServerApplication.class, args);

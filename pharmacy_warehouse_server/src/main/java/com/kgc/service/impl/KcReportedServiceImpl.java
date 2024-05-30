@@ -501,6 +501,16 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
         return kcReportedMapper.insert(kcReported);
     }
 
+    @Override
+    public Message insertKcReported(KcReported kcReported) {
+        int count=kcReportedMapper.insert(kcReported);
+        if(count>0) {
+            return Message.success();
+        }else{
+            return Message.error();
+        }
+    }
+
 
     @Override
     public boolean saveBatch(Collection<KcReported> entityList, int batchSize) {

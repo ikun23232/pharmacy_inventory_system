@@ -1,12 +1,15 @@
 package com.kgc.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CwXstkDao;
+import com.kgc.dao.CwXsysMapper;
 import com.kgc.entity.CwXstk;
 import com.kgc.entity.CwXsys;
 import com.kgc.entity.Message;
 import com.kgc.service.CwXstkService;
+import com.kgc.service.CwXsysService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwCgyfVO;
 import com.kgc.vo.CwXstkVO;
@@ -19,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class CwXstkServiceImpl implements CwXstkService {
+public class CwXstkServiceImpl extends ServiceImpl<CwXstkDao, CwXstk> implements CwXstkService {
 
     @Autowired
     private CwXstkDao cwXstkDao;
@@ -84,5 +87,15 @@ public class CwXstkServiceImpl implements CwXstkService {
             return Message.success(cwXsys);
         }
         return Message.error();
+    }
+
+    @Override
+    public Message addCwXstk(CwXstk cwXstk) {
+        int count=cwXstkDao.insert(cwXstk);
+        if(count>0){
+            return Message.success();
+        }else {
+            return Message.error();
+        }
     }
 }

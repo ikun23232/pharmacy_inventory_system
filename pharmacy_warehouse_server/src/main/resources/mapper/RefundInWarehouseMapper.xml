@@ -31,6 +31,8 @@
         <if test="code!=null and code!=''">
             and code like concat('%',#{code},'%')
         </if>
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and xs.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="createBy>0">and xs.createBy=#{createBy}</if>
     </select>
 
 
@@ -46,5 +48,7 @@
         <if test="code!=null and code!=''">
             and code like concat('%',#{code},'%')
         </if>
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and xs.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="createBy>0">and xs.createBy=#{createBy}</if>
     </select>
 </mapper>

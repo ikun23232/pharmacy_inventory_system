@@ -26,10 +26,12 @@
         <if test="code!=null and code!=''">
             and code like concat('%',#{code},'%')
         </if>
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and xs.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="createBy>0">and xs.createBy=#{createBy}</if>
     </select>
 
     <select id="getSaleOutWarehouseList" resultType="com.kgc.vo.KcSalefromwareVo">
-        SELECT kc.id,code,kc.orderNo,orderDate,totalNumber,totalPrice,remark,
+        SELECT code,kc.orderNo,orderDate,totalNumber,totalPrice,remark,
         xs.updateDate,c.userName AS createByName,u.userName AS updateByName
         from kc_salefromware kc,xs_order xs
         LEFT JOIN sys_user c ON xs.createBy = c.userId AND c.isDel = 0
@@ -38,6 +40,8 @@
         <if test="code!=null and code!=''">
             and code like concat('%',#{code},'%')
         </if>
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and xs.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="createBy>0">and xs.createBy=#{createBy}</if>
     </select>
 
 </mapper>

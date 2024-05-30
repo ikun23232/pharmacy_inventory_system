@@ -245,7 +245,7 @@
        },
        async checkedRefundOrder(){
         console.log("1234",this.saleOrder.isCheck)
-          if(this.saleOrder.isCheck!=null){
+          if(this.saleOrder.isCheck!=null&&this.saleOrder.isCheck!=0){
             this.saleOrder.medicineDetailList=this.medicineDetailList;
             let data = await checkedRefundOrder(this.saleOrder);
             if(data.code=="200"){

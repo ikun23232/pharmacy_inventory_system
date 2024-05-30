@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.*;
 import com.kgc.entity.*;
+import com.kgc.feign.*;
 import com.kgc.service.SaleOrderService;
 import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
@@ -24,17 +25,17 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
     @Autowired
     private SaleOrderMapper saleOrderMapper;
     @Autowired
-    private StockDetailMapper stockDetailMapper;
+    private StockDetailFeign stockDetailFeign;
     @Autowired
-    private SaleOutWarehouseMapper saleOutWarehouseMapper;
+    private SaleOutWarehouseFeign saleOutWarehouseFeign;
     @Autowired
-    private KcOutintodetialMapper kcOutintodetialMapper;
+    private KcOutintodetialFeign kcOutintodetialFeign;
     @Autowired
-    private CwXsysMapper cwXsysMapper;
+    private CwXsysFeign cwXsysFeign;
     @Autowired
-    private CwAccountsMapper cwAccountsMapper;
+    private CwAccountsFeign cwAccountsFeign;
     @Autowired
-    private CwInvoiceMapper cwInvoiceMapper;
+    private CwInvoiceFeign cwInvoiceFeign;
 
 
     @Override
@@ -66,7 +67,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         KcSalefromware kcSalefromware=new KcSalefromware();
         kcSalefromware.setCode(code);
         kcSalefromware.setOrderNo(xsOrder.getOrderNo());
-        int saleOutCount=saleOutWarehouseMapper.insert(kcSalefromware);
+        Message saleOutWarehouseMessage=saleOutWarehouseFeign.addSaleOutWarehouse(kcSalefromware);
         //获取订单详情
         List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
         boolean result=true;
@@ -75,7 +76,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
             //生成销售明细单
             int count2=saleOrderMapper.addSaleOrderDetail(orderMedicine);
             //更新库存明细
-            int stockDetailCount=stockDetailMapper.reduceStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
+            Message stockDetailMessage=stockDetailFeign.reduceStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
             //生成销售出库明细单
             String code2=CodeUtil.createCode("CRKMX");
             KcOutintodetial kcOutintodetial=new KcOutintodetial();
@@ -89,8 +90,8 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
             kcOutintodetial.setBatchCode(orderMedicine.getBatchCode());
             kcOutintodetial.setToStockQuantity(orderMedicine.getQuantity());
             kcOutintodetial.setPrice(orderMedicine.getSalePrice());
-            int count3=kcOutintodetialMapper.insert(kcOutintodetial);
-            if(count2<0&&stockDetailCount<0&&count3<0){
+            Message kcOutintodetialMessage=kcOutintodetialFeign.addKcOutintodetial(kcOutintodetial);
+            if(count2<0&&"200".equals(stockDetailMessage.getCode())&&"200".equals(kcOutintodetialMessage.getCode())){
                 result=false;
             }
         }
@@ -102,7 +103,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         cwXsys.setCreateTime(xsOrder.getOrderDate());
         cwXsys.setCost(xsOrder.getTotalPrice());
         cwXsys.setCreateBy(1);
-        int count4=cwXsysMapper.insert(cwXsys);
+        Message cwXsysMessage=cwXsysFeign.addCwXsys(cwXsys);
         //生成销售应收流水
         CwAccounts cwAccounts=new CwAccounts();
         String code4=CodeUtil.createCode("XSYSLS");
@@ -114,7 +115,7 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         cwAccounts.setDescription(xsOrder.getRemark());
         cwAccounts.setCreateTime(xsOrder.getOrderDate());
         cwAccounts.setCreateBy(1);
-        int count5=cwAccountsMapper.insert(cwAccounts);
+        Message cwAccountsMessage=cwAccountsFeign.insertCwAccounts(cwAccounts);
         //生成销售应收发票
         CwInvoice cwInvoice=new CwInvoice();
         String code5=CodeUtil.createCode("XSYSFP");
@@ -124,8 +125,8 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         cwInvoice.setCreateTime(xsOrder.getOrderDate());
         cwInvoice.setCreateBy(1);
         cwInvoice.setCost(xsOrder.getTotalPrice());
-        int count6=cwInvoiceMapper.insert(cwInvoice);
-        if(count>0&&saleOutCount>0&&result&&count4>0&&count5>0&&count6>0){
+        Message cwInvoiceMessage=cwInvoiceFeign.addCwInvoice(cwInvoice);
+        if(count>0&&"200".equals(saleOutWarehouseMessage.getCode())&&result&&"200".equals(cwXsysMessage.getCode())&&"200".equals(cwAccountsMessage.getCode())&&"200".equals(cwInvoiceMessage.getCode())){
             return Message.success();
         }else{
             return Message.error();
@@ -283,6 +284,16 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         if(count>0) {
             return Message.success();
         }else{
+            return Message.error();
+        }
+    }
+
+    @Override
+    public Message getSaleOrderDetailByOrderNo(String orderNo) {
+        List<BaseMedicine> baseMedicineDetailList=saleOrderMapper.getSaleOrderDetailByOrderNo(orderNo);
+        if(baseMedicineDetailList!=null){
+            return Message.success(baseMedicineDetailList);
+        }else {
             return Message.error();
         }
     }
