@@ -55,8 +55,8 @@ public class SaleOutWarehouseServiceImpl extends ServiceImpl<SaleOutWarehouseMap
     public void saleOutWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response) {
         List<KcSalefromwareVo> kcSalefromwareList=saleOutWarehouseMapper.getSaleOutWarehouseList(kcSalefromware);
         for (KcSalefromwareVo KcSalefromwareVo :kcSalefromwareList) {
-            Message message = saleOrderFeign.getSaleOrderDetailByOrderNo(KcSalefromwareVo.getOrderNo());
-            KcSalefromwareVo.setBaseMedicineList((List<BaseMedicine>) message.getData());
+            List<BaseMedicine> baseMedicineList = saleOrderFeign.getSaleOrderDetailByOrderNo(KcSalefromwareVo.getOrderNo());
+            KcSalefromwareVo.setBaseMedicineList(baseMedicineList);
         }
         try {
             ExeclUtil.write(kcSalefromwareList, KcSalefromwareVo.class,response,"销售出库订单");

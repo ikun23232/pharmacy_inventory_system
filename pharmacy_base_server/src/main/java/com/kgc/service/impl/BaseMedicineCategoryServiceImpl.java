@@ -111,6 +111,16 @@ public class BaseMedicineCategoryServiceImpl extends ServiceImpl<BaseMedicineCat
         return Message.success(baseMedicineCategory);
     }
 
+    @Override
+    public Message getAllBaseCategory() {
+        List<BaseMedicineCategory> baseMedicineCategoryList=baseMedicineCategoryMapper.getAllBaseCategory();
+       if(baseMedicineCategoryList!=null){
+           return Message.success(baseMedicineCategoryList);
+       }else {
+           return Message.error();
+       }
+    }
+
     /**
      * 递归查找所有的下级分类
      * 在这一级别的分类中找下级分类

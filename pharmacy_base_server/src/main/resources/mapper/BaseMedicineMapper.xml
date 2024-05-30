@@ -11,8 +11,8 @@
             LEFT JOIN sys_user u on b.updateBy=u.userId,
             base_unit un,base_medicine_category mc
         where b.categoryId=mc.id and b.unitId=un.id and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0
-        <if test="id!=null and id>0">and b.id=#{id}</if>
-        <if test="name!=null and name!=''">and b.name like concat('%',#{name},'%')</if>
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and b.createTime between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="id!=null and id>0">and b.id=#{medicineId}</if>
         <if test="categoryId!=null and categoryId>0">and categoryId=#{categoryId}</if>
         <if test="specification!=null and specification!=''">and specification like concat('%',#{specification},'%')</if>
         <if test="unitId!=null and unitId>0">and unitId=#{unitId}</if>

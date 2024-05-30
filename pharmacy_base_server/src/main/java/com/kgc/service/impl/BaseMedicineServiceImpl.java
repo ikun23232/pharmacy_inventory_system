@@ -5,16 +5,16 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.BaseMedicineCategoryMapper;
 import com.kgc.dao.BaseMedicineMapper;
-import com.kgc.entity.BaseMedicine;
-import com.kgc.entity.BaseMedicineCategory;
-import com.kgc.entity.KcMedicine;
-import com.kgc.entity.Message;
+import com.kgc.entity.*;
 import com.kgc.service.BaseMedicineService;
+import com.kgc.utils.ExeclUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,6 +158,16 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
             category.setChildren(getChildrenCategoriesWithProducts(category.getId()));
         }
         return Message.success(categories);
+    }
+
+    @Override
+    public void baseMedicineExcel(BaseMedicine baseMedicine, HttpServletResponse response) {
+        List<BaseMedicine> baseMedicineList=baseMedicineMapper.getAllBaseMedicineList();
+        try {
+            ExeclUtil.write(baseMedicineList, BaseMedicine.class,response,"医用商品");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<BaseMedicineCategory> getChildrenCategoriesWithProducts(Integer parentId) {

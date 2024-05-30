@@ -289,12 +289,12 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
     }
 
     @Override
-    public Message getSaleOrderDetailByOrderNo(String orderNo) {
+    public List<BaseMedicine> getSaleOrderDetailByOrderNo(String orderNo) {
         List<BaseMedicine> baseMedicineDetailList=saleOrderMapper.getSaleOrderDetailByOrderNo(orderNo);
         if(baseMedicineDetailList!=null){
-            return Message.success(baseMedicineDetailList);
+            return baseMedicineDetailList;
         }else {
-            return Message.error();
+            return null;
         }
     }
 

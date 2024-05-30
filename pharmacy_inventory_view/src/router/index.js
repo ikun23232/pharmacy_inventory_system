@@ -97,18 +97,18 @@ const routes = [
     name: 'bankAccountList',
     component: BankAccountList
   },
-  {
-    //医用商品
-    path: '/baseMedicine',
-    name: 'BaseMedicine',
-    component: BaseMedicine
-  },
-  {
-    //销售订单
-    path: '/saleOrder',
-    name: 'SaleOrder',
-    component: SaleOrder,
-  },
+  // {
+  //   //医用商品
+  //   path: '/baseMedicine',
+  //   name: 'BaseMedicine',
+  //   component: BaseMedicine
+  // },
+  // {
+  //   //销售订单
+  //   path: '/saleOrder',
+  //   name: 'SaleOrder',
+  //   component: SaleOrder,
+  // },
   {
     //销售订单打印
     path: '/printSaleOrder',
@@ -121,36 +121,36 @@ const routes = [
     name: 'CGDDOrder',
     component: procurementOrder
   },
-  {
-    //销售出库
-    path: '/saleOutWarehouse',
-    name: 'saleOutWarehouse',
-    component: SaleOutWarehouse
-  },
+  // {
+  //   //销售出库
+  //   path: '/saleOutWarehouse',
+  //   name: 'saleOutWarehouse',
+  //   component: SaleOutWarehouse
+  // },
   {
     //销售出库打印
     path: '/printSaleOutWarehouse',
     name: 'printSaleOutWarehouse',
     component: PrintSaleOutWarehouse
   },
-  {
-    //库存明细
-    path: '/stockDetail',
-    name: 'stockDetail',
-    component: StockDetail
-  },
+  // {
+  //   //库存明细
+  //   path: '/stockDetail',
+  //   name: 'stockDetail',
+  //   component: StockDetail
+  // },
   {
     //库存明细打印
     path: '/printStockDetail',
     name: 'printStockDetail',
     component: PrintStockDetail
   },
-  {
-    //销售退货退款
-    path: '/refundOrder',
-    name: 'refundOrder',
-    component: RefundOrder
-  },
+  // {
+  //   //销售退货退款
+  //   path: '/refundOrder',
+  //   name: 'refundOrder',
+  //   component: RefundOrder
+  // },
   {
     //销售退货退款打印
     path: '/printRefundOrder',
@@ -294,36 +294,36 @@ const routes = [
     name: 'CRKMXManager',
     component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
-  {
-    path: '/refundInWarehouse',
-    name: 'refundInWarehouse',
-    component: RefundInWarehouse
-  },
-  {
-    path: '/saleOrderStatistics',
-    name: 'saleOrderStatistics',
-    component: SaleOrderStatistics
-  },
-  {
-    path: '/saleOrderDetailStatistics',
-    name: 'saleOrderDetailStatistics',
-    component: SaleOrderDetailStatistics
-  },
-  {
-    path: '/refundOrderStatistics',
-    name: 'refundOrderStatistics',
-    component: RefundOrderStatistics
-  },
-  {
-    path: '/refundOrderDetailStatistics',
-    name: 'refundOrderDetailStatistics',
-    component: RefundOrderDetailStatistics
-  },
-  {
-    path: '/saleStatistics',
-    name: 'saleStatistics',
-    component: SaleStatistics
-  },
+  // {
+  //   path: '/refundInWarehouse',
+  //   name: 'refundInWarehouse',
+  //   component: RefundInWarehouse
+  // },
+  // {
+  //   path: '/saleOrderStatistics',
+  //   name: 'saleOrderStatistics',
+  //   component: SaleOrderStatistics
+  // },
+  // {
+  //   path: '/saleOrderDetailStatistics',
+  //   name: 'saleOrderDetailStatistics',
+  //   component: SaleOrderDetailStatistics
+  // },
+  // {
+  //   path: '/refundOrderStatistics',
+  //   name: 'refundOrderStatistics',
+  //   component: RefundOrderStatistics
+  // },
+  // {
+  //   path: '/refundOrderDetailStatistics',
+  //   name: 'refundOrderDetailStatistics',
+  //   component: RefundOrderDetailStatistics
+  // },
+  // {
+  //   path: '/saleStatistics',
+  //   name: 'saleStatistics',
+  //   component: SaleStatistics
+  // },
   {
     //调度入库订单
     path: '/DDRKManager',

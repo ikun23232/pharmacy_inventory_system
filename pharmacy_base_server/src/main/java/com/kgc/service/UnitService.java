@@ -23,6 +23,6 @@ public interface UnitService extends IService<BaseUnit> {
     public Message CheckUnit(String unit,int id);
 
 
-
+    public Message getAllBaseUnit();
 
 }

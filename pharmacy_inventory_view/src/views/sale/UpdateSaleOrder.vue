@@ -238,7 +238,9 @@
        async changeMedicine(obj){
         obj.batchCodeList=[]
         let data=await getAllBatchCodeByMedicineId(obj.medicineId);
+        console.log("123",data)
         obj.batchCodeList=data.data;
+        this.medicineDetailList = [...this.medicineDetailList];
        },
        //批次号变化
        async changeBatchCode(obj){
@@ -309,15 +311,23 @@
             return;
           }else{
             for (const obj of this.medicineDetailList) {
-            if (obj.medicineId==''||obj.medicineId==undefined||obj.batchCode==''||obj.batchCode==undefined){
-              Message({
-                message: "请输入商品明细",
-                type: "error",
-                center: "true",
-              });
-              return;
+              if (obj.medicineId==''||obj.medicineId==undefined||obj.batchCode==''||obj.batchCode==undefined){
+                Message({
+                  message: "请输入商品明细",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
+              if (obj.stock<obj.quantity){
+                Message({
+                  message: "库存不足，无法购买",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
             }
-          }
           }
           this.saleOrder.medicineDetailList=this.medicineDetailList
           this.saleOrder.totalPrice=this.sumPrice
@@ -341,6 +351,16 @@
        saveForm(formName){
          this.$refs[formName].validate((valid) => {
            if (valid) {
+            for (const obj of this.medicineDetailList) {
+              if (obj.stock<obj.quantity){
+                Message({
+                  message: "库存不足，无法购买",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
+            }
             this.saleOrder.medicineDetailList=this.medicineDetailList
             this.saleOrder.totalPrice=this.sumPrice
             this.saleOrder.totalNumber=this.totalNumber

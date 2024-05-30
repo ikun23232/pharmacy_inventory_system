@@ -44,8 +44,7 @@ public class RefundInWarehouseServiceImpl extends ServiceImpl<RefundInWarehouseM
     public void refundInWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response) {
         List<KcRefundInWareVo> KcRefundInWareList=refundInWarehouseMapper.getRefundInWarehouseList(kcSalefromware);
         for (KcRefundInWareVo KcRefundInWareVo :KcRefundInWareList) {
-            Message message = saleOrderFeign.getSaleOrderDetailByOrderNo(KcRefundInWareVo.getOrderNo());
-            List<BaseMedicine> baseMedicineList=(List<BaseMedicine>) message.getData();
+            List<BaseMedicine> baseMedicineList= saleOrderFeign.getSaleOrderDetailByOrderNo(KcRefundInWareVo.getOrderNo());
             KcRefundInWareVo.setBaseMedicineList(baseMedicineList);
         }
         try {
