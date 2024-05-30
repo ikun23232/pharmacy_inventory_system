@@ -65,6 +65,11 @@ const routes = [
 		name: 'Login',
 		component: () => import('../views/operate/Login_Form.vue'),
 	},
+  {
+		path: '/kk',
+		name: 'Kk',
+		component: () => import('@/components/UserList.vue'),
+	},
 	{
 		path: '/printcheck',
 		name: 'Printcheck',
