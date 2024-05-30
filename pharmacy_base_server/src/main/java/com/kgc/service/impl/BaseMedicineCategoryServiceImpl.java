@@ -56,6 +56,7 @@ public class BaseMedicineCategoryServiceImpl extends ServiceImpl<BaseMedicineCat
         if (!baseMedicineCategories.isEmpty()) {
             return Message.error("无法删除 里面仍然有数据哦！");
         }
+
         int updateRow = baseMedicineCategoryMapper.deleteById(id);
 
         if (updateRow > 0) {
