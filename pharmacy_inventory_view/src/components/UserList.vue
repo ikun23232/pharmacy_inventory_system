@@ -18,62 +18,65 @@
       <el-form-item>
         <el-button @click="getUserList">搜索</el-button>
       </el-form-item>
-    <el-table
-      ref="multipleTable"
-      :data="tableData"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @row-click="singleElection"
-      border
-      stripe
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column  width="55">
-        <template slot-scope="scope">
-            <el-radio class="radio" v-model="templateSelection" :label="scope.$index">&nbsp;</el-radio>
-        </template>
-      </el-table-column>
-      <el-table-column prop="username" label="用户名" width="120">
-      </el-table-column>
-      <el-table-column prop="code" label="角色名称">
-        <template slot-scope="scope">
-          <el-tag
-            size="small"
-            type="info"
-            v-for="item in scope.row.sysRoles"
-            :key="item.id"
-            >{{ item.name }}</el-tag
-          >
-        </template>
-      </el-table-column>
-      <el-table-column prop="email" label="邮箱"> </el-table-column>
-      <el-table-column prop="sex" label="年龄">
-        <template slot-scope="scope">
-          <el-tag size="small" v-if="scope.row.sex === 1">男</el-tag>
-          <el-tag size="small" v-else-if="scope.row.sex === 0">女</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="createdate" width="200" label="创建时间">
-      </el-table-column>
-    </el-table>
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @row-click="singleElection"
+        border
+        stripe
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column width="55">
+          <template slot-scope="scope">
+            <el-radio
+              class="radio"
+              v-model="templateSelection"
+              :label="scope.$index"
+              >&nbsp;</el-radio
+            >
+          </template>
+        </el-table-column>
+        <el-table-column prop="username" label="用户名" width="120">
+        </el-table-column>
+        <el-table-column prop="code" label="角色名称">
+          <template slot-scope="scope">
+            <el-tag
+              size="small"
+              type="info"
+              v-for="item in scope.row.sysRoles"
+              :key="item.id"
+              >{{ item.name }}</el-tag
+            >
+          </template>
+        </el-table-column>
+        <el-table-column prop="email" label="邮箱"> </el-table-column>
+        <el-table-column prop="sex" label="年龄">
+          <template slot-scope="scope">
+            <el-tag size="small" v-if="scope.row.sex === 1">男</el-tag>
+            <el-tag size="small" v-else-if="scope.row.sex === 0">女</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createdate" width="200" label="创建时间">
+        </el-table-column>
+      </el-table>
 
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      layout="total, sizes, prev, pager, next, jumper"
-      :page-sizes="[10, 20, 50, 100]"
-      :current-page="current"
-      :page-size="size"
-      :total="total"
-    >
-    </el-pagination>
-        <div>
-      <el-row type="flex" justify="center">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        layout="total, sizes, prev, pager, next, jumper"
+        :page-sizes="[10, 20, 50, 100]"
+        :current-page="current"
+        :page-size="size"
+        :total="total"
+      >
+      </el-pagination>
+      <div>
+        <el-row type="flex" justify="center">
           <el-col :span="6"
             ><div class="grid-content bg-purple">
-              <el-button type="primary" @click="submitForm()"
-                >立即添加</el-button
-              >
+              <el-button type="primary" @click="submitForm()">选中</el-button>
             </div></el-col
           >
           <el-col :span="6">
@@ -82,7 +85,8 @@
             </div>
           </el-col>
         </el-row>
-  </div>
+      </div>
+    </el-form>
   </div>
 </template>
   
@@ -99,8 +103,9 @@ export default {
       current: 1,
       tableData: [],
       multipleSelection: [],
-      roleTreeData: [], 
-      templateSelection: {},
+      roleTreeData: [],
+      templateSelection: [],
+      userid:0,
     };
   },
   created() {
@@ -143,18 +148,23 @@ export default {
           this.total = res.data.total;
         });
     },
+    singleElection(row) {
+      console.log(row);
+      
+      this.userid = row.userid
+      console.log(this.userid);
+    },
     submitForm() {
-      if (this.templateSelection == null || this.templateSelection == "") {
+      console.log(this.userid,"dyf");
+      if (this.userid == null ) {
         this.$message({
           message: "请选择执行人！",
           type: "error",
         });
       }
-      this.$emit("handleKcmxSuccess", this.templateSelection);
+      this.$emit("handleKcmxSuccess", this.userid);
     },
-    singleElection(row) {
-      this.templateSelection = this.tableData.indexOf(row);
-    },
+    
   },
 };
 </script>

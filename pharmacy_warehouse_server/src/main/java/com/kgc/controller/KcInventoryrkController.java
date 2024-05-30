@@ -64,6 +64,7 @@ public class KcInventoryrkController {
     @Log("盘盈入库信息导出")
     @RequestMapping("/check/getAllCheckRkexcel")
     public void getAllCheckRkexcel(@RequestBody KcInventoryrk kcInventoryrk , HttpServletResponse response) {
+        List<String> permissionList = StpUtil.getPermissionList();
         StpUtil.checkPermission("kc:inventroyRK:excel");
         iKcInventoryrkService.getAllCheckRkexcel(kcInventoryrk, response);
     }

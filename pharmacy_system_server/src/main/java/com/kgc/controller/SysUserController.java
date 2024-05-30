@@ -75,7 +75,7 @@ public class SysUserController {
     @Log("导出用户")
     @RequestMapping("Userexcel")
     public void Userexcel(@RequestBody SysUser sysUser , HttpServletResponse response) {
-
+        List<String> permissionList = StpUtil.getPermissionList();
         userService.Userexcel(sysUser,response);
     }
     @Log("删除用户")
