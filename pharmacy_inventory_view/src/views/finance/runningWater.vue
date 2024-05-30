@@ -138,7 +138,7 @@ export default {
       })
     },
     initPieChart() {
-      var myPieChart = echarts.init(this.$refs.pieChart);
+      const myPieChart = echarts.init(this.$refs.pieChart);
       this.pieChartOption = {
         title: {
           text: this.thisDate+'入账出账金额',
@@ -174,7 +174,7 @@ export default {
       myPieChart.setOption(this.pieChartOption);
     },
     initPieChart2() {
-      var myPieChart2 = echarts.init(this.$refs.pieChart2);
+      const myPieChart2 = echarts.init(this.$refs.pieChart2);
       this.pieChartOption = {
         title: {
           text: this.thisDate+'入账出账单数',

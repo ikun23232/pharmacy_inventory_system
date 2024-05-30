@@ -164,12 +164,12 @@ const routes = [
   //   name: 'procurementTJ',
   //   component: () => import('../views/procurement/ProcurementTJ.vue')
   // },
-  {
-    //库存报损
-    path:'/KcReported',
-    name: 'KcReported',
-    component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  },
+  // {
+  //   //库存报损
+  //   path:'/KcReported',
+  //   name: 'KcReported',
+  //   component: () => import('../views/warehouse/KCBC/KcReported.vue')
+  // },
   {
     //库存报损打印
     path:'/PrintKcReported',
