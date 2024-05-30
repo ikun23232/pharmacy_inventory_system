@@ -214,7 +214,7 @@ export default {
 
 <template>
   <div>
-    <div class="title">库存报损</div>
+<!--    <div class="title">库存报损</div>-->
     <!--查询条件-->
     <div class="condition">
       报损编号：
