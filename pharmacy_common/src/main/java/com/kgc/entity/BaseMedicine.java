@@ -58,7 +58,11 @@ public class BaseMedicine implements Serializable {
     @TableLogic
     @TableField("isDel")
     private Integer isDel;
-
+    /**
+     * 医用商品规格
+     */
+    @ExcelFiled("医用商品规格")
+    private String specification;
     /**
      * 零售价
      */
@@ -66,33 +70,9 @@ public class BaseMedicine implements Serializable {
     private BigDecimal salePrice;
 
     /**
-     * 医用商品规格
-     */
-    @ExcelFiled("医用商品规格")
-    private String specification;
-
-    /**
      * 库存预警值
      */
     private Integer warning;
-
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    @ExcelFiled("创造时间")
-    private Date createTime;
-
-    private Integer createBy;
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-    private Date updateTime;
-
-    private Integer updateBy;
-
-    @TableField(exist=false)
-    @ExcelFiled("创造人名称")
-    private String createByName;
-
-    @TableField(exist=false)
-    @ExcelFiled("修改人名称")
-    private String updateByName;
 
     @TableField(exist=false)
     @ExcelFiled("医药品分类名")
@@ -108,6 +88,23 @@ public class BaseMedicine implements Serializable {
     @TableField(exist=false)
     @ExcelFiled("数量")
     private Integer quantity;
+
+    @TableField(exist=false)
+    @ExcelFiled("创建人名称")
+    private String createByName;
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @ExcelFiled("创造时间")
+    private Date createTime;
+
+    @TableField(exist=false)
+    @ExcelFiled("修改人名称")
+    private String updateByName;
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    @ExcelFiled("修改时间")
+    private Date updateTime;
+
+    private Integer createBy;
+    private Integer updateBy;
 
     @TableField(exist=false)
     private BigDecimal totalPrice;
@@ -157,5 +154,11 @@ public class BaseMedicine implements Serializable {
     private Integer fowardWarHouseId;
     @TableField(exist=false)
     private String fowardWarHouseName;
+
+    @TableField(exist=false)
+    private String orderDateBegin;
+    @TableField(exist=false)
+    private String orderDateEnd;
+
 
 }

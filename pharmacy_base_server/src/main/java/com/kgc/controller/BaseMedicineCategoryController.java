@@ -58,4 +58,10 @@ public class BaseMedicineCategoryController {
         Message message = categoryService.checkCatById(id);
         return message;
     }
+
+    @RequestMapping("/getAllBaseCategory")
+    public Message getAllBaseCategory() {
+        Message message = categoryService.getAllBaseCategory();
+        return message;
+    }
 }

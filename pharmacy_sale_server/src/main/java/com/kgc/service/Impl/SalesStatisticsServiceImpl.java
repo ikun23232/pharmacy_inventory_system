@@ -22,4 +22,13 @@ public class SalesStatisticsServiceImpl implements SalesStatisticsService {
         }
         return Message.error();
     }
+
+    @Override
+    public Message getSalesStatisticsTK() {
+        SalesStatistics salesStatistics = salesStatisticsMapper.getSalesStatisticsTK();
+        if (salesStatistics != null) {
+            return Message.success(salesStatistics);
+        }
+        return Message.error();
+    }
 }

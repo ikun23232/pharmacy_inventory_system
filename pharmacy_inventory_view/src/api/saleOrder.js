@@ -69,3 +69,23 @@ export function saleOrderExcel(xsOrder) {
         console.log("error:",error)
     })
 }
+
+export function updateSaleOrderByOrderNo(orderNo) {
+    return request.get(baseUrl + "/updateSaleOrderByOrderNo",{
+        params: {
+            orderNo: orderNo,
+        }
+    });
+}
+
+export function recoverSaleOrderByOrderNo(orderNo) {
+    return request.get(baseUrl + "/recoverSaleOrderByOrderNo",{
+        params: {
+            orderNo: orderNo,
+        }
+    });
+}
+
+export function getAliPayImg(xsOrder) {
+    return request.post(baseUrl + "/getAliPayImg",xsOrder);
+}

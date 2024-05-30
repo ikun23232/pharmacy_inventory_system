@@ -55,28 +55,25 @@
     </select>
 
     <select id="getCgPayCom"  resultType="CgPayCom">
-    SELECT
-      CASE
+        SELECT
+        CASE
         WHEN isPay = '0' THEN '未支付'
         ELSE '已支付'
-      END AS paymentStatus,
-      COUNT(*) AS orderCount,
-      IFNULL(SUM(CASE WHEN isPay = '1' THEN referenceAmount ELSE 0 END), 0) AS totalAmount
-    FROM
-      cgdd_order
-    WHERE
-      isDel = 0
-      <if test="year!=null and year!=''">
-          AND YEAR(createTime) = #{year}
-      </if>
+        END AS paymentStatus,
+        COUNT(*) AS orderCount,
+        IFNULL(SUM(referenceAmount), 0) AS totalAmount
+        FROM
+        cgdd_order
+        WHERE
+        isDel = 0
+        <if test="year!=null and year!=''">
+            AND YEAR(createTime) = #{year}
+        </if>
         <if test="month!=null and month!=''">
             AND MONTH(createTime) = #{month}
         </if>
-    GROUP BY
-      CASE
-        WHEN isPay = '0' THEN '未支付'
-        ELSE '已支付'
-      END;
+        GROUP BY
+        paymentStatus;
   </select>
 
     <select id="getCgPayNum" resultType="CgPayNum">

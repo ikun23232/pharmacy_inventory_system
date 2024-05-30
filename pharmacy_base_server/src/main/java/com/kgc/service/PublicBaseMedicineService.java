@@ -14,4 +14,6 @@ public interface PublicBaseMedicineService {
     public Message getMedicineListByCode(String code);
 
     Message getMedicineVOListByCode(String code);
+
+    List<MedicineVO> getMedicineVOListByCodes(String code);
 }

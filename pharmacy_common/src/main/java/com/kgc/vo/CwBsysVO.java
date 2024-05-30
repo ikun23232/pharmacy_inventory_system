@@ -6,6 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 报损应收VO
@@ -53,4 +54,7 @@ public class CwBsysVO implements Serializable {
     private String createBy;
     @ExcelFiled("报损人")
     private String createByName;
+
+    @ExcelFiled(value = "药品报损明细",type = KcMedicineBSVO.class)
+    private List<KcMedicineBSVO> medicineList;
 }

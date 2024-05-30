@@ -154,6 +154,7 @@
       </el-col>
       <el-col :span="2">
         <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
+        <!-- <el-button type="primary" size="mini" @click="payOrder">支付</el-button> -->
       </el-col>
       <el-col :span="2">
         <el-button size="mini" @click="cancelForm">取消</el-button>
@@ -161,6 +162,19 @@
     </el-row>
   </el-form>
   </div>
+  <!-- <el-dialog
+    title="销售订单支付"
+    :visible.sync="dialogVisible"
+    width="30%"
+    append-to-body
+    :before-close="handleClose">
+    <div>
+      <img :src="imgUrl" alt="">
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="dialogVisible = false">关闭交易</el-button>
+    </span>
+  </el-dialog> -->
  </div>
 </template>
 
@@ -189,6 +203,7 @@ export default {
         totalNumber:""
       },   
       checkedDetail:[],
+      dialogVisible:false,
       rules:{
         orderNo:[
             { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -211,6 +226,13 @@ export default {
     this.getAllBaseMedicine();
   },
   methods: {
+    // download(){
+
+    // },
+    // payOrder(){
+    //   this.dialogVisible=true;
+
+    // },
     //拿到所有的银行账户
     async getAllBankCountList() {
       let data = await getAllBankCountList();
@@ -298,22 +320,23 @@ export default {
             return;
           }else{
             for (const obj of this.medicineDetailList) {
-            if (obj.medicineId==''||obj.medicineId==undefined||obj.batchCode==''||obj.batchCode==undefined){
-              Message({
-                message: "请输入商品明细",
-                type: "error",
-                center: "true",
-              });
-              return;
-            }else if (obj.stock<obj.quantity){
-              Message({
-                message: "库存不足，无法购买",
-                type: "error",
-                center: "true",
-              });
-              return;
+              if (obj.medicineId==''||obj.medicineId==undefined||obj.batchCode==''||obj.batchCode==undefined){
+                Message({
+                  message: "请输入商品明细",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
+              if (obj.stock<obj.quantity){
+                Message({
+                  message: "库存不足，无法购买",
+                  type: "error",
+                  center: "true",
+                });
+                return;
+              }
             }
-          }
           }
           this.saleOrder.medicineDetailList=this.medicineDetailList
           this.saleOrder.totalPrice=this.sumPrice
@@ -327,7 +350,7 @@ export default {
               });
               this.$emit("handleDialogFormVisible",false);
             }         
-          });   
+          });
         } else {
           console.log("error submit!!");
           return false;
@@ -337,6 +360,16 @@ export default {
     saveForm(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          for (const obj of this.medicineDetailList) {
+            if (obj.stock<obj.quantity){
+              Message({
+                message: "库存不足，无法购买",
+                type: "error",
+                center: "true",
+              });
+              return;
+            }
+          }
           this.saleOrder.medicineDetailList=this.medicineDetailList
           this.saleOrder.totalPrice=this.sumPrice
           this.saleOrder.totalNumber=this.totalNumber

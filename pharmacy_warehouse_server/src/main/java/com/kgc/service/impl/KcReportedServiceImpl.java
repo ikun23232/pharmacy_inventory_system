@@ -9,6 +9,7 @@ import com.kgc.entity.*;
 import com.kgc.feign.CwAccountsFeign;
 import com.kgc.feign.CwBsysFeign;
 import com.kgc.service.*;
+import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.KcMedicineBSVO;
 import com.kgc.vo.KcReportedVO;
@@ -34,6 +35,9 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
 
     @Autowired
     private KcMedicineService kcMedicineService;
+
+    @Autowired
+    private KcOutintodetialService kcOutintodetialService;
 
 
 
@@ -256,16 +260,6 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
         List list = (List) theData.get("kcMedicineList");
         if (kcReported.getApprovalStatus()==2){
             this.addKcReportedfromwareByReported(kcReported.getId());
-//            KcOutintodetial kcOutintodetial = new KcOutintodetial();
-
-//            CwBsys cwBsys = new CwBsys();
-//            String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
-//            cwBsys.setCode(code);
-//            cwBsys.setOriginalOrder(kcReported.getCode());
-//            cwBsys.setCost(kcReported.getCost());
-//            cwBsys.setCreateTime(LocalDateTime.now());
-
-
         }
         Message messageDel = delKcReporteddetailByCode(kcReported.getCode());
         if (!messageDel.getCode().equals("200")){
@@ -277,9 +271,33 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 kcMedicine.setId(Integer.valueOf(((Map)list.get(i)).get("id").toString()));
                 kcMedicine.setQuantity(Integer.valueOf(((Map)list.get(i)).get("quantity").toString()));
                 kcMedicine.setReportedNum(Integer.valueOf(((Map)list.get(i)).get("reportedNum").toString()));
-                this.kcMedicineService.updateQuantityById(kcMedicine);
+                this.kcMedicineService.updateQuantityById(kcMedicine);//修改库存数量
+
+                KcOutintodetial kcOutintodetial = new KcOutintodetial();
+                kcOutintodetial.setCode(CodeUtil.createCode("CRKMX"));
+                kcOutintodetial.setTypeId(4);
+                kcOutintodetial.setCreateDate(new Date());
+                kcOutintodetial.setCreateBy(kcReported.getModificationBy());
+                kcOutintodetial.setOrderCode((String) kcReportedMap.get("code"));
+                kcOutintodetial.setMedicineId((Integer) ((Map)list.get(i)).get("medicineId"));
+                kcOutintodetial.setProviderId((Integer) ((Map)list.get(i)).get("providerId"));
+                kcOutintodetial.setBatchCode((String) ((Map)list.get(i)).get("batchCode"));
+//                kcOutintodetial.setFromStockMoney((BigDecimal) ((Map)list.get(i)).get("allPrice"));
+                kcOutintodetial.setFromStockQuantity((Integer) ((Map)list.get(i)).get("reportedNum"));
+//                kcOutintodetial.setPrice((BigDecimal) ((Map)list.get(i)).get("money"));
+                kcOutintodetial.setWareHouseId((Integer) ((Map)list.get(i)).get("storehouseId"));
+
+                BigDecimal allPrice = getBigDecimalFromMap((Map) list.get(i), "allPrice");
+                BigDecimal money = getBigDecimalFromMap((Map) list.get(i), "money");
+
+                // 现在设置 kcOutintodetial 对象的属性
+                kcOutintodetial.setFromStockMoney(allPrice);
+                kcOutintodetial.setPrice(money);
+
+                kcOutintodetialService.addKcOutinTodetail(kcOutintodetial);//添加出入库明细
+
             }
-//            this.kcMedicineService.updateQuantityById((KcMedicine) list.get(i));//修改库存数量
+
             KcReporteddetail kcReporteddetail = new KcReporteddetail();
             kcReporteddetail.setReportedCode((String) kcReportedMap.get("code"));
             kcReporteddetail.setMedicineId((Integer) ((Map)list.get(i)).get("medicineId"));
@@ -301,7 +319,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
 
             if (kcReported.getReportedTypeId()==1){
                 CwBsys cwBsys = new CwBsys();
-                String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//                String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+                String code = CodeUtil.createCode("CWBSYS");
                 cwBsys.setCode(code);
                 cwBsys.setOriginalOrder(kcReported.getCode());
                 cwBsys.setCost(allCost);
@@ -309,7 +328,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 cwBsysFeign.addCwbsys(cwBsys);
 
                 CwAccounts cwAccounts = new CwAccounts();
-                String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//                String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+                String codes = CodeUtil.createCode("CWACC");
                 cwAccounts.setCode(codes);
                 cwAccounts.setCategoryId(7);
                 cwAccounts.setCost(allCost);
@@ -328,6 +348,15 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
             return message;
         }
         return message;
+    }
+
+    private BigDecimal getBigDecimalFromMap(Map map, String key) {
+        return Optional.ofNullable(map.get(key))
+                .filter(o -> o instanceof Number)  // 确保值是数字类型
+                .map(Number.class::cast)           // 强制转换为 Number
+                .map(Number::doubleValue)         // 转换为 double
+                .map(BigDecimal::new)             // 转换为 BigDecimal
+                .orElse(BigDecimal.ZERO);          // 如果值不存在或不是数字类型，返回零
     }
 
     /**
@@ -358,7 +387,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
     public Message addKcReportedfromwareByReported(int reportedId) {
         KcReportedfromware kcReportedfromware = new KcReportedfromware();
         kcReportedfromware.setReportedId(reportedId);
-        String code = UUID.randomUUID().toString().replace("-", "");
+//        String code = UUID.randomUUID().toString().replace("-", "");
+        String code = CodeUtil.createCode("KCBS");
         kcReportedfromware.setCode(code);
         int isAdd=kcReportedMapper.addKcReportedfromwareByReported(kcReportedfromware);
         if (isAdd>0){
@@ -422,7 +452,13 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
      */
     @Override
     public void kcReportedfromwareExcel(HttpServletResponse response) {
-        List<KcReportedfromwareVO> listExcel = kcReportedMapper.getKcReportedfromwareVO();
+        List<KcReportedfromwareVO> list = kcReportedMapper.getKcReportedfromwareVO();
+        List<KcReportedfromwareVO> listExcel = new ArrayList<>();
+        for (KcReportedfromwareVO kcReportedfromwareVO : list){
+            List<KcMedicineBSVO> medicineList = kcMedicineService.getKcMedicineVOByReportedCode(kcReportedfromwareVO.getCode());
+            kcReportedfromwareVO.setMedicineList(medicineList);
+            listExcel.add(kcReportedfromwareVO);
+        }
         try {
             ExeclUtil.write(listExcel, KcReportedfromwareVO.class,response,"报损出库");
         } catch (IOException e) {
@@ -432,7 +468,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
 
     @Override
     public Message addKcReportedAllByPk(Map map) {
-        String code = UUID.randomUUID().toString().replace("-", "");
+//        String code = UUID.randomUUID().toString().replace("-", "");
+        String code = CodeUtil.createCode("KCBS");
         Map a = (Map) map.get("theData");
         KcReported kcReported = new KcReported();
         kcReported.setCode(code);
@@ -510,6 +547,16 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
     @Override
     public int addKcReportedBits(KcReported kcReported) {
         return kcReportedMapper.insert(kcReported);
+    }
+
+    @Override
+    public Message insertKcReported(KcReported kcReported) {
+        int count=kcReportedMapper.insert(kcReported);
+        if(count>0) {
+            return Message.success();
+        }else{
+            return Message.error();
+        }
     }
 
 

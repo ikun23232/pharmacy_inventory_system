@@ -56,6 +56,6 @@ public interface KcReportedService extends IService<KcReported> {
 
     int addKcReportedBits(KcReported kcReported);
 
-
+    Message insertKcReported(KcReported kcReported);
 
 }

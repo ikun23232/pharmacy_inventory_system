@@ -1,11 +1,14 @@
 package com.kgc.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
+import com.kgc.entity.BaseMedicine;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 销售应收VO
@@ -66,4 +69,8 @@ public class CwXsysVO {
      */
     @ExcelFiled("审核意见")
     private String opinion;
+
+    @TableField(exist=false)
+    @ExcelFiled(value = "药品明细",type = BaseMedicine.class)
+    private List<BaseMedicine> baseMedicineList;
 }

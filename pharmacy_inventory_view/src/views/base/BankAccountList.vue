@@ -11,14 +11,15 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             <label style="font-weight: bolder; font-size: 14px">银行名称:&nbsp;</label>
             <el-input style="width: 200px" placeholder="请输入内容" v-model="belongBank" clearable>
-            </el-input>
-            <el-button type="primary" icon="el-icon-delete" style="background-color: #ff4e00; border: none"
-                @click="clearsearch()">重置</el-button>
-            <el-button type="primary" icon="el-icon-search" style="background-color: #ff4e00; border: none"
-                @click="handlegetbankAccountList(1)">搜索</el-button>
-            <el-button type="primary" icon="el-icon-search" style="background-color: #ff4e00; border: none"
+            </el-input>&nbsp;&nbsp;&nbsp;
+            <el-button type="primary" icon="el-icon-delete" style=" border: none"
+                @click="clearsearch()">重置</el-button>&nbsp;
+            <el-button type="primary" icon="el-icon-search" style=" border: none"
+                @click="handlegetbankAccountList(1)">搜索</el-button>&nbsp;
+            <el-button type="primary" icon="el-icon-search" style=" border: none"
                 @click="addBankAccount()">添加</el-button>
         </p>
+        <br/>
         <el-table :data="page.list" style="width: 100%; border: black" max-height="1000">
             <el-table-column label="序号" width="120" align="center">
                 <template slot-scope="scope">

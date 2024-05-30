@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/pharmacy_base_server/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/pharmacy_base_server/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/pharmacy_nacos/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/pharmacy_server/pharmacy_sale_server/src/main/java" isTestSource="false" />
     </content>
   </component>
 </module>

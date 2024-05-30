@@ -88,7 +88,7 @@
   </template>
   
   <script>
-  import {initSaleOrder} from "../../api/saleOrder.js";
+  import {initSaleOrder,updateSaleOrderByOrderNo} from "../../api/saleOrder.js";
   import {getAllUser} from "../../api/sysUser.js";
   import { Message } from "element-ui";
   
@@ -104,7 +104,8 @@
               orderDateEnd:"",
               createByName:"",
               currentPage:1, 
-              editStatus:1
+              editStatus:1,
+              isCheck:1
           },
           pageInfo:"",
           list:"",
@@ -148,7 +149,13 @@
          row.xh = rowIndex + 1;
        },
        //确认要添加的销售订单
-       addSaleOrder(){
+       async addSaleOrder(){
+         //给选中的销售订单添加退货标识
+         for(var i=0;i<this.saleOrderList.length;i++){
+          const orderNo=this.saleOrderList[i].orderNo;
+          const data=await updateSaleOrderByOrderNo(orderNo)
+          console.log("888",data.data)
+        }
         this.$emit("chooseSaleOrder",this.saleOrderList);
         this.closeForm()
        }

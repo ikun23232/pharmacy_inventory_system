@@ -7,36 +7,34 @@
           <el-form-item label="创建时间">
             <el-col :span="11">
               <el-date-picker
-                type="date"
-                placeholder="请选择开始"
-                v-model="object.orderDateBegin"
-                style="width: 100%"
-              ></el-date-picker>
-            </el-col>
-            <el-col class="line" :span="1">~</el-col>
-            <el-col :span="11">
-              <el-date-picker
-                type="date"
-                placeholder="请选择结束"
-                v-model="object.orderDateEnd"
-                style="width: 100%"
-              ></el-date-picker>
+                v-model="time"
+                type="daterange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions"
+                />
             </el-col>
           </el-form-item>
           <el-form-item label="仓库">
-            <el-input
-              placeholder="请选择"
-              v-model="object.storehouseName"
-            ></el-input>
+            <el-select v-model="object.storeHouseId" >
+              <el-option
+                v-for="dict in storeHouseList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+              </el-select>
           </el-form-item>
           <el-form-item label="医用商品名称">
-            <el-input placeholder="请选择" v-model="object.name"></el-input>
-          </el-form-item>
-          <el-form-item label="医用商品类型">
-            <el-input
-              placeholder="请选择"
-              v-model="object.categoryName"
-            ></el-input>
+            <el-select v-model="object.medicineId" >
+              <el-option
+                v-for="dict in baseMedicineList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+              </el-select>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -45,19 +43,13 @@
               @click="initStockDetailListByPage(1)"
               >查询</el-button
             >
-            <el-button icon="el-icon-refresh-right">重置</el-button>
+            <el-button icon="el-icon-refresh-right" @click="resetForm">重置</el-button>
             <el-button
               type="text"
               icon="el-icon-upload2"
               style="margin-left: 18px"
               @click="handleExcel"
               >导出</el-button
-            >
-            <el-button
-              type="text"
-              icon="el-icon-download"
-              style="margin-left: 18px"
-              >导入</el-button
             >
             <el-button
               type="text"
@@ -139,6 +131,8 @@
   
   <script>
 import { initStockDetailListByPage,stockDetailExcel} from "../../../api/stockDetail.js";
+import { getAllBaseMedicine} from "@/api/baseMedicine.js";
+import { getAllStoreHouseList} from "@/api/storeHouse.js";
 import { Message } from "element-ui";
 
 export default {
@@ -148,20 +142,42 @@ export default {
       object: {
         orderDateBegin: "",
         orderDateEnd: "",
-        storehouseName: "",
-        name: "",
-        categoryName: "",
+        storeHouseId: "",
+        medicineId: "",
         currentPage: 1,
       },
+      // 时间
+      time:{},
       pageInfo: "",
       list: "",
+      baseMedicineList:[],
+      storeHouseList:[]
     };
   },
   mounted() {
+    this.getAllBaseMedicine();
+    this.getAllStoreHouseList();
     this.initStockDetailListByPage(1);
   },
   methods: {
+    async getAllBaseMedicine() {
+        let data = await getAllBaseMedicine();
+        console.log("12345",data.data)
+        this.baseMedicineList=data.data;
+    },
+    async getAllStoreHouseList() {
+        let data = await getAllStoreHouseList();
+        console.log("12345",data.data)
+        this.storeHouseList=data.data;
+    },
     async initStockDetailListByPage(currentPage) {
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        this.object.orderDateBegin = this.time[0];
+        this.object.orderDateEnd = this.time[1];
+      } else {
+        this.object.orderDateBegin = null;
+        this.object.orderDateEnd = null;
+      }
       this.object.currentPage = currentPage;
       let data = await initStockDetailListByPage(this.object);
       this.pageInfo = data.data;
@@ -202,6 +218,11 @@ export default {
             message: "取消删除成功！",
           });
         });
+    },
+    resetForm(){
+      this.time="";
+      this.object.storeHouseId="";
+      this.object.medicineId="";
     },
     async handleExcel(){
       await stockDetailExcel(this.object);

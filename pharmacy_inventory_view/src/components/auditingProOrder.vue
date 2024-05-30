@@ -672,7 +672,7 @@ import { getCgddByCode, auditingOrder } from "../api/procurementOrder.js";
 import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
 import { getPayType } from "../api/public.js";
 export default {
-  name: "AuditingProcOrder",
+  name: "auditingProcOrder",
   props: {
     code: {
       type: String,

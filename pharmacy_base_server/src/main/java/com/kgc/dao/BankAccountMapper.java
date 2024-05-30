@@ -3,6 +3,7 @@ package com.kgc.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.BankAccount;
 import com.kgc.entity.BaseProvider;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author lemon
  * @since 2024-04-30
  */
+@Mapper
 public interface BankAccountMapper extends BaseMapper<BankAccount> {
 
     /**

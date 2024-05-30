@@ -91,7 +91,7 @@ export default {
       <el-row :gutter="20">
         <el-col :span="11"
         ><div class="grid-content bg-purple">
-          单据编号：
+          发票编号：
           <el-input
               v-model="cwInvoice.code"
               style="width: 200px"
@@ -100,7 +100,7 @@ export default {
         ></el-col>
         <el-col :span="11"
         ><div class="grid-content bg-purple">
-          单据编号：
+          销售单编号：
           <el-input
               v-model="cwInvoice.orderNumber"
               style="width: 200px"

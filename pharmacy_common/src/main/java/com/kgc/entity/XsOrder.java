@@ -46,7 +46,7 @@ public class XsOrder implements Serializable {
     /**
      * 销售订单日期
      */
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @TableField("orderDate")
     @ExcelFiled("单据日期")
     private Date orderDate;
@@ -97,7 +97,7 @@ public class XsOrder implements Serializable {
     /**
      * 修改时间
      */
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @TableField("updateDate")
     @ExcelFiled("修改时间")
     private Date updateDate;

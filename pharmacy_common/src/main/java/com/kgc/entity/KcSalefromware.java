@@ -50,14 +50,14 @@ public class KcSalefromware implements Serializable {
 
     @TableField(exist=false)
     private int currentPage;
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
     @TableField(exist=false)
-    private Date orderDateBegin;
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    private String orderDateBegin;
     @TableField(exist=false)
-    private Date orderDateEnd;
+    private String orderDateEnd;
     @TableField(exist=false)
     private String createByName;
+    @TableField(exist=false)
+    private Integer createBy;
 
 
 

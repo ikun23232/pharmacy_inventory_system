@@ -1,5 +1,7 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.CwInvoice;
 import com.kgc.entity.Message;
 import com.kgc.service.CwInvoiceService;
@@ -33,8 +35,10 @@ public class CwInvoiceController {
         return cwInvoiceService.getCategoryString();
     }
 
+    @Log("发票导出")
     @RequestMapping("/cwInvoiceExcel")
     public void cwInvoiceExcel(HttpServletResponse response){
+        StpUtil.checkPermission("cw:invoice:excel");
         cwInvoiceService.cwInvoiceExcel(response);
     }
 

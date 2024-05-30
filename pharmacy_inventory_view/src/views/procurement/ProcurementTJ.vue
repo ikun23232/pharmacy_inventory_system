@@ -58,6 +58,12 @@
       <div ref="echart" style="flex: 1; width: 50%; height: 400px;"></div>
       <!-- 饼图容器 -->
       <div ref="pieChart" style="flex: 1; width: 50%; height: 400px;"></div>
+    </div><br/>
+    <div style="display: flex;">
+      <!-- 柱状图容器 -->
+      <div ref="echart2" style="flex: 1; width: 50%; height: 400px;"></div>
+      <!-- 饼图容器 -->
+      <div ref="pieChart2" style="flex: 1; width: 50%; height: 400px;"></div>
     </div>
 
 
@@ -76,6 +82,8 @@ export default {
       month: '',
       monthListNum: [],
       monthListNum2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      monthListNums: [],
+      monthListNums2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       showList: {
         pageNum: 1,
         pageSize: 3,
@@ -83,10 +91,16 @@ export default {
         list: []
       },
       pieChartOption: {},// 饼图的配置
+      pieChartOption2: {},
       pay: {
         success: 0,
         fail: 0
-      }
+      },
+      pay2: {
+        success: 0,
+        fail: 0
+      },
+      thisDate:""
     };
   },
   mounted() {
@@ -97,11 +111,24 @@ export default {
     this.getList();
   },
   methods: {
+    getThisData() {
+      if (this.month == ''){
+        this.thisDate = this.year + '年'
+      }else if(!this.month){
+        this.thisDate = this.year + '年'
+      } else {
+        this.thisDate = this.year + '年' + this.month + '月'
+      }
+      if (!this.year){
+        this.thisDate = '全年'
+      }
+    },
     initEChart() {
       var myChart = echarts.init(this.$refs.echart);
       myChart.setOption({
         title: {
-          text: '                                                      ' + this.year + '年采购成交数'
+          text: this.year + '年采购成交数',
+          left: 'center'
         },
         tooltip: {},
         xAxis: {
@@ -120,11 +147,35 @@ export default {
         ]
       });
     },
+    initEChart2() {
+      var myChart = echarts.init(this.$refs.echart2);
+      myChart.setOption({
+        title: {
+          text: this.year + '年采购成金额',
+          left: 'center'
+        },
+        tooltip: {},
+        xAxis: {
+          type: 'category',
+          data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '销量',
+            type: 'bar',
+            data: this.monthListNums2
+          }
+        ]
+      });
+    },
     initPieChart() {
       var myPieChart = echarts.init(this.$refs.pieChart);
       this.pieChartOption = {
         title: {
-          text: '当年当月采购成功成交数',
+          text: this.thisDate+'采购成功成交数',
           left: 'center'
         },
         tooltip: {
@@ -156,6 +207,42 @@ export default {
       };
       myPieChart.setOption(this.pieChartOption);
     },
+    initPieChart2() {
+      var myPieChart2 = echarts.init(this.$refs.pieChart2);
+      this.pieChartOption2 = {
+        title: {
+          text: this.thisDate+'采购成功成金额',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: 'Access From',
+            type: 'pie',
+            radius: '50%',
+            data: [
+              {value: this.pay2.success, name: '已支付'},
+              {value: this.pay2.fail, name: '未支付'},
+
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      myPieChart2.setOption(this.pieChartOption2);
+    },
     getCgPayComInfo() {
       // 设置年份和月份的默认值为空字符串
       let year = '';
@@ -172,32 +259,48 @@ export default {
       this.pay.fail = 0
       // 调用getCgPayCom函数并传入年份和月份
       getCgPayCom(year, month).then(resp => {
+        console.log("11111111111111111111111111111111111111111111111111111111111");
+        console.log(resp.data);
         for (let i = 0; i < resp.data.length; i++) {
           if (resp.data[i].paymentStatus == '已支付') {
             this.pay.success = resp.data[i].orderCount;
+            this.pay2.success = resp.data[i].totalAmount;
           }
           if (resp.data[i].paymentStatus == '未支付') {
             this.pay.fail = resp.data[i].orderCount;
+            this.pay2.fail = resp.data[i].totalAmount;
           }
         }
+        this.getThisData();
         this.initPieChart();
+        this.initPieChart2();
       });
     },
     getCgPayNumInfo() {
       if (this.year) {
         getCgPayNum(this.year).then(resp => {
-          console.log(resp.data);
+
           this.monthListNum = resp.data;
+          this.monthListNums = resp.data;
           this.getCgPayNumInfo2();
         });
       }
     },
     getCgPayNumInfo2() {
       this.monthListNum2 = this.monthListNum2.map(() => 0); // 重置数组为0
+      this.monthListNums2 = this.monthListNums2.map(() => 0);
       this.monthListNum.forEach(item => {
         this.monthListNum2[item.month - 1] = item.paidCount;
       });
+      this.monthListNums.forEach(item => {
+        this.monthListNums2[item.month - 1] = item.totalPaidAmount;
+      });
+      console.log("2222222222222222222222222222222222");
+      console.log(this.monthListNums);
+      console.log(this.monthListNums2);
       this.initEChart(); // 更新柱状图
+      this.initEChart2();
+
     },
     getList() {
       let year = '';

@@ -6,12 +6,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.entity.*;
 import com.kgc.dao.CwCgyfDao;
+import com.kgc.feign.BaseMedineFeign;
 import com.kgc.feign.ProcurementOrderFeign;
 import com.kgc.service.CwAccountsService;
 import com.kgc.service.CwCgyfService;
 //import com.kgc.service.ProcurementOrderService;
+import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwCgyfVO;
+import com.kgc.vo.MedicineVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,9 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
 
     @Resource
     private CwCgyfDao cwCgyfDao;
+
+    @Resource
+    private BaseMedineFeign baseMedineFeign;
 
     @Resource
     private CwAccountsService cwAccountsService;
@@ -70,7 +76,8 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         }
         CwCgyf cwCgyfById = cwCgyfDao.getCwCgyfById(cwCgyf.getId());
         CwAccounts cwAccounts = new CwAccounts();
-        String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//        String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        String code = CodeUtil.createCode("CG");
         cwAccounts.setCode(code);
         cwAccounts.setCategoryId(5);
         cwAccounts.setCost(cwCgyfById.getCost());
@@ -121,8 +128,14 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
     @Override
     public void cwCgyfExcel(HttpServletResponse response) {
         List<CwCgyfVO> listExcel = cwCgyfDao.getCwCgyfVOList();
+        List<CwCgyfVO> listExcels = new ArrayList<>();
+        for (CwCgyfVO cwCgyfVO : listExcel){
+            List<MedicineVO> medicineVOList = baseMedineFeign.getMedicineVOListByCodes(cwCgyfVO.getCgddCode());
+            cwCgyfVO.setMedicineVOList(medicineVOList);
+            listExcels.add(cwCgyfVO);
+        }
         try {
-            ExeclUtil.write(listExcel, CwCgyfVO.class,response,"采购应付");
+            ExeclUtil.write(listExcels, CwCgyfVO.class,response,"采购应付");
         } catch (IOException e) {
             e.printStackTrace();
         }

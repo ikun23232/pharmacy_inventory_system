@@ -3,6 +3,7 @@ package com.kgc.controller;
 
 import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.Message;
+import com.kgc.entity.XsOrder;
 import com.kgc.service.BaseMedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -99,4 +102,8 @@ public class BaseMedicineController {
         return message;
     }
 
+    @RequestMapping("/baseMedicineExcel")
+    public void baseMedicineExcel(@RequestBody BaseMedicine baseMedicine, HttpServletResponse response) {
+        baseMedicineService.baseMedicineExcel(baseMedicine,response);
+    }
 }

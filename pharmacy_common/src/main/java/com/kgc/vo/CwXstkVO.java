@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.kgc.annotation.ExcelFiled;
+import com.kgc.entity.BaseMedicine;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 销售退款VO
@@ -72,4 +74,8 @@ public class CwXstkVO {
      */
     @ExcelFiled("审核意见")
     private String opinion;
+
+
+    @ExcelFiled(value = "药品明细",type = BaseMedicine.class)
+    private List<BaseMedicine> baseMedicineList;
 }
