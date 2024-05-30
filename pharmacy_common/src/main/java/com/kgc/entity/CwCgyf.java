@@ -38,7 +38,7 @@ public class CwCgyf implements Serializable {
     /**
      * 供应商id
      */
-    @TableField("provider_id")
+    @TableField("providerId")
     private Integer providerId;
     /**
      * 采购应付状态(付款状态(0未知,1待付款,已付款))
@@ -53,12 +53,12 @@ public class CwCgyf implements Serializable {
     /**
      * 采购应付生成时间
      */
-    @TableField("create_time")
+    @TableField("createTime")
     private Date createTime;
     /**
      * 付款时间
      */
-    @TableField("payment_time")
+    @TableField("paymentTime")
     private Date paymentTime;
     /**
      * 供应商名称

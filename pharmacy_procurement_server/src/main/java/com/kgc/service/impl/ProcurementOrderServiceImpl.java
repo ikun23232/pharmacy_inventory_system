@@ -86,7 +86,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (message.getCode().equals("200")){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
+                price = price.add(orderMedicine.getTotalPrice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -158,7 +158,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             if (message.getCode().equals("200")){
                 count1++;
                 num += orderMedicine.getQuantity();
-                price = orderMedicine.getTotalPrice().add(orderMedicine.getTotalPrice());
+                price = price.add(orderMedicine.getTotalPrice());
             }
         }
         if (cgddOrder.getMedicineList().size() != count1){
@@ -204,6 +204,7 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
                 //添加采购订单采购应付记录
                 CwCgyf cwCgyf = new CwCgyf();
                 cwCgyf.setCode(CodeUtil.createCode("CGYF"));
+                cwCgyf.setCgddCode(cgddOrder.getCode());
                 cwCgyf.setProviderId(cgddOrder.getProviderId());
                 cwCgyf.setIsPay(1);
                 cwCgyf.setCost(cgddOrder.getReferenceAmount());

@@ -383,7 +383,7 @@ import { auditingDispatch, getKcDispatchById } from "../api/KcDispatch";
 import { getKcDetailsList } from "@/api/kcDisparchDetails";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 export default {
-  name: "DDRKViewOrder",
+  name: "DDCKViewOrder",
   components: {
     wareDetails,
   },

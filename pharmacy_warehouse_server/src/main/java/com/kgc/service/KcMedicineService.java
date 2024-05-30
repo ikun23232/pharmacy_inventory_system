@@ -1,5 +1,6 @@
 package com.kgc.service;
 
+import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.vo.KcMedicineBSVO;
@@ -21,4 +22,5 @@ public interface KcMedicineService {
     //根据仓库id和药品id查询库存药品
     List<KcMedicine> getMedicineByStorehouseIdMedicineId(KcMedicine kcMedicine);
 
+    Message getKcMedicineByWareHouseId(BaseMedicine baseMedicine);
 }

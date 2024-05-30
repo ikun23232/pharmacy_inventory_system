@@ -106,7 +106,7 @@
 </template>
   
   <script>
-import { initStockDetailListByPage } from "@/api/stockDetail.js";
+import { getKcMedicineByWareHouseId } from "@/api/stockDetail.js";
 
 export default {
   name: "stockDetail",
@@ -137,7 +137,7 @@ export default {
   methods: {
     async initStockDetailListByPage(currentPage) {
       this.object.currentPage = currentPage;
-      let data = await initStockDetailListByPage(this.object);
+      let data = await getKcMedicineByWareHouseId(this.object);
       this.pageInfo = data.data;
       this.list = data.data.list;
       console.log("123", this.list);

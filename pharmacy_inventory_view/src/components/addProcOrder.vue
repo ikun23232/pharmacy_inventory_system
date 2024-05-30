@@ -669,10 +669,6 @@ export default {
             trigger: "blur",
           },
         ],
-        // fax: [
-        //   { required: true, message: "传真不能为空", trigger: "blur" },
-        //   { min: 2, max: 10, message: "传真限制为为2-10个字符", trigger: "blur" },
-        // ],
       },
     };
   },

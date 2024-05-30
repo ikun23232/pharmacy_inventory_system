@@ -99,14 +99,7 @@
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="200">
-        <template slot-scope="scope">
-          <el-button
-            @click="updateOrder(scope.row.id)"
-            type="primary"
-            size="small"
-            :disabled="scope.row.orderstatus >= 2"
-            >编辑
-          </el-button>
+        <template slot-scope="scope"> 
           <el-dropdown>
             <span class="el-dropdown-link">
               更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -118,25 +111,6 @@
                   type="danger"
                   size="small"
                   >删除
-                </el-button></el-dropdown-item
-              >
-
-              <el-dropdown-item
-                ><el-button
-                  @click="voidOrder(scope.row)"
-                  type="info"
-                  size="small"
-                  >作废
-                </el-button></el-dropdown-item
-              >
-
-              <el-dropdown-item
-                ><el-button
-                  @click="approveOrder(scope.row.id)"
-                  v-if="scope.row.orderStatus == 2"
-                  type="success"
-                  size="small"
-                  >审核
                 </el-button></el-dropdown-item
               >
               <el-dropdown-item

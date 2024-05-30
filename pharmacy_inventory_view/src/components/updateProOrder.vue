@@ -68,7 +68,7 @@
               >
                 <el-option label="货到付款" :value="0"> </el-option>
                 <el-option label="全款后发货" :value="1"> </el-option>
-                <el-option label="全款后发货" :value="2"> </el-option>
+                <el-option label="直接付款" :value="2"> </el-option>
               </el-select>
             </el-form-item></div
         ></el-col>
@@ -426,7 +426,7 @@
           </el-table>
           <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
           <div style="text-align: left">
-            <div style="margin-bottom: 25px">合计{{ totalPrice }}元</div>
+            <div style="margin-bottom: 25px">合计{{ totalPrice.toFixed(2) }}元</div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -1033,7 +1033,7 @@ export default {
         return 0;
       }
       return this.bcglXiangXiList.reduce(
-        (total, item) => total + item.totalPrice * item.quantity,
+        (total, item) => total + item.price * item.quantity,
         0
       );
     },

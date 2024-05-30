@@ -2,7 +2,7 @@
   <div>
     <div v-loading="loading" style="padding: 10px;">
       <div id="printView" style="padding-left: 90px; padding-right: 20px;">
-        <h2 style="text-align: center;margin: 30px 0 10px 0;font-family: SimSun;">调度出库单</h2>
+        <h2 style="text-align: center;margin: 30px 0 10px 0;font-family: SimSun;">调度入库单</h2>
         <table class="table" border="0pm" cellspacing="0" align="left" width="100%" style="font-size: 12px;font-family: SimSun;margin-bottom: 10px; table-layout:fixed;word-wrap:break-word;word-break:break-all">
           <tr>
             <td style="padding:5px;" align="left">单据编号:{{ saleOrder.code }}</td>
@@ -28,9 +28,9 @@
             <th>型号规格</th>
             <th>药品类型</th>
             <th>计量单位</th>
+            <th>目的仓库</th>
             <th>数量</th>
             <th>金额（元）</th>
-            <th>目的仓库</th>
           </tr>
           <tr v-for="(item, index) in medicineDetailList" :key="index" align="center">
             <td>{{ index + 1 }}</td>
@@ -39,19 +39,19 @@
             <td>{{ item.specification}}</td>
             <td>{{ item.categoryName}}</td>
             <td>{{ item.unitName }}</td>
+            <td>{{ item.aimStoreHouseName }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.price }}</td>
-            <td>{{ item.aimStoreHouseName }}</td>
           </tr>
           <tr align="center">
-            <td colspan="6" style="font-weight: bolder;">合计</td>
-            <td>{{saleOrder.count}}</td>
-            <td>{{saleOrder.medicineprice
+            <td colspan="7" style="font-weight: bolder;">合计</td>
+            <td>{{saleOrder.totalCount}}</td>
+            <td>{{saleOrder.price
               }}</td>
           </tr>
           <tr align="center">
             <td style="font-weight: bolder;">备注</td>
-            <td colspan="6">{{saleOrder.remark}}</td>
+            <td colspan="8">{{saleOrder.remark}}</td>
           </tr>
         </table>
       </div>
