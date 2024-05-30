@@ -16,6 +16,7 @@
         <if test="categoryId!=null and categoryId>0">and categoryId=#{categoryId}</if>
         <if test="specification!=null and specification!=''">and specification like concat('%',#{specification},'%')</if>
         <if test="unitId!=null and unitId>0">and unitId=#{unitId}</if>
+        order by b.createTime DESC
     </select>
 
     <select id="getMedicineListByCode" resultType="com.kgc.entity.BaseMedicine">
@@ -60,6 +61,19 @@
         where b.categoryId=mc.id and b.unitId=un.id and k.medicineId=b.id
           and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0 and k.isDel=0
           and b.id=#{id} and k.batchCode=#{batchCode}
+    </select>
+
+    <select id="getMedicineById" resultType="com.kgc.entity.BaseMedicine">
+        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
+                        c.userName as createByName,u.userName as updateByName,
+                        un.name as unitName,mc.name as categoryName
+        from base_medicine b
+                 LEFT JOIN sys_user c on b.createBy=c.userId
+                 LEFT JOIN sys_user u on b.updateBy=u.userId,
+             base_unit un,base_medicine_category mc
+        where b.categoryId=mc.id and b.unitId=un.id
+          and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0
+          and b.id=#{id}
     </select>
 
     <select id="getAllBaseMedicine" resultType="com.kgc.entity.BaseMedicine">
