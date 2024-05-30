@@ -68,6 +68,13 @@ export function getMedicineListByCodeComblie(code) {
         params: {
             code: code,
         }
-
     });
+}
+
+export function addProviderMedicine(ProvideMedicine) {
+    return request.post(baseUrl + "/addProviderMedicine", ProvideMedicine);
+}
+
+export function checkProviderExits(ProvideMedicine) {
+    return request.post(baseUrl + "/checkProviderExits", ProvideMedicine);
 }

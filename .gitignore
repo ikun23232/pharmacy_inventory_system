@@ -65,3 +65,4 @@ hs_err_pid*
 !/pharmacy_server/pharmacy_sale_server/target/
 !/pharmacy_server/pharmacy_system_server/target/
 !/pharmacy_server/pharmacy_warehouse_server/target/
+!/pharmacy_common/target/

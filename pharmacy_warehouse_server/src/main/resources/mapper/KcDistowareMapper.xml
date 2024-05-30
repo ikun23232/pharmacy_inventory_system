@@ -10,15 +10,18 @@
         </collection>
     </resultMap>
 
-    <select id="getKcDistowareList" resultMap="BaseResultMap">
+    <select id="getKcDistowareList" resultType="com.kgc.vo.DispatchToWareVO">
         SELECT k.id, k.code, k.dispatchId, k.isDel,d.medicineId as TempId, d.dispatchCode, d.aimStoreHouseId,
         (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,kd.price,kd.totalCount,
-        d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price, d.batchCode, d.isDel,
+        d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price as dispatchPrice, d.batchCode, d.isDel,
+        bm.unitId,(select base_unit.name from base_unit where bm.unitId = base_unit.id) as unitName,
+        bm.name as name,specification,d.providerId,(select base_provider.name from base_provider where d.providerId = base_provider.id) as providerName,
         kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus
-        , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
-        FROM kc_distoware k,kc_dispatchdetails d,kc_dispatch kd
+        , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel,
+        (SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) as documenterName
+        FROM kc_distoware k,kc_dispatchdetails d,kc_dispatch kd,base_medicine bm
         WHERE kd.`code`=d.dispatchCode
-        AND kd.id=k.dispatchId
+        AND kd.id=k.dispatchId and d.medicineId = bm.id
         <if test="code!=null and code!=''">
             and k.code like concat('%',#{code},'%')
         </if>
@@ -37,15 +40,17 @@
         AND k.isDel=0
         order by kd.dispatchTime Desc
     </select>
-    <select id="getKcDistowareOrder" resultMap="BaseResultMap">
-        SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
-               (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
-               d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price, d.batchCode, d.isDel,
-               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus,(SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) documenterName
+    <select id="getKcDistowareOrder" resultType="com.kgc.vo.DispatchToWareVO">
+        SELECT k.id, k.code, k.dispatchId, k.isDel,d.medicineId as TempId, d.dispatchCode, d.aimStoreHouseId,
+               (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,kd.price,kd.totalCount,
+               d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price as dispatchPrice, d.batchCode, d.isDel,
+               bm.unitId,(select base_unit.name from base_unit where bm.unitId = base_unit.id) as unitName,
+               bm.name as name,specification,d.providerId,(select base_provider.name from base_provider where d.providerId = base_provider.id) as providerName,
+               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus
                 , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
-        FROM kc_distoware k,kc_dispatchdetails d,kc_dispatch kd
+        FROM kc_distoware k,kc_dispatchdetails d,kc_dispatch kd,base_medicine bm
         WHERE kd.`code`=d.dispatchCode
-          AND kd.id=k.dispatchId
+          AND kd.id=k.dispatchId and d.medicineId = bm.id
           AND k.isDel=0
           AND K.id=#{id}
     </select>

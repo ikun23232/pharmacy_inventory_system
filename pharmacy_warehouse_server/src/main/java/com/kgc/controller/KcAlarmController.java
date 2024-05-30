@@ -1,8 +1,10 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.annotation.Log;
 import com.kgc.entity.KcAlarm;
 import com.kgc.entity.Message;
 import com.kgc.service.KcAlarmService;
@@ -35,7 +37,9 @@ public class KcAlarmController {
     }
 
     @RequestMapping("deleteAlarmList")
+    @Log("库存告警删除")
     public Message deleteAlarmList(Integer id) {
+        StpUtil.checkPermission("kcgj:bihewoqiang");
         Message message = kcAlarmService.deleteAlarmList(id);
         return message;
     }
@@ -47,7 +51,9 @@ public class KcAlarmController {
     }
 
     @RequestMapping("excelKcAlarm")
+    @Log("库存告警导出")
     public void excelKcAlarm(@RequestBody KcAlarmVO kcAlarmVO, HttpServletResponse response) {
+        StpUtil.checkPermission("kcgj:daochu");
         kcAlarmService.excelKcAlarm(kcAlarmVO,response);
     }
 

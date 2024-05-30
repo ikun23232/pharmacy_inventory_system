@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -14,6 +15,7 @@ import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.DispatchExcelVO;
 import com.kgc.vo.DispatchVO;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +53,6 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getKcDispathList(DispatchVO dispatchVO) {
-//        SimpleDateFormat inputSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-//        SimpleDateFormat outputSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        try {
-//            Date beginDate = inputSdf.parse(dispatchVO.getStartTime());
-//            Date endDate = inputSdf.parse(dispatchVO.getEndTime());
-//            dispatchVO.setStartTime(outputSdf.format(beginDate));
-//            dispatchVO.setEndTime(outputSdf.format(endDate));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
         PageHelper.startPage(dispatchVO.getCurrentPageNo(), dispatchVO.getPageSize());
         List<KcDispatch> kcDispathList = kcDispatchMapper.getKcDispathList(dispatchVO);
         PageInfo pageInfo = new PageInfo(kcDispathList);
@@ -87,11 +79,6 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
                 totalCount += baseMedicine.getQuantity();
                 //这里总计求求总数有问题。
                 price = price.add(kcDispatchDetails.getPrice().multiply(BigDecimal.valueOf(baseMedicine.getQuantity())));
-//                QueryWrapper<KcMedicine> query = Wrappers.query();
-//                query.eq("batchCode",kcDispatchDetails.getBatchCode());
-//                KcMedicine kcMedicine = new KcMedicine();
-//                kcMedicine.setQuantity(baseMedicine.getQuantity());
-//                kcMedicineMapper.update()
             }
         }
         if (kcDispatch.getMedicineList().size() != count1){
@@ -103,7 +90,9 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
         }else {
             kcDispatch.setOrderStatus(1);
         }
-        kcDispatch.setDocumenterBy(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        kcDispatch.setDocumenterBy(loginUser.getUserid());
+        kcDispatch.setCreateDate(new Date());
         kcDispatch.setTotalCount(totalCount);
         int count = kcDispatchMapper.insert(kcDispatch);
         if (count > 0){
@@ -150,7 +139,8 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
             }else {
                 kcDispatch.setOrderStatus(1);
             }
-            kcDispatch.setUpdateBy(1);
+            SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+            kcDispatch.setUpdateBy(loginUser.getUserid());
             kcDispatch.setUpdateDate(new Date());
             kcDispatch.setTotalCount(totalCount);
             int count = kcDispatchMapper.updateById(kcDispatch);
@@ -165,6 +155,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
     @Override
     public Message auditingDispatch(KcDispatch kcDispatch) {
         int addCount = 0;
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
         if (kcDispatch.getApprovalStatus() == 2){
             String ddrk = CodeUtil.createCode("DDCK");
             KcDisfromware kcDisfromware = new KcDisfromware();
@@ -187,7 +178,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
                 String crkmx = CodeUtil.createCode("CRKMX");
                 kcOutintodetial.setCode(crkmx);
                 kcOutintodetial.setTypeId(1);
-                kcOutintodetial.setCreateBy(1);
+                kcOutintodetial.setCreateBy(loginUser.getUserid());
                 kcOutintodetial.setCreateDate(new Date());
                 kcOutintodetial.setOrderCode(kcDispatch.getCode());
                 kcOutintodetial.setBatchCode(baseMedicine.getBatchCode());
@@ -220,7 +211,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
                 String crkmx = CodeUtil.createCode("CRKMX");
                 kcOutintodetial.setCode(crkmx);
                 kcOutintodetial.setTypeId(2);
-                kcOutintodetial.setCreateBy(1);
+                kcOutintodetial.setCreateBy(loginUser.getUserid());
                 kcOutintodetial.setCreateDate(new Date());
                 kcOutintodetial.setOrderCode(kcDispatch.getCode());
                 kcOutintodetial.setMedicineId(baseMedicine.getMedicineId());
@@ -260,14 +251,14 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
                 throw new RuntimeException("添加出入库调度入库明细失败！");
             }
             kcDispatch.setOrderStatus(4);
-            kcDispatch.setApproverBy(1);
+            kcDispatch.setApproverBy(loginUser.getUserid());
             int approverCount = kcDispatchMapper.updateById(kcDispatch);
             if (approverCount > 0){
                 return Message.success();
             }
             throw new RuntimeException("审批调度单失败");
         }
-        kcDispatch.setApproverBy(1);
+        kcDispatch.setApproverBy(loginUser.getUserid());
         int approverCount = kcDispatchMapper.updateById(kcDispatch);
         if (approverCount > 0){
             return Message.success();

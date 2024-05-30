@@ -1,6 +1,8 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
+import com.kgc.annotation.Log;
 import com.kgc.entity.*;
 import com.kgc.service.ProcurementOrderService;
 import org.slf4j.Logger;
@@ -46,20 +48,26 @@ public class ProcurementOrderController {
     }
 
     @RequestMapping("/addCgddOrder")
+    @Log("采购订单添加")
     public Message addCgddOrder(@RequestBody Map map) {
+        StpUtil.checkPermission("2sFvfYUUvG");
         CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
         Message message = procurementOrderService.addCgddOrder(cgddOrder);
         return message;
     }
 
     @RequestMapping("/deleteById")
+    @Log("采购订单删除")
     public Message deleteById(int id) {
+        StpUtil.checkPermission("PaWis9fkq7");
         Message message = procurementOrderService.deleteById(id);
         return message;
     }
 
     @RequestMapping("/setVoidState")
+    @Log("采购订单作废")
     public Message setVoidState(CgddOrder cgddOrder) {
+        StpUtil.checkPermission("msODbgXO0q");
         Message message = procurementOrderService.setVoidState(cgddOrder);
         return message;
     }
@@ -71,14 +79,18 @@ public class ProcurementOrderController {
     }
 
     @RequestMapping("/updateCgddById")
+    @Log("采购订单修改")
     public Message updateCgddById(@RequestBody Map map) {
+        StpUtil.checkPermission("VTCSGKKpc5");
         CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
         Message message = procurementOrderService.updateCgddById(cgddOrder);
         return message;
     }
 
     @RequestMapping("/auditingOrder")
+    @Log("采购订单审核")
     public Message auditingOrder(@RequestBody Map map) {
+        StpUtil.checkPermission("2yzAhLijP2");
         CgddOrder cgddOrder = JSON.parseObject(JSON.toJSONString(map.get("cgddOrder")),CgddOrder.class);
         Message message = procurementOrderService.auditingOrder(cgddOrder);
         return message;
@@ -86,7 +98,9 @@ public class ProcurementOrderController {
 
 
     @RequestMapping("/cgddExcel")
+    @Log("采购订单导出")
     public void cgddExcel(@RequestBody CgddOrder procPage, HttpServletResponse response) {
+        StpUtil.checkPermission("iLQhbwvr3p");
         procurementOrderService.cgddExcel(procPage,response);
     }
 

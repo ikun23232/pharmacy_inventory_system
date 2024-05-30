@@ -1,6 +1,8 @@
 package com.kgc.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.KcDisfromware;
 import com.kgc.entity.KcDistoware;
 import com.kgc.entity.Message;
@@ -34,12 +36,16 @@ public class KcDistowareController {
     }
 
     @RequestMapping("/delKcDistoware")
+    @Log("调度入库删除")
     public Message delKcDistoware(int id) {
+        StpUtil.checkPermission("aQuS3wCq90");
         Message message = kcDistowareService.delKcDistoware(id);
         return message;
     }
     @RequestMapping("/ddrkExcel")
+    @Log("调度入库导出")
     public Message ddckExcel(@RequestBody KcDistoware kcDistoware, HttpServletResponse response) {
+        StpUtil.checkPermission("QS1d4XPaZ9");
         kcDistowareService.ddrkExcel(kcDistoware,response);
         return Message.success(null);
     }

@@ -214,6 +214,7 @@
               disabled
               :data="cgsqList"
               show-summary
+              :summary-method="(param) => getSummaries(param, ['count', 'referenceamount'])"             
               border
               style="width: 1200px"
             >
@@ -264,6 +265,7 @@
               disabled
               :data="medicineListTemp"
               show-summary
+              :summary-method="(param) => getSummaries(param, ['quantity', 'purchasePrice','totalPrice'])"
               border
               style="width: 1200px"
             >
@@ -1066,6 +1068,34 @@ export default {
         }
         this.CgddOrder.medicineList = this.bcglXiangXiList;
       }
+    },
+    getSummaries(param, targetColumns) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+        if (targetColumns.includes(column.property)) {
+          const values = data.map((item) => Number(item[column.property]));
+
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] =
+              values
+                .reduce((prev, curr) => {
+                  return prev + curr;
+                }, 0)
+                .toFixed(2) + "";
+          } else {
+            sums[index] = "N/A";
+          }
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
   },
   computed: {

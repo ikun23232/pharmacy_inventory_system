@@ -75,7 +75,7 @@
 
       <el-table-column prop="beforeWarehouseName" label="源仓库" width="120">
       </el-table-column>
-      <el-table-column prop="stock" label="调度数量" width="120">
+      <el-table-column prop="totalCount" label="调度数量" width="120">
       </el-table-column>
 
       <el-table-column prop="price" label="调度金额" width="120">
