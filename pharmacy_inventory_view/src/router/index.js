@@ -117,8 +117,8 @@ const routes = [
   },
   {
     //采购订单
-    path: '/CGDD',
-    name: 'CGDD',
+    path: '/CGDDOrder',
+    name: 'CGDDOrder',
     component: procurementOrder
   },
   {

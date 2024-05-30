@@ -15,7 +15,6 @@
                   type="text"
                   disabled
                   v-model="CgddOrder.code"
-                  disabled
               ></el-input>
             </el-form-item></div
         ></el-col>

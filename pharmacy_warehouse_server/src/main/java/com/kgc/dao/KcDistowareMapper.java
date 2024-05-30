@@ -16,7 +16,9 @@ import java.util.Map;
  * @since 2024-04-30
  */
 public interface KcDistowareMapper extends BaseMapper<KcDistoware> {
-    List<KcDisfromware> getKcDistowareList(Map map);
+    List<KcDistoware> getKcDistowareList(Map map);
 
-    KcDisfromware getKcDistowareOrder(int id);
+    KcDistoware getKcDistowareOrder(int id);
+
+    List<KcDistoware> getKcDistowareListByExcel(Map map);
 }

@@ -49,14 +49,14 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
         paramsMap.put("beforeWarhouseId", vo.getBeforeWarehouseId());
         logger.debug("KcDistowareServiceImpl getKcDistowareList paramsMap:"+paramsMap);
         PageHelper.startPage(vo.getCurrentPageNo(), vo.getPageSize());
-        List<KcDisfromware> kcDisfromwareList1 = kcDistowareMapper.getKcDistowareList(paramsMap);
-        PageInfo<KcDisfromware> kcDisfromwarePageInfo = new PageInfo<>(kcDisfromwareList1);
+        List<KcDistoware> kcDisfromwareList1 = kcDistowareMapper.getKcDistowareList(paramsMap);
+        PageInfo<KcDistoware> kcDisfromwarePageInfo = new PageInfo<>(kcDisfromwareList1);
         return Message.success(kcDisfromwarePageInfo);
     }
 
     @Override
     public Message getKcDistowareOrder(int id) {
-        KcDisfromware kcDisfromwareOrder = kcDistowareMapper.getKcDistowareOrder(id);
+        KcDistoware kcDisfromwareOrder = kcDistowareMapper.getKcDistowareOrder(id);
         return Message.success(kcDisfromwareOrder);
     }
 
@@ -71,12 +71,12 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
 
     @Override
     public void ddrkExcel(KcDistoware kcDistoware, HttpServletResponse response) {
-//        List<KcDisfromware> kcDisfromwareList = kcDisfromwareMapper.getKcDisfromwareList(new HashMap<>());
-//        try {
-//            ExeclUtil.writeExcel(kcDisfromwareList,response,"调度出库",KcDisfromware.class);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<KcDistoware> kcDisfromwareList = kcDistowareMapper.getKcDistowareListByExcel(new HashMap<>());
+        try {
+            ExeclUtil.write(kcDisfromwareList,KcDistoware.class,response,"调度出库");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -85,6 +85,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
             if (temp > 0){
                 count1++;
                 totalCount += baseMedicine.getQuantity();
+                //这里总计求求总数有问题。
                 price = price.add(kcDispatchDetails.getPrice().multiply(BigDecimal.valueOf(baseMedicine.getQuantity())));
 //                QueryWrapper<KcMedicine> query = Wrappers.query();
 //                query.eq("batchCode",kcDispatchDetails.getBatchCode());

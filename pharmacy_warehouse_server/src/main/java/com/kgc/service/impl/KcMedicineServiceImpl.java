@@ -3,6 +3,7 @@ package com.kgc.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.KcMedicineMapper;
+import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.KcMedicineService;
@@ -67,5 +68,17 @@ public class KcMedicineServiceImpl implements KcMedicineService {
     @Override
     public List<KcMedicine> getMedicineByStorehouseIdMedicineId(KcMedicine kcMedicine) {
         return kcMedicineMapper.getMedicineByStorehouseIdMedicineId(kcMedicine);
+    }
+
+    @Override
+    public Message getKcMedicineByWareHouseId(BaseMedicine baseMedicine) {
+        PageHelper.startPage(baseMedicine.getCurrentPage(),5);
+        List<BaseMedicine> kcMedicineByWareHouseId = kcMedicineMapper.getKcMedicineByWareHouseId(baseMedicine.getStoreHouseId());
+        PageInfo<BaseMedicine> pageInfo=new PageInfo<>(kcMedicineByWareHouseId);
+        if(pageInfo!=null) {
+            return Message.success(pageInfo);
+        }else{
+            return Message.error();
+        }
     }
 }

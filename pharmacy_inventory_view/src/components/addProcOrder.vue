@@ -28,8 +28,7 @@
                 format="yyyy 年 MM 月 dd 日"
               >
               </el-date-picker>
-            </el-form-item></div
-        ></el-col>
+            </el-form-item></div></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
@@ -43,8 +42,7 @@
                 v-model="CgddOrder.type"
                 placeholder="请选择采购类型"
                 clearable
-                filterable
-              >
+                filterable>
                 <el-option
                   v-for="item in cgType"
                   :key="item.id"
@@ -184,8 +182,7 @@
               show-summary
               border
               style="width: 1200px"
-              @selection-change="handleCgsqChange"
-            >
+              @selection-change="handleCgsqChange">
               <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column prop="code" label="订单编码" width="150" fixed>
               </el-table-column>
@@ -368,8 +365,6 @@
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="handleChange"
-                  :min="1"
-                  :max="10"
                 ></el-input-number>
               </template>
             </el-table-column>
@@ -377,21 +372,18 @@
               label="单价"
               align="center"
               prop="price"
-              width="150"
-            >
+              width="150">
               <template slot-scope="scope">
                 <el-select
                   clearable
                   @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].price"
-                  disabled
-                >
+                  disabled>
                   <el-option
                     v-for="dict in zdtsOptions"
                     :key="dict.dictValue"
                     :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  />
+                    :value="dict.dictValue"/>
                 </el-select>
               </template>
             </el-table-column>
@@ -677,10 +669,6 @@ export default {
             trigger: "blur",
           },
         ],
-        // fax: [
-        //   { required: true, message: "传真不能为空", trigger: "blur" },
-        //   { min: 2, max: 10, message: "传真限制为为2-10个字符", trigger: "blur" },
-        // ],
       },
     };
   },
@@ -933,11 +921,21 @@ export default {
         });
         return;
       }
-      this.bcglXiangXiList = [];
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
-          if (this.bcglXiangXiList == undefined) {
+          if (this.bcglXiangXiList.length == 0) {
             this.bcglXiangXiList = new Array();
+          }else if(this.bcglXiangXiList.length > 0){
+            for (let i = 0; i < this.bcglXiangXiList.length; i++) {
+              const element = this.bcglXiangXiList[i];
+              if (this.cgddMedicineionList[index].id == element.medicineId) {
+                Message({
+                  message: this.cgddMedicineionList[index].name + "已经存在",
+                  type:"error"
+                })
+                return;
+              }
+            }
           }
           let resp = await getBaseMedicineListByProviderId(
             this.CgddOrder.providerId

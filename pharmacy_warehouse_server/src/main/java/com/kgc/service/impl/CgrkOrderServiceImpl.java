@@ -5,7 +5,6 @@
 
 package com.kgc.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -13,8 +12,8 @@ import com.github.pagehelper.PageInfo;
 import com.kgc.dao.CgrkOrderMapper;
 import com.kgc.dao.KcMedicineMapper;
 import com.kgc.dao.KcOutintodetialMapper;
-import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.*;
+import com.kgc.feign.PublicOMedicineService;
 import com.kgc.service.CgrkOrderService;
 import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
@@ -37,7 +36,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
     @Autowired
     private CgrkOrderMapper cgrkOrderMapper;
     @Autowired
-    private PublicOMedicineMapper orderMapper;
+    private PublicOMedicineService medicineService;
     @Autowired
     private KcMedicineMapper kcMedicineMapper;
 
@@ -107,9 +106,9 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
-            Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode(String.valueOf(batchCode+1));
-            orderMapper.insert(orderMedicine);
+            Message message = medicineService.selectMaxYourField();
+            orderMedicine.setBatchCode(String.valueOf(Integer.valueOf(message.getData().toString())+1));
+            medicineService.addMedicineOrder(orderMedicine);
         }
         return Message.success();
 
@@ -131,7 +130,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         Map<String, Object> columnMap = new HashMap<>();
         columnMap.put("code", cgrqOrder.getCode());
         // 调用 deleteByMap 方法，传入 Map 对象删除满足条件的数据
-        orderMapper.deleteByMap(columnMap);
+        medicineService.deleteMediciOrder(columnMap);
         for (BaseMedicine baseMedicine : cgrqOrder.getMedicineList()) {
 
             OrderMedicine orderMedicine = new OrderMedicine();
@@ -142,9 +141,9 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             orderMedicine.setTotalPrice(baseMedicine.getTotalPrice());
             orderMedicine.setProviderId(baseMedicine.getProviderId());
             orderMedicine.setFowardWarHouseId(baseMedicine.getFowardWarHouseId());
-            Integer batchCode = orderMapper.selectMaxYourField();
-            orderMedicine.setBatchCode(String.valueOf(batchCode+1));
-            orderMapper.insert(orderMedicine);
+            Message message = medicineService.selectMaxYourField();
+            orderMedicine.setBatchCode(String.valueOf(Integer.valueOf(message.getData().toString())+1));
+            medicineService.addMedicineOrder(orderMedicine);
         }
         return Message.success();
     }
@@ -219,6 +218,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         if (updateRow > 0) {
             return Message.success();
         }
+        //变更采购订单的单据状态变为4
         return Message.error("审核失败");
     }
 

@@ -3,16 +3,16 @@
 <mapper namespace="com.kgc.dao.KcDistowareMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.kgc.entity.KcDisfromware" autoMapping="true">
+    <resultMap id="BaseResultMap" type="com.kgc.entity.KcDistoware" autoMapping="true">
         <id column="id" property="id"/>
         <collection property="medicineList" ofType="com.kgc.entity.KcDispatchdetails" autoMapping="true">
          <id column="TempId" property="id"/>
         </collection>
     </resultMap>
 
-    <select id="getKcDistowareList" resultType="com.kgc.entity.KcDisfromware">
-        SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
-        (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
+    <select id="getKcDistowareList" resultMap="BaseResultMap">
+        SELECT k.id, k.code, k.dispatchId, k.isDel,d.medicineId as TempId, d.dispatchCode, d.aimStoreHouseId,
+        (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,kd.price,kd.totalCount,
         d.medicineId,(SELECT name FROM base_medicine WHERE id=d.medicineId) medicineName, d.quantity, d.price, d.batchCode, d.isDel,
         kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus
         , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
@@ -20,7 +20,7 @@
         WHERE kd.`code`=d.dispatchCode
         AND kd.id=k.dispatchId
         <if test="code!=null and code!=''">
-            and kd.code like concat('%',#{code},'%')
+            and k.code like concat('%',#{code},'%')
         </if>
         <if test="subject!=null and subject!=''">
             and kd.subject like concat('%',#{subject},'%')
@@ -50,4 +50,19 @@
           AND K.id=#{id}
     </select>
 
+    <select id="getKcDistowareListByExcel" resultMap="BaseResultMap" >
+        SELECT k.id, k.code, k.dispatchId, k.isDel,d.id as TempId, d.dispatchCode, d.aimStoreHouseId,
+               (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
+               d.medicineId,(select base_medicine.specification from base_medicine where medicineId = base_medicine.id) as specification,
+               (select (select name from base_medicine_category where categoryId = base_medicine_category.id) from base_medicine where medicineId = base_medicine.id) as categoryName,
+               d.quantity as stock, (select (select name from base_unit where unitId = base_unit.id) from base_medicine where medicineId = base_medicine.id) as unitName,
+               d.price as purchasePrice,(select name from base_medicine where d.medicineId = base_medicine.id) as name,d.batchCode,
+               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus,(SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) documenterName
+                , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel,kd.totalCount,
+               (SELECT name from base_provider where base_provider.id = d.providerId) as providerName
+        FROM kc_distoware k,kc_dispatchdetails d,kc_dispatch kd
+        WHERE kd.`code`=d.dispatchCode
+          AND kd.id=k.dispatchId
+          AND k.isDel=0
+    </select>
 </mapper>
