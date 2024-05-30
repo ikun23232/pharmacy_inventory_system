@@ -16,4 +16,6 @@ public interface SaleOutWarehouseService extends IService<KcSalefromware> {
 
     public void saleOutWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response);
 
+    public Message addSaleOutWarehouse(KcSalefromware kcSalefromware);
+
 }

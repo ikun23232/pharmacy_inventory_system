@@ -26,7 +26,8 @@ instance.interceptors.request.use(async (request) => {
 // 添加响应拦截器
 instance.interceptors.response.use(
 	response => {
-
+		console.log("sadasfaffffff");
+		console.log(response);
 		let res = response.data
 		console.log(res+"1111")
 		console.log(res)
@@ -44,9 +45,7 @@ instance.interceptors.response.use(
 		}
 	},
 	error => {
-
-		
-
+		console.log(error);
 		if (error.response.data) {
 			error.massage = error.response.data.message
 		}

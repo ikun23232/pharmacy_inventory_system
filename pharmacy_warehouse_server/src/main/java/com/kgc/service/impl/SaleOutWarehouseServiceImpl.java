@@ -4,15 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-//import com.kgc.dao.SaleOrderMapper;
 import com.kgc.dao.SaleOutWarehouseMapper;
 import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcSalefromware;
 import com.kgc.entity.Message;
+import com.kgc.feign.SaleOrderFeign;
 import com.kgc.service.SaleOutWarehouseService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.KcSalefromwareVo;
-import com.kgc.vo.RefundOrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,8 @@ public class SaleOutWarehouseServiceImpl extends ServiceImpl<SaleOutWarehouseMap
 
     @Autowired
     private SaleOutWarehouseMapper saleOutWarehouseMapper;
-//    @Autowired
-//    private SaleOrderMapper saleOrderMapper;
+    @Autowired
+    private SaleOrderFeign saleOrderFeign;
 
     @Override
     public Message getSaleOutWarehouseListByPage(KcSalefromware kcSalefromware) {
@@ -54,15 +53,25 @@ public class SaleOutWarehouseServiceImpl extends ServiceImpl<SaleOutWarehouseMap
 
     @Override
     public void saleOutWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response) {
-//        List<KcSalefromwareVo> kcSalefromwareList=saleOutWarehouseMapper.getSaleOutWarehouseList(kcSalefromware);
-//        for (KcSalefromwareVo KcSalefromwareVo :kcSalefromwareList) {
-//            List<BaseMedicine> baseMedicineList = saleOrderMapper.getSaleOrderDetailByOrderNo(KcSalefromwareVo.getOrderNo());
-//            KcSalefromwareVo.setBaseMedicineList(baseMedicineList);
-//        }
-//        try {
-//            ExeclUtil.write(kcSalefromwareList, KcSalefromwareVo.class,response,"销售出库订单");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        List<KcSalefromwareVo> kcSalefromwareList=saleOutWarehouseMapper.getSaleOutWarehouseList(kcSalefromware);
+        for (KcSalefromwareVo KcSalefromwareVo :kcSalefromwareList) {
+            Message message = saleOrderFeign.getSaleOrderDetailByOrderNo(KcSalefromwareVo.getOrderNo());
+            KcSalefromwareVo.setBaseMedicineList((List<BaseMedicine>) message.getData());
+        }
+        try {
+            ExeclUtil.write(kcSalefromwareList, KcSalefromwareVo.class,response,"销售出库订单");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Message addSaleOutWarehouse(KcSalefromware kcSalefromware) {
+        int count=saleOutWarehouseMapper.insert(kcSalefromware);
+        if(count>0){
+            return Message.success();
+        }else{
+            return Message.error();
+        }
     }
 }

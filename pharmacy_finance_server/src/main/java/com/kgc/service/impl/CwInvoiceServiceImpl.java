@@ -1,11 +1,15 @@
 package com.kgc.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.dao.CwAccountsDao;
 import com.kgc.dao.CwInvoiceDao;
+import com.kgc.entity.CwAccounts;
 import com.kgc.entity.CwCategory;
 import com.kgc.entity.CwInvoice;
 import com.kgc.entity.Message;
+import com.kgc.service.CwAccountsService;
 import com.kgc.service.CwInvoiceService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwAccountsVO;
@@ -18,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class CwInvoiceServiceImpl implements CwInvoiceService {
+public class CwInvoiceServiceImpl extends ServiceImpl<CwInvoiceDao, CwInvoice> implements CwInvoiceService {
 
     @Autowired
     private CwInvoiceDao cwInvoiceDao;
@@ -60,6 +64,16 @@ public class CwInvoiceServiceImpl implements CwInvoiceService {
             ExeclUtil.write(listExcel, CwInvoiceVO.class,response,"发票详情");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Message addCwInvoice(CwInvoice cwInvoice) {
+        int count=cwInvoiceDao.insert(cwInvoice);
+        if(count>0){
+            return Message.success();
+        }else{
+            return Message.error();
         }
     }
 }

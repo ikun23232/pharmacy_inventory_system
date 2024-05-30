@@ -1,5 +1,6 @@
 package com.kgc.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kgc.entity.CwXstk;
 import com.kgc.entity.CwXsys;
 import com.kgc.vo.CwXstkVO;
@@ -8,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface CwXstkDao {
+public interface CwXstkDao extends BaseMapper<CwXstk> {
 
     List<CwXstk> getXstkList(CwXstk cwXstk);
 

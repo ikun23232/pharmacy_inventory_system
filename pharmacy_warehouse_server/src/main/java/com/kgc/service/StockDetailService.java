@@ -16,4 +16,11 @@ public interface StockDetailService extends IService<BaseMedicine> {
     public Message getStockDetailList();
 
     public void stockDetailExcel(BaseMedicine baseMedicine,HttpServletResponse response);
+
+    public Message reduceStockDetailByMedicineId(int medicineId,int quantity,String batchCode);
+
+    public Message addStockDetailByMedicineId(int medicineId,int quantity,String batchCode);
+
+
+
 }

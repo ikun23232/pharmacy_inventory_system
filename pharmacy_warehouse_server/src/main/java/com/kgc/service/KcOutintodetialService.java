@@ -23,4 +23,5 @@ public interface KcOutintodetialService extends IService<KcOutintodetial> {
     void crkmxExcel(DispatchVO vo, HttpServletResponse response);
 
     Message addKcOutinTodetail(KcOutintodetial kcOutintodetial);
+
 }

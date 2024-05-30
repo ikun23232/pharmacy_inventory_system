@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @MapperScan(basePackages = "com.kgc.dao")
 @EnableDiscoveryClient
-//@EnableFeignClients
+@EnableFeignClients
 public class PharmacySaleServerApplication {
 
     public static void main(String[] args) {

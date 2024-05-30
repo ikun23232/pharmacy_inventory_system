@@ -4,15 +4,38 @@
   <div>
     <div style="padding-top: 15px;padding-left: 20px;">
         <el-form :inline="true" >
-            <el-form-item label="医用商品编码">
-                <el-input placeholder="医用商品编码" v-model="object.id"></el-input>
-            </el-form-item>
+          <el-form-item label="创建时间">
+            <el-col :span="11">
+              <el-date-picker
+                v-model="time"
+                type="daterange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions"
+                />
+            </el-col>
+          </el-form-item>
             <el-form-item label="医用商品名称">
-                <el-input placeholder="医用商品名称" v-model="object.name"></el-input>
+              <el-select v-model="object.medicineId" >
+              <el-option
+                v-for="dict in baseMedicineList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+              </el-select>
             </el-form-item>
             <el-form-item label="医用商品类型">
-            <el-select v-model="object.categoryId" placeholder="医用商品类型">
-                <!-- <el-option :label="item.name" :value="item.id" v-for="(item,index) in categoryList" :key="index"></el-option> -->
+            <el-select v-model="object.categoryId" placeholder="请选择">
+              <!-- <el-select v-model="object.storeHouseId" >
+              <el-option
+                v-for="dict in storeHouseList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+              </el-select> -->
             </el-select>
             </el-form-item>
             <el-form-item label="医用商品规格">
@@ -20,7 +43,13 @@
             </el-form-item>
             <el-form-item label="计量单位">
             <el-select v-model="object.unitId" placeholder="计量单位">
-                <!-- <el-option :label="item.name" :value="item.id" v-for="(item,index) in categoryList" :key="index"></el-option> -->
+              <!-- <el-select v-model="object.storeHouseId" >
+              <el-option
+                v-for="dict in storeHouseList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+              </el-select> -->
             </el-select>
             </el-form-item>
             <el-form-item>
@@ -40,8 +69,6 @@
         {{ scope.$index +(pageInfo.pageNum - 1) * pageInfo.pageSize+ 1 }}
         </template>
       </el-table-column>
-    <el-table-column prop="id" label="医用商品编码" width="120">
-    </el-table-column>
     <el-table-column prop="name" label="医用商品名称" width="150">
     </el-table-column>
     <el-table-column prop="categoryName" label="医用商品类型" width="120">
@@ -125,12 +152,14 @@
 
 <script>
 import {initMedicine,addBaseMedicine,getBaseMedicineById,updateBaseMedicine,deleteBaseMedicine} from "../../api/baseMedicine.js";
+import { getAllBaseMedicine} from "@/api/baseMedicine.js";
 import { Message } from "element-ui";
 
 export default {
   name: "baseMedicine",
   data() {
     return {
+      baseMedicineList:[],
         object:{
             id:"",
             name:"",
@@ -139,6 +168,7 @@ export default {
             unitId:"",
             currentPage:1,
         },
+        time:{},
         pageInfo:"",
         list:"",
         title:"",
@@ -179,9 +209,15 @@ export default {
     };
   },
   mounted() {
+    this.getAllBaseMedicine();
     this.initMedicineListByPage(1);
   },
   methods: {
+    async getAllBaseMedicine() {
+        let data = await getAllBaseMedicine();
+        console.log("12345",data.data)
+        this.baseMedicineList=data.data;
+    },
     async initMedicineListByPage(currentPage) {
         this.object.currentPage=currentPage;
         let data = await initMedicine(this.object);
@@ -273,7 +309,11 @@ export default {
           })
         });
     },
-    
+    resetForm(){
+      this.time="";
+      this.object.storeHouseId="";
+      this.object.medicineId="";
+    },
   }
 }
 </script>

@@ -7,6 +7,7 @@ import com.kgc.dao.RefundInWarehouseMapper;
 import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcSalefromware;
 import com.kgc.entity.Message;
+import com.kgc.feign.SaleOrderFeign;
 import com.kgc.service.RefundInWarehouseService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.KcRefundInWareVo;
@@ -23,8 +24,8 @@ public class RefundInWarehouseServiceImpl extends ServiceImpl<RefundInWarehouseM
 
     @Autowired
     private RefundInWarehouseMapper refundInWarehouseMapper;
-//    @Autowired
-//    private saleOrderMapper saleOrderMapper;
+    @Autowired
+    private SaleOrderFeign saleOrderFeign;
 
     @Override
     public Message getRefundInWarehouseListByPage(KcSalefromware kcSalefromware) {
@@ -42,14 +43,25 @@ public class RefundInWarehouseServiceImpl extends ServiceImpl<RefundInWarehouseM
     @Override
     public void refundInWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response) {
         List<KcRefundInWareVo> KcRefundInWareList=refundInWarehouseMapper.getRefundInWarehouseList(kcSalefromware);
-//        for (KcRefundInWareVo KcRefundInWareVo :KcRefundInWareList) {
-//            List<BaseMedicine> baseMedicineList = saleOrderMapper.getSaleOrderDetailByOrderNo(KcRefundInWareVo.getOrderNo());
-//            KcRefundInWareVo.setBaseMedicineList(baseMedicineList);
-//        }
+        for (KcRefundInWareVo KcRefundInWareVo :KcRefundInWareList) {
+            Message message = saleOrderFeign.getSaleOrderDetailByOrderNo(KcRefundInWareVo.getOrderNo());
+            List<BaseMedicine> baseMedicineList=(List<BaseMedicine>) message.getData();
+            KcRefundInWareVo.setBaseMedicineList(baseMedicineList);
+        }
         try {
             ExeclUtil.write(KcRefundInWareList, KcRefundInWareVo.class,response,"销售退货入库订单");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Message addRefundInWarehouse(KcSalefromware kcSalefromware) {
+        int count=refundInWarehouseMapper.insert(kcSalefromware);
+        if(count>0){
+            return Message.success();
+        }else {
+            return Message.error();
         }
     }
 }

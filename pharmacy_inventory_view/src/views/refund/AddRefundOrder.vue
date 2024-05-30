@@ -72,7 +72,7 @@
             <el-tab-pane label="销售订单" name="first">
               <div style="float: left;margin-bottom: 10px;">
                   <el-button  type="primary" icon="el-icon-plus" size="mini" @click="handleAddSaleOrder">销售订单</el-button>
-                  <el-button  icon="el-icon-minus" size="mini" @click="handleDeleteDetails">移除</el-button>
+                  <!-- <el-button  icon="el-icon-minus" size="mini" @click="handleDeleteDetails">移除</el-button> -->
                   <el-button  icon="el-icon-delete" size="mini" @click="handleDeleteAllDetails">清空</el-button>
               </div>
               <el-table
@@ -224,7 +224,7 @@
             </el-table>
            </el-tab-pane>
            </el-tabs> 
-           <div style="text-align: left;margin-top: 10px;">
+           <div style="text-align: left;margin-top: 10px;margin-left: 10px;">
             <span>合计: {{sumPrice}} 元</span> 
            </div>  
           <el-divider></el-divider>
@@ -392,17 +392,17 @@
         handleSelectionChange(val) {
          this.saleOrder.checkedOrder = val;
        },
-       //移除
-       handleDeleteDetails() {
-         if (this.saleOrder.checkedOrder.length == 0) {
-           this.$alert("请先选择要删除的数据", "提示", {
-             confirmButtonText: "确定",
-           });
-         } else {
-           this.saleOrderList.splice(this.saleOrder.checkedOrder[0].index - 1, 1);
-           this.medicineDetailList.splice(this.saleOrder.checkedOrder[0].index - 1, 1);
-         }
-       },
+      //  //移除
+      //  handleDeleteDetails() {
+      //    if (this.saleOrder.checkedOrder.length == 0) {
+      //      this.$alert("请先选择要删除的数据", "提示", {
+      //        confirmButtonText: "确定",
+      //      });
+      //    } else {
+      //      this.saleOrderList.splice(this.saleOrder.checkedOrder[0].index - 1, 1);
+      //      this.medicineDetailList.splice(this.saleOrder.checkedOrder[0].index - 1, 1);
+      //    }
+      //  },
        //清空
        handleDeleteAllDetails() {
          this.saleOrderList = [];

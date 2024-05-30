@@ -5,23 +5,33 @@
       <div style="padding-top: 15px;padding-left: 20px;">
           <el-form :inline="true" >
               <el-form-item label="单据编号">
-                  <el-input placeholder="单据编号" v-model="object.orderNo"></el-input>
+                  <el-input placeholder="单据编号" v-model="object.code"></el-input>
               </el-form-item>
               <el-form-item label="单据日期">
                 <el-col :span="11">
-                  <el-date-picker type="date" placeholder="请选择开始" v-model="object.orderDateBegin" style="width: 100%;"></el-date-picker>
-                </el-col>
-                <el-col class="line" :span="1">~</el-col>
-                  <el-col :span="11">
-                  <el-date-picker type="date" placeholder="请选择结束" v-model="object.orderDateEnd" style="width: 100%;"></el-date-picker>
-                </el-col>
+                  <el-date-picker
+                    v-model="time"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerOptions"
+                />                </el-col>
               </el-form-item>
               <el-form-item label="创建人">
-                  <el-input placeholder="创建人" v-model="object.createByName"></el-input>
+                <el-select v-model="object.createBy" >
+                  <el-option
+                    v-for="dict in userList"
+                    :key="dict.id"
+                    :label="dict.username"
+                    :value="dict.userid"/>
+                 </el-select>
               </el-form-item>
               <el-form-item>
-                  <el-button type="primary" icon="el-icon-search" @click="(1)">查询</el-button>
-                  <el-button icon="el-icon-refresh-right" >重置</el-button>
+                  <el-button type="primary" icon="el-icon-search" @click="initRefundInWarehouseListByPage(1)">查询</el-button>
+                  <el-button icon="el-icon-refresh-right" @click="resetForm">重置</el-button>
               <el-button type="text" icon="el-icon-download" style="margin-left:18px" @click="handleExcel">导出</el-button>
               <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
               </el-form-item>
@@ -87,6 +97,7 @@
   import RefundOrderDetail from "@/views/refund/RefundOrderDetail.vue";
   import {deleteSaleOutWarehouseOrder} from  "../../../api/saleOutWarehouse.js";
   import {initRefundInWarehouseListByPage,refundInWarehouseExcel} from  "../../../api/refundInWarehouse.js";
+  import {getAllUser} from "@/api/sysUser.js";
   import { Message } from "element-ui";
   
   export default {
@@ -97,13 +108,16 @@
     data(){
       return{
         orderNo:"",
+        userList:[],
         object:{
               code:"",
               orderDateBegin:"",
               orderDateEnd:"",
-              createByName:"",
+              createBy:"",
               currentPage:1, 
           },
+          // 时间
+          time:{},
           pageInfo:"",
           list:"",
           detailDialogFormVisible:false,
@@ -111,9 +125,22 @@
     },
     mounted() {
       this.initRefundInWarehouseListByPage(1);
+      this.initAllUser();
     },
     methods: {
+      async initAllUser() {
+        let data = await getAllUser();
+        console.log("12345",data.data)
+        this.userList=data.data;
+    },
       async initRefundInWarehouseListByPage(currentPage) {
+        if (Array.isArray(this.time) && this.time.length > 0) {
+          this.object.orderDateBegin = this.time[0];
+          this.object.orderDateEnd = this.time[1];
+        } else {
+          this.object.orderDateBegin = null;
+          this.object.orderDateEnd = null;
+        }
           this.object.currentPage=currentPage;
           let data = await initRefundInWarehouseListByPage(this.object);
           this.pageInfo=data.data;
@@ -167,6 +194,11 @@
               message: '取消删除成功！'
             })
           });
+      },
+      resetForm(){
+        this.object.code="";
+        this.time="";
+        this.object.createBy="";
       },
       async handleExcel(){
         await refundInWarehouseExcel(this.object);

@@ -13,5 +13,6 @@ public interface RefundInWarehouseService extends IService<KcSalefromware> {
 
     public void refundInWarehouseExcel(KcSalefromware kcSalefromware, HttpServletResponse response);
 
+    public Message addRefundInWarehouse(KcSalefromware kcSalefromware);
 
 }

@@ -79,6 +79,9 @@
           >
             <el-table-column label="序号" fixed align="center" prop="xh" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
+              <template slot-scope="scope">
+               <el-input  v-model="medicineDetailList[scope.row.xh-1].name" readonly></el-input>
+              </template>
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
             </el-table-column>
@@ -120,9 +123,9 @@
           </el-table>
            </el-col>
            </el-row>
-           <el-row type="flex" justify="start" style="margin-top: 10px;">
-          <el-col :span="2"><span>合计: {{saleOrder.totalPrice}} 元</span></el-col>
-          </el-row>
+           <div style="text-align: left;margin-top: 10px;margin-left: 10px;">
+            <span>合计: {{saleOrder.totalPrice}} 元</span> 
+           </div>  
           <el-divider></el-divider>
           <el-row>
             <el-col :span="24"><div>
@@ -151,8 +154,9 @@
             <el-col :span="12"><div>
               <el-form-item label="核批结果:" label-width="80px" size="small">
                 <el-select v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
-                  <el-option label="同意" value="1"></el-option>
-                  <el-option label="拒绝" value="2"></el-option>
+                  <el-option label="未审批" :value="0"></el-option>
+                  <el-option label="同意" :value="1"></el-option>
+                  <el-option label="拒绝" :value="2"></el-option>
                 </el-select>
               </el-form-item>
             </div></el-col>
@@ -206,7 +210,6 @@
        };
      },
      async mounted() {
-       this.getSaleOrderByOrderNo();
        this.getAllBankCountList();
        this.getAllRefundTypeList();
      },
@@ -218,6 +221,7 @@
        async getAllRefundTypeList() {
          let data = await getAllRefundTypeList();
          this.refundTypeList=data.data;
+         this.getSaleOrderByOrderNo();
        },
         async getSaleOrderByOrderNo() {
           let data = await getSaleOrderByOrderNo(this.orderNo);
@@ -241,7 +245,8 @@
        },
        async checkedRefundOrder(){
         console.log("1234",this.saleOrder.isCheck)
-          if(this.saleOrder.isCheck!=null){
+          if(this.saleOrder.isCheck!=null&&this.saleOrder.isCheck!=0){
+            this.saleOrder.medicineDetailList=this.medicineDetailList;
             let data = await checkedRefundOrder(this.saleOrder);
             if(data.code=="200"){
                 Message({

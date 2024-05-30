@@ -23,6 +23,7 @@
         JOIN bank_account b ON o.bankAccountId = b.id AND b.isDel = 0
         WHERE o.isDelete = 0 and o.type=0
         <if test="editStatus>0">and editStatus=1</if>
+        <if test="isCheck>0">and ischeck=0</if>
         <if test="orderNo!=null and orderNo!=''">and orderNo like concat('%',#{orderNo},'%')</if>
         <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and o.orderDate between #{orderDateBegin} and #{orderDateEnd}</if>
         <if test="createBy>0">and o.createBy=#{createBy}</if>
@@ -44,11 +45,12 @@
                o.updateBy,
                o.updateDate,
                c.userName AS createByName,
+               u.userName AS updateByName,
                ba.bandCount AS bankAccountName,
                ba.`name`,
                ba.belongBank
-        FROM xs_order o,sys_user c,bank_account ba
-        WHERE o.createBy = c.userId and o.bankAccountId=ba.id and o.isDelete = 0 and c.isDel=0 and ba.isDel=0
+        FROM xs_order o,sys_user c,sys_user u,bank_account ba
+        WHERE o.createBy = c.userId and o.updateBy=u.userId and o.bankAccountId=ba.id and o.isDelete = 0 and c.isDel=0 and ba.isDel=0 and u.isDel=0
         and orderNo=#{orderNo}
     </select>
 
@@ -82,10 +84,6 @@
     <update id="cancelOrderDetailByOrderNo">
         update order_medicine set isCancel=1 where code=#{orderNo}
     </update>
-
-    <delete id="deleteSaleOrderByOrderNo">
-        delete from xs_order where orderNo=#{orderNo}
-    </delete>
 
     <delete id="deleteSaleOrderByOrderNo">
         delete from xs_order where orderNo=#{orderNo}

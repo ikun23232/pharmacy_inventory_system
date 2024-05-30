@@ -9,12 +9,16 @@
             </el-form-item>
             <el-form-item label="单据日期">
               <el-col :span="11">
-                <el-date-picker type="date" placeholder="请选择开始" v-model="object.orderDateBegin" style="width: 100%;"></el-date-picker>
-              </el-col>
-              <el-col class="line" :span="1">~</el-col>
-                <el-col :span="11">
-                <el-date-picker type="date" placeholder="请选择结束" v-model="object.orderDateEnd" style="width: 100%;"></el-date-picker>
-              </el-col>
+                <el-date-picker
+                    v-model="time"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerOptions"
+                /></el-col>
             </el-form-item>
             <el-form-item label="创建人">
                 <el-select v-model="object.createBy" >
@@ -27,10 +31,10 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="initSaleOrderByPage(1)">查询</el-button>
-                <el-button icon="el-icon-refresh-right" @click="resetForm('saleOrderForm')">重置</el-button>
+                <el-button icon="el-icon-refresh-right" @click="resetForm">重置</el-button>
                  <el-button type="text" icon="el-icon-plus" @click="handleAdd">添加</el-button>
             <el-button type="text" icon="el-icon-upload2" style="margin-left:18px" @click="handleExcel">导出</el-button>
-            <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
+            <!-- <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button> -->
             </el-form-item>
         </el-form>
         </div>
@@ -139,7 +143,7 @@ import SaleOrderDetail from "../sale/SaleOrderDetail.vue";
 import { Message } from "element-ui";
 
 export default {
-  name:"SaleOrder",
+  name:"saleOrder",
   components: {
     AddSaleOrder,
     UpdateSaleOrder,
@@ -150,12 +154,14 @@ export default {
       orderNo:"",
       userList:[],
       object:{
-            orderNo:"",
-            orderDateBegin:"",
-            orderDateEnd:"",
-            createBy:"",
-            currentPage:1, 
+        orderNo:"",
+        orderDateBegin:"",
+        orderDateEnd:"",
+        createBy:"",
+        currentPage:1, 
         },
+        // 时间
+        time:{},
         pageInfo:[],
         list:[],
         addDialogFormVisible:false,
@@ -174,6 +180,13 @@ export default {
         this.userList=data.data;
     },
     async initSaleOrderByPage(currentPage) {
+      if (Array.isArray(this.time) && this.time.length > 0) {
+        this.object.orderDateBegin = this.time[0];
+        this.object.orderDateEnd = this.time[1];
+      } else {
+        this.object.orderDateBegin = null;
+        this.object.orderDateEnd = null;
+      }
         this.object.currentPage=currentPage;
         let data = await initSaleOrder(this.object);
         this.pageInfo=data.data;
@@ -267,9 +280,11 @@ export default {
    async handleExcel(){
       await saleOrderExcel();
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    }
+    resetForm(){
+      this.object.orderNo="";
+      this.time="";
+      this.object.createBy="";
+    },
   }
 }
 </script>
