@@ -62,9 +62,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="code" label="订单编码" width="150" fixed>
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <a href="#" @click="viewOrder(scope.row)">{{ scope.row.code }}</a>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="dispatchCode" label="源单号" width="120">
       </el-table-column>
@@ -72,12 +72,21 @@
       </el-table-column>
       <el-table-column prop="subject" label="单据主题" width="120">
       </el-table-column>
-
       <el-table-column prop="aimStoreHouseName" label="调入目标仓库" width="120">
       </el-table-column>
-      <el-table-column prop="totalCount" label="调度数量" width="120">
+      <el-table-column prop="batchCode" label="批次号" width="120">
       </el-table-column>
-      <el-table-column prop="price" label="调度金额" width="120">
+      <el-table-column prop="medicineName" label="药品名称" width="120">
+      </el-table-column>      
+      <el-table-column prop="specification" label="药品规格" width="120">
+      </el-table-column>      
+      <el-table-column prop="unitName" label="药品计量单位" width="120">
+      </el-table-column>      
+      <el-table-column prop="providerName" label="药品供应商" width="120">
+      </el-table-column>      
+      <el-table-column prop="quantity" label="调度数量" width="120">
+      </el-table-column>
+      <el-table-column prop="dispatchPrice" label="调度金额" width="120">
       </el-table-column>
       <el-table-column prop="approvalstatus" label="核批结果" width="120">
         <template slot-scope="scope">
@@ -99,14 +108,7 @@
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="200">
-        <template slot-scope="scope">
-          <el-button
-            @click="updateOrder(scope.row.id)"
-            type="primary"
-            size="small"
-            :disabled="scope.row.orderstatus >= 2"
-            >编辑
-          </el-button>
+        <template slot-scope="scope"> 
           <el-dropdown>
             <span class="el-dropdown-link">
               更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -120,28 +122,9 @@
                   >删除
                 </el-button></el-dropdown-item
               >
-
               <el-dropdown-item
                 ><el-button
-                  @click="voidOrder(scope.row)"
-                  type="info"
-                  size="small"
-                  >作废
-                </el-button></el-dropdown-item
-              >
-
-              <el-dropdown-item
-                ><el-button
-                  @click="approveOrder(scope.row.id)"
-                  v-if="scope.row.orderStatus == 2"
-                  type="success"
-                  size="small"
-                  >审核
-                </el-button></el-dropdown-item
-              >
-              <el-dropdown-item
-                ><el-button
-                  @click="printSaleOrder(scope.row.id)"
+                  @click="printSaleOrder(scope.row)"
                   type="primary"
                   size="small">打印
                 </el-button></el-dropdown-item>
@@ -302,13 +285,10 @@ export default {
         this.initDdrkOrderList(1);
       }
     },
-    printSaleOrder(orderNo) {
+    printSaleOrder(row) {
       const newPage = this.$router.resolve({
         path: "/printDDRKOrder",
-        query: {
-          //要传的参数 可传多个
-          orderNo: orderNo,
-        },
+        query: row,
       });
       window.open(newPage.href, "_blank");
     },

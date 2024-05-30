@@ -5,6 +5,7 @@ import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.Message;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -44,5 +45,6 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
 
     public Message getTreeMedicine();
 
+    public void baseMedicineExcel(BaseMedicine baseMedicine, HttpServletResponse response);
 
 }

@@ -100,4 +100,14 @@ public class UnitServiceImpl extends ServiceImpl<UnitMapper, BaseUnit> implement
         return Message.success();
     }
 
+    @Override
+    public Message getAllBaseUnit() {
+        List<BaseUnit> baseUnitList=unitMapper.selectList(null);
+        if(baseUnitList!=null){
+            return Message.success(baseUnitList);
+        }else {
+            return Message.error();
+        }
+    }
+
 }

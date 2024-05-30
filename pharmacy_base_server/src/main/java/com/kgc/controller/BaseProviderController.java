@@ -1,7 +1,9 @@
 package com.kgc.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kgc.annotation.Log;
 import com.kgc.entity.BaseProvider;
 import com.kgc.entity.Message;
 import com.kgc.service.BaseProviderService;
@@ -34,20 +36,26 @@ public class BaseProviderController {
         return message;
     }
 
+    @Log("添加供应商")
     @RequestMapping("addBaseProvider")
     public Message addBaseProvider(BaseProvider baseProvider) {
+        StpUtil.checkPermission("base:provider:add");
         Message message = baseProviderService.addBaseProvider(baseProvider);
         return message;
     }
 
+    @Log("修改供应商")
     @RequestMapping("updateBaseProvider")
     public Message updateBaseProvider(BaseProvider baseProvider) {
+        StpUtil.checkPermission("base:provider:update");
         Message message = baseProviderService.updateBaseProvider(baseProvider);
         return message;
     }
 
+    @Log("删除供应商")
     @RequestMapping("delBaseProvider")
     public Message delBaseProvider(@RequestParam("id") Integer id) {
+        StpUtil.checkPermission("base:provider:del");
         Message message = baseProviderService.delBaseProvider(id);
         return message;
     }

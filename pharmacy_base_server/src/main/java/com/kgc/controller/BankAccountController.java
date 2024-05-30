@@ -1,6 +1,8 @@
 package com.kgc.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.BankAccount;
 import com.kgc.entity.BaseProvider;
 import com.kgc.entity.Message;
@@ -33,20 +35,26 @@ public class BankAccountController {
         return message;
     }
 
+    @Log("添加银行账户")
     @RequestMapping("addBankAccount")
     public Message getBankAccountBybandCount(BankAccount bankAccount) {
+        StpUtil.checkPermission("base:account:add");
         Message message = bankAccountService.addBankAccount(bankAccount);
         return message;
     }
 
+    @Log("修改银行账户")
     @RequestMapping("updateBankAccount")
     public Message updateBankAccount(BankAccount bankAccount) {
+        StpUtil.checkPermission("base:account:update");
         Message message = bankAccountService.updateBankAccount(bankAccount);
         return message;
     }
 
+    @Log("删除银行账户")
     @RequestMapping("delBankAccountBybandCount")
     public Message delBankAccountBybandCount(@RequestParam("bandCount") String bandCount) {
+        StpUtil.checkPermission("base:account:del");
         Message message = bankAccountService.delBankAccountBybandCount(bandCount);
         return message;
     }

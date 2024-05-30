@@ -79,6 +79,15 @@ public class CwAccountsServiceImpl extends ServiceImpl<CwAccountsDao, CwAccounts
         }
         return Message.error();
     }
+    @Override
+    public Message insertCwAccounts(CwAccounts cwAccounts) {
+        int count=cwAccountsDao.insert(cwAccounts);
+        if(count>0){
+            return Message.success();
+        }else{
+            return Message.error();
+        }
+    }
 
     @Override
     public boolean saveBatch(Collection<CwAccounts> entityList, int batchSize) {

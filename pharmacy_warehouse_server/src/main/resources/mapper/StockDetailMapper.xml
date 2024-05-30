@@ -2,18 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.StockDetailMapper">
     <select id="getStockDetailListByPage" resultType="com.kgc.entity.BaseMedicine">
-#         select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,
-#                kc.quantity as stock,kc.batchCode,kc.`code`,bs.name as storehouseName
-#         from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs
-#         where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.`code`=bs.`code`
-#           and b.isDel=0  and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0
         select b.id,b.name,categoryId,unitId,salePrice,specification,warning,un.name as unitName,mc.name as categoryName,
-               kc.quantity as stock,kc.batchCode,bs.name as storehouseName,kc.providerId,kc.money as purchasePrice,
-            kc.id as kcMedicineId
-        from base_medicine b, base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs
+        kc.quantity as stock,kc.batchCode,bs.name as storehouseName,kc.providerId,kc.money as purchasePrice,
+        kc.id as kcMedicineId,c.userName as createByName,u.userName as updateByName,b.createTime,b.updateTime
+        from base_unit un,base_medicine_category mc,kc_medicine kc,base_storehouse bs,base_medicine b
+        LEFT JOIN sys_user c on b.createBy=c.userId
+        LEFT JOIN sys_user u on b.updateBy=u.userId
         where b.categoryId=mc.id and b.unitId=un.id and kc.medicineId=b.id and kc.storehouseId=bs.id
-          and b.isDel=0 and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0
-          and bs.id =#{storeHouseId}
+        and b.isDel=0 and un.isDel=0 and mc.isDel=0 and kc.isDel=0 and bs.isDel=0 and c.isDel=0 and u.isDel=0
+        <if test="orderDateBegin!=null and orderDateEnd!=null and orderDateBegin!='' and orderDateEnd!=''">and b.createTime between #{orderDateBegin} and #{orderDateEnd}</if>
+        <if test="storeHouseId>0">and kc.storeHouseId =#{storeHouseId}</if>
+        <if test="medicineId>0">and kc.medicineId =#{medicineId}</if>
     </select>
 
     <update id="reduceStockDetailByMedicineId">

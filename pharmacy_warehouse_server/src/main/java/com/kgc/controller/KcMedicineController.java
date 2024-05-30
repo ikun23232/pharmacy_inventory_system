@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.KcMedicine;
 import com.kgc.entity.Message;
 import com.kgc.service.KcMedicineService;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/warehouse")
@@ -27,5 +30,10 @@ public class KcMedicineController {
         return kcMedicineService.getKcMedicineByReportedCode(reportedCode);
     }
 
+    @RequestMapping("/getKcMedicineByWareHouseId")
+    public Message getKcMedicineByWareHouseId(@RequestBody BaseMedicine baseMedicine) {
+        Message message = kcMedicineService.getKcMedicineByWareHouseId(baseMedicine);
+        return message;
+    }
 
 }

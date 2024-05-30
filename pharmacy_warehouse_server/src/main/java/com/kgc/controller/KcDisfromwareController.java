@@ -1,6 +1,7 @@
 package com.kgc.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.kgc.annotation.Log;
 import com.kgc.entity.CgrkOrder;
 import com.kgc.entity.KcDisfromware;
@@ -37,15 +38,17 @@ public class KcDisfromwareController {
     return Message.success(kcDisfromwareList);
     }
 
-    @Log("删除调度出库订单")
     @RequestMapping("/delKcDisfromware")
+    @Log("调度出库删除")
     public Message delKcDisfromware(int id) {
+        StpUtil.checkPermission("ffPslIZX6P");
         Message message = kcDisfromwareService.delKcDisfromware(id);
         return message;
     }
-    @Log("导出调度出库订单")
     @RequestMapping("/ddckExcel")
+    @Log("调度出库导出")
     public Message ddckExcel(@RequestBody KcDisfromware kcDisfromware, HttpServletResponse response) {
+        StpUtil.checkPermission("T0Cmj2nP6i");
         kcDisfromwareService.ddckExcel(kcDisfromware,response);
         return Message.success(null);
     }

@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kgc.dao.BaseMedicineCategoryMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,6 +109,16 @@ public class BaseMedicineCategoryServiceImpl extends ServiceImpl<BaseMedicineCat
             return Message.error("数据不存在", baseMedicineCategory);
         }
         return Message.success(baseMedicineCategory);
+    }
+
+    @Override
+    public Message getAllBaseCategory() {
+        List<BaseMedicineCategory> baseMedicineCategoryList=baseMedicineCategoryMapper.getAllBaseCategory();
+       if(baseMedicineCategoryList!=null){
+           return Message.success(baseMedicineCategoryList);
+       }else {
+           return Message.error();
+       }
     }
 
     /**

@@ -10,6 +10,7 @@ import com.kgc.entity.KcDistoware;
 import com.kgc.entity.Message;
 import com.kgc.service.KcDistowareService;
 import com.kgc.utils.ExeclUtil;
+import com.kgc.vo.DispatchToWareVO;
 import com.kgc.vo.DispatchVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +50,14 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
         paramsMap.put("beforeWarhouseId", vo.getBeforeWarehouseId());
         logger.debug("KcDistowareServiceImpl getKcDistowareList paramsMap:"+paramsMap);
         PageHelper.startPage(vo.getCurrentPageNo(), vo.getPageSize());
-        List<KcDistoware> kcDisfromwareList1 = kcDistowareMapper.getKcDistowareList(paramsMap);
-        PageInfo<KcDistoware> kcDisfromwarePageInfo = new PageInfo<>(kcDisfromwareList1);
+        List<DispatchToWareVO> kcDisfromwareList1 = kcDistowareMapper.getKcDistowareList(paramsMap);
+        PageInfo<DispatchToWareVO> kcDisfromwarePageInfo = new PageInfo<>(kcDisfromwareList1);
         return Message.success(kcDisfromwarePageInfo);
     }
 
     @Override
     public Message getKcDistowareOrder(int id) {
-        KcDistoware kcDisfromwareOrder = kcDistowareMapper.getKcDistowareOrder(id);
+        DispatchToWareVO kcDisfromwareOrder = kcDistowareMapper.getKcDistowareOrder(id);
         return Message.success(kcDisfromwareOrder);
     }
 
@@ -71,7 +72,7 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
 
     @Override
     public void ddrkExcel(KcDistoware kcDistoware, HttpServletResponse response) {
-        List<KcDistoware> kcDisfromwareList = kcDistowareMapper.getKcDistowareList(new HashMap<>());
+        List<KcDistoware> kcDisfromwareList = kcDistowareMapper.getKcDistowareListByExcel(new HashMap<>());
         try {
             ExeclUtil.write(kcDisfromwareList,KcDistoware.class,response,"调度出库");
         } catch (IOException e) {

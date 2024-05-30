@@ -5,6 +5,7 @@ import storeHouse from '../views/storeHouse.vue'
 import BaseProviderList from "../views/base/BaseProviderList.vue"
 import BankAccountList from "../views/base/BankAccountList.vue"
 import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
+import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
 import dispatch from '../views/kc/KCDD/dispatch.vue'
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
@@ -79,82 +80,38 @@ const routes = [
     component: storeHouse
   },
   {
-    //供应商管理
-    path: '/baseProviderList',
-    name: 'baseProviderList',
-    component: BaseProviderList
-  },
-  {
-    //银行账户
-    path: '/bankAccountList',
-    name: 'bankAccountList',
-    component: BankAccountList
-  },
-  {
     //医用商品
-    path: '/baseMedicine',
+    path: '/Medicine',
     name: 'BaseMedicine',
     component: BaseMedicine
   },
-  {
-    //销售订单
-    path: '/saleOrder',
-    name: 'SaleOrder',
-    component: SaleOrder,
-  },
+
   {
     //销售订单打印
     path: '/printSaleOrder',
     name: 'printSaleOrder',
     component: PrintSaleOrder
   },
-  {
-    //采购订单
-    path: '/CGDDOrder',
-    name: 'CGDDOrder',
-    component: procurementOrder
-  },
-  {
-    //销售出库
-    path: '/saleOutWarehouse',
-    name: 'saleOutWarehouse',
-    component: SaleOutWarehouse
-  },
+
   {
     //销售出库打印
     path: '/printSaleOutWarehouse',
     name: 'printSaleOutWarehouse',
     component: PrintSaleOutWarehouse
   },
-  {
-    //库存明细
-    path: '/stockDetail',
-    name: 'stockDetail',
-    component: StockDetail
-  },
+
   {
     //库存明细打印
     path: '/printStockDetail',
     name: 'printStockDetail',
     component: PrintStockDetail
   },
-  {
-    //销售退货退款
-    path: '/refundOrder',
-    name: 'refundOrder',
-    component: RefundOrder
-  },
+
   {
     //销售退货退款打印
     path: '/printRefundOrder',
     name: 'printRefundOrder',
     component: PrintRefundOrder
-  },
-  {
-    //库存调度
-    path: '/dispatch',
-    name: 'dispatch',
-    component: dispatch
   },
   {
     //采购统计
@@ -163,34 +120,17 @@ const routes = [
     component: () => import('../views/procurement/ProcurementTJ.vue')
   },
   {
-    //库存报损
-    path:'/KcReported',
-    name: 'KcReported',
-    component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  },
-  {
     //库存报损打印
     path:'/PrintKcReported',
     name: 'PrintKcReported',
     component: () => import('../views/warehouse/KCBC/PrintKcReported.vue')
   },
-  {
-    //报损出库
-    path:'/KcReportedfromware',
-    name: 'KcReportedfromware',
-    component: () => import('../views/warehouse/BSCK/KcReportedfromware.vue')
-  },
+
   {
     //付款订单
     path:'/procurementPay',
     name: 'procurementPay',
     component: () => import('../views/procurement/CGDD/procurementPay.vue')
-  },
-  {
-    //采购应付
-    path:'/purchasePay',
-    name: 'purchasePay',
-    component: () => import('../views/finance/CGYF/purchasePay.vue')
   },
   {
     //采购应付打印
@@ -199,59 +139,33 @@ const routes = [
     component: () => import('../views/finance/CGYF/printPurchasePay.vue')
 
   },
-  {
-    //报损应收
-    path:'/breakageReceivable',
-    name: 'breakageReceivable',
-    component: () => import('../views/finance/BSYS/breakageReceivable.vue')
-  },
+
   {
     //报损应收打印
     path:'/printBreakageReceivable',
     name: 'printBreakageReceivable',
     component: () => import('../views/finance/BSYS/printBreakageReceivable.vue')
   },
-  {
-    //销售应收
-    path:'/XSYS',
-    name: 'XSYS',
-    component: () => import('../views/finance/XS/salesReceivable.vue')
-  },
+
   {
     //销售应收打印
     path:'/printSalesReceivable',
     name: 'printSalesReceivable',
     component: () => import('../views/finance/XS/printSalesReceivable.vue')
   },
-  {
-    //销售退款
-    path:'/XSTK',
-    name: 'XSTk',
-    component: () => import('../views/finance/XS/salesRefund.vue')
-  },
+
   {
     //销售退款打印
     path:'/printSalesRefund',
     name: 'printSalesRefund',
     component: () => import('../views/finance/XS/printSalesRefund.vue')
   },
-  {
-    //发票详情
-    path:'/invoice',
-    name: 'invoice',
-    component: () => import('../views/finance/invoice.vue')
-  },
+
   {
     //发票详情打印
     path:'/printInvoice',
     name: 'printInvoice',
     component: () => import('../views/finance/printInvoice.vue')
-  },
-  {
-    //流水统计
-    path:'/runningWater',
-    name: 'runningWater',
-    component: () => import('../views/finance/runningWater.vue')
   },
   {
     //首页
@@ -272,65 +186,32 @@ const routes = [
     component: PrintCGRKOrder
 
   },
-
   {
     path:'/printDDCKOrder',
     name: 'PrintDDCKOrder',
      component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
   },
   {
-    path: '/refundInWarehouse',
-    name: 'refundInWarehouse',
-    component: RefundInWarehouse
+    path:'/printDDRKOrder',
+    name: 'printDDRKOrder',
+     component: () => import('@/views/kc/DDRK/PrintDDRKOrder')
   },
   {
-    path: '/saleOrderStatistics',
-    name: 'saleOrderStatistics',
-    component: SaleOrderStatistics
-  },
-  {
-    path: '/saleOrderDetailStatistics',
-    name: 'saleOrderDetailStatistics',
-    component: SaleOrderDetailStatistics
-  },
-  {
-    path: '/refundOrderStatistics',
-    name: 'refundOrderStatistics',
-    component: RefundOrderStatistics
-  },
-  {
-    path: '/refundOrderDetailStatistics',
-    name: 'refundOrderDetailStatistics',
-    component: RefundOrderDetailStatistics
-  },
-  {
-    path: '/saleStatistics',
-    name: 'saleStatistics',
-    component: SaleStatistics
-  },
-  {
-    //调度入库订单
-    path: '/DDRKManager',
-    name: 'DDRKManager',
-    component: DDRKManager
-  },
-  {
-    //调度出库单打印
-    path: '/PrintDDRKOrder',
-    name: 'PrintDDRKOrder',
-    component: PrintDDRKOrder
-  },
-  {
-    //库存告警
-    path: '/KCGJManager',
-    name: 'KCGJManager',
-    component: () => import('@/views/kc/KCGJ/KCGJManager')
+    path:'/crkmxManager',
+    name: 'CRKMXManager',
+    component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
   {
     //调度出库单打印
     path: '/printDDCKOrder',
     name: 'PrintDDCKOrder',
     component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
+  },
+  {
+    //出入库明细
+    path: '/crkmxManager',
+    name: 'CRKMXManager',
+    component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
   {
       //采购订单打印
@@ -344,12 +225,8 @@ const routes = [
     name: 'PrintCGSQOrder',
     component: () => import('@/views/procurement/CGSQ/PrintCGSQOrder')
   },
-  {
-    //首页
-    path:'/HomePage',
-    name: 'HomePage',
-    component: () => import('@/views/index/HomePage.vue')
-  }
+
+
 ]
 
 const router = new VueRouter({

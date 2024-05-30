@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.kgc.annotation.ExcelFiled;
+import com.kgc.entity.BaseMedicine;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * 采购应付VO
  */
@@ -60,5 +63,7 @@ public class CwCgyfVO implements Serializable {
     @ExcelFiled("付款时间")
     private LocalDateTime paymentTime;
 
-
+    @TableField(exist=false)
+    @ExcelFiled(value = "药品明细",type = MedicineVO.class)
+    private List<MedicineVO> medicineVOList;
 }

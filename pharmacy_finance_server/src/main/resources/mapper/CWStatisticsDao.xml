@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CWStatisticsDao">
+    <select id="getCWStatistics" resultType="com.kgc.entity.CWStatistics">
+        SELECT
+            SUM(CASE WHEN b.parentId = 2 THEN a.cost ELSE 0 END) AS totalIncome,
+            SUM(CASE WHEN b.parentId = 1 THEN a.cost ELSE 0 END) AS totalExpense
+        FROM
+            cw_accounts a
+                LEFT JOIN cw_category b ON b.id = a.categoryId
+        WHERE
+            a.isDel = 0
+          AND MONTH(a.createTime) = MONTH(CURRENT_DATE)
+          AND YEAR(a.createTime) = YEAR(CURRENT_DATE);
+    </select>
+
+    <select id="getCWStatisticsPicture" resultType="com.kgc.entity.CWStatistics">
+        SELECT
+            YEAR(a.createTime) AS year,
+            MONTH(a.createTime) AS month,
+            SUM(CASE WHEN b.parentId = 2 THEN a.cost ELSE 0 END) AS totalIncome,
+            SUM(CASE WHEN b.parentId = 1 THEN a.cost ELSE 0 END) AS totalExpense
+        FROM
+            cw_accounts a
+                LEFT JOIN cw_category b ON b.id = a.categoryId
+        WHERE
+            a.isDel = 0
+          AND YEAR(a.createTime) = YEAR(CURDATE())
+        GROUP BY
+            YEAR(a.createTime),
+            MONTH(a.createTime)
+        ORDER BY
+            year, month;
+
+    </select>
+
+
+
+</mapper>
+

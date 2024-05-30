@@ -11,16 +11,23 @@ export function initRefundOrder(xsOrder) {
 export function addRefundOrder(xsOrder) {
     return request.post(baseUrl + "/addRefundOrder",{xsOrder:xsOrder});
 }
-
 //获取退货原因
 export function getAllRefundTypeList() {
     return request.post(baseUrl + "/getAllRefundTypeList");
 }
-
 //保存退货订单
 export function saveRefundOrder(xsOrder) {
     return request.post(baseUrl + "/saveRefundOrder",{xsOrder:xsOrder});
 }
+//修改退货订单
+export function updateRefundOrder(xsOrder) {
+    return request.post(baseUrl + "/updateRefundOrder",{xsOrder:xsOrder});
+}
+//保存修改退货订单
+export function saveUpdateRefundOrder(xsOrder) {
+    return request.post(baseUrl + "/saveUpdateRefundOrder",{xsOrder:xsOrder});
+}
+
 //审核
 export function checkedRefundOrder(xsOrder) {
     return request.post(baseUrl + "/checkedRefundOrder",{
@@ -46,13 +53,6 @@ export function refundOrderExcel(xsOrder) {
         console.log("error:",error)
     })
 }
-// export function updateRefundOrder(xsOrder) {
-//     return request.post(baseUrl + "/updateRefundOrder",{xsOrder:xsOrder});
-// }
-
-// export function saveUpdateRefundOrder(xsOrder) {
-//     return request.post(baseUrl + "/saveUpdateRefundOrder",{xsOrder:xsOrder});
-// }
 
 
 //退货订单作废

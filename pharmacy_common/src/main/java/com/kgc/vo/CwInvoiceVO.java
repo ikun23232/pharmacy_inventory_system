@@ -1,12 +1,15 @@
 package com.kgc.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.kgc.annotation.ExcelFiled;
+import com.kgc.entity.BaseMedicine;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 发票VO
@@ -76,5 +79,9 @@ public class CwInvoiceVO implements Serializable {
      */
     @ExcelFiled("发票总金额")
     private BigDecimal cost;
+
+    @TableField(exist=false)
+    @ExcelFiled(value = "药品明细",type = BaseMedicine.class)
+    private List<BaseMedicine> baseMedicineList;
 
 }

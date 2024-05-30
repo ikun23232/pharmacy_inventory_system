@@ -1,5 +1,7 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.CwAccounts;
 import com.kgc.entity.Message;
 import com.kgc.service.CwAccountsService;
@@ -33,8 +35,10 @@ public class CwAccountsController {
         return cwAccountsService.getCwNumByMonth(year,month);
     }
 
+    @Log("流水导出")
     @RequestMapping("/cwAccountsExcel")
     public void cwAccountsExcel(HttpServletResponse response) {
+        StpUtil.checkPermission("cw:account:excel");
         cwAccountsService.cwAccountsExcel(response);
     }
 }

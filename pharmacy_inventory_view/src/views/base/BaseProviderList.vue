@@ -10,13 +10,14 @@
       &nbsp;&nbsp;&nbsp;&nbsp;
       <label style="font-weight: bolder; font-size: 14px">供应商名称:&nbsp;</label>
       <el-input style="width: 200px" placeholder="请输入内容" v-model="input" clearable>
-      </el-input>
-      <el-button type="primary" icon="el-icon-delete" style="background-color: #ff4e00; border: none"
-        @click="clearsearch()"></el-button>
+      </el-input>&nbsp;&nbsp;&nbsp;&nbsp;
+
       <el-button type="primary" icon="el-icon-search" style="background-color: #ff4e00; border: none"
-        @click="handlegetproviderList(1)">搜索</el-button>
+        @click="handlegetproviderList(1)">搜索</el-button>&nbsp;
       <el-button type="primary" icon="el-icon-search" style="background-color: #ff4e00; border: none"
         @click="addProvider()">添加</el-button>
+      <el-button type="primary" icon="el-icon-delete" style="background-color: #ff4e00; border: none"
+                 @click="clearsearch()">清空</el-button>&nbsp;
     </p>
     <el-table :data="page.list" style="width: 100%; border: black" max-height="1000">
       <el-table-column label="序号" width="120" align="center">

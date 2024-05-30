@@ -45,4 +45,8 @@ export function checkCat(name) {
     }
     })
   }
+
+  export function getAllBaseCategory() {
+    return request.get(baseUrl + "/getAllBaseCategory")
+}
   

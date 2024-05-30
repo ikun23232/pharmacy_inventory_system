@@ -18,4 +18,6 @@ public interface CwAccountsService extends IService<CwAccounts> {
 
     Message addCwAccounts(CwAccounts cwAccounts);
 
+    Message insertCwAccounts(CwAccounts cwAccounts);
+
 }

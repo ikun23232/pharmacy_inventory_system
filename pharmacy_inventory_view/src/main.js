@@ -16,14 +16,14 @@ Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBo
 Vue.prototype.$axios = axios
 
 
-Vue.prototype.$axios = axios //
+// Vue.prototype.$axios = axios //
 Vue.use(VueRouter)
 Vue.use(ElementUI);
 Vue.use(Antd)
 Vue.use(Message);
 Vue.use(Print)
 Vue.config.productionTip = false
-Vue.prototype.$message = Message;
+// Vue.prototype.$message = Message;
 
 new Vue({
   router,

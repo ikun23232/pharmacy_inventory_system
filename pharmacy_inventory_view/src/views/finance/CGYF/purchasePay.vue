@@ -13,7 +13,7 @@ export default {
       // 分页
       cwCgyfPage: {
         pageNum:1,
-        pageSize:3,
+        pageSize:5,
         total:0,
         list:[]
       },
@@ -152,8 +152,7 @@ export default {
     },
     viewOrder(code) {
       this.code = code;
-      console.log("row11111");
-      console.log(this.code);
+
       this.viewdialogVisible = true;
     },
     closeviewOrder() {
@@ -170,7 +169,7 @@ export default {
       <el-row :gutter="20">
         <el-col :span="8"
         ><div class="grid-content bg-purple">
-          单据编号：
+          采购应付编号：
           <el-input
               v-model="cwCgyf.code"
               style="width: 200px"
@@ -179,7 +178,7 @@ export default {
         ></el-col>
         <el-col :span="8"
         ><div class="grid-content bg-purple">
-          单据编号：
+          采购订单编号：
           <el-input
               v-model="cwCgyf.cgddCode"
               style="width: 200px"
@@ -229,7 +228,7 @@ export default {
         <el-table-column prop="paymentTime" label="付款时间" width="120"/>
         <el-table-column prop="cost" label="应付金额" width="120"/>
         <el-table-column prop="isPay" label="是否支付" width="120" :formatter="formatPayStatus"/>
-        <el-table-column align="center" label="操作"  width="200">
+        <el-table-column align="center" label="操作"  width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" plain @click="viewOrder(row.cgddCode)">详情</el-button>&nbsp;
             <el-dropdown>

@@ -150,18 +150,18 @@
       width="85%"
       v-if="viewdialogVisible"
     >
-      <DDRKViewOrder
+      <DDCKViewOrder
         :id="this.id"
         :code="this.code"
         @closeviewOrder="closeviewOrder"
-      ></DDRKViewOrder>
+      ></DDCKViewOrder>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
-import DDRKViewOrder from "@/components/DDRKViewOrder.vue";
+import DDCKViewOrder from "@/components/DDCKViewOrder.vue";
 import {
   DdckExcel,
   delKcDisfromware,
@@ -172,7 +172,7 @@ import { getStoreList } from "@/api/storeHouse";
 export default {
   name: "storeHouse",
   components: {
-    DDRKViewOrder,
+    DDCKViewOrder,
   },
   data() {
     return {
@@ -281,7 +281,7 @@ export default {
       }
     },
     viewOrder(row) {
-      this.id = row.id;
+      this.id = row.dispatchid;
       this.code = row.dispatchCode;
       this.viewdialogVisible = true;
     },

@@ -227,3 +227,11 @@ export function getCwInvoiceByCode(code) {
 export function updateCwCgyf(cwCgyf) {
     return request.post(baseUrl + "/updateCwCgyf",cwCgyf);
 }
+
+export function getCWStatistics() {
+    return request.get(baseUrl + "/getCWStatistics");
+}
+
+export function getCWStatisticsPicture() {
+    return request.get(baseUrl + "/getCWStatisticsPicture");
+}

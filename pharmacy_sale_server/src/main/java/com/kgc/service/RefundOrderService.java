@@ -14,6 +14,10 @@ public interface RefundOrderService extends IService<XsOrder> {
 
     public Message saveRefundOrder(XsOrder xsOrder);
 
+    public Message updateRefundOrder(XsOrder xsOrder);
+
+    public Message saveUpdateRefundOrder(XsOrder xsOrder);
+
     public Message checkedRefundOrder(XsOrder xsOrder);
 
     public void refundOrderExcel(XsOrder xsOrder, HttpServletResponse response);

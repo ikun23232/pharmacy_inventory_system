@@ -68,6 +68,31 @@ export function getMedicineListByCodeComblie(code) {
         params: {
             code: code,
         }
-
     });
+}
+
+export function addProviderMedicine(ProvideMedicine) {
+    return request.post(baseUrl + "/addProviderMedicine", ProvideMedicine);
+}
+
+export function checkProviderExits(ProvideMedicine) {
+    return request.post(baseUrl + "/checkProviderExits", ProvideMedicine);
+}
+//导出库存明细
+export function baseMedicineExcel(baseMedicine) {
+    return request.post(baseUrl + "/baseMedicineExcel", {
+        baseMedicine: baseMedicine,
+    }, {
+        responseType: 'blob'
+    }).then(resp => {
+        let blob = new Blob([resp], { type: 'application/xlsx' });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a'); //创建a标签
+        link.href = url;
+        link.download = '医用商品.xlsx'; //重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+    }).catch(error =>{
+        console.log("error:",error)
+    })
 }

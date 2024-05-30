@@ -214,6 +214,7 @@
               disabled
               :data="cgsqList"
               show-summary
+              :summary-method="(param) => getSummaries(param, ['count', 'referenceamount'])"             
               border
               style="width: 1200px"
             >
@@ -264,6 +265,7 @@
               disabled
               :data="medicineListTemp"
               show-summary
+              :summary-method="(param) => getSummaries(param, ['quantity', 'purchasePrice','totalPrice'])"
               border
               style="width: 1200px"
             >
@@ -512,8 +514,8 @@
               clearable
               filterable
             >
-              <el-option label="不通过" :value="0"></el-option>
-              <el-option label="通过" :value="1"></el-option>
+              <el-option label="不通过" :value="1"></el-option>
+              <el-option label="通过" :value="2"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -535,7 +537,8 @@
           <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-button @click="cancel()">取 消</el-button>
-            </div></el-col>
+            </div></el-col
+          >
         </el-row>
       </el-form-item>
     </el-form>
@@ -669,7 +672,7 @@ import { getCgddByCode, auditingOrder } from "../api/procurementOrder.js";
 import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
 import { getPayType } from "../api/public.js";
 export default {
-  name: "AuditingProcOrder",
+  name: "auditingProcOrder",
   props: {
     code: {
       type: String,
@@ -758,6 +761,13 @@ export default {
             trigger: "blur",
           },
         ],
+        approvalStatus: [
+          { required: true, message: "请审批", trigger: "change" },
+        ],
+        approverRemark: [
+          { required: true, message: "审批备注不能为空", trigger: "blur" },
+          { min: 1, max: 10, message: "联系人为1-10个字符", trigger: "blur" },
+        ],
       },
     };
   },
@@ -783,7 +793,7 @@ export default {
     this.cgddMedicineionList = this.medicineListTemp;
     await this.getMedicineListDetail();
     await this.initCgSqOrderList();
-    this.CgddOrder.approvalStatus=""
+    this.CgddOrder.approvalStatus = "";
   },
   methods: {
     async initCgSqOrderList() {
@@ -1058,6 +1068,34 @@ export default {
         }
         this.CgddOrder.medicineList = this.bcglXiangXiList;
       }
+    },
+    getSummaries(param, targetColumns) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+        if (targetColumns.includes(column.property)) {
+          const values = data.map((item) => Number(item[column.property]));
+
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] =
+              values
+                .reduce((prev, curr) => {
+                  return prev + curr;
+                }, 0)
+                .toFixed(2) + "";
+          } else {
+            sums[index] = "N/A";
+          }
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
   },
   computed: {

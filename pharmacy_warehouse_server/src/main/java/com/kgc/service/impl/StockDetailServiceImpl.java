@@ -54,6 +54,26 @@ public class StockDetailServiceImpl extends ServiceImpl<StockDetailMapper, BaseM
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public Message reduceStockDetailByMedicineId(int medicineId, int quantity, String batchCode) {
+        int count= stockDetailMapper.reduceStockDetailByMedicineId(medicineId,quantity,batchCode);
+        if(count>0){
+            return Message.success();
+        }else{
+            return Message.error();
+        }
+
+    }
+
+    @Override
+    public Message addStockDetailByMedicineId(int medicineId, int quantity, String batchCode) {
+        int count= stockDetailMapper.addStockDetailByMedicineId(medicineId,quantity,batchCode);
+        if(count>0){
+            return Message.success();
+        }else{
+            return Message.error();
+        }
     }
 }

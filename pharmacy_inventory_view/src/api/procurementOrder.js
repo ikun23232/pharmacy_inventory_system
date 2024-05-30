@@ -102,3 +102,7 @@ export function addcgyf(cwCgyf) {
 export function getCheckHintList() {
     return request.get(baseUrl + "/getCheckHintList");
 }
+
+export function getCgStatistics() {
+    return request.get(baseUrl + "/getCgStatistics");
+}

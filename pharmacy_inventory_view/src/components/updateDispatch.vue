@@ -122,7 +122,7 @@
             </el-table-column>
             <el-table-column prop="unitName" label="单位" width="120">
             </el-table-column>
-            <el-table-column prop="stock" label="剩余库存" width="120">
+            <el-table-column prop="stock" label="调度数量" width="120">
             </el-table-column>
             <el-table-column prop="purchasePrice" label="进价" width="120">
             </el-table-column>
@@ -405,6 +405,7 @@ export default {
       activeName: "first",
       adddialogVisible: false,
       kcmxdialog: false,
+      firstRender: false,
       kcmxListTemp: [],
       kcmxList: [],
       medicineListTemp: [],
@@ -445,6 +446,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.KcDispatch.medicineList.length == 0) {
+            Message({
+              message: "请加入药品详情!",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }
           for (
             let index = 0;
             index < this.KcDispatch.medicineList.length;
@@ -476,11 +485,6 @@ export default {
           return false;
         }
       });
-    },
-    resetForm(formName) {
-      var data = this.KcDispatch.code;
-      this.$refs[formName].resetFields();
-      this.KcDispatch.code = data;
     },
     cancel() {
       this.$emit("cancelUpdate");
@@ -573,6 +577,15 @@ export default {
           this.bcglXiangXiList.push(obj);
         }
         this.KcDispatch.medicineList = this.bcglXiangXiList;
+        if (this.firstRender) {
+          alert(111)
+          this.$message({
+            message: "添加成功",
+            type: "success",
+          });
+          this.activeName = "second";
+        }
+        this.firstRender = true;
       }
     },
     async showMedicineListDetail() {
