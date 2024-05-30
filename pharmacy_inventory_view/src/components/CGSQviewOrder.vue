@@ -221,27 +221,30 @@
         </el-tab-pane>
       </el-tabs>
       <el-divider></el-divider>
-
-      <div style="text-align: left;">
+   <div style="text-align: left;">
       <div class="demo-input-suffix">
   核批意见:
   <el-input
       placeholder="请输入内容"
       prefix-icon="el-icon-search"
-      v-model="input2"
+      v-model="CgsqOrder.approverremark"
       style="width: 1000px;" disabled>
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select  v-model="CgsqOrder.approvement" placeholder="请选择" disabled>
-
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select v-model="CgsqOrder.approvalstatus"
+                                                                          placeholder="请选择" disabled>
+<el-option
+    label="未审批"
+    :value="0">
+    </el-option>
     <el-option
         label="未通过"
-        value="0">
+        :value="1">
     </el-option>
     <el-option
         label="通过"
-        value="1">
+        :value="2">
     </el-option>
   </el-select>
 </div>
@@ -578,28 +581,6 @@ export default {
 
     },
     async changeMedicine(obj){
-
-      // if (this.checkFalg) {
-      //   for (let i = 0; i <= this.bcglXiangXiList.length - 2; i++) {
-      //     if (this.bcglXiangXiList[i].medicineId == obj.medicineId) {
-      //       // alert(i)
-      //       // alert(this.bcglXiangXiList[i].providerId)
-      //       // alert(obj.providerId)
-      //       if (this.bcglXiangXiList[i].providerId != obj.providerId) {
-      //         break;
-      //       }
-      //
-      //       Message({
-      //         message: "您重复添加了商品!",
-      //         type: "error",
-      //         center: "true",
-      //       });
-      //       obj.medicineId = ''
-      //       this.index=2;
-      //       return
-      //     }
-      //   }
-      // }
       this.checkFalg=true
 
       for (const objElement of obj.medicineList) {

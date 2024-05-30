@@ -31,10 +31,30 @@
         WHERE ur.userId = #{userId}
     </select>
     <select id="getMenuListByToken" resultType="com.kgc.entity.SysMenu">
-        select m.* ,menuname as title,perms as name from sys_menu m,sys_rolemenu r,sys_userrole u WHERE m.id = r.menuId and r.roleId=u.roleId and m.isDel=0 and u.userId=#{userId} and m.type IN(0,1)
+        select DISTINCT m.* ,menuname as title,perms as name from sys_menu m,sys_rolemenu r,sys_userrole u WHERE m.id = r.menuId and r.roleId=u.roleId and m.isDel=0
+        <if test="userId>0">
+            and u.userId=#{userId}
+        </if>
+        and m.type IN(0,1)
     </select>
+
+
+
     <select id="getAllMenuList" resultType="com.kgc.entity.SysMenu">
         select m.* ,menuname as title,perms as name from sys_menu m WHERE  m.isDel=0
+    </select>
+
+    <select id="exsitMenuName" resultType="com.kgc.entity.SysMenu">
+        select *  from sys_menu  WHERE  isDel=0 and menuname =#{menuname}
+        <if test="id>0">
+            and id NOT IN (#{id})
+        </if>
+    </select>
+    <select id="exsitMenuPerms" resultType="com.kgc.entity.SysMenu">
+        select *  from sys_menu  WHERE  isDel=0 and perms =#{perms}
+        <if test="id>0">
+            and id NOT IN (#{id})
+        </if>
     </select>
 
 

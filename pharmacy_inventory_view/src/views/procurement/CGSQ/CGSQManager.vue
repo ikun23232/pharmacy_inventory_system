@@ -106,7 +106,7 @@
               @click="updateOrder(scope.row.id)"
               type="primary"
               size="small"
-              :disabled="scope.row.orderstatus>2 || scope.row.voidstate==1"
+              :disabled="scope.row.orderstatus>2 || scope.row.voidstate==1 || scope.row.approvalstatus==1"
           >编辑
           </el-button>
           <el-dropdown>
@@ -120,7 +120,7 @@
               <el-dropdown-item ><el-button @click="voidOrder(scope.row)" :disabled="scope.row.voidstate==1" type="info" size="small">作废
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderstatus==2&& scope.row.approvalstatus==1" type="success" size="small">审核
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderstatus!=2||scope.row.approvalstatus==1||scope.row.voidstate==1" type="success" size="small">审核
               </el-button></el-dropdown-item>
               <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
@@ -158,7 +158,7 @@
     <el-dialog
         title="修改采购申请单"
         :visible.sync="updatedialogVisible"
-        width="85%"
+        width="1400px"
         v-if="updatedialogVisible"
     >
       <CGSQupdateOrder
@@ -181,11 +181,10 @@
     <el-dialog
         title="采购申请订单添加"
         :visible.sync="adddialogVisible"
-        width="85%"
+        width="1400px"
         v-if="adddialogVisible"
     >
       <CGSQaddOrder
-          width="75%"
           :id="id"
           @addSuccess="addSuccess">
 

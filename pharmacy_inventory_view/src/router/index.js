@@ -1,20 +1,36 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import { Message } from 'element-ui'
 import storeHouse from '../views/storeHouse.vue'
+import BaseProviderList from "../views/base/BaseProviderList.vue"
+import BankAccountList from "../views/base/BankAccountList.vue"
+import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
 import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
+import dispatch from '../views/kc/KCDD/dispatch.vue'
 import BaseMedicine from "../views/base/BaseMedicine.vue";
+import SaleOrder from "../views/sale/SaleOrder.vue";
 import PrintSaleOrder from "../views/sale/PrintSaleOrder.vue";
+import SaleOutWarehouse from "../views/kc/CKGL/SaleOutWarehouse.vue";
 import PrintSaleOutWarehouse from "../views/kc/CKGL/PrintSaleOutWarehouse.vue";
+import StockDetail from "../views/kc/KCMX/StockDetail.vue";
 import PrintStockDetail from "../views/kc/KCMX/PrintStockDetail.vue";
 import PrintRefundOrder from "../views/refund/PrintRefundOrder.vue";
+import RefundOrder from "../views/refund/RefundOrder.vue";
 import PrintCGRKOrder from "@/views/procurement/CGRK/PrintCGRKOrder";
 import printDispatchOrder from './../views/kc/KCDD/printDispatchOrder.vue'
+import DDRKManager from './../views/kc/DDRK/DDRKManager.vue'
+import PrintDDRKOrder from './../views/kc/DDRK/PrintDDRKOrder.vue'
 
 import axios from "@/utils/request";
 import store from "@/store/index"
 import Home from '../views/operate/Home.vue'
 import Index from '../views/operate/Index.vue'
+import RefundInWarehouse from "../views/kc/TKRK/RefundInWarehouse.vue";
+import SaleOrderStatistics from "../views/saleStatistics/SaleOrderStatistics.vue";
+import RefundOrderStatistics from "../views/saleStatistics/RefundOrderStatistics.vue";
+import SaleStatistics from "../views/saleStatistics/SaleStatistics.vue";
+import SaleOrderDetailStatistics from "../views/saleStatistics/SaleOrderDetailStatistics.vue";
+import RefundOrderDetailStatistics from "../views/saleStatistics/RefundOrderDetailStatistics.vue";
 import IndexHome from "../views/index/IndexHome.vue";
 
 Vue.use(VueRouter)
@@ -33,14 +49,21 @@ const routes = [
         },
         component: Index
       },
-
+      {
+				path: '/userCenter',
+				name: 'UserCenter',
+				meta: {
+					title: "个人中心"
+				},
+				component: () => import('@/views/operate/UserCenter.vue')
+			},
     ]
   },
 
 	{
 		path: '/login',
 		name: 'Login',
-		component: () => import('../views/operate/Login.vue')
+		component: () => import('../views/operate/Login_Form.vue'),
 	},
 	{
 		path: '/printcheck',
@@ -63,14 +86,6 @@ const routes = [
     name: 'storeHouse',
     component: storeHouse
   },
- 
-  {
-    //采购入库
-    path: '/cgrkManager',
-    name: 'CGRKManager',
-    component: CGRKManager
-  },
-
   {
     //医用商品
     path: '/Medicine',
@@ -277,7 +292,6 @@ if (to.path == '/login') {
 					} else {
 						// 转成路由
 						let route = menuToRoute(e)
-
 						// 吧路由添加到路由管理中
 						if (route) {
 							newRoutes[0].children.push(route)
@@ -286,7 +300,6 @@ if (to.path == '/login') {
 
 				})
 			}
-		
 		})
 		router.addRoutes(newRoutes)
 
@@ -300,10 +313,14 @@ next()
 
 // 导航转成路由
 const menuToRoute = (menu) => {
-	
+
 	if (!menu.component) {
 		return null
 	}
+  if(menu.statu===2){
+    menu.component="operate/NoAccess"
+    // Message.warning("你无此权限");
+  }
 	let route = {
 		name: menu.perms,
 		path: menu.path,
@@ -311,6 +328,7 @@ const menuToRoute = (menu) => {
 			title: menu.title
 		}
 	}
+
 	route.component = () => import('../views/' + menu.component +'.vue')
 
 	return route

@@ -8,7 +8,6 @@ import com.kgc.annotation.ExcelFiled;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -113,4 +112,7 @@ public class SysUser implements Serializable {
 
     @TableField(exist = false)
     private List<SysRole> sysRoles = new ArrayList<>();
+
+    @TableField(exist = false)
+    private String roleIds;
 }

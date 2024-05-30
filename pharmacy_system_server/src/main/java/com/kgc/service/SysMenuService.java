@@ -16,5 +16,7 @@ public interface SysMenuService extends IService<SysMenu> {
    Message getMenuListByToken(Integer userId);
    Message getAllMenuList();
    Message getAuth();
+   Message exsitMenuName(String menuname,Integer id );
+   Message exsitMenuPerms(String perms,Integer id);
 
 }

@@ -51,19 +51,43 @@
           and isDel = 0
     </select>
     <select id="getUsersListByPage" resultType="com.kgc.entity.SysUser">
-        select userId, userName, password, age, sex, createDate, createBy, updateDate, updateBy, isDel, isState, nickName, email    from sys_user
+        SELECT
+        u.userId,
+        u.userName,
+        u.password,
+        u.age,
+        u.sex,
+        u.createDate,
+        u.createBy,
+        u.updateDate,
+        u.updateBy,
+        GROUP_CONCAT(r.roleId) as roleIds,
+        u.isDel,
+        u.isState,
+        u.nickName,
+        u.email
+        FROM sys_user u
+        LEFT JOIN sys_userrole ur ON u.userId = ur.userId
+        LEFT JOIN sys_role r ON ur.roleId = r.roleId
+
         <where>
-            isDel = 0
+            u.isDel = 0
             <if test="username != null and username != ''">
-                and userName like concat("%",#{username},"%")
+                and  u.userName like concat("%",#{username},"%")
             </if>
-            <if test="sex >0">
-                and sex = #{sex}
+
+            <if test="sex ==1||sex==0">
+                and  u.sex = #{sex}
             </if>
-            <if test="isstate >0">
-                and isState = #{isstate}
+
+            <if test="isstate ==1||isstate==0">
+                and  u.isState = #{isstate}
             </if>
         </where>
+        GROUP BY u.userId, u.userName, u.password, u.age, u.sex, u.createDate, u.createBy, u.updateDate, u.updateBy, u.isDel, u.isState, u.nickName, u.email
+        <if test="roleId >0">
+            HAVING FIND_IN_SET(#{roleId}, roleIds)
+        </if>
     </select>
 
 
@@ -79,4 +103,7 @@
         WHERE
             rm.menuId = #{menuId}
     </select>
+
+
+
 </mapper>
