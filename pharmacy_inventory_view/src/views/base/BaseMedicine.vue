@@ -100,33 +100,34 @@
   </el-table>
   <div class="block">
     <p>
-      <el-pagination background layout="prev, pager, next" :total="pageInfo.total" :page-size=pageInfo.size @current-change="handleCurrentChange" style="float: right;"></el-pagination>
+      <el-pagination background layout="prev, pager, next" :total="pageInfo.total" :page-size=5 @current-change="handleCurrentChange" style="float: right;"></el-pagination>
       <span style="color: gray;float: right;margin-top: 5px;">共{{ pageInfo.total }}条</span>
     </p>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="baseMedicine" ref="baseMedicineForm" status-icon :rules="rules" auto-complete="on" style="width: 500px;">
-        <el-form-item label="医用商品编号" prop="id" :label-width="formLabelWidth">
-        <el-input v-model="baseMedicine.id" autocomplete="off" placeholder="请输入"></el-input>
-        </el-form-item>
         <el-form-item label="医用商品名称" prop="name" :label-width="formLabelWidth">
         <el-input v-model="baseMedicine.name" autocomplete="off" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="医用商品类型" prop="categoryId" :label-width="formLabelWidth">
-          <el-cascader
-            v-model="value"
-            :options="options"
-            @change="handleChange"
-            style="width:380px"
-            >
-          </el-cascader>
+          <el-select v-model="baseMedicine.categoryId" placeholder="请选择" style="width: 100%;">
+            <el-option
+                v-for="dict in baseCategoryList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+            </el-select>
         </el-form-item>
         <el-form-item label="医用商品规格" prop="specification" :label-width="formLabelWidth">
         <el-input v-model="baseMedicine.specification" autocomplete="off" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="计量单位" prop="unitId" :label-width="formLabelWidth">
             <el-select v-model="baseMedicine.unitId" placeholder="请选择" style="width: 100%;">
-                <el-option :label="item.name" :value="item.id" v-for="(item,index) in list" :key="index" ></el-option>
+              <el-option
+                v-for="dict in baseUnitList"
+                :key="dict.id"
+                :label="dict.name" 
+                :value="dict.id"/>
             </el-select>
         </el-form-item>
         <el-form-item label="零售价" prop="salePrice" :label-width="formLabelWidth">
@@ -134,6 +135,9 @@
         </el-form-item>
         <el-form-item label="库存预警值" prop="warning" :label-width="formLabelWidth">
         <el-input v-model="baseMedicine.warning" autocomplete="off" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="库存总预警值" prop="totalWarning" :label-width="formLabelWidth">
+        <el-input v-model="baseMedicine.totalWarning" autocomplete="off" placeholder="请输入"></el-input>
         </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -147,7 +151,7 @@
 </template>
 
 <script>
-import {initMedicine,addBaseMedicine,getBaseMedicineById,updateBaseMedicine,deleteBaseMedicine,baseMedicineExcel} from "../../api/baseMedicine.js";
+import {initMedicine,addBaseMedicine,getMedicineById,updateBaseMedicine,deleteBaseMedicine,baseMedicineExcel} from "../../api/baseMedicine.js";
 import { getAllBaseMedicine} from "@/api/baseMedicine.js";
 import { getAllBaseUnit} from "@/api/BaseUnit.js";
 import { getAllBaseCategory} from "@/api/BaseCategory.js";
@@ -173,20 +177,17 @@ export default {
         list:"",
         title:"",
         baseMedicine:{
-            id:"",
             name:"",
             categoryId:"",
             specification:"",
             unitId:"",
             salePrice:"",
             warning:"",
+            totalWarning:""
        },
        dialogFormVisible:false,
        formLabelWidth: '120px',
        rules: {
-        id: [
-            { required: true, message: '请输入医用商品编号', trigger:'blur'},
-        ],
         name: [
             { required: true, message: '请输入医用商品名称', trigger:'blur'},
         ],
@@ -201,10 +202,18 @@ export default {
         ],
         salePrice: [
             { required: true, message: '请输入零售价', trigger:'blur'},
+            {type: 'number', message:'请输入正确的零售价', trigger: 'blur'}
         ],
         warning: [
             { required: true, message: '请输入库存预警值', trigger:'blur'},
-        ],                 
+            // {type:'number', min: 50,message: '最小库存预警值不能低于50', trigger: 'blur'},
+            {pattern: /^\d*$/, message: '只能输入数字', trigger: 'blur'}
+        ],
+        totalWarning: [
+            {required: true, message: '请输入库存预警值', trigger:'blur'},
+            // {min: 200, message: '最小库存预警值不能低于200', trigger: 'blur'},
+            {pattern: /^\d*$/, message: '只能输入数字', trigger: 'blur'}
+        ],                   
         }            
     };
   },
@@ -253,6 +262,7 @@ export default {
         return new Promise((resolve, reject) => {
             this.$refs["baseMedicineForm"].validate((valid) => {
                 if (valid) {
+                  console.log("11",this.baseMedicine)
                     let data = addBaseMedicine(this.baseMedicine);
                     if(data.code=="200"){
                         Message({type: 'success',message: '添加成功！'})
@@ -271,9 +281,8 @@ export default {
     async handleUpdate(id){
         this.title="修改医用商品信息";
         this.dialogFormVisible=true;  
-        alert(1)
-        let data = await getBaseMedicineById(id);
-       this.baseMedicine=data.data;
+        let data = await getMedicineById(id);
+        this.baseMedicine=data.data;
     },
     updateBaseMedicine(){
         return new Promise((resolve, reject) => {

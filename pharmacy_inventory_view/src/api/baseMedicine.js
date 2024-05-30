@@ -7,12 +7,7 @@ export function initMedicine(baseMedicine) {
 }
 
 export function addBaseMedicine(baseMedicine) {
-    return request.get(baseUrl + "/addBaseMedicine", {
-        params: {
-            baseMedicine: baseMedicine,
-        }
-
-    });
+    return request.post(baseUrl + "/addBaseMedicine",baseMedicine);
 }
 
 export function getBaseMedicineById(id,batchCode) {
@@ -20,6 +15,14 @@ export function getBaseMedicineById(id,batchCode) {
         params: {
             id: id,
             batchCode:batchCode
+        }
+
+    });
+}
+export function getMedicineById(id) {
+    return request.get(baseUrl + "/getMedicineById", {
+        params: {
+            id: id
         }
 
     });
