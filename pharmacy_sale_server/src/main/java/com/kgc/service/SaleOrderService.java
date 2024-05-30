@@ -1,11 +1,13 @@
 package com.kgc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public interface SaleOrderService extends IService<XsOrder> {
 
@@ -32,4 +34,6 @@ public interface SaleOrderService extends IService<XsOrder> {
     public Message recoverSaleOrderByOrderNo(String orderNo);
 
     public Message getSaleOrderDetailByOrderNo(String orderNo);
+
+    List<BaseMedicine> getSaleOrderDetailListByOrderNo(String orderNo);
 }

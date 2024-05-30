@@ -1,4 +1,4 @@
-package com.kgc.providerContorller;
+package com.kgc.providerController;
 
 import com.kgc.entity.KcReporteddetail;
 import com.kgc.entity.Message;

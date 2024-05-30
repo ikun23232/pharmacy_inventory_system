@@ -21,4 +21,10 @@ public class CwAccountsFeignController implements CwAccountsRemote {
         return cwAccountsService.addCwAccounts(cwAccounts);
     }
 
+    @Override
+    public Message insertCwAccounts(CwAccounts cwAccounts) {
+        Message message=cwAccountsService.insertCwAccounts(cwAccounts);
+        return message;
+    }
+
 }

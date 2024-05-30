@@ -3,8 +3,12 @@ package com.kgc.controller;
 import com.kgc.entity.Message;
 import com.kgc.remote.BaseMedineRemote;
 import com.kgc.service.PublicBaseMedicineService;
+import com.kgc.vo.MedicineVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author 15279
@@ -26,5 +30,10 @@ public class PublicBaseMedicineController implements BaseMedineRemote {
     public Message getMedicineVOListByCode(String code) {
         Message message = publicBaseMedicineService.getMedicineVOListByCode(code);
         return message;
+    }
+
+    @Override
+    public List<MedicineVO> getMedicineVOListByCodes(@RequestParam("code") String code){
+        return publicBaseMedicineService.getMedicineVOListByCodes(code);
     }
 }

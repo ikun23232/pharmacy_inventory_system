@@ -33,4 +33,10 @@ public class PublicBaseMedicineServiceImpl implements PublicBaseMedicineService 
         List<MedicineVO> medicineListByCode = baseMedicineMapper.getMedicineVOListByCode(code);
         return Message.success(medicineListByCode);
     }
+
+    @Override
+    public List<MedicineVO> getMedicineVOListByCodes(String code) {
+        List<MedicineVO> medicineListByCode = baseMedicineMapper.getMedicineVOListByCode(code);
+        return medicineListByCode;
+    }
 }
