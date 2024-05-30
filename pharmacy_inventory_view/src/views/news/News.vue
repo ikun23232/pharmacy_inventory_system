@@ -209,6 +209,12 @@ export default {
     };
   },
   created() {
+    if (this.$route.query.code) {
+      // 将参数值赋给 data 中的属性
+      this.searchForm.noticeTitle = this.$route.query.code;
+
+    }
+
     this.getNoticeList();
   },
   methods: {

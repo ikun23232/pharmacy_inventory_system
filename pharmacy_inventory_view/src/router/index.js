@@ -377,6 +377,12 @@ const routes = [
     path:'/HomePage',
     name: 'HomePage',
     component: () => import('@/views/index/HomePage.vue')
+  },
+  {
+    //首页
+    path:'/EChartsExample',
+    name: 'EChartsExample',
+    component: () => import('@/views/index/EChartsExample.vue')
   }
 ]
 

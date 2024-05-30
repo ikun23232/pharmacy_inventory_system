@@ -1,4 +1,4 @@
-package com.kgc.providerContorller;
+package com.kgc.providerController;
 
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.Message;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-public class ProcurementOrderFeignControllor implements ProcurementOrderRemote {
+public class ProcurementOrderFeignController implements ProcurementOrderRemote {
 
     @Resource
     private ProcurementOrderService procurementOrderService;

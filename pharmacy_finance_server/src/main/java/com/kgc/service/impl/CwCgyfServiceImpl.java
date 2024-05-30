@@ -59,9 +59,7 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         updateCwCgyf.setId(cwCgyf.getId());
         updateCwCgyf.setIsPay(2);
         int isPay = cwCgyfDao.updateById(updateCwCgyf);
-        if (isPay > 0){
-            return Message.success();
-        }
+
         CgddOrder cgddOrder = new CgddOrder();
         cgddOrder.setId(cwCgyf.getCgddId());
         cgddOrder.setIsPay(1);
@@ -81,6 +79,9 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         cwAccounts.setOrderCode(cwCgyfById.getCode());
         cwAccounts.setCreateBy(cwCgyf.getPayUserId());
         cwAccountsService.addCwAccounts(cwAccounts);
+        if (isPay > 0){
+            return Message.success();
+        }
         return Message.error();
     }
 

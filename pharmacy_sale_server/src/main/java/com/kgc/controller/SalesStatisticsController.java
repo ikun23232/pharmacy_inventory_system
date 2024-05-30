@@ -23,4 +23,11 @@ public class SalesStatisticsController {
         return salesStatisticsService.getSalesStatistics();
     }
 
+    @RequestMapping("/getSalesStatisticsTK")
+    @ResponseBody
+    public Message getSalesStatisticsTK()
+    {
+        return salesStatisticsService.getSalesStatisticsTK();
+    }
+
 }

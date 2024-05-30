@@ -152,8 +152,7 @@ export default {
     },
     viewOrder(code) {
       this.code = code;
-      console.log("row11111");
-      console.log(this.code);
+
       this.viewdialogVisible = true;
     },
     closeviewOrder() {

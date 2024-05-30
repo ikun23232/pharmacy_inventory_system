@@ -4,7 +4,7 @@ import addProcOrder from "../../../components/addProcOrder.vue";
 import updateProOrder from "./../../../components/updateProOrder.vue";
 import auditingProOrder from "./../../../components/auditingProOrder.vue";
 import { Message } from "element-ui";
-import { getPayType } from "./../../../api/public.js";
+import { getPayType } from "@/api/public";
 import { getAllBaseProvider } from "@/api/BaseProvider.js";
 import AddProcuementPay from "@/components/AddProcuementPay.vue";
 export default {
@@ -318,20 +318,20 @@ export default {
       >
       </el-pagination>
     </div>
-    <el-dialog
-        title="采购订单付款"
-        :visible.sync="auditingdialogVisible"
-        width="1300px"
-        v-if="auditingdialogVisible"
-    >
-      <AddProcuementPay
-          :code="this.code"
-          :id="this.id"
-          @handleAuditingSuccess="handleAuditingSuccess"
-          @cancelAuditing="cancelAuditing"
-      >
-      </AddProcuementPay>
-    </el-dialog>
+<!--    <el-dialog-->
+<!--        title="采购订单付款"-->
+<!--        :visible.sync="auditingdialogVisible"-->
+<!--        width="1300px"-->
+<!--        v-if="auditingdialogVisible"-->
+<!--    >-->
+<!--      <AddProcuementPay-->
+<!--          :code="this.code"-->
+<!--          :id="this.id"-->
+<!--          @handleAuditingSuccess="handleAuditingSuccess"-->
+<!--          @cancelAuditing="cancelAuditing"-->
+<!--      >-->
+<!--      </AddProcuementPay>-->
+<!--    </el-dialog>-->
   </div>
 </template>
 
