@@ -9,6 +9,7 @@ export default {
   components: {DetailsReported, UpdateReported, AddReported},
   data() {
     return {
+      loading:false,
       // 登录用户
       loginUser:1,
       // 库存报损模糊查询数据
@@ -88,6 +89,7 @@ export default {
     }
   },
   mounted() {
+    this.loading=true
     // 初始化分页数据
     this.getKcReportedLists()
     // 初始化仓库列表
@@ -251,7 +253,7 @@ export default {
     </div><br/>
     <!--表格内容-->
     <div class="table">
-      <el-table :data="kcReportedPage.list" border style="width: 100%">
+      <el-table :data="kcReportedPage.list" border style="width: 100%" v-loading="loading">
         <el-table-column prop="code" label="报损编号" width="150" fixed/>
         <el-table-column prop="storehouseName" label="仓库" width="120"/>
         <el-table-column prop="reportedTypeName" label="报损类型" width="120"/>

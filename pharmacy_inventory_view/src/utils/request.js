@@ -37,26 +37,30 @@ instance.interceptors.response.use(
 		}else if(response.status===200){
 			return response.data
 		} else {
-			console.log(response+"111");
+			console.log(response+"1111111111111111111111111111111111111111111");
 			console.log(res);
 			Element.Message.error(!res.message ? '系统异常' : res.message)
 			return Promise.reject(response)
 		}
 	},
 	error => {
-
-		
-
+		console.log(error);
 		if (error.response.data) {
-			error.massage = error.response.data.message
+			error.message = error.response.data.message;
+			if (error.response.data.disableMessage) {
+				error.disableMessage = error.response.data.disableMessage;
+			}
 		}
 
 		if (error.response.status === 500) {
-			// router.push("/login")
+			router.push("/login");
 		}
 
-		Element.Message.error(error.response.data.massage, {duration: 3000})
-		return Promise.reject(error)
+		Element.Message.error(error.response.data.message, {duration: 3000});
+		if (error.disableMessage) {
+			console.log(error.disableMessage); // 获取账号禁止信息
+		}
+		return Promise.reject(error);
 	}
 )
 export default instance

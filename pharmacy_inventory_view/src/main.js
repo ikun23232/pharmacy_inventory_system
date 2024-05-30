@@ -11,12 +11,9 @@ import { Message, MessageBox } from 'element-ui'  //引入Message, MessageBox
 import axios from './utils/request'
 import Print from 'vue-print-nb'
 import global from './globalFun'
-Vue.prototype.$message = Message                //vue实例上挂载Message
 Vue.prototype.$messagebox = MessageBox             //vue实例上挂载MessageBox
 Vue.prototype.$axios = axios
 
-
-Vue.prototype.$axios = axios //
 Vue.use(VueRouter)
 Vue.use(ElementUI);
 Vue.use(Antd)
@@ -24,6 +21,7 @@ Vue.use(Message);
 Vue.use(Print)
 Vue.config.productionTip = false
 Vue.prototype.$message = Message;
+Vue.prototype.$confirm = MessageBox.confirm
 
 new Vue({
   router,

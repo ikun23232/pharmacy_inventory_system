@@ -1,6 +1,7 @@
 package com.kgc.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.kgc.annotation.Log;
 import com.kgc.entity.Message;
@@ -58,11 +59,14 @@ public class SysMenuController {
     @Log("添加菜单")
     @RequestMapping("/menu/save")
     public Message save(@Validated @RequestBody SysMenu sysMenu) {
-
-        sysMenu.setCreatedate(new Date());
-
-        sysMenuService.save(sysMenu);
-        return Message.success(sysMenu);
+        boolean flag = StpUtil.hasPermission("sys:user:add");
+        if (flag){
+            sysMenu.setCreatedate(new Date());
+            sysMenu.setCreateby(1);
+            sysMenuService.save(sysMenu);
+            return Message.success(sysMenu);
+        }
+        return Message.error("无此权限");
     }
     @Log("修改菜单")
     @RequestMapping("/menu/update")

@@ -3,7 +3,6 @@ package com.kgc.service.Impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kgc.dao.RefundTypeMapper;
 import com.kgc.entity.Message;
-import com.kgc.entity.XsOrder;
 import com.kgc.entity.XsRefundtype;
 import com.kgc.service.RefundTypeService;
 import org.springframework.beans.factory.annotation.Autowired;

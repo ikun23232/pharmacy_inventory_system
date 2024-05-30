@@ -295,28 +295,7 @@
           <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
         </el-tab-pane>
         <el-tab-pane label="账外物料">
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            size="mini"
-            @click="handleAddDetails"
-            >添加</el-button
-          >
-          <el-button
-            type="success"
-            icon="el-icon-delete"
-            size="mini"
-            @click="handleDeleteDetails()"
-            >删除</el-button
-          >
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            size="mini"
-            @click="handleDeleteAllDetails()"
-            >清空</el-button
-          >
-
+         
           <el-table
             :data="bcglXiangXiList1"
             :row-class-name="rowClassName"
@@ -401,6 +380,13 @@
               prop="totalQuantity"
               width="150"
             >
+              <template slot-scope="scope">
+                <el-input
+                  v-model="scope.row.totalQuantity"
+                  :disabled="true"
+                  placeholder="0"
+                ></el-input>
+              </template>
             </el-table-column>
 
             <el-table-column
@@ -666,7 +652,7 @@ export default {
       console.log(value1, value2);
 
       await this.$axios
-        .get("/base/getProviderByWareAndMe", {
+        .get("/base/baseProvider/getProviderByWareAndMe", {
           params: { warehouseId: value1, medecineId: value2 },
         })
         .then((resp) => {

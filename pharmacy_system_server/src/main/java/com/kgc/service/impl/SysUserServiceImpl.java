@@ -3,6 +3,7 @@ package com.kgc.service.impl;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -70,15 +71,34 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
+    public Message existLogin(SysUser user) {
+        String md5String = Md5Util.getMD5String(user.getPassword());
+        user.setPassword(md5String);
+        String loginId = StpUtil.getLoginId().toString();
+        user.setUsername(loginId);
+        SysUser sysUser = sysUserMapper.login(user);
+        if (sysUser == null) {
+            return Message.error("原密码输入错误");
+        }
+        return Message.success(sysUser);
+    }
+
+    @Override
     public Message login(SysUser user) {
         String md5String = Md5Util.getMD5String(user.getPassword());
         user.setPassword(md5String);
-        SysUser login = sysUserMapper.login(user);
+        SysUser login = sysUserMapper.existUser(user.getUsername(),null);
         if (login == null) {
             return Message.error("登录失败,用户不存在");
         }
+
         if (!login.getPassword().equals(user.getPassword())) {
             return Message.error("密码错误");
+        }
+        try {
+            StpUtil.checkDisable(login.getUsername());
+        } catch (Exception e) {
+            return Message.error("账号已被禁止访问服务:还剩 " +StpUtil.getDisableTime(10001) +"秒解封");
         }
         StpUtil.login(login.getUsername());
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
@@ -93,10 +113,16 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 
     @Override
-    public Message getUsersListByPage(String username,Integer sex,Integer isstate,Page page) {
+    public Message getUsersListByPage(String username,Integer sex,Integer isstate,String roleId,Page page) {
         PageHelper.startPage(page.getCurrentPageNo(), page.getPageSize());
-        List<SysUser> usersListByPage = sysUserMapper.getUsersListByPage(username,sex,isstate);
-        PageInfo pageInfo = new PageInfo(usersListByPage);
+        List<SysUser> list=new ArrayList<SysUser>();
+        List<SysUser> usersListByPage = sysUserMapper.getUsersListByPage(username,sex,isstate,roleId);
+        for (SysUser user : usersListByPage) {
+            List<SysRole> roleList = sysRoleMapper.getRoleList(user.getUserid());
+            user.setSysRoles(roleList);
+            list.add(user);
+        }
+        PageInfo pageInfo = new PageInfo(list);
         if (usersListByPage != null){
             return Message.success(pageInfo);
         }
@@ -128,6 +154,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setUpdateby(loginUser.getUserid());
         sysUser.setUpdatedate(new Date());
         boolean flag = this.updateById(sysUser);
+        if (sysUser.getIsstate()==0){
+            StpUtil.kickout(sysUser.getUsername());
+            StpUtil.disable(sysUser.getUsername(), 86400);
+        }
+        if (sysUser.getIsstate()==1){
+            StpUtil.untieDisable(sysUser.getUsername());
+
+        }
         if (flag) {
             return Message.success(flag);
         }
@@ -244,6 +278,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Message updatePass(String password) {
+        String md5String = Md5Util.getMD5String(password);
+        SysUser user = (SysUser) StpUtil.getSession().get("user");
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("userId", user.getUserid());
+        updateWrapper.set("password",md5String);
+        baseMapper.update(user, updateWrapper);
+        return Message.success("修改成功");
     }
 
 }

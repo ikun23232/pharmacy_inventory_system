@@ -1,4 +1,4 @@
-package com.kgc.auth;
+package com.kgc.service.impl;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.kgc.dao.SysMenuMapper;
@@ -19,7 +19,6 @@ import java.util.List;
  * 自定义权限验证接口扩展
  */
 @Component
-@Primary
 public class StpInterfaceImpl implements StpInterface {
 
     @Autowired
@@ -67,26 +66,16 @@ public class StpInterfaceImpl implements StpInterface {
 //            return list1;
 //        }
         if (menuIds.size() > 0) {
-
             List<SysMenu> menus = sysMenuService.listByIds(menuIds);
             if (menus.isEmpty()) {
                 return null;
             }
-
             for (SysMenu menu : menus) {
                 list.add(menu.getPerms());
             }
 
         }
-        list.add("101");
-        list.add("user-add");
-        list.add("user-delete");
-        list.add("user-update");
-        list.add("user-get");
-        list.add("article-get");
-
         return list;
-
     }
 }
 

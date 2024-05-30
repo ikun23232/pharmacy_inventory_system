@@ -2,7 +2,6 @@ package com.kgc.controller;
 
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderStatistics;
-import com.kgc.entity.XsOrder;
 import com.kgc.service.OrderStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

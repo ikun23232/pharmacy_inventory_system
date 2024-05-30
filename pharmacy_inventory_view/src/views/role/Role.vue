@@ -43,6 +43,7 @@
       border
       stripe
       @selection-change="handleSelectionChange"
+      v-loading=loading
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -55,7 +56,7 @@
           <el-tag size="small" v-if="scope.row.isUse === 1" type="success"
             >正常</el-tag
           >
-          <el-tag size="small" v-else-if="scope.row.isUse === 0" type="danger"
+          <el-tag size="small" v-else-if="scope.row.isUse === 2" type="danger"
             >禁用</el-tag
           >
         </template>
@@ -162,6 +163,7 @@ export default {
   name: "Role",
   data() {
     return {
+      loading:false,
       searchForm: {
         name: "",
       },
@@ -237,6 +239,7 @@ export default {
     },
 
     getRoleList() {
+      this.loading=true
       this.$axios
         .get("/user/role/list", {
           params: {
@@ -252,6 +255,7 @@ export default {
           this.size = res.data.pageSize;
           this.current = res.data.pageNum;
           this.total = res.data.total;
+          this.loading=false
         });
     },
 

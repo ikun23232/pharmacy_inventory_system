@@ -1,10 +1,6 @@
 package com.kgc.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.kgc.dao.SaleOrderMapper;
-import com.kgc.entity.CgddOrder;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
 import com.kgc.service.SaleOrderService;
@@ -16,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/sale")

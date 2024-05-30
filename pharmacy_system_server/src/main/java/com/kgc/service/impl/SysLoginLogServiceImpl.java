@@ -46,7 +46,12 @@ public class SysLoginLogServiceImpl extends ServiceImpl<SysLoginLogMapper, SysLo
     @Override
     public void LogLoginexcel(SysLoginLogVo sysLoginLogVo, HttpServletResponse response) {
         List<SysLoginLogVo> sysLoginLogVos = sysLoginLogMapper.queryList(null, null, null, null);
+        for (SysLoginLogVo sysLoginLog : sysLoginLogVos){
+            if (sysLoginLog.getResponseResult().length() > 255){
+                sysLoginLog.setResponseResult(sysLoginLog.getResponseResult().substring(0, 254));
+            }
 
+        }
         try {
             ExeclUtil.write(sysLoginLogVos, SysLoginLogVo.class,response,"操作登陆日志信息");
         } catch (IOException e) {

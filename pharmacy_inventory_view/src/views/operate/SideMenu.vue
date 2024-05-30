@@ -97,7 +97,8 @@ import { logout } from '@/api/test';
 		  this.$emit('collapse-change', this.isCollapse);
 		},
 	  selectMenu(item) {
-
+		console.log("kkkkkkkkkkkkkkkkkaaaaaaaaaaaaaaa");
+		console.log(item);
 		this.$store.commit("addTab", item);
 	  },
 	},

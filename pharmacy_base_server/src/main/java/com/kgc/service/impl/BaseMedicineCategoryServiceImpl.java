@@ -34,7 +34,7 @@ public class BaseMedicineCategoryServiceImpl extends ServiceImpl<BaseMedicineCat
     public Message listWithTree() {
 
         // 1.查询出所有的分类
-        List<BaseMedicineCategory> entities = baseMedicineCategoryMapper.getAllCategoryList();
+        List<BaseMedicineCategory> entities = baseMedicineCategoryMapper.getAllCategoryListALL();
         // 2.组装成父子的树形结构
         List<BaseMedicineCategory> level1Menus = new ArrayList<>();
         // 找到所有的一级分类

@@ -550,7 +550,7 @@ export default {
               },
             })
             .then((resp) => {
-              if (resp.status === 200) {
+          
                 if (resp.code === "200") {
                   this.$message({
                     message: "添加成功!",
@@ -565,9 +565,7 @@ export default {
                     center: true,
                   });
                 }
-              } else {
-                console.log("Response status is not 200");
-              }
+              
             })
             .catch((error) => {
               console.error("Error in sending request:", error);

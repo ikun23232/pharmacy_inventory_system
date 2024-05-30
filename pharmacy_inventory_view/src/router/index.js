@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import { Message } from 'element-ui'
 import storeHouse from '../views/storeHouse.vue'
 import BaseProviderList from "../views/base/BaseProviderList.vue"
 import BankAccountList from "../views/base/BankAccountList.vue"
@@ -49,14 +49,21 @@ const routes = [
         },
         component: Index
       },
-
+      {
+				path: '/userCenter',
+				name: 'UserCenter',
+				meta: {
+					title: "个人中心"
+				},
+				component: () => import('@/views/operate/UserCenter.vue')
+			},
     ]
   },
 
 	{
 		path: '/login',
 		name: 'Login',
-		component: () => import('../views/operate/Login.vue')
+		component: () => import('../views/operate/Login_Form.vue'),
 	},
 	{
 		path: '/printcheck',
@@ -285,13 +292,10 @@ const routes = [
         component: () => import('@/views/kc/DDCK/DDCKManager')
     },{
         path:'/printDDCKOrder',
-        name: 'PrintDDCKOrder',
+        name: 'PrintDDCKOrder1111',
         component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
-    },{
-        path:'/crkmxManager',
-        name: 'CRKMXManager',
-        component: () => import('@/views/kc/CRKMX/CRKMXManager')
     },
+ 
   {
     path: '/refundInWarehouse',
     name: 'refundInWarehouse',
@@ -334,18 +338,12 @@ const routes = [
     name: 'PrintDDRKOrder',
     component: PrintDDRKOrder
   },
-  {
-    //库存告警半成品(史)
-    path: '/KCGJManager',
-    name: 'KCGJManager',
-    component: () => import('@/views/kc/KCGJ/KCGJManager')
-  },
-  {
-    //调度入库订单
-    path: '/ddckManager',
-    name: 'DDCKManager',
-    component: () => import('@/views/kc/DDCK/DDCKManager')
-  },
+  // {
+  //   //库存告警半成品(史)
+  //   path: '/KCGJManager',
+  //   name: 'KCGJManager',
+  //   component: () => import('@/views/kc/KCGJ/KCGJManager')
+  // },
   {
     //调度出库单打印
     path: '/printDDCKOrder',
@@ -428,7 +426,6 @@ if (to.path == '/login') {
 					} else {
 						// 转成路由
 						let route = menuToRoute(e)
-
 						// 吧路由添加到路由管理中
 						if (route) {
 							newRoutes[0].children.push(route)
@@ -437,7 +434,6 @@ if (to.path == '/login') {
 
 				})
 			}
-		
 		})
 		router.addRoutes(newRoutes)
 
@@ -451,10 +447,15 @@ next()
 
 // 导航转成路由
 const menuToRoute = (menu) => {
-	
+	console.log("sadadappppppppppppppppp");
+  console.log(menu);
 	if (!menu.component) {
 		return null
 	}
+  if(menu.statu===2){
+    menu.component="operate/NoAccess"
+    // Message.warning("你无此权限");
+  }
 	let route = {
 		name: menu.perms,
 		path: menu.path,
@@ -462,6 +463,7 @@ const menuToRoute = (menu) => {
 			title: menu.title
 		}
 	}
+  
 	route.component = () => import('../views/' + menu.component +'.vue')
 
 	return route
