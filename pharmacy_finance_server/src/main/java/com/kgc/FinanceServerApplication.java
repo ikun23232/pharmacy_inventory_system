@@ -10,8 +10,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @EnableDiscoveryClient
 @MapperScan(basePackages = "com.kgc.dao")
-@EnableDiscoveryClient
-@EnableFeignClients
 public class FinanceServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(FinanceServerApplication.class, args);

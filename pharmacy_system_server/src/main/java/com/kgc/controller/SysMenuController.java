@@ -56,17 +56,29 @@ public class SysMenuController {
         Message message = sysMenuService.getAllMenuList();
         return message;
     }
+
+    @RequestMapping("/menu/exsitMenuName")
+    public Message exsitMenuName(String menuname,Integer id){
+        Message message = sysMenuService.exsitMenuName(menuname,id);
+        return message;
+    }
+
+    @RequestMapping("/menu/exsitMenuPerms")
+    public Message exsitMenuPerms(String perms,Integer id){
+        Message message = sysMenuService.exsitMenuPerms(perms,id);
+        return message;
+    }
     @Log("添加菜单")
     @RequestMapping("/menu/save")
     public Message save(@Validated @RequestBody SysMenu sysMenu) {
-        boolean flag = StpUtil.hasPermission("sys:user:add");
-        if (flag){
-            sysMenu.setCreatedate(new Date());
-            sysMenu.setCreateby(1);
-            sysMenuService.save(sysMenu);
-            return Message.success(sysMenu);
-        }
-        return Message.error("无此权限");
+//        boolean flag = StpUtil.hasPermission("sys:user:add");
+//        if (flag){
+        sysMenu.setCreatedate(new Date());
+        sysMenu.setCreateby(1);
+        sysMenuService.save(sysMenu);
+        return Message.success(sysMenu);
+//        }
+//        return Message.error("无此权限");
     }
     @Log("修改菜单")
     @RequestMapping("/menu/update")

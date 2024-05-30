@@ -93,7 +93,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysRole> roleList = sysRoleMapper.getRoleList(user.getUserid());
         for (SysRole role : roleList){
             if (role.getIsUse()==0){
-                 return Message.success(null);
+                return Message.success(null);
             }
         }
         map.put("authoritys",authorityInfoArray);
@@ -101,6 +101,24 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         return Message.success(map);
 
 
+    }
+
+    @Override
+    public Message exsitMenuName(String menuname, Integer id) {
+        SysMenu sysMenu = sysMenuMapper.exsitMenuName(menuname, id);
+        if (sysMenu!=null){
+            return Message.error("202","该菜单名称存在",sysMenu);
+        }
+        return Message.success(sysMenu);
+    }
+
+    @Override
+    public Message exsitMenuPerms(String perms, Integer id) {
+        SysMenu sysMenu = sysMenuMapper.exsitMenuPerms(perms, id);
+        if (sysMenu!=null){
+            return Message.error("202","该菜单名称存在",sysMenu);
+        }
+        return Message.success(sysMenu);
     }
 
 
