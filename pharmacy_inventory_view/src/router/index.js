@@ -63,80 +63,42 @@ const routes = [
     name: 'storeHouse',
     component: storeHouse
   },
-  // {
-  //   //供应商管理
-  //   path: '/baseProviderList',
-  //   name: 'baseProviderList',
-  //   component: BaseProviderList
-  // },
+ 
   {
     //采购入库
     path: '/cgrkManager',
     name: 'CGRKManager',
     component: CGRKManager
   },
-  // {
-  //   //银行账户
-  //   path: '/bankAccountList',
-  //   name: 'bankAccountList',
-  //   component: BankAccountList
-  // },
+
   {
     //医用商品
     path: '/Medicine',
     name: 'BaseMedicine',
     component: BaseMedicine
   },
-  // r
 
-  // {
-  //   //医用商品
-  //   path: '/baseMedicine',
-  //   name: 'BaseMedicine',
-  //   component: BaseMedicine
-  // },
-  // {
-  //   //销售订单
-  //   path: '/saleOrder',
-  //   name: 'SaleOrder',
-  //   component: SaleOrder,
-  // },
   {
     //销售订单打印
     path: '/printSaleOrder',
     name: 'printSaleOrder',
     component: PrintSaleOrder
   },
-  // {
-  //   //销售出库
-  //   path: '/saleOutWarehouse',
-  //   name: 'saleOutWarehouse',
-  //   component: SaleOutWarehouse
-  // },
+
   {
     //销售出库打印
     path: '/printSaleOutWarehouse',
     name: 'printSaleOutWarehouse',
     component: PrintSaleOutWarehouse
   },
-  // {
-  //   //库存明细
-  //   path: '/stockDetail',
-  //   name: 'stockDetail',
-  //   component: StockDetail
-  // },
+
   {
     //库存明细打印
     path: '/printStockDetail',
     name: 'printStockDetail',
     component: PrintStockDetail
   },
-  // {
-  //   //销售退货退款
-  //   path: '/refundOrder',
-  //   name: 'refundOrder',
-  //   component: RefundOrder
-  // },
+
   {
     //销售退货退款打印
     path: '/printRefundOrder',
@@ -150,47 +112,18 @@ const routes = [
     component: () => import('../views/procurement/ProcurementTJ.vue')
   },
   {
-    //库存报损
-    path:'/KcReported',
-    name: 'KcReported',
-    component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  },
-  // {
-  //   //采购统计
-  //   path:'/procurementTJ',
-  //   name: 'procurementTJ',
-  //   component: () => import('../views/procurement/ProcurementTJ.vue')
-  // },
-  // {
-  //   //库存报损
-  //   path:'/KcReported',
-  //   name: 'KcReported',
-  //   component: () => import('../views/warehouse/KCBC/KcReported.vue')
-  // },
-  {
     //库存报损打印
     path:'/PrintKcReported',
     name: 'PrintKcReported',
     component: () => import('../views/warehouse/KCBC/PrintKcReported.vue')
   },
-  // {
-  //   //报损出库
-  //   path:'/KcReportedfromware',
-  //   name: 'KcReportedfromware',
-  //   component: () => import('../views/warehouse/BSCK/KcReportedfromware.vue')
-  // },
+
   {
     //付款订单
     path:'/procurementPay',
     name: 'procurementPay',
     component: () => import('../views/procurement/CGDD/procurementPay.vue')
   },
-  // {
-  //   //采购应付
-  //   path:'/purchasePay',
-  //   name: 'purchasePay',
-  //   component: () => import('../views/finance/CGYF/purchasePay.vue')
-  // },
   {
     //采购应付打印
     path:'/printPurchasePay',
@@ -198,60 +131,34 @@ const routes = [
     component: () => import('../views/finance/CGYF/printPurchasePay.vue')
 
   },
-  // {
-  //   //报损应收
-  //   path:'/breakageReceivable',
-  //   name: 'breakageReceivable',
-  //   component: () => import('../views/finance/BSYS/breakageReceivable.vue')
-  // },
+
   {
     //报损应收打印
     path:'/printBreakageReceivable',
     name: 'printBreakageReceivable',
     component: () => import('../views/finance/BSYS/printBreakageReceivable.vue')
   },
-  // {
-  //   //销售应收
-  //   path:'/XSYS',
-  //   name: 'XSYS',
-  //   component: () => import('../views/finance/XS/salesReceivable.vue')
-  // },
+
   {
     //销售应收打印
     path:'/printSalesReceivable',
     name: 'printSalesReceivable',
     component: () => import('../views/finance/XS/printSalesReceivable.vue')
   },
-  // {
-  //   //销售退款
-  //   path:'/XSTK',
-  //   name: 'XSTk',
-  //   component: () => import('../views/finance/XS/salesRefund.vue')
-  // },
+
   {
     //销售退款打印
     path:'/printSalesRefund',
     name: 'printSalesRefund',
     component: () => import('../views/finance/XS/printSalesRefund.vue')
   },
-  // {
-  //   //发票详情
-  //   path:'/invoice',
-  //   name: 'invoice',
-  //   component: () => import('../views/finance/invoice.vue')
-  // },
+
   {
     //发票详情打印
     path:'/printInvoice',
     name: 'printInvoice',
     component: () => import('../views/finance/printInvoice.vue')
   },
-  // {
-  //   //流水统计
-  //   path:'/runningWater',
-  //   name: 'runningWater',
-  //   component: () => import('../views/finance/runningWater.vue')
-  // },
   {
     //首页
     path:'/Index2',
@@ -286,36 +193,6 @@ const routes = [
     name: 'CRKMXManager',
     component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
-  // {
-  //   path: '/refundInWarehouse',
-  //   name: 'refundInWarehouse',
-  //   component: RefundInWarehouse
-  // },
-  // {
-  //   path: '/saleOrderStatistics',
-  //   name: 'saleOrderStatistics',
-  //   component: SaleOrderStatistics
-  // },
-  // {
-  //   path: '/saleOrderDetailStatistics',
-  //   name: 'saleOrderDetailStatistics',
-  //   component: SaleOrderDetailStatistics
-  // },
-  // {
-  //   path: '/refundOrderStatistics',
-  //   name: 'refundOrderStatistics',
-  //   component: RefundOrderStatistics
-  // },
-  // {
-  //   path: '/refundOrderDetailStatistics',
-  //   name: 'refundOrderDetailStatistics',
-  //   component: RefundOrderDetailStatistics
-  // },
-  // {
-  //   path: '/saleStatistics',
-  //   name: 'saleStatistics',
-  //   component: SaleStatistics
-  // },
   {
     //调度出库单打印
     path: '/printDDCKOrder',
