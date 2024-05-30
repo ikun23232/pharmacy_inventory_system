@@ -30,6 +30,7 @@ export default {
       monthListCost: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       monthListCost2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       CwNumByMonth:{},
+      thisDate:{}
     }
   },
   mounted() {
@@ -39,6 +40,18 @@ export default {
     this.getCwNumByMonths()
   },
   methods: {
+    getThisData() {
+      if (this.time.month == ''){
+        this.thisDate = this.time.year + '年'
+      }else if(!this.time.month){
+        this.thisDate =this.time.year + '年'
+      } else {
+        this.thisDate = this.time.year + '年' + this.time.month + '月'
+      }
+      if (!this.time.year){
+        this.thisDate = '全年'
+      }
+    },
     getCwAccountsLists() {
       if (Array.isArray(this.timeTo) && this.timeTo.length > 0) {
         // time 是一个非空数组
@@ -80,10 +93,11 @@ export default {
           return;
         }
         this.CwNumByYear = resp.data
+        this.getThisData()
         this.setData()
         this.initEChart()
         this.initEChart2()
-        console.log(this.CwNumByYear)
+
       })
     },
     setData(){
@@ -107,20 +121,27 @@ export default {
       getCwNumByMonth(this.time.year,this.time.month).then(resp => {
 
         if (resp.code != 200){
-          this.CwNumByMonth = []
+          this.CwNumByMonth = {}
           return;
         }
         this.CwNumByMonth = resp.data
+        if (!this.CwNumByMonth.totalInAmount){
+          this.CwNumByMonth.totalInAmount = 0;
+        }
+        if (!this.CwNumByMonth.totalOutAmount){
+          this.CwNumByMonth.totalOutAmount = 0;
+        }
+        this.getThisData()
         this.initPieChart();
         this.initPieChart2();
-        console.log(this.CwNumByMonth)
+
       })
     },
     initPieChart() {
       var myPieChart = echarts.init(this.$refs.pieChart);
       this.pieChartOption = {
         title: {
-          text: '当年当月入账出账金额',
+          text: this.thisDate+'入账出账金额',
           left: 'center'
         },
         tooltip: {
@@ -153,10 +174,10 @@ export default {
       myPieChart.setOption(this.pieChartOption);
     },
     initPieChart2() {
-      var myPieChart = echarts.init(this.$refs.pieChart2);
+      var myPieChart2 = echarts.init(this.$refs.pieChart2);
       this.pieChartOption = {
         title: {
-          text: '当年当月入账出账单数',
+          text: this.thisDate+'入账出账单数',
           left: 'center'
         },
         tooltip: {
@@ -186,7 +207,7 @@ export default {
           }
         ]
       };
-      myPieChart.setOption(this.pieChartOption);
+      myPieChart2.setOption(this.pieChartOption);
     },
     initEChart() {
       var myChart = echarts.init(this.$refs.echart);

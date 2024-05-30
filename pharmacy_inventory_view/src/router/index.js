@@ -158,12 +158,12 @@ const routes = [
     name: 'dispatch',
     component: dispatch
   },
-  {
-    //采购统计
-    path:'/procurementTJ',
-    name: 'procurementTJ',
-    component: () => import('../views/procurement/ProcurementTJ.vue')
-  },
+  // {
+  //   //采购统计
+  //   path:'/procurementTJ',
+  //   name: 'procurementTJ',
+  //   component: () => import('../views/procurement/ProcurementTJ.vue')
+  // },
   {
     //库存报损
     path:'/KcReported',
