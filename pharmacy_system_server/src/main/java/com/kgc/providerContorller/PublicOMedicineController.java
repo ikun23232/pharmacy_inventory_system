@@ -5,6 +5,7 @@ import com.kgc.entity.OrderMedicine;
 import com.kgc.remote.PublicOMedicineRemote;
 import com.kgc.service.PublicOMedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -22,13 +23,13 @@ public class PublicOMedicineController implements PublicOMedicineRemote {
     private PublicOMedicineService publicOMedicineService;
 
     @Override
-    public Message addMedicineOrder(OrderMedicine orderMedicine){
+    public Message addMedicineOrder(@RequestBody OrderMedicine orderMedicine){
         Message message = publicOMedicineService.addMedicineOrder(orderMedicine);
         return message;
     }
 
     @Override
-    public Message deleteMediciOrder(Map map){
+    public Message deleteMediciOrder(@RequestBody Map map){
         Message message = publicOMedicineService.deleteMediciOrder(map);
         return message;
     }

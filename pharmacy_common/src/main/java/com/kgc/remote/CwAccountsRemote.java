@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 public interface CwAccountsRemote {
+
+    @RequestMapping("addCwAccountsFeign")
+    @ResponseBody
+    public Message addCwAccounts(CwAccounts cwAccounts);
     @RequestMapping("/insertCwAccounts")
     @ResponseBody
     Message insertCwAccounts(@RequestBody CwAccounts cwAccounts);

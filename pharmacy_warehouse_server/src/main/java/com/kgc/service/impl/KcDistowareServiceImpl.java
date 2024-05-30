@@ -71,7 +71,7 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
 
     @Override
     public void ddrkExcel(KcDistoware kcDistoware, HttpServletResponse response) {
-        List<KcDistoware> kcDisfromwareList = kcDistowareMapper.getKcDistowareList(new HashMap<>());
+        List<KcDistoware> kcDisfromwareList = kcDistowareMapper.getKcDistowareListByExcel(new HashMap<>());
         try {
             ExeclUtil.write(kcDisfromwareList,KcDistoware.class,response,"调度出库");
         } catch (IOException e) {

@@ -29,5 +29,5 @@ public interface CwCgyfService extends IService<CwCgyf> {
     Message getCgddByCode(CgddOrder cgddOrder);
     //采购应付excel
     void cwCgyfExcel(HttpServletResponse response);
-
+    Message addCgyf(CwCgyf cwCgyf);
 }

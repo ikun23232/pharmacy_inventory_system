@@ -1,9 +1,12 @@
 <script>
 import { getXsysList ,cwXsysExcel} from '@/api/finance'
+import SaleOrderDetail from "@/views/sale/SaleOrderDetail.vue";
 export default {
   name: "salesReceivable",
+  components: {SaleOrderDetail},
   data() {
     return {
+      orderNo:'',
       cwXsysPage: {
         pageNum: 1,
         pageSize: 3,
@@ -14,7 +17,8 @@ export default {
         code: '',
         originalOrder: ''
       },
-      time:{}
+      time:{},
+      detailDialogFormVisible:false,
     }
   },
   mounted() {
@@ -57,6 +61,16 @@ export default {
         },
       });
       window.open(newPage.href, "_blank");
+    },
+    lookSaleOrderDetail(orderNo){
+      this.detailDialogFormVisible=true;
+      this.orderNo=orderNo;
+    },
+    changeDialogFormVisible(val){
+      // this.addDialogFormVisible=val;
+      // this.updateDialogFormVisible=val;
+      this.detailDialogFormVisible=val;
+      // this.initSaleOrderByPage(this.object.currentPage);
     },
   }
 }
@@ -106,18 +120,18 @@ export default {
     </div>
     <div class="table">
       <el-table :data="cwXsysPage.list" border style="width: 100%">
-        <el-table-column prop="id" label="销售应收id" width="120"/>
-        <el-table-column prop="code" label="销售应收编号" width="150" fixed/>
-        <el-table-column prop="originalOrder" label="销售申请编号" width="150" fixed/>
-        <el-table-column prop="createTime" label="单号生成时间" width="120"/>
-        <el-table-column prop="cost" label="应收金额" width="120"/>
-        <el-table-column prop="createName" label="销售员" width="120"/>
-        <el-table-column prop="bandCount" label="银行账户" width="120"/>
-        <el-table-column prop="opinion" label="审核意见" width="120"/>
-        <el-table-column align="center" label="操作" fixed="right" width="200">
+        <el-table-column prop="id" label="销售应收id" />
+        <el-table-column prop="code" label="销售应收编号" fixed/>
+        <el-table-column prop="originalOrder" label="销售申请编号"  fixed/>
+        <el-table-column prop="createTime" label="单号生成时间" />
+        <el-table-column prop="cost" label="应收金额"/>
+        <el-table-column prop="createName" label="销售员"/>
+        <el-table-column prop="bandCount" label="银行账户" />
+        <el-table-column prop="opinion" label="审核意见" />
+        <el-table-column align="center" label="操作" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="print(row.code)">打印</el-button>&nbsp;
-<!--            <el-button type="primary" plain>详情</el-button>&nbsp;-->
+            <el-button type="primary" plain @click="print(row.code)">打印</el-button>
+            <el-button type="primary" plain @click="lookSaleOrderDetail(row.originalOrder)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,6 +146,15 @@ export default {
       >
       </el-pagination>
     </div>
+
+    <el-dialog
+        title="销售订单-详情"
+        :visible.sync="detailDialogFormVisible"
+        width="1000px"
+        v-if="detailDialogFormVisible"
+    >
+      <SaleOrderDetail @handleDialogFormVisible="changeDialogFormVisible" :orderNo="orderNo"></SaleOrderDetail>
+    </el-dialog>
   </div>
 </template>
 

@@ -19,4 +19,6 @@ public interface KcDistowareMapper extends BaseMapper<KcDistoware> {
     List<KcDistoware> getKcDistowareList(Map map);
 
     KcDistoware getKcDistowareOrder(int id);
+
+    List<KcDistoware> getKcDistowareListByExcel(Map map);
 }

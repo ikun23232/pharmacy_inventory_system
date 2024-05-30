@@ -30,4 +30,5 @@ public interface KcMedicineMapper extends BaseMapper<KcMedicine> {
     List<BaseMedicine> getWarningByTotalCount();
     List<KcMedicine> getMedicineByStorehouseIdMedicineId(KcMedicine kcMedicine);
 
+    List<BaseMedicine> getKcMedicineByWareHouseId(Integer wareHouseId);
 }

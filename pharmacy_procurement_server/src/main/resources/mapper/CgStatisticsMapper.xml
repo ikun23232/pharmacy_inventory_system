@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.dao.CgStatisticsMapper">
+    <select id="getCgStatistics" resultType="com.kgc.entity.CgStatistics">
+        SELECT
+            SUM(CASE WHEN DATE(a.payTime) = CURDATE() THEN 1 ELSE 0 END) AS daySalesNum,
+            SUM(CASE WHEN DATE(a.payTime) = CURDATE() THEN a.count ELSE 0 END) AS daySalesPrice,
+            SUM(CASE WHEN MONTH(a.payTime) = MONTH(CURDATE()) AND YEAR(a.payTime) = YEAR(CURDATE()) THEN 1 ELSE 0 END) AS monthsSalesNum,
+            SUM(CASE WHEN MONTH(a.payTime) = MONTH(CURDATE()) AND YEAR(a.payTime) = YEAR(CURDATE()) THEN a.count ELSE 0 END) AS monthSalesPrice,
+            SUM(CASE WHEN YEAR(a.payTime) = YEAR(CURDATE()) AND WEEK(a.payTime, 1) = WEEK(CURDATE(), 1) THEN 1 ELSE 0 END) AS weekSalesNum,
+            SUM(CASE WHEN YEAR(a.payTime) = YEAR(CURDATE()) AND WEEK(a.payTime, 1) = WEEK(CURDATE(), 1) THEN a.count ELSE 0 END) AS weekSalesPrice
+        FROM
+            cgdd_order a
+        WHERE
+            a.approvalStatus = 1;
+    </select>
+
+
+</mapper>

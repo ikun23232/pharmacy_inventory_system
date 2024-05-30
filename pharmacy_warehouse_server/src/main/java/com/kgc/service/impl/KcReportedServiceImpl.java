@@ -6,6 +6,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.dao.KcReportedMapper;
 import com.kgc.entity.*;
+import com.kgc.feign.CwAccountsFeign;
+import com.kgc.feign.CwBsysFeign;
 import com.kgc.service.*;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.KcMedicineBSVO;
@@ -14,6 +16,7 @@ import com.kgc.vo.KcReportedfromwareVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,13 +35,21 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
     @Autowired
     private KcMedicineService kcMedicineService;
 
+
+
 //    @Autowired
 //    private CwBsysService cwBsysService;
-//
+
+    @Resource
+    private CwBsysFeign cwBsysFeign;
+
 //    @Autowired
 //    private CwAccountsService cwAccountsService;
 
-    private KcOutintodetialService kcOutintodetialService;
+    @Resource
+    private CwAccountsFeign cwAccountsFeign;
+
+//    private KcOutintodetialService kcOutintodetialService;
     /**
      * 分页获取库存报损列表
      * @param kcReported
@@ -295,7 +306,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 cwBsys.setOriginalOrder(kcReported.getCode());
                 cwBsys.setCost(allCost);
                 cwBsys.setCreateTime(LocalDateTime.now());
-//                cwBsysService.addCwbsys(cwBsys);
+                cwBsysFeign.addCwbsys(cwBsys);
 
                 CwAccounts cwAccounts = new CwAccounts();
                 String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
@@ -306,7 +317,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 cwAccounts.setCreateTime(new Date());
                 cwAccounts.setOrderCode(kcReported.getCode());
                 cwAccounts.setCreateBy(kcReported.getModificationBy());
-//                cwAccountsService.addCwAccounts(cwAccounts);
+                cwAccountsFeign.addCwAccounts(cwAccounts);
             }
 
 

@@ -16,7 +16,7 @@ public interface CwAccountsService extends IService<CwAccounts> {
 
     void cwAccountsExcel(HttpServletResponse response);
 
-    int addCwAccounts(CwAccounts cwAccounts);
+    Message addCwAccounts(CwAccounts cwAccounts);
 
     Message insertCwAccounts(CwAccounts cwAccounts);
 

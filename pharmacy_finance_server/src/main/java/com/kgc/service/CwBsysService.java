@@ -15,5 +15,5 @@ public interface CwBsysService extends IService<CwBsys> {
 
     void cwbsysExcel(HttpServletResponse response);
 
-    int addCwbsys(CwBsys cwBsys);
+    Message addCwbsys(CwBsys cwBsys);
 }

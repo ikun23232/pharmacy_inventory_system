@@ -75,7 +75,7 @@
 
       <el-table-column prop="beforeWarehouseName" label="源仓库" width="120">
       </el-table-column>
-      <el-table-column prop="totalCount" label="调度数量" width="120">
+      <el-table-column prop="stock" label="调度数量" width="120">
       </el-table-column>
 
       <el-table-column prop="price" label="调度金额" width="120">
@@ -150,18 +150,18 @@
       width="85%"
       v-if="viewdialogVisible"
     >
-      <DDRKViewOrder
+      <DDCKViewOrder
         :id="this.id"
         :code="this.code"
         @closeviewOrder="closeviewOrder"
-      ></DDRKViewOrder>
+      ></DDCKViewOrder>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { Message } from "element-ui";
-import DDRKViewOrder from "@/components/DDRKViewOrder.vue";
+import DDCKViewOrder from "@/components/DDCKViewOrder.vue";
 import {
   DdckExcel,
   delKcDisfromware,
@@ -172,7 +172,7 @@ import { getStoreList } from "@/api/storeHouse";
 export default {
   name: "storeHouse",
   components: {
-    DDRKViewOrder,
+    DDCKViewOrder,
   },
   data() {
     return {
@@ -281,7 +281,7 @@ export default {
       }
     },
     viewOrder(row) {
-      this.id = row.id;
+      this.id = row.dispatchid;
       this.code = row.dispatchCode;
       this.viewdialogVisible = true;
     },

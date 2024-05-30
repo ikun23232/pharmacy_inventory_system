@@ -431,6 +431,13 @@ export default {
         subject: [
           { required: true, message: "请输入调度主题", trigger: "blur" },
         ],
+        approvalStatus: [
+          { required: true, message: "请审批", trigger: "change" },
+        ],
+        approverRemark: [
+          { required: true, message: "审批备注不能为空", trigger: "blur" },
+          { min: 1, max: 10, message: "联系人为1-10个字符", trigger: "blur" },
+        ],
       },
     };
   },

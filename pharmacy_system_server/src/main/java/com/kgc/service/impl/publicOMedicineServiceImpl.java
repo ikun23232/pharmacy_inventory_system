@@ -5,6 +5,8 @@ import com.kgc.dao.PublicOMedicineMapper;
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderMedicine;
 import com.kgc.service.PublicOMedicineService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class publicOMedicineServiceImpl extends ServiceImpl<PublicOMedicineMapper,OrderMedicine> implements PublicOMedicineService {
     @Autowired
     private PublicOMedicineMapper mapper;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message addMedicineOrder(OrderMedicine orderMedicine) {
         int count = mapper.insert(orderMedicine);
@@ -32,7 +36,9 @@ public class publicOMedicineServiceImpl extends ServiceImpl<PublicOMedicineMappe
 
     @Override
     public Message deleteMediciOrder(Map map) {
+        logger.debug("publicOMedicineServiceImpl deleteMediciOrder map:"+map);
         int i = mapper.deleteByMap(map);
+        logger.debug("publicOMedicineServiceImpl deleteMediciOrder i:"+i);
         if (i > 0){
             return Message.success(i);
         }

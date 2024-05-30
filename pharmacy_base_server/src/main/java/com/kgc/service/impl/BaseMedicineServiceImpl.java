@@ -1,6 +1,5 @@
 package com.kgc.service.impl;
 
-import ch.qos.logback.core.db.dialect.MsSQLDialect;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

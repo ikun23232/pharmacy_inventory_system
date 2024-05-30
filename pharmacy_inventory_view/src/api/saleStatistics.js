@@ -68,6 +68,15 @@ export function refundOrderStatisticsExcel(orderStatistics) {
     })
 }
 
+
+export function getSalesStatistics() {
+    return request.get(baseUrl + "/getSalesStatistics");
+}
+
+export function getSalesStatisticsTK() {
+    return request.get(baseUrl + "/getSalesStatisticsTK");
+}
+
 //导出销售订单明细统计
 export function saleOrderDetailStatisticsExcel(orderStatistics) {
     return request.post(baseUrl + "/saleOrderDetailStatisticsExcel", {

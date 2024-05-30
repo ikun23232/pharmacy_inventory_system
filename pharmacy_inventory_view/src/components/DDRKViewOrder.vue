@@ -121,7 +121,7 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="batchCode" label="批次号" width="150" fixed>
             </el-table-column>
-            <el-table-column prop="name" label="医药品名称" width="300">
+            <el-table-column prop="medicineName" label="医药品名称" width="300">
             </el-table-column>
             <el-table-column
               prop="specification"
@@ -131,7 +131,7 @@
             </el-table-column>
             <el-table-column prop="unitName" label="单位" width="120">
             </el-table-column>
-            <el-table-column prop="stock" label="剩余库存" width="120">
+            <el-table-column prop="stock" label="调度数量" width="120">
             </el-table-column>
             <el-table-column prop="purchasePrice" label="进价" width="120">
             </el-table-column>
@@ -551,15 +551,15 @@ export default {
           let obj = {
             aimStoreHouseList: this.storeHouseList,
             batchCode: this.medicineListTemp[index].batchCode,
-            name: this.medicineListTemp[index].name,
+            name: this.medicineListTemp[index].medicineName,
             medicineId: this.medicineListTemp[index].medicineId,
             unitId: this.medicineListTemp[index].unitId,
             unitName: this.medicineListTemp[index].unitName,
             specification: this.medicineListTemp[index].specification,
             purchasePrice: this.medicineListTemp[index].purchasePrice,
             aimStoreHouseId: this.medicineListTemp[index].aimStoreHouseId,
-            quantity: this.medicineListTemp[index].stock,
-            maxStock: this.medicineListTemp[index].stock,
+            quantity: this.medicineListTemp[index].quantity,
+            maxStock: this.medicineListTemp[index].quantity,
             providerId: this.medicineListTemp[index].providerId,
             isRight: true,
           };

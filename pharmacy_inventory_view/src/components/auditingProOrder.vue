@@ -512,8 +512,8 @@
               clearable
               filterable
             >
-              <el-option label="不通过" :value="0"></el-option>
-              <el-option label="通过" :value="1"></el-option>
+              <el-option label="不通过" :value="1"></el-option>
+              <el-option label="通过" :value="2"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -535,7 +535,8 @@
           <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-button @click="cancel()">取 消</el-button>
-            </div></el-col>
+            </div></el-col
+          >
         </el-row>
       </el-form-item>
     </el-form>
@@ -758,6 +759,13 @@ export default {
             trigger: "blur",
           },
         ],
+        approvalStatus: [
+          { required: true, message: "请审批", trigger: "change" },
+        ],
+        approverRemark: [
+          { required: true, message: "审批备注不能为空", trigger: "blur" },
+          { min: 1, max: 10, message: "联系人为1-10个字符", trigger: "blur" },
+        ],
       },
     };
   },
@@ -783,7 +791,7 @@ export default {
     this.cgddMedicineionList = this.medicineListTemp;
     await this.getMedicineListDetail();
     await this.initCgSqOrderList();
-    this.CgddOrder.approvalStatus=""
+    this.CgddOrder.approvalStatus = "";
   },
   methods: {
     async initCgSqOrderList() {

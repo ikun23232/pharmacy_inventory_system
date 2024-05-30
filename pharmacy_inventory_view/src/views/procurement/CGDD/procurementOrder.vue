@@ -117,7 +117,8 @@
       </el-table-column>
       <el-table-column prop="payType" label="结算方式" width="120">
         <template slot-scope="scope">
-          {{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}
+          <div v-if="scope.row.payType == 2">直接付款</div>
+          <div v-if="scope.row.payType != 2">{{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}</div>
         </template>
       </el-table-column>
       <el-table-column prop="isPay" label="支付状态" width="120">

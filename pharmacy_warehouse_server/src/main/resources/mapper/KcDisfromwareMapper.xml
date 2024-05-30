@@ -44,7 +44,7 @@
                (select (select name from base_medicine_category where categoryId = base_medicine_category.id) from base_medicine where medicineId = base_medicine.id) as categoryName,
                d.quantity, (select (select name from base_unit where unitId = base_unit.id) from base_medicine where medicineId = base_medicine.id) as unitName,
                d.price as purchasePrice,(select name from base_medicine where d.medicineId = base_medicine.id) as medicineName,d.batchCode,
-               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,
+               kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,kd.totalCount,
                (select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName,
                kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus,
                (SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) documenterName
@@ -60,10 +60,11 @@
                (select name from base_storehouse where id=d.aimStoreHouseId) aimStoreHouseName,
                d.medicineId,(select base_medicine.specification from base_medicine where medicineId = base_medicine.id) as specification,
                (select (select name from base_medicine_category where categoryId = base_medicine_category.id) from base_medicine where medicineId = base_medicine.id) as categoryName,
-               d.quantity, (select (select name from base_unit where unitId = base_unit.id) from base_medicine where medicineId = base_medicine.id) as unitName,
-               d.price as purchasePrice,(select name from base_medicine where d.medicineId = base_medicine.id) as medicineName,d.batchCode,
+               d.quantity as stock, (select (select name from base_unit where unitId = base_unit.id) from base_medicine where medicineId = base_medicine.id) as unitName,
+               d.price as purchasePrice,(select name from base_medicine where d.medicineId = base_medicine.id) as name,d.batchCode,
                kd.id, kd.code, kd.subject, kd.dispatchTime, kd.price, kd.beforeWarehouseId,(select name from base_storehouse where id=kd.beforeWarehouseId) beforeWarehouseName, kd.remark, kd.orderStatus, kd.approverBy, kd.approvalStatus,(SELECT nickName FROM sys_user WHERE userId=kd.documenterBy) documenterName
-                , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel
+                , kd.documenterBy, kd.voidState, kd.createDate, kd.updateDate, kd.updateBy,kd.isDel,kd.totalCount,
+                  (SELECT name from base_provider where base_provider.id = d.providerId) as providerName
         FROM kc_disfromware k,kc_dispatchdetails d,kc_dispatch kd
         WHERE kd.`code`=d.dispatchCode
           AND kd.id=k.dispatchId

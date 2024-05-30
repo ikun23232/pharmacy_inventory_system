@@ -1,10 +1,14 @@
 <script>
 import {getCwCgyfList,getCgddByCode,getProviderList,cwCgyfExcel,updateCwCgyf} from '@/api/finance';
 import {Message} from "element-ui";
+import CGDDviewOrder from "@/components/CGDDviewOrder.vue";
 export default {
   name: "purchasePay",
+  components: {CGDDviewOrder},
   data() {
     return {
+      code:"",
+      viewdialogVisible: false,
       userId:1,
       // 分页
       cwCgyfPage: {
@@ -70,7 +74,7 @@ export default {
         this.cwCgyf.endTime = null;
       }
       getCwCgyfList(this.cwCgyf,this.cwCgyfPage.pageNum,this.cwCgyfPage.pageSize).then(resp=>{
-        console.log(resp)
+
         if (resp.code!=200){// 失败
           this.cwCgyfPage.list=[]
           this.cwCgyfPage.total=0
@@ -103,7 +107,7 @@ export default {
     },
     getCgddByCodes(row){
       getCgddByCode(row.cgddCode).then(resp=>{
-        console.log(resp)
+
         if (resp.code!=200){// 失败
           return
         }
@@ -130,24 +134,30 @@ export default {
       window.open(newPage.href, "_blank");
     },
     pay(row) {
-      updateCwCgyf(row).then(resp=>{
-        console.log(resp)
-        if (resp.code!=200){
-          Message({
-            message: '付款失败',
-            type: 'error',
-            duration: 5 * 1000
-          })
-          return
-        }
-        Message({
-          message: '付款成功',
-          type: 'success',
-          duration: 5 * 1000
-        })
-        this.getCwCgyfLists();
-      })
-    }
+      if (confirm('确认要进行付款操作吗？')) {
+        updateCwCgyf(row).then(resp => {
+
+          if (resp.code != 200) {
+            Message.error('付款失败');
+            return;
+          }
+          Message.success('付款成功');
+          this.getCwCgyfLists();
+        }).catch(() => {
+          Message.error('付款操作遇到错误');
+        });
+      } else {
+        Message.info('已取消付款操作');
+      }
+    },
+    viewOrder(code) {
+      this.code = code;
+
+      this.viewdialogVisible = true;
+    },
+    closeviewOrder() {
+      this.viewdialogVisible = false;
+    },
   }
 }
 </script>
@@ -218,9 +228,9 @@ export default {
         <el-table-column prop="paymentTime" label="付款时间" width="120"/>
         <el-table-column prop="cost" label="应付金额" width="120"/>
         <el-table-column prop="isPay" label="是否支付" width="120" :formatter="formatPayStatus"/>
-        <el-table-column align="center" label="操作" fixed="right" width="200">
+        <el-table-column align="center" label="操作"  width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="getCgddByCodes(row)">详情</el-button>&nbsp;
+            <el-button type="primary" plain @click="viewOrder(row.cgddCode)">详情</el-button>&nbsp;
             <el-dropdown>
           <span class="el-dropdown-link">
             更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -246,144 +256,156 @@ export default {
     </div>
 
 
-    <div>
-      <el-dialog title="采购订单详情" v-if="cgddVisible" :visible.sync="cgddVisible" width="60%">
-        <el-form>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item label="采购订单编号">
-                <el-input v-model="cgdd.code" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="采购订单主题">
-                <el-input v-model="cgdd.subject" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="采购订单类型名称">
-                <el-input v-model="cgdd.orderTypeName" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="需求人名">
-                <el-input v-model="cgdd.demanderName" disabled/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item label="需求时间">
-                <el-input v-model="cgdd.demandTime" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="数量">
-                <el-input v-model="cgdd.count" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="参考金额">
-                <el-input v-model="cgdd.referenceAmount" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="订单状态">
-                <el-input v-model="cgdd.orderStatus" disabled/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item label="备注">
-                <el-input v-model="cgdd.remark" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="生效时间">
-                <el-input v-model="cgdd.effectiveTime" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="审批人">
-                <el-input v-model="cgdd.approverName" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="审批备注">
-                <el-input v-model="cgdd.approverRemark" disabled/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item label="联系电话">
-                <el-input v-model="cgdd.phone" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="传真">
-                <el-input v-model="cgdd.fax" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="电子邮箱">
-                <el-input v-model="cgdd.email" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="联系人">
-                <el-input v-model="cgdd.contactperson" disabled/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item label="供应商">
-                <el-input v-model="cgdd.providerName" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="交货日期">
-                <el-input v-model="cgdd.deliveryDate" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="付款类型">
-                <el-input v-model="cgdd.payType" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="付款时间">
-                <el-input v-model="cgdd.payTime" disabled/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="6">
-              <el-form-item label="付款金额">
-                <el-input v-model="cgdd.referenceAmount" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="付款状态">
-                <el-input v-model="cgdd.isPay" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="付款备注">
-                <el-input v-model="cgdd.remark" disabled/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="付款时间">
-                <el-input v-model="cgdd.payTime" disabled/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-      </el-dialog>
-    </div>
+<!--    <div>-->
+<!--      <el-dialog title="采购订单详情" v-if="cgddVisible" :visible.sync="cgddVisible" width="60%">-->
+<!--        <el-form>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="采购订单编号">-->
+<!--                <el-input v-model="cgdd.code" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="采购订单主题">-->
+<!--                <el-input v-model="cgdd.subject" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="采购订单类型名称">-->
+<!--                <el-input v-model="cgdd.orderTypeName" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="需求人名">-->
+<!--                <el-input v-model="cgdd.demanderName" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="需求时间">-->
+<!--                <el-input v-model="cgdd.demandTime" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="数量">-->
+<!--                <el-input v-model="cgdd.count" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="参考金额">-->
+<!--                <el-input v-model="cgdd.referenceAmount" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="订单状态">-->
+<!--                <el-input v-model="cgdd.orderStatus" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="备注">-->
+<!--                <el-input v-model="cgdd.remark" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="生效时间">-->
+<!--                <el-input v-model="cgdd.effectiveTime" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="审批人">-->
+<!--                <el-input v-model="cgdd.approverName" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="审批备注">-->
+<!--                <el-input v-model="cgdd.approverRemark" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="联系电话">-->
+<!--                <el-input v-model="cgdd.phone" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="传真">-->
+<!--                <el-input v-model="cgdd.fax" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="电子邮箱">-->
+<!--                <el-input v-model="cgdd.email" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="联系人">-->
+<!--                <el-input v-model="cgdd.contactperson" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="供应商">-->
+<!--                <el-input v-model="cgdd.providerName" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="交货日期">-->
+<!--                <el-input v-model="cgdd.deliveryDate" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="付款类型">-->
+<!--                <el-input v-model="cgdd.payType" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="付款时间">-->
+<!--                <el-input v-model="cgdd.payTime" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--          <el-row :gutter="20">-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="付款金额">-->
+<!--                <el-input v-model="cgdd.referenceAmount" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="付款状态">-->
+<!--                <el-input v-model="cgdd.isPay" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="付款备注">-->
+<!--                <el-input v-model="cgdd.remark" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--              <el-form-item label="付款时间">-->
+<!--                <el-input v-model="cgdd.payTime" disabled/>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--        </el-form>-->
+<!--      </el-dialog>-->
+<!--    </div>-->
+
+    <el-dialog
+        title="查看采购订单"
+        :visible.sync="viewdialogVisible"
+        width="85%"
+        v-if="viewdialogVisible"
+    >
+      <CGDDviewOrder
+          :code="this.code"
+          @closeviewOrder="closeviewOrder"
+      ></CGDDviewOrder>
+    </el-dialog>
 
   </div>
 </template>

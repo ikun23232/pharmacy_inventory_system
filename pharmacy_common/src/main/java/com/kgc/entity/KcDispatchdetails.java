@@ -28,13 +28,11 @@ public class KcDispatchdetails implements Serializable {
 
     @TableField("medicineId")
     private Integer medicineId;
-    @ExcelFiled("药品名称")
     private String medicineName;
     @ExcelFiled("分类名称")
     private String categoryName;
 
     @TableField("quantity")
-    @ExcelFiled("数量")
     private Integer quantity;
 
     @TableField(exist = false)
@@ -42,7 +40,7 @@ public class KcDispatchdetails implements Serializable {
     private BigDecimal purchasePrice;//采购价
 
     @TableField(exist = false)
-    @ExcelFiled("剩余库存")
+    @ExcelFiled("数量")
     private Integer stock;//剩余库存
 
     @TableField("price")
@@ -69,7 +67,6 @@ public class KcDispatchdetails implements Serializable {
     private String unitName;
 
     @TableField(exist = false)
-    @ExcelFiled("药品名称")
     private String name;
 
     @TableField(exist = false)

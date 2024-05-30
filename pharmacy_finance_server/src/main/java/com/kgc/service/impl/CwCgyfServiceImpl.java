@@ -6,11 +6,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kgc.entity.*;
 import com.kgc.dao.CwCgyfDao;
+import com.kgc.feign.ProcurementOrderFeign;
 import com.kgc.service.CwAccountsService;
 import com.kgc.service.CwCgyfService;
-import com.kgc.service.ProcurementOrderService;
+//import com.kgc.service.ProcurementOrderService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwCgyfVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,8 +35,12 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
 
     @Resource
     private CwAccountsService cwAccountsService;
+//    @Resource
+//    private ProcurementOrderService procurementOrderService;
+
+
     @Resource
-    private ProcurementOrderService procurementOrderService;
+    private ProcurementOrderFeign procurementOrderFeign;
 
     @Override
     public Message getCwCgyfList(CwCgyf cwCgyf,int pageNum,int pageSize) {
@@ -53,14 +59,12 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         updateCwCgyf.setId(cwCgyf.getId());
         updateCwCgyf.setIsPay(2);
         int isPay = cwCgyfDao.updateById(updateCwCgyf);
-        if (isPay > 0){
-            return Message.success();
-        }
+
         CgddOrder cgddOrder = new CgddOrder();
         cgddOrder.setId(cwCgyf.getCgddId());
         cgddOrder.setIsPay(1);
         cgddOrder.setPayTime(new Date());
-        int isPay1 = procurementOrderService.updateCgddIsPayById(cgddOrder);
+        int isPay1 = (int) procurementOrderFeign.updateCgddIsPayById(cgddOrder).getData();
         if (isPay1 <= 0){
             return Message.error();
         }
@@ -75,6 +79,9 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         cwAccounts.setOrderCode(cwCgyfById.getCode());
         cwAccounts.setCreateBy(cwCgyf.getPayUserId());
         cwAccountsService.addCwAccounts(cwAccounts);
+        if (isPay > 0){
+            return Message.success();
+        }
         return Message.error();
     }
 
@@ -122,47 +129,11 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
     }
 
     @Override
-    public boolean saveBatch(Collection<CwCgyf> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdateBatch(Collection<CwCgyf> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean updateBatchById(Collection<CwCgyf> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdate(CwCgyf entity) {
-        return false;
-    }
-
-    @Override
-    public CwCgyf getOne(Wrapper<CwCgyf> queryWrapper, boolean throwEx) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> getMap(Wrapper<CwCgyf> queryWrapper) {
-        return null;
-    }
-
-    @Override
-    public <V> V getObj(Wrapper<CwCgyf> queryWrapper, Function<? super Object, V> mapper) {
-        return null;
-    }
-
-    @Override
-    public CwCgyfDao getBaseMapper() {
-        return null;
-    }
-
-    @Override
-    public Class<CwCgyf> getEntityClass() {
-        return null;
+    public Message addCgyf(CwCgyf cwCgyf) {
+        int insert = cwCgyfDao.insert(cwCgyf);
+        if (insert >0){
+            return Message.success();
+        }
+        return Message.error("添加失败");
     }
 }

@@ -36,3 +36,7 @@ export function stockDetailExcel(baseMedicine) {
         console.log("error:",error)
     })
 }
+
+export function getKcMedicineByWareHouseId(baseMedicine) {
+    return request.post(baseUrl + "/getKcMedicineByWareHouseId",baseMedicine);
+}
