@@ -1,10 +1,12 @@
 package com.kgc.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.dao.SysRoleMapper;
 import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.Message;
 import com.kgc.entity.SysMenu;
 import com.kgc.dao.SysMenuMapper;
+import com.kgc.entity.SysRole;
 import com.kgc.entity.SysUser;
 import com.kgc.service.SysMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -33,7 +35,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private SysUserMapper sysUserMapper;
     @Autowired
     private SysUserService sysUserService;
-
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
 
     @Autowired
     private SysMenuMapper sysMenuMapper;
@@ -86,6 +89,13 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         Object data = menuListByToken.getData();
         List<SysMenu> menuList = (List<SysMenu>) data;
         Map map=new HashMap<>();
+        SysUser user = (SysUser) StpUtil.getSession().get("user");
+        List<SysRole> roleList = sysRoleMapper.getRoleList(user.getUserid());
+        for (SysRole role : roleList){
+            if (role.getIsUse()==0){
+                 return Message.success(null);
+            }
+        }
         map.put("authoritys",authorityInfoArray);
         map.put("nav", menuList);
         return Message.success(map);
