@@ -26,7 +26,7 @@ public class KcReportedtype implements Serializable {
      * 报损类型id
      */
       @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+       private Integer id;
 
     /**
      * 报损类型

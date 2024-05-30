@@ -186,14 +186,16 @@
       </el-table-column>
       <el-table-column prop="referenceAmount" label="参考金额" width="120">
       </el-table-column>
-                    <el-table-column prop="orderStatus" label="单据状态" width="120">
+                    <el-table-column  label="单据状态" width="120">
                       <template slot-scope="scope">
-                        {{ scope.row.orderStatus }}
+                        {{(scope.row.orderStatus == 1) ? "编制中" : (scope.row.orderStatus == 2) ? "编制完" : (scope.row.orderStatus == 3) ? "执行中" : (scope.row.orderStatus == 4) ? "执行完" : "未知状态" }}
                       </template>
                     </el-table-column>
                     <el-table-column prop="payType" label="结算方式" width="120">
                       <template slot-scope="scope">
-                        {{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}
+                                  <div v-if="scope.row.payType == 2">直接付款</div>
+          <div v-if="scope.row.payType != 2">{{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}</div>
+
                       </template>
                     </el-table-column>
                     <el-table-column prop="isPay" label="支付状态" width="120">
@@ -515,7 +517,7 @@
     <el-dialog
         title="选择采购订单"
         :visible.sync="cgsqdialog"
-        width="100%"
+        width="1400px"
         v-if="cgsqdialog"
     >
 
@@ -763,6 +765,14 @@ export default {
         return;
       }
       console.log("看看我",this.cgsqListTemp)
+      if (this.cgsqListTemp[0].voidState==1){
+        Message({
+          message: "该采购订单已被作废",
+          type: "error",
+          center: "true",
+        });
+        return;
+      }
       if (this.cgsqListTemp[0].isPay==0){
         Message({
           message: "该采购订单未支付哦!请支付后进行入库操作",

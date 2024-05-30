@@ -5,7 +5,6 @@ import storeHouse from '../views/storeHouse.vue'
 import BaseProviderList from "../views/base/BaseProviderList.vue"
 import BankAccountList from "../views/base/BankAccountList.vue"
 import procurementOrder from '@/views/procurement/CGDD/procurementOrder'
-import CGRKManager from "@/views/procurement/CGRK/CGRKManager";
 import dispatch from '../views/kc/KCDD/dispatch.vue'
 import BaseMedicine from "../views/base/BaseMedicine.vue";
 import SaleOrder from "../views/sale/SaleOrder.vue";
@@ -84,12 +83,6 @@ const routes = [
     path: '/baseProviderList',
     name: 'baseProviderList',
     component: BaseProviderList
-  },
-  {
-    //采购入库
-    path: '/cgrkManager',
-    name: 'CGRKManager',
-    component: CGRKManager
   },
   {
     //银行账户
@@ -279,20 +272,11 @@ const routes = [
     component: PrintCGRKOrder
 
   },
-  {
-    path:'/ddckManager',
-    name: 'DDCKManager',
-    component: () => import('@/views/kc/DDCK/DDCKManager')
-  },
+
   {
     path:'/printDDCKOrder',
     name: 'PrintDDCKOrder',
      component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
-  },
-  {
-    path:'/crkmxManager',
-    name: 'CRKMXManager',
-    component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
   {
     path: '/refundInWarehouse',
@@ -343,22 +327,10 @@ const routes = [
     component: () => import('@/views/kc/KCGJ/KCGJManager')
   },
   {
-    //调度入库订单
-    path: '/ddckManager',
-    name: 'DDCKManager',
-    component: () => import('@/views/kc/DDCK/DDCKManager')
-  },
-  {
     //调度出库单打印
     path: '/printDDCKOrder',
     name: 'PrintDDCKOrder',
     component: () => import('@/views/kc/DDCK/PrintDDCKOrder')
-  },
-  {
-    //出入库明细
-    path: '/crkmxManager',
-    name: 'CRKMXManager',
-    component: () => import('@/views/kc/CRKMX/CRKMXManager')
   },
   {
       //采购订单打印

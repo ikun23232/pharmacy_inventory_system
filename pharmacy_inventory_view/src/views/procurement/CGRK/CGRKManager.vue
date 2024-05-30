@@ -59,6 +59,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="sourceCode" label="源单号" width="120">
+        <template slot-scope="scope">
+          <a href="#" @click="viewcgddOrder(scope.row.sourceCode)">{{ scope.row.sourceCode }}</a>
+        </template>
       </el-table-column>
       <el-table-column prop="createTime" label="单据日期" width="200">
       </el-table-column>
@@ -127,7 +130,7 @@
               <el-dropdown-item ><el-button @click="voidOrder(scope.row)" :disabled="scope.row.voidstate==1" type="info" size="small">作废
               </el-button></el-dropdown-item>
 
-              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderStatus==2 && scope.row.approvalstatus==0" type="success" size="small">审核
+              <el-dropdown-item ><el-button @click="approveOrder(scope.row.id)" :disabled="scope.row.orderStatus!=2 || scope.row.approvalstatus==1" type="success" size="small">审核
               </el-button></el-dropdown-item>
               <el-dropdown-item ><el-button @click="printSaleOrder(scope.row.id)" type="primary" size="small">打印
               </el-button></el-dropdown-item>
@@ -184,14 +187,24 @@
     <el-dialog
         title="采购入库单添加"
         :visible.sync="adddialogVisible"
-        width="85%"
+        width="1400px"
         v-if="adddialogVisible"
     >
       <AddCGRKOrder
-          width="75%"
           :id="id"
           @addSuccess="addSuccess">
       </AddCGRKOrder>
+    </el-dialog>
+    <el-dialog
+        title="采购订单详情"
+        :visible.sync="cgddviewVisible"
+        width="1400px"
+        v-if="cgddviewVisible"
+    >
+      <CGDDviewOrder
+          :code="this.sourceCode"
+          @closeviewOrder="closeviewOrder">
+      </CGDDviewOrder>
     </el-dialog>
   </div>
 </template>
@@ -209,6 +222,7 @@ import CGRKUpdateOrder from "@/components/WarHouse/CGRKUpdateOrder";
 import CGRKApproveOrder from "@/components/WarHouse/CGRKApproveOrder";
 import CGRKViewOrder from "@/components/WarHouse/CGRKViewOrder";
 import {cgddExcel} from "@/api/procurementOrder";
+import CGDDviewOrder from "@/components/CGDDviewOrder";
 // import AddUnit from "./AddUnit.vue";
 
 
@@ -216,6 +230,7 @@ import {cgddExcel} from "@/api/procurementOrder";
 export default {
   name: "storeHouse",
   components: {
+    CGDDviewOrder,
     AddCGRKOrder,
     CGRKUpdateOrder,
     CGRKApproveOrder,
@@ -241,6 +256,7 @@ export default {
       serialNumber: "",
       list: {},
       //添加弹框开关
+      cgddviewVisible:false,
       dialogVisible: false,
       updatedialogVisible: false,
       adddialogVisible: false,
@@ -338,12 +354,20 @@ export default {
       this.id = id;
       this.viewdialogVisible = true;
     },
+    viewcgddOrder(code) {
+      this.sourceCode = code;
+      this.cgddviewVisible = true;
+    },
     closeUpdateDiago() {
       this.updatedialogVisible = false;
       this.initCgSqOrderList(1);
     },
     closeviewOrder(){
       this.viewdialogVisible = false;
+      this.cgddviewVisible=false;
+    },
+    closeCgddViewOrder(){
+      this.cgddviewVisible = false;
     },
     closeapproveDiago() {
       this.approvedialogVisible = false;

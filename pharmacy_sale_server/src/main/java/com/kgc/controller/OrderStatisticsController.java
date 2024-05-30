@@ -3,6 +3,7 @@ package com.kgc.controller;
 import com.kgc.entity.Message;
 import com.kgc.entity.OrderStatistics;
 import com.kgc.service.OrderStatisticsService;
+import com.kgc.utils.QRcodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,12 @@ public class OrderStatisticsController {
        Message message=orderStatisticsService.getSaleOrderStatisticsList(orderStatistics);
        return message;
     }
+
+    @RequestMapping("getAliPayImg")
+    public void qrcode(String url, HttpServletResponse response) throws Exception {
+        QRcodeUtil.encode(url, response);
+    }
+
     @RequestMapping("/getRefundOrderStatisticsList")
     @ResponseBody
     public Message getRefundOrderStatisticsList(@RequestBody OrderStatistics orderStatistics) {

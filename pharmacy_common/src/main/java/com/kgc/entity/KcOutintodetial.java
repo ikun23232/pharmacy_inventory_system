@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,6 +54,8 @@ public class KcOutintodetial implements Serializable {
      */
     @TableField("createDate")
     @ExcelFiled("执行时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+
     private Date createDate;
 
     /**
@@ -65,6 +68,8 @@ public class KcOutintodetial implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+
     private Date updateDate;
 
     /**

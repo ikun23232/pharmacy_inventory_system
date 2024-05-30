@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -108,7 +109,8 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         }else {
             cgsqOrder.setOrderstatus(1);
         }
-        cgsqOrder.setDemanderby(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        cgsqOrder.setDemanderby(loginUser.getUserid());
         cgsqOrder.setVoidstate(0);
         cgsqOrderMapper.insert(cgsqOrder);
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
@@ -143,7 +145,9 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             cgsqOrder.setOrderstatus(cgsqOrder.getOrderstatus());
         }
         cgsqOrder.setUpdatetime(new Date());
-        cgsqOrder.setUpdateby(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+
+        cgsqOrder.setUpdateby(loginUser.getUserid());
         cgsqOrderMapper.updateById(cgsqOrder);
 
 
@@ -186,12 +190,18 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         CgsqOrder cgsqOrder=new CgsqOrder();
         cgsqOrder.setId(id);
         cgsqOrder.setApprovalstatus(approveMent);
-        cgsqOrder.setEffectivetime(new Date());
-        cgsqOrder.setApproverremark(approveRemark);
-        cgsqOrder.setOrderstatus(3);
 
-        int approverBy=1;
-        cgsqOrder.setApproverby(approverBy);
+        cgsqOrder.setApproverremark(approveRemark);
+        if (approveMent==2){
+            cgsqOrder.setOrderstatus(3);
+            cgsqOrder.setEffectivetime(new Date());
+        }else {
+            cgsqOrder.setOrderstatus(2);
+
+        }
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+
+        cgsqOrder.setApproverby(loginUser.getUserid());
         int updateRow = cgsqOrderMapper.updateById(cgsqOrder);
 
         if (updateRow > 0) {

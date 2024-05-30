@@ -1,6 +1,7 @@
 package com.kgc.controller;
 
 
+import com.kgc.annotation.Log;
 import com.kgc.entity.CgrkOrder;
 import com.kgc.entity.KcDisfromware;
 import com.kgc.entity.Message;
@@ -36,12 +37,13 @@ public class KcDisfromwareController {
     return Message.success(kcDisfromwareList);
     }
 
+    @Log("删除调度出库订单")
     @RequestMapping("/delKcDisfromware")
     public Message delKcDisfromware(int id) {
         Message message = kcDisfromwareService.delKcDisfromware(id);
-
         return message;
     }
+    @Log("导出调度出库订单")
     @RequestMapping("/ddckExcel")
     public Message ddckExcel(@RequestBody KcDisfromware kcDisfromware, HttpServletResponse response) {
         kcDisfromwareService.ddckExcel(kcDisfromware,response);

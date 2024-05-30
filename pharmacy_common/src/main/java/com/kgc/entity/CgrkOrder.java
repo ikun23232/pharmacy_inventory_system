@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -70,6 +71,7 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("effectiveTime")
     @ExcelFiled("生效时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
     private Date effectiveTime;
 
     /**
@@ -121,6 +123,7 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("createTime")
     @ExcelFiled("创造时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
     private Date createTime;
 
     /**
@@ -137,6 +140,8 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("updateTime")
     @ExcelFiled("修改时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+
     private Date updateTime;
 
     /**
@@ -169,16 +174,16 @@ public class CgrkOrder implements Serializable {
     private String sourceCode;
     @TableField(exist = false)
     @ExcelFiled("入库总数")
-    private int count;
+    private Integer count;
     @TableField(exist = false)
     @ExcelFiled("参考金额")
     private double referenceAmount;
     @TableField(exist = false)
     @ExcelFiled(value = "药品明细",type = BaseMedicine.class)
     private List<BaseMedicine> medicineList;
-    private  int orderStatus;
-    private  int providerId;
-    private int warhouseUserId;
+    private  Integer orderStatus;
+    private  Integer providerId;
+    private Integer warhouseUserId;
     @TableField(exist = false)
     @ExcelFiled("库管员")
     private String warhouseUserName;
