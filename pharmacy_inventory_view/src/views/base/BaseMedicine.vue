@@ -29,35 +29,31 @@
             </el-form-item>
             <el-form-item label="医用商品类型">
             <el-select v-model="object.categoryId" placeholder="请选择">
-              <!-- <el-select v-model="object.storeHouseId" >
               <el-option
-                v-for="dict in storeHouseList"
+                v-for="dict in baseCategoryList"
                 :key="dict.id"
                 :label="dict.name"
                 :value="dict.id"/>
-              </el-select> -->
             </el-select>
             </el-form-item>
             <el-form-item label="医用商品规格">
-                <el-input placeholder="医用商品规格" v-model="object.specification"></el-input>
+                <el-input placeholder="请输入医用商品规格" v-model="object.specification"></el-input>
             </el-form-item>
             <el-form-item label="计量单位">
             <el-select v-model="object.unitId" placeholder="计量单位">
-              <!-- <el-select v-model="object.storeHouseId" >
               <el-option
-                v-for="dict in storeHouseList"
+                v-for="dict in baseUnitList"
                 :key="dict.id"
-                :label="dict.name"
+                :label="dict.name" 
                 :value="dict.id"/>
-              </el-select> -->
             </el-select>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="initMedicineListByPage(1)">查询</el-button>
-                <el-button icon="el-icon-refresh-right" >重置</el-button>
+                <el-button icon="el-icon-refresh-right" @click="resetForm">重置</el-button>
                  <el-button type="text" icon="el-icon-plus" @click="handleAdd('addMedicine')">添加</el-button>
-            <el-button type="text" icon="el-icon-download" style="margin-left:18px">导出</el-button>
-            <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button>
+            <el-button type="text" icon="el-icon-download" style="margin-left:18px" @click="handleExcel">导出</el-button>
+            <!-- <el-button type="text" icon="el-icon-download" style="margin-left:18px">导入</el-button> -->
             </el-form-item>
         </el-form>
         </div>
@@ -151,8 +147,10 @@
 </template>
 
 <script>
-import {initMedicine,addBaseMedicine,getBaseMedicineById,updateBaseMedicine,deleteBaseMedicine} from "../../api/baseMedicine.js";
+import {initMedicine,addBaseMedicine,getBaseMedicineById,updateBaseMedicine,deleteBaseMedicine,baseMedicineExcel} from "../../api/baseMedicine.js";
 import { getAllBaseMedicine} from "@/api/baseMedicine.js";
+import { getAllBaseUnit} from "@/api/BaseUnit.js";
+import { getAllBaseCategory} from "@/api/BaseCategory.js";
 import { Message } from "element-ui";
 
 export default {
@@ -160,13 +158,15 @@ export default {
   data() {
     return {
       baseMedicineList:[],
-        object:{
-            id:"",
-            name:"",
-            categoryId:"",
-            specification:"",
-            unitId:"",
-            currentPage:1,
+      baseCategoryList:[],
+      baseUnitList:[],
+      object:{
+          id:"",
+          name:"",
+          categoryId:"",
+          specification:"",
+          unitId:"",
+          currentPage:1,
         },
         time:{},
         pageInfo:"",
@@ -210,6 +210,8 @@ export default {
   },
   mounted() {
     this.getAllBaseMedicine();
+    this.getAllBaseCategory();
+    this.getAllBaseUnit();
     this.initMedicineListByPage(1);
   },
   methods: {
@@ -217,6 +219,16 @@ export default {
         let data = await getAllBaseMedicine();
         console.log("12345",data.data)
         this.baseMedicineList=data.data;
+    },
+    async getAllBaseUnit() {
+        let data = await getAllBaseUnit();
+        console.log("12345",data.data)
+        this.baseUnitList=data.data;
+    },
+    async getAllBaseCategory() {
+        let data = await getAllBaseCategory();
+        console.log("12345",data.data)
+        this.baseCategoryList=data.data;
     },
     async initMedicineListByPage(currentPage) {
         this.object.currentPage=currentPage;
@@ -311,9 +323,14 @@ export default {
     },
     resetForm(){
       this.time="";
-      this.object.storeHouseId="";
       this.object.medicineId="";
+      this.object.specification="";
+      this.object.categoryId="";
+      this.object.unitId="";
     },
+    async handleExcel(){
+      await baseMedicineExcel(this.object);
+    }
   }
 }
 </script>

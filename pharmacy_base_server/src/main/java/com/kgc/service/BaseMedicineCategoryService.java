@@ -24,4 +24,6 @@ public interface BaseMedicineCategoryService extends IService<BaseMedicineCatego
     public Message checkCatByName(String name);
 
     public Message checkCatById(Integer id);
+
+    public Message getAllBaseCategory();
 }

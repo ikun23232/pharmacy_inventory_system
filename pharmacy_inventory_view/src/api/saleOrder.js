@@ -85,3 +85,7 @@ export function recoverSaleOrderByOrderNo(orderNo) {
         }
     });
 }
+
+export function getAliPayImg(xsOrder) {
+    return request.post(baseUrl + "/getAliPayImg",xsOrder);
+}

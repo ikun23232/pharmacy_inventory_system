@@ -3,7 +3,9 @@ package com.kgc.controller;
 import com.alibaba.fastjson.JSON;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
+import com.kgc.service.AlipayService;
 import com.kgc.service.SaleOrderService;
+import com.kgc.utils.QRcodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 import java.util.Map;
 
 @Controller
@@ -19,6 +22,8 @@ import java.util.Map;
 public class SaleOrderController {
     @Autowired
     private SaleOrderService saleOrderService;
+    @Autowired
+    private AlipayService alipayService;
 
     @RequestMapping("/getSaleOrderListByPage")
     @ResponseBody
@@ -96,5 +101,11 @@ public class SaleOrderController {
     public Message recoverSaleOrderByOrderNo(@RequestParam("orderNo") String orderNo) {
         Message message=saleOrderService.recoverSaleOrderByOrderNo(orderNo);
         return message;
+    }
+
+    @RequestMapping("getAliPayImg")
+    public void qrcode(XsOrder xsOrder, HttpServletResponse response) throws Exception {
+        Message order = alipayService.createOrder(xsOrder);
+        QRcodeUtil.encode(order.getData().toString(), response);
     }
 }

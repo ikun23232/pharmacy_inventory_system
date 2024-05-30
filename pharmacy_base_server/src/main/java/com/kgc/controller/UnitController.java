@@ -71,4 +71,11 @@ public class UnitController {
         Message message = unitService.CheckUnit(unit, id);
         return message;
     }
+
+
+    @RequestMapping("/getAllBaseUnit")
+    public Message getAllBaseUnit() {
+        Message message = unitService.getAllBaseUnit();
+        return message;
+    }
 }

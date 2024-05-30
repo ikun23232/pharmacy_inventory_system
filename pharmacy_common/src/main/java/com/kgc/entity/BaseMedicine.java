@@ -92,14 +92,14 @@ public class BaseMedicine implements Serializable {
     @TableField(exist=false)
     @ExcelFiled("创建人名称")
     private String createByName;
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @ExcelFiled("创造时间")
     private Date createTime;
 
     @TableField(exist=false)
     @ExcelFiled("修改人名称")
     private String updateByName;
-    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @ExcelFiled("修改时间")
     private Date updateTime;
 

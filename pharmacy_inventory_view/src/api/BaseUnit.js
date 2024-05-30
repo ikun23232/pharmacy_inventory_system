@@ -42,6 +42,9 @@ export function CheckUnit(name,id) {
     });
 }
 
+export function getAllBaseUnit() {
+    return request.get(baseUrl + "/getAllBaseUnit")
+}
 
 
 

@@ -74,4 +74,10 @@
         WHERE parentId = #{parentId}
           and isdel = 0
     </select>
+
+    <select id="getAllBaseCategory" resultType="com.kgc.entity.BaseMedicineCategory">
+        SELECT *
+        FROM base_medicine_category
+        WHERE isDel=0 and parentId!=0
+    </select>
 </mapper>

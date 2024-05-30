@@ -25,4 +25,6 @@ public interface BaseMedicineCategoryMapper extends BaseMapper<BaseMedicineCateg
     List<BaseMedicineCategory> checkCatByIdLst(Integer parentId);
 
     List<BaseMedicineCategory> findChildrenCategoriesByParentId(Integer parentId);
+
+    List<BaseMedicineCategory> getAllBaseCategory();
 }
