@@ -11,6 +11,7 @@ import com.kgc.feign.ProcurementOrderFeign;
 import com.kgc.service.CwAccountsService;
 import com.kgc.service.CwCgyfService;
 //import com.kgc.service.ProcurementOrderService;
+import com.kgc.utils.CodeUtil;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwCgyfVO;
 import com.kgc.vo.MedicineVO;
@@ -75,7 +76,8 @@ public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements
         }
         CwCgyf cwCgyfById = cwCgyfDao.getCwCgyfById(cwCgyf.getId());
         CwAccounts cwAccounts = new CwAccounts();
-        String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//        String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        String code = CodeUtil.createCode("CG");
         cwAccounts.setCode(code);
         cwAccounts.setCategoryId(5);
         cwAccounts.setCost(cwCgyfById.getCost());

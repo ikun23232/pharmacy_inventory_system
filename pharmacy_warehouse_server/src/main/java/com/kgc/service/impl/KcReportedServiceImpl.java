@@ -319,7 +319,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
 
             if (kcReported.getReportedTypeId()==1){
                 CwBsys cwBsys = new CwBsys();
-                String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//                String code = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+                String code = CodeUtil.createCode("CWBSYS");
                 cwBsys.setCode(code);
                 cwBsys.setOriginalOrder(kcReported.getCode());
                 cwBsys.setCost(allCost);
@@ -327,7 +328,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
                 cwBsysFeign.addCwbsys(cwBsys);
 
                 CwAccounts cwAccounts = new CwAccounts();
-                String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+//                String codes = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+                String codes = CodeUtil.createCode("CWACC");
                 cwAccounts.setCode(codes);
                 cwAccounts.setCategoryId(7);
                 cwAccounts.setCost(allCost);
@@ -385,7 +387,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
     public Message addKcReportedfromwareByReported(int reportedId) {
         KcReportedfromware kcReportedfromware = new KcReportedfromware();
         kcReportedfromware.setReportedId(reportedId);
-        String code = UUID.randomUUID().toString().replace("-", "");
+//        String code = UUID.randomUUID().toString().replace("-", "");
+        String code = CodeUtil.createCode("KCBS");
         kcReportedfromware.setCode(code);
         int isAdd=kcReportedMapper.addKcReportedfromwareByReported(kcReportedfromware);
         if (isAdd>0){
@@ -465,7 +468,8 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
 
     @Override
     public Message addKcReportedAllByPk(Map map) {
-        String code = UUID.randomUUID().toString().replace("-", "");
+//        String code = UUID.randomUUID().toString().replace("-", "");
+        String code = CodeUtil.createCode("KCBS");
         Map a = (Map) map.get("theData");
         KcReported kcReported = new KcReported();
         kcReported.setCode(code);
