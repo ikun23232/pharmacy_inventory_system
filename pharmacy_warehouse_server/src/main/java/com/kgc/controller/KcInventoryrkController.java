@@ -48,13 +48,14 @@ public class KcInventoryrkController {
         Message message = iKcInventoryrkService.getAllCheckRkByPage(vo, page);
         return message;
     }
+    @Log("盘盈入库信息删除")
     @RequestMapping("/check/deleteCheckRK")
     public Message deleteCheckRK(@RequestBody Integer[] ids) {
 
         iKcInventoryrkService.removeByIds(Arrays.asList(ids));
         return Message.success("操作成功");
     }
-
+    @Log("盘盈入库信息审核")
     @RequestMapping("/check/approveRK")
     public Message approveRK(Integer id ,Integer status) {
         Message message = iKcInventoryrkService.approveRK(id,status);
@@ -64,7 +65,7 @@ public class KcInventoryrkController {
     @RequestMapping("/check/getAllCheckRkexcel")
     public void getAllCheckRkexcel(@RequestBody KcInventoryrk kcInventoryrk , HttpServletResponse response) {
         StpUtil.checkPermission("kc:inventroyRK:excel");
-         iKcInventoryrkService.getAllCheckRkexcel(kcInventoryrk, response);
+        iKcInventoryrkService.getAllCheckRkexcel(kcInventoryrk, response);
     }
     @RequestMapping("/check/getAllCheckById")
     public Message getAllCheckById(Integer id) {

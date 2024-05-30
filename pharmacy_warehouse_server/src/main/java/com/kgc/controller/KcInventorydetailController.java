@@ -2,6 +2,7 @@ package com.kgc.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kgc.annotation.Log;
 import com.kgc.dao.KcInventoryMapper;
 import com.kgc.dao.KcInventorydetailMapper;
 import com.kgc.entity.KcInventory;
@@ -42,6 +43,7 @@ public class KcInventorydetailController {
     @Autowired
     private KcInventoryMapper kcInventoryMapper;
 
+    @Log("盘点详细信息修改")
     @RequestMapping("/check/updateCheck")
     public Message updateCheck(@RequestBody KcInventoryVo vo ) {
         Integer id = vo.getId();
