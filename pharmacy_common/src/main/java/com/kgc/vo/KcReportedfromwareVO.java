@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class KcReportedfromwareVO implements Serializable {
@@ -65,4 +66,7 @@ public class KcReportedfromwareVO implements Serializable {
      */
     @ExcelFiled("制单时间")
     private LocalDateTime createTime;
+
+    @ExcelFiled(value = "药品报损明细",type = KcMedicineBSVO.class)
+    private List<KcMedicineBSVO> medicineList;
 }

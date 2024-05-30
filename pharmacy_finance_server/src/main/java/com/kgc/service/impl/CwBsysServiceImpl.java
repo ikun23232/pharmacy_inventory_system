@@ -8,14 +8,17 @@ import com.kgc.dao.CwBsysDao;
 import com.kgc.entity.BaseStorehouse;
 import com.kgc.entity.CwBsys;
 import com.kgc.entity.Message;
+import com.kgc.feign.KcMedicineFeign;
 import com.kgc.service.CwBsysService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwBsysVO;
+import com.kgc.vo.KcMedicineBSVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +29,9 @@ public class CwBsysServiceImpl extends ServiceImpl<CwBsysDao, CwBsys> implements
 
     @Autowired
     private CwBsysDao cwBsysDao;
+
+    @Autowired
+    private KcMedicineFeign kcMedicineFeign;
 
     @Override
     public Message getCwbsysList(CwBsys cwBsys, int pageNum, int pageSize) {
@@ -59,8 +65,15 @@ public class CwBsysServiceImpl extends ServiceImpl<CwBsysDao, CwBsys> implements
     @Override
     public void cwbsysExcel(HttpServletResponse response) {
         List<CwBsysVO> listExcel = cwBsysDao.getCwbsysVOList();
+        List<CwBsysVO> listExcels=new ArrayList<>();
+        for (CwBsysVO cwBsysVO : listExcel){
+            List<KcMedicineBSVO> medicineList = kcMedicineFeign.getKcMedicineByReportedCodeTo(cwBsysVO.getOriginalOrder());
+            cwBsysVO.setMedicineList(medicineList);
+            listExcels.add(cwBsysVO);
+        }
+
         try {
-            ExeclUtil.write(listExcel, CwBsysVO.class,response,"报损应收");
+            ExeclUtil.write(listExcels, CwBsysVO.class,response,"报损应收");
         } catch (IOException e) {
             e.printStackTrace();
         }
