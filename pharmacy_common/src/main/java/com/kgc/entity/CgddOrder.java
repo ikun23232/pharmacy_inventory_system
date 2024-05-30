@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import com.kgc.utils.BigDecimalUtils;
 import lombok.Data;
@@ -71,6 +72,7 @@ public class CgddOrder implements Serializable {
      * 需求日期
      */
     @TableField("demandTime")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date demandTime;
 
     /**
@@ -106,6 +108,7 @@ public class CgddOrder implements Serializable {
      * 生效时间
      */
     @TableField("effectiveTime")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date effectiveTime;
 
     /**
@@ -140,6 +143,7 @@ public class CgddOrder implements Serializable {
      * 制单时间
      */
     @TableField("createTime")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -156,6 +160,7 @@ public class CgddOrder implements Serializable {
      */
     @TableField("updateTime")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     /**
@@ -190,7 +195,7 @@ public class CgddOrder implements Serializable {
      * 交货日期
      */
     @TableField("deliveryDate")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date deliveryDate;
 
     /**
@@ -213,6 +218,7 @@ public class CgddOrder implements Serializable {
      * 结算日期
      */
     @TableField("payTime")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date payTime;
 
     /**
