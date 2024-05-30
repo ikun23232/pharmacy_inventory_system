@@ -28,13 +28,15 @@
                 format="yyyy 年 MM 月 dd 日"
               >
               </el-date-picker>
-            </el-form-item></div></el-col>
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="单据主题" prop="subject">
               <el-input type="text" v-model="CgddOrder.subject"></el-input>
-            </el-form-item></div
-        ></el-col>
+            </el-form-item>
+          </div>
+        </el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="采购类型" prop="type">
@@ -42,7 +44,8 @@
                 v-model="CgddOrder.type"
                 placeholder="请选择采购类型"
                 clearable
-                filterable>
+                filterable
+              >
                 <el-option
                   v-for="item in cgType"
                   :key="item.id"
@@ -182,7 +185,8 @@
               show-summary
               border
               style="width: 1200px"
-              @selection-change="handleCgsqChange">
+              @selection-change="handleCgsqChange"
+            >
               <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column prop="code" label="订单编码" width="150" fixed>
               </el-table-column>
@@ -282,7 +286,8 @@
             :data="bcglXiangXiList"
             :row-class-name="rowClassName"
             @selection-change="chandleDetailSelectionChange"
-            ref="tb">
+            ref="tb"
+          >
             <el-table-column type="selection" width="30" align="center" />
             <el-table-column
               label="序号"
@@ -294,7 +299,8 @@
               label="药品"
               align="center"
               prop="medicineId"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 <el-select
                   clearable
@@ -317,7 +323,8 @@
               label="规格型号"
               align="center"
               prop="measureId"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 <el-select
                   clearable
@@ -372,18 +379,21 @@
               label="单价"
               align="center"
               prop="price"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 <el-select
                   clearable
                   @change="changezdts(scope.row)"
                   v-model="bcglXiangXiList[scope.row.xh - 1].price"
-                  disabled>
+                  disabled
+                >
                   <el-option
                     v-for="dict in zdtsOptions"
                     :key="dict.dictValue"
                     :label="dict.dictLabel"
-                    :value="dict.dictValue"/>
+                    :value="dict.dictValue"
+                  />
                 </el-select>
               </template>
             </el-table-column>
@@ -391,7 +401,8 @@
               label="参考总价"
               align="center"
               prop="totalPrice"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 {{ calculatedTotalPrice(scope.row) }}
               </template>
@@ -601,6 +612,7 @@ export default {
         approverRemark: "",
         remark: "",
         orderStatus: "1",
+        createTime: new Date(),
         email: "",
         fax: "",
         code: "",
@@ -611,8 +623,6 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        createTime: new Date(),
-        documenterBy: 1,
         medicineList: [],
         isSave: "",
       },
@@ -703,6 +713,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.CgddOrder.medicineList == null || this.CgddOrder.medicineList.length == 0) {
+            Message({
+              message: "请添加药品明细!",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }
           addCgddOrder(this.CgddOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
@@ -721,11 +739,11 @@ export default {
       });
     },
     commit(formName) {
-      this.CgddOrder.isSave == 1;
+      this.CgddOrder.isSave = 1;
       this.submitForm(formName);
     },
     save(formName) {
-      this.CgddOrder.isSave == 2;
+      this.CgddOrder.isSave = 2;
       this.submitForm(formName);
     },
     cancel() {
@@ -796,7 +814,9 @@ export default {
       }
     },
     deleteMedicine() {
-      this.medicineListTemp = this.medicineListTemp.filter((item) => !this.cgddMedicineionList.includes(item));
+      this.medicineListTemp = this.medicineListTemp.filter(
+        (item) => !this.cgddMedicineionList.includes(item)
+      );
       this.cgddMedicineionList = [];
     },
     getCgsqlist() {
@@ -923,17 +943,19 @@ export default {
       }
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
+          let isAdd = false;
           if (this.bcglXiangXiList.length == 0) {
             this.bcglXiangXiList = new Array();
-          }else if(this.bcglXiangXiList.length > 0){
+          } else if (this.bcglXiangXiList.length > 0) {
             for (let i = 0; i < this.bcglXiangXiList.length; i++) {
               const element = this.bcglXiangXiList[i];
               if (this.cgddMedicineionList[index].id == element.medicineId) {
-                Message({
-                  message: this.cgddMedicineionList[index].name + "已经存在",
-                  type:"error"
-                })
-                return;
+                // Message({
+                //   message: this.cgddMedicineionList[index].name + "已经存在",
+                //   type: "error",
+                // });
+                isAdd = true;
+                break;
               }
             }
           }
@@ -955,9 +977,16 @@ export default {
           obj.dkdd = "1";
           obj.sjfw = ["07:00", "07:30"];
           obj.jxsjfw = ["06:00", "12:00"];
-          this.bcglXiangXiList.push(obj);
+          if (isAdd == false) {
+            this.bcglXiangXiList.push(obj);
+          }
         }
         this.CgddOrder.medicineList = this.bcglXiangXiList;
+        this.$message({
+          message: "添加成功",
+          type: "success",
+        });
+        this.activeName = "second";
       }
     },
   },

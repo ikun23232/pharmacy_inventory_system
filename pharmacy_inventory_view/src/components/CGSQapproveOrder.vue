@@ -622,6 +622,7 @@ export default {
       alert(row)
     },
   async  approveCgsqOrder(){
+
     if (this.CgsqOrder.approvementRemark==''||this.CgsqOrder.approvementRemark==undefined){
       Message({
         message: "请输入核批意见!",

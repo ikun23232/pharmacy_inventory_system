@@ -122,7 +122,7 @@
             </el-table-column>
             <el-table-column prop="unitName" label="单位" width="120">
             </el-table-column>
-            <el-table-column prop="stock" label="剩余库存" width="120">
+            <el-table-column prop="stock" label="调度数量" width="120">
             </el-table-column>
             <el-table-column prop="purchasePrice" label="进价" width="120">
             </el-table-column>
@@ -245,11 +245,13 @@
               label="进价"
               align="center"
               prop="price"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 <el-input
                   disabled
-                  v-model="bcglXiangXiList[scope.row.xh - 1].purchasePrice"></el-input>
+                  v-model="bcglXiangXiList[scope.row.xh - 1].purchasePrice"
+                ></el-input>
               </template>
             </el-table-column>
             <el-table-column
@@ -268,7 +270,8 @@
                     v-for="dict in storeHouseList"
                     :key="dict.id"
                     :label="dict.name"
-                    :value="dict.id"/>
+                    :value="dict.id"
+                  />
                 </el-select>
               </template>
             </el-table-column>
@@ -428,6 +431,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.KcDispatch.medicineList.length == 0) {
+            Message({
+              message: "请加入药品详情!",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }
           for (
             let index = 0;
             index < this.KcDispatch.medicineList.length;
@@ -554,6 +565,7 @@ export default {
           this.bcglXiangXiList.push(obj);
         }
         this.KcDispatch.medicineList = this.bcglXiangXiList;
+        this.activeName = "second";
       }
     },
     addDispatchMedicine() {

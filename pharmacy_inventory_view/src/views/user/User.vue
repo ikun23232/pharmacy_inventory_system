@@ -7,21 +7,38 @@
         <el-select
           v-model="searchForm.sex"
           placeholder="请选择性别"
+          clearable
           style="width: 300px"
+          
         >
-          <el-option label="全部" value="-1"></el-option>
+          <!-- <el-option label="全部" value="-1"></el-option> -->
           <el-option label="男" value="1"></el-option>
           <el-option label="女" value="0"></el-option>
         </el-select>
 
         <el-select
-          v-model="searchForm.isstate"
-          placeholder="请选择状态"
+          v-model="searchForm.roleId"
+          placeholder="请选择身份"
+          clearable
           style="width: 300px"
         >
-          <el-option label="全部" value="-1"></el-option>
-          <el-option label="已启用" value="0"></el-option>
-          <el-option label="未启用" value="1"></el-option>
+          <el-option
+            v-for="role in roleTreeData"
+            :key="role.roleid"
+            :label="role.rolename"
+            :value="role.roleid"
+          ></el-option>
+        </el-select>
+
+        <el-select
+          v-model="searchForm.isstate"
+          placeholder="请选择状态"
+          clearable
+          style="width: 300px"
+        >
+          <!-- <el-option label="全部" value="-1"></el-option> -->
+          <el-option label="正常" value="1"></el-option>
+          <el-option label="禁用" value="0"></el-option>
         </el-select>
       </el-form-item>
 
@@ -55,6 +72,7 @@
       border
       stripe
       @selection-change="handleSelectionChange"
+      v-loading="loading"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -66,8 +84,8 @@
             size="small"
             type="info"
             v-for="item in scope.row.sysRoles"
-            :key="item.id"
-            >{{ item.name }}</el-tag
+            :key="item.roleid"
+            >{{ item.rolename }}</el-tag
           >
         </template>
       </el-table-column>
@@ -216,6 +234,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       id: 0,
       username: "",
       searchForm: {},
@@ -235,6 +254,11 @@ export default {
           { required: true, message: "请输入用户名", trigger: "blur" },
           {
             validator: this.validatePass,
+            trigger: "blur",
+          },
+          {
+            pattern: /^.{2,10}$/,
+            message: "用户名长度为2-10个字符",
             trigger: "blur",
           },
         ],
@@ -259,6 +283,8 @@ export default {
     this.getUserList();
 
     this.$axios.get("/user/role/AllList").then((res) => {
+      console.log("sdlaldasldsaldlasdlasdlasdas");
+      console.log(res.data);
       this.roleTreeData = res.data;
     });
   },
@@ -301,12 +327,15 @@ export default {
     },
 
     getUserList() {
+      this.loading = true;
+
       this.$axios
         .get("/user/getUserListByPage", {
           params: {
             username: this.searchForm.username,
             sex: this.searchForm.sex,
             isstate: this.searchForm.isstate,
+            roleId: this.searchForm.roleId,
             currentNo: this.current,
           },
         })
@@ -315,6 +344,7 @@ export default {
           this.size = res.data.pageSize;
           this.current = res.data.pageNum;
           this.total = res.data.total;
+          this.loading = false;
         });
     },
     addHandle() {
@@ -386,10 +416,8 @@ export default {
           showClose: true,
           message: "恭喜你，操作成功",
           type: "success",
-          onClose: () => {
-            this.getUserList();
-          },
         });
+        this.getUserList();
       });
     },
 
@@ -397,8 +425,6 @@ export default {
       this.roleDialogFormVisible = true;
 
       this.$axios.get("/user/info/" + id).then((res) => {
-        console.log(12132111111111111111111111111111111111);
-        console.log(res);
         this.roleForm = res.data;
 
         let roleIds = [];
@@ -427,6 +453,7 @@ export default {
         });
     },
     repassHandle(id, username) {
+      console.log(id, username);
       this.$confirm("将重置用户【" + username + "】的密码, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

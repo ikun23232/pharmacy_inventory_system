@@ -253,6 +253,7 @@
                 <el-input
                   v-model="scope.row.exactCount"
                   placeholder="请输入数量"
+                  @blur="checkextount(scope.row.exactCount)"
                 ></el-input>
               </template>
             </el-table-column>
@@ -368,12 +369,12 @@
             <el-table-column
               label="供应商"
               align="center"
-              prop="providerId"
+              prop="providername"
               width="150"
             >
               <template slot-scope="scope">
                 <el-select
-                  v-model="scope.row.providername"
+                  v-model="scope.row.providerId"
                   placeholder="请选择供应商"
                 >
                   <el-option
@@ -400,6 +401,13 @@
               prop="totalQuantity"
               width="150"
             >
+              <template slot-scope="scope">
+                <el-input
+                  v-model="scope.row.totalQuantity"
+                  :disabled="true"
+                  placeholder="0"
+                ></el-input>
+              </template>
             </el-table-column>
 
             <el-table-column
@@ -412,6 +420,7 @@
                 <el-input
                   v-model="scope.row.exactCount"
                   placeholder="请输入数量"
+                  @blur="checkextount(scope.row.exactCount)"
                 ></el-input>
               </template>
             </el-table-column>
@@ -519,7 +528,6 @@
         <el-button class="anniu" @click="tosumbit()">提 交</el-button>
       </el-form-item>
     </el-form>
-    
   </span>
 </template>
     
@@ -581,20 +589,27 @@ export default {
         voidState: "",
       },
       list: {},
+      isfalg: false,
       activeName: "first",
       adddialogVisible: false,
       checkdialog: false,
       rules: {
         subject: [
           { required: true, message: "请输入主题名称", trigger: "blur" },
-          { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
+          {
+            min: 3,
+            max: 10,
+            message: "长度在 3 到 10 个字符",
+            trigger: "blur",
+          },
         ],
-        checkerBy: [{ required: true, message: "请选择盘点人", trigger: "blur" }],
+        checkerBy: [
+          { required: true, message: "请选择盘点人", trigger: "blur" },
+        ],
         exactCount: [
           { required: true, message: "仓库面积不能为空", trigger: "blur" },
-          { pattern: /^[1-9]\d*$/, message: "请输入正整数", trigger: "blur" }
+          { pattern: /^[1-9]\d*$/, message: "请输入正整数", trigger: "blur" },
         ],
-
       },
     };
   },
@@ -611,6 +626,13 @@ export default {
     this.loading = false;
   },
   methods: {
+    checkextount(value) {
+      if (!/^([1-9]\d*|0)$/.test(value)) {
+        this.$message.error("数量必须为正整数");
+        this.isfalg = true;
+        return;
+      }
+    },
     onMedicineChange(row) {
       console.log("mmsadasdasdasdsadsa");
       console.log(row);
@@ -675,10 +697,11 @@ export default {
     },
     async initallProvider(value1, value2) {
       await this.$axios
-        .get("/base/getProviderByWareAndMe", {
+        .get("/base/baseProvider/getProviderByWareAndMe", {
           params: { warehouseId: value1, medecineId: value2 },
         })
         .then((resp) => {
+          
           this.providerList = resp.data;
         });
     },
@@ -693,6 +716,7 @@ export default {
           params: { id: this.kid },
         })
         .then((resp) => {
+    
           this.bcglXiangXiList1 = resp.data;
         });
     },
@@ -718,6 +742,21 @@ export default {
             ...this.bcglXiangXiList,
             ...this.bcglXiangXiList1,
           ];
+          this.bcglXiangXiList.forEach((item) => {
+            let extantValue = item.exactCount;
+            if(extantValue===null){
+              extantValue=item.totalQuantity
+            }
+            alert(extantValue)
+            item.totalQuantity
+            this.checkextount(extantValue)
+            // 在这里可以对每个extant属性值进行操作
+          });
+          alert(this.isfalg)
+          if(this.isfalg){
+            this.$message.error("数量不能为糟糕的值！！")
+            return
+          }
           console.log(this.bcglXiangXiList);
           this.StoreCheck.kcInventorydetailList = this.bcglXiangXiList;
           console.log(this.StoreCheck);
@@ -728,28 +767,25 @@ export default {
               },
             })
             .then((resp) => {
-              if (resp.status === 200) {
-                if (resp.code === "200") {
-                  this.$message({
-                    message: "添加成功!",
-                    type: "success",
-                    center: true,
-                  });
-                  this.$emit("closeUpdateDiago");
-                } else {
-                  this.$message({
-                    message: "添加失败!",
-                    type: "error",
-                    center: true,
-                  });
-                }
+              if (resp.code === "200") {
+                this.$message({
+                  message: "添加成功!",
+                  type: "success",
+                  center: true,
+                });
+                this.$emit("closeUpdateDiago");
               } else {
-                console.log("Response status is not 200");
+                this.$message({
+                  message: "添加失败!",
+                  type: "error",
+                  center: true,
+                });
               }
             })
             .catch((error) => {
               console.error("Error in sending request:", error);
             });
+          
         } else {
           console.log("error submit!!");
           return false;

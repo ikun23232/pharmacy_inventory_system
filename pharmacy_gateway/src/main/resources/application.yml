@@ -4,6 +4,8 @@ server:
 #  level:
 #    root: debug
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: gatewayServe
   cloud:
@@ -75,5 +77,5 @@ sa-token:
   # 是否从cookie中读取token
   is-read-cookie: false
 gateway-config:
-  open-token: false
+  open-token: true
   open-replay: false

@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.kgc.annotation.Log;
 import com.kgc.entity.BaseUnit;
 import com.kgc.entity.Message;
 import com.kgc.entity.Page;
@@ -36,12 +37,13 @@ public class UnitController {
         Message unitListByPage = unitService.getUnitListByPage(page,name);
         return unitListByPage;
     }
-
+    @Log("删除计量单位")
     @RequestMapping("/delUnitById")
     public Message delUnitById(int id) {
         Message message = unitService.delUnitById(id);
         return message;
     }
+    @Log("修改计量单位")
 
     @RequestMapping("/updateUnit")
     public Message updateUnit(@RequestBody BaseUnit baseUnit) {
@@ -54,6 +56,7 @@ public class UnitController {
         Message unitById = unitService.getUnitById(id);
         return unitById;
     }
+    @Log("添加计量单位")
     @RequestMapping("/addUnit")
     public Message addUnit(@RequestBody BaseUnit baseUnit){
         Message message = unitService.addUnit(baseUnit);

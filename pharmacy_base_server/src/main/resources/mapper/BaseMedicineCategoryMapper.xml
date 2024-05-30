@@ -19,6 +19,22 @@
           and c.isDel = 0
           and c.parentId = 0
     </select>
+
+    <select id="getAllCategoryListALL" resultType="com.kgc.entity.BaseMedicineCategory">
+        select id,
+               name,
+               c.createBy,
+               u.createBy as createUser,
+               c.createDate,
+               c.updateBy,
+               c.updateDate,
+               c.isDel,
+               parentId
+        from base_medicine_category c,
+             sys_user u
+        where c.createBy = u.userId
+          and c.isDel = 0
+    </select>
     <select id="checkCatByName" resultType="com.kgc.entity.BaseMedicineCategory">
         select id,
                name,

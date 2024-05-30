@@ -189,6 +189,9 @@
             <el-table
               :data="cgsqList"
               show-summary
+              :summary-method="
+                (param) => getSummaries(param, ['count', 'referenceamount'])
+              "
               border
               style="width: 1200px"
               @selection-change="handleCgsqChange"
@@ -239,6 +242,14 @@
             <el-table
               :data="medicineListTemp"
               show-summary
+              :summary-method="
+                (param) =>
+                  getSummaries(param, [
+                    'quantity',
+                    'purchasePrice',
+                    'totalPrice',
+                  ])
+              "
               border
               style="width: 1200px"
               @selection-change="handleCgsqMedicineionChange"
@@ -247,7 +258,7 @@
               <el-table-column
                 prop="sourceCode"
                 label="源单据编号"
-                width="150"
+                width="200"
                 fixed
               >
                 <!-- <template slot-scope="scope">
@@ -264,16 +275,16 @@
               <el-table-column
                 prop="specification"
                 label="医药品规格"
-                width="120"
+                width="130"
               >
               </el-table-column>
-              <el-table-column prop="unitName" label="单位" width="120">
+              <el-table-column prop="unitName" label="单位" width="130">
               </el-table-column>
-              <el-table-column prop="quantity" label="数量" width="120">
+              <el-table-column prop="quantity" label="数量" width="130">
               </el-table-column>
-              <el-table-column prop="purchasePrice" label="采购价" width="120">
+              <el-table-column prop="purchasePrice" label="采购价" width="130">
               </el-table-column>
-              <el-table-column prop="totalPrice" label="总价格" width="120">
+              <el-table-column prop="totalPrice" label="总价格" width="130">
               </el-table-column>
             </el-table>
           </el-form>
@@ -426,7 +437,9 @@
           </el-table>
           <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
           <div style="text-align: left">
-            <div style="margin-bottom: 25px">合计{{ totalPrice.toFixed(2) }}元</div>
+            <div style="margin-bottom: 25px">
+              合计{{ totalPrice.toFixed(2) }}元
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -640,7 +653,6 @@ export default {
         email: "",
         fax: "",
         code: "",
-        createTime: new Date(),
         phone: "",
         contactperson: "",
         providerId: "",
@@ -648,7 +660,6 @@ export default {
         payType: "",
         type: "",
         subject: "",
-        documenterBy: 1,
         medicineList: [],
         isSave: 0,
       },
@@ -674,6 +685,7 @@ export default {
       changeMedicineList: [],
       providerList: [],
       cgddMedicineionList: [],
+      firstRender: true,
       cgddRules: {
         type: [
           { required: true, message: "请输入采购类型", trigger: "change" },
@@ -728,18 +740,21 @@ export default {
           medicineList.data[index].sourceCode
         );
         this.cgsqList.push(cgsq.data);
+        this.cgsqList = this.cgsqList.filter(
+          (item, index) => item.code === cgsq.data.code || index === 0
+        );
       }
     }
     this.medicineListTemp = medicineList.data;
     this.cgddMedicineionList = this.medicineListTemp;
-   await this.getMedicineListDetail();
+    await this.getMedicineListDetail();
     await this.initCgSqOrderList();
     this.initProvider();
     let data = await getPayType();
     this.cgType = data.data;
     console.log(this.cgType);
     this.CgddOrder.approvalStatus = "";
-    this.cgddMedicineionList  =[]
+    this.cgddMedicineionList = [];
   },
   methods: {
     cleanList() {
@@ -764,6 +779,17 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (
+            this.CgddOrder.medicineList == null ||
+            this.CgddOrder.medicineList.length == 0
+          ) {
+            Message({
+              message: "请添加药品明细!",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }
           updateCgddById(this.CgddOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {
@@ -988,17 +1014,15 @@ export default {
       }
       if (this.cgddMedicineionList.length > 0) {
         for (let index = 0; index < this.cgddMedicineionList.length; index++) {
+          let isAdd = false;
           if (this.bcglXiangXiList.length == 0) {
             this.bcglXiangXiList = new Array();
           } else if (this.bcglXiangXiList.length > 0) {
             for (let i = 0; i < this.bcglXiangXiList.length; i++) {
               const element = this.bcglXiangXiList[i];
               if (this.cgddMedicineionList[index].id == element.medicineId) {
-                Message({
-                  message: this.cgddMedicineionList[index].name + "已经存在",
-                  type: "error",
-                });
-                return;
+                isAdd = true;
+                break;
               }
             }
           }
@@ -1006,24 +1030,80 @@ export default {
             this.CgddOrder.providerId
           );
           console.log("cgddMedicineionList:" + this.cgddMedicineionList[index]);
-          let obj = {
-            medicineList: resp.data.data,
-            providerId: this.CgddOrder.providerId,
-            medicineId: this.cgddMedicineionList[index].id,
-            unitName: this.cgddMedicineionList[index].unitName,
-            specification: this.cgddMedicineionList[index].specification,
-            price: this.cgddMedicineionList[index].purchasePrice,
-            totalPrice: this.cgddMedicineionList[index].totalPrice,
-            quantity: this.cgddMedicineionList[index].quantity,
-            sourceCode: this.cgddMedicineionList[index].sourceCode,
-          };
+          let obj = {};
+          if (
+            this.cgddMedicineionList[index].sourceCode != null &&
+            this.cgddMedicineionList[index].sourceCode != ""
+          ) {
+            obj = {
+              medicineList: resp.data.data,
+              providerId: this.CgddOrder.providerId,
+              medicineId: this.cgddMedicineionList[index].id,
+              unitName: this.cgddMedicineionList[index].unitName,
+              specification: this.cgddMedicineionList[index].specification,
+              price: this.cgddMedicineionList[index].purchasePrice,
+              totalPrice: this.cgddMedicineionList[index].totalPrice,
+              quantity: this.cgddMedicineionList[index].quantity,
+              sourceCode: this.cgddMedicineionList[index].sourceCode,
+            };
+          } else {
+            obj = {
+              medicineList: resp.data.data,
+              providerId: this.CgddOrder.providerId,
+              medicineId: this.cgddMedicineionList[index].id,
+              unitName: this.cgddMedicineionList[index].unitName,
+              specification: this.cgddMedicineionList[index].specification,
+              price: this.cgddMedicineionList[index].purchasePrice,
+              totalPrice: this.cgddMedicineionList[index].totalPrice,
+              quantity: this.cgddMedicineionList[index].quantity,
+              sourceCode: this.cgddMedicineionList[index].code,
+            };
+          }
           obj.dkdd = "1";
           obj.sjfw = ["07:00", "07:30"];
           obj.jxsjfw = ["06:00", "12:00"];
-          this.bcglXiangXiList.push(obj);
+          if (isAdd == false) {
+            this.bcglXiangXiList.push(obj);
+          }
         }
         this.CgddOrder.medicineList = this.bcglXiangXiList;
+        if (!this.firstRender) {
+          this.$message({
+            message: "添加成功",
+            type: "success",
+          });
+          this.activeName = "second";
+        }
+        this.firstRender = false;
       }
+    },
+    getSummaries(param, targetColumns) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
+          return;
+        }
+        if (targetColumns.includes(column.property)) {
+          const values = data.map((item) => Number(item[column.property]));
+
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] =
+              values
+                .reduce((prev, curr) => {
+                  return prev + curr;
+                }, 0)
+                .toFixed(2) + "";
+          } else {
+            sums[index] = "N/A";
+          }
+        } else {
+          sums[index] = "";
+        }
+      });
+
+      return sums;
     },
   },
   computed: {

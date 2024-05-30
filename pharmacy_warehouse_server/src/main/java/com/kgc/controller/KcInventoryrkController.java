@@ -4,6 +4,7 @@ package com.kgc.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kgc.annotation.Log;
 import com.kgc.entity.KcInventorydetail;
 import com.kgc.entity.KcInventoryrk;
 import com.kgc.entity.Message;
@@ -47,7 +48,6 @@ public class KcInventoryrkController {
         Message message = iKcInventoryrkService.getAllCheckRkByPage(vo, page);
         return message;
     }
-    @SaCheckPermission("kc:inventroyRK:dekete")//必须拥有该权限可访问
     @RequestMapping("/check/deleteCheckRK")
     public Message deleteCheckRK(@RequestBody Integer[] ids) {
 
@@ -60,11 +60,9 @@ public class KcInventoryrkController {
         Message message = iKcInventoryrkService.approveRK(id,status);
         return message;
     }
-
+    @Log("盘盈入库信息导出")
     @RequestMapping("/check/getAllCheckRkexcel")
     public void getAllCheckRkexcel(@RequestBody KcInventoryrk kcInventoryrk , HttpServletResponse response) {
-        List<String> permissionList = StpUtil.getPermissionList();
-        System.out.println(permissionList);
         StpUtil.checkPermission("kc:inventroyRK:excel");
          iKcInventoryrkService.getAllCheckRkexcel(kcInventoryrk, response);
     }

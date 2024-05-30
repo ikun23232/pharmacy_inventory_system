@@ -5,6 +5,7 @@
 
 package com.kgc.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -13,6 +14,7 @@ import com.kgc.dao.CgrkOrderMapper;
 import com.kgc.dao.KcMedicineMapper;
 import com.kgc.dao.KcOutintodetialMapper;
 import com.kgc.entity.*;
+import com.kgc.feign.CGDDFegin;
 import com.kgc.feign.PublicOMedicineService;
 import com.kgc.service.CgrkOrderService;
 import com.kgc.utils.CodeUtil;
@@ -39,6 +41,8 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
     private PublicOMedicineService medicineService;
     @Autowired
     private KcMedicineMapper kcMedicineMapper;
+    @Autowired
+    private CGDDFegin cgddFegin;
 
     @Autowired
     private KcOutintodetialMapper kcOutintodetialMapper;
@@ -90,13 +94,15 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             cgrqOrder.setOrderStatus(1);
         }
         cgrqOrder.setApprovalstatus(0);
-        cgrqOrder.setDocumenterby(1);
+
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        cgrqOrder.setDocumenterby(loginUser.getUserid());
         cgrqOrder.setVoidstate(0);
-        cgrqOrder.setCreateby(1);
+        cgrqOrder.setCreateby(loginUser.getUserid());
         cgrqOrder.setIsaddwarehouse(0);
 //        cgrqOrder.setPayMoney(referencCount);
 //        cgrqOrder.setFormMoney(BigDecimal.ZERO);
-        cgrkOrderMapper.insert(cgrqOrder);
+         cgrkOrderMapper.insert(cgrqOrder);
         for (BaseMedicine baseMedicine : cgrqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();
             orderMedicine.setCode(cgrqOrder.getCode());
@@ -123,7 +129,9 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             cgrqOrder.setOrderStatus(cgrqOrder.getOrderStatus());
         }
         cgrqOrder.setUpdateTime(new Date());
-        cgrqOrder.setUpdateby(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+
+        cgrqOrder.setUpdateby(loginUser.getUserid());
         cgrkOrderMapper.updateById(cgrqOrder);
 
 
@@ -172,14 +180,17 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
         CgrkOrder updateObj = new CgrkOrder();
 // 假设你想要更新的字段是这些
         updateObj.setEffectiveTime(new Date());
-        updateObj.setApproverby(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+
+        updateObj.setApproverby(loginUser.getUserid());
         updateObj.setApprovalstatus(approveMent);
+        CgrkOrder cgrkOrder = cgrkOrderMapper.getCgrkOrder(id);
+
         if (approveMent==2){
             updateObj.setOrderStatus(3);
             updateObj.setIsaddwarehouse(1);
 
             //更新我的流水
-            CgrkOrder cgrkOrder = cgrkOrderMapper.getCgrkOrder(id);
             List<BaseMedicine> medicineList = cgrkOrder.getMedicineList();
             for (BaseMedicine baseMedicine : medicineList) {
                 KcMedicine kcMedicine=new KcMedicine();
@@ -212,13 +223,23 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
 
         }else {
             updateObj.setOrderStatus(2);
+            updateObj.setIsaddwarehouse(0);
+
         }
         int updateRow = cgrkOrderMapper.approveOrder(id,updateObj.getEffectiveTime(),updateObj.getApproverby(),approveMent,updateObj.getOrderStatus(),updateObj.getIsaddwarehouse());
 
-        if (updateRow > 0) {
+
+        //变更采购订单的单据状态变为4
+        CgddOrder cgddOrder = new CgddOrder();
+        cgddOrder.setOrderStatus(4);
+        cgddOrder.setId(cgrkOrder.getPurchaseid());
+        Message message = cgddFegin.updateCgddIsPayById(cgddOrder);
+        if (!message.getCode().equals("200")){
+            throw new RuntimeException("更新采购订单状态失败!");
+        }
+        if (message.getCode().equals("200")){
             return Message.success();
         }
-        //变更采购订单的单据状态变为4
         return Message.error("审核失败");
     }
 

@@ -4,7 +4,7 @@
 
     <select id="getBaseMedicineListByPage" resultType="com.kgc.entity.BaseMedicine">
         select b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
-            un.name as unitName,mc.name as categoryName,
+            un.name as unitName,mc.name as categoryName,b.totalWarning,
             c.userName as createByName,u.userName as updateByName
         from base_medicine b
             LEFT JOIN sys_user c on b.createBy=c.userId
@@ -16,12 +16,13 @@
         <if test="categoryId!=null and categoryId>0">and categoryId=#{categoryId}</if>
         <if test="specification!=null and specification!=''">and specification like concat('%',#{specification},'%')</if>
         <if test="unitId!=null and unitId>0">and unitId=#{unitId}</if>
+        order by b.createTime DESC
     </select>
 
     <select id="getMedicineListByCode" resultType="com.kgc.entity.BaseMedicine">
         SELECT b.*,o.quantity,o.totalPrice,o.code,o.providerId,bpt.type AS providerName,
                b.createBy,b.createTime,b.updateBy,b.updateTime,
-               un.name as unitName,mc.name as categoryName,
+               un.name as unitName,mc.name as categoryName,b.totalWarning,
                (SELECT userName FROM sys_user u WHERE b.createBy=u.userId)
                as createByName, (SELECT userName FROM sys_user u WHERE b.updateBy=u.userId) as updateByName,
                p.price AS purchasePrice,
@@ -39,7 +40,7 @@
         select DISTINCT b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
                         un.name as unitName,mc.name as categoryName,
                         c.userName as createByName,u.userName as updateByName,
-                        p.price AS purchasePrice
+                        p.price AS purchasePrice,b.totalWarning
         from base_medicine b
                  LEFT JOIN sys_user c on b.createBy=c.userId
                  LEFT JOIN sys_user u on b.updateBy=u.userId,
@@ -51,7 +52,7 @@
 
     <select id="getBaseMedicineById" resultType="com.kgc.entity.BaseMedicine">
         select DISTINCT b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
-               c.userName as createByName,u.userName as updateByName,
+               c.userName as createByName,u.userName as updateByName,b.totalWarning,
                un.name as unitName,mc.name as categoryName,k.quantity as stock
         from base_medicine b
                  LEFT JOIN sys_user c on b.createBy=c.userId
@@ -60,6 +61,19 @@
         where b.categoryId=mc.id and b.unitId=un.id and k.medicineId=b.id
           and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0 and k.isDel=0
           and b.id=#{id} and k.batchCode=#{batchCode}
+    </select>
+
+    <select id="getMedicineById" resultType="com.kgc.entity.BaseMedicine">
+        select b.id,b.name,categoryId,unitId,salePrice,specification,warning,b.createBy,b.createTime,b.updateBy,b.updateTime,
+                        c.userName as createByName,u.userName as updateByName,
+                        un.name as unitName,mc.name as categoryName,b.totalWarning
+        from base_medicine b
+                 LEFT JOIN sys_user c on b.createBy=c.userId
+                 LEFT JOIN sys_user u on b.updateBy=u.userId,
+             base_unit un,base_medicine_category mc
+        where b.categoryId=mc.id and b.unitId=un.id
+          and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0
+          and b.id=#{id}
     </select>
 
     <select id="getAllBaseMedicine" resultType="com.kgc.entity.BaseMedicine">
@@ -73,7 +87,7 @@
     <select id="getMedicineVOListByCode" resultType="com.kgc.vo.MedicineVO">
         SELECT b.*,o.quantity,o.totalPrice,o.code,o.providerId,bpt.type AS providerName,
                b.createBy,b.createTime,b.updateBy,b.updateTime,
-               un.name as unitName,mc.name as categoryName,
+               un.name as unitName,mc.name as categoryName,b.totalWarning,
                (SELECT userName FROM sys_user u WHERE b.createBy=u.userId)
                                                                         as createByName, (SELECT userName FROM sys_user u WHERE b.updateBy=u.userId) as updateByName,
                p.price AS purchasePrice,

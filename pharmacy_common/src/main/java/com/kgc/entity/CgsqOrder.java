@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import com.kgc.vo.MedicineVO;
 import lombok.Data;
@@ -72,6 +73,7 @@ public class CgsqOrder implements Serializable {
      */
     @TableField("demandTime")
     @ExcelFiled("需求日期")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
 
     private Date demandtime;
 
@@ -114,6 +116,7 @@ public class CgsqOrder implements Serializable {
      */
     @TableField("effectiveTime")
     @ExcelFiled("生效时期")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
 
     private Date effectivetime;
 
@@ -148,6 +151,7 @@ public class CgsqOrder implements Serializable {
      */
     @TableField("createTime")
     @ExcelFiled("制单时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
 
     private Date createtime;
 

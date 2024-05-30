@@ -131,7 +131,7 @@
             </el-table-column>
             <el-table-column prop="unitName" label="单位" width="120">
             </el-table-column>
-            <el-table-column prop="stock" label="剩余库存" width="120">
+            <el-table-column prop="stock" label="调度数量" width="120">
             </el-table-column>
             <el-table-column prop="purchasePrice" label="进价" width="120">
             </el-table-column>

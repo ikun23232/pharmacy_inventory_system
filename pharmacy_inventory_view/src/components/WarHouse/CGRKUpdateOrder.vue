@@ -118,7 +118,7 @@
                   :value="item.id"
                 >
                 </el-option> -->
-                <el-option label="未编制" :value="1"></el-option>
+                <el-option label="编制中" :value="1"></el-option>
                 <el-option label="编制完" :value="2"></el-option>
                 <el-option label="执行中" :value="3"></el-option>
                 <el-option label="执行完" :value="4"></el-option>
@@ -188,14 +188,16 @@
       </el-table-column>
       <el-table-column prop="referenceAmount" label="参考金额" width="120">
       </el-table-column>
-                    <el-table-column prop="orderStatus" label="单据状态" width="120">
+                   <el-table-column  label="单据状态" width="120">
                       <template slot-scope="scope">
-                        {{ scope.row.orderStatus }}
+                        {{(scope.row.orderStatus == 1) ? "编制中" : (scope.row.orderStatus == 2) ? "编制完" : (scope.row.orderStatus == 3) ? "执行中" : (scope.row.orderStatus == 4) ? "执行完" : "未知状态" }}
                       </template>
                     </el-table-column>
                     <el-table-column prop="payType" label="结算方式" width="120">
                       <template slot-scope="scope">
-                        {{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}
+                                  <div v-if="scope.row.payType == 2">直接付款</div>
+          <div v-if="scope.row.payType != 2">{{ scope.row.payType == 0 ? "货到付款" : "全款后发款" }}</div>
+
                       </template>
                     </el-table-column>
                     <el-table-column prop="isPay" label="支付状态" width="120">
@@ -772,7 +774,8 @@ export default {
       this.cgsqdialog = false;
       this.cgsqList = this.cgsqListTemp;
       this.cgsqListTemp = [];
-      // this.initCgSqOrderList();
+      //新增
+      this.bcglXiangXiList=[]      // this.initCgSqOrderList();
     },
     async deleteCgsq() {
       console.log("我在这",this.cgsqListTemp)

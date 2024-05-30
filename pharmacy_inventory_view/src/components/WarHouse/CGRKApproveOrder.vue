@@ -15,7 +15,6 @@
                   type="text"
                   disabled
                   v-model="CgddOrder.code"
-                  disabled
               ></el-input>
             </el-form-item></div
         ></el-col>
@@ -689,6 +688,14 @@ export default {
       // console.log(resp)
     },
     async  approveCgsqOrder(){
+      if(this.cgsqList[0].orderStatus==4){
+        Message({
+          message: "该采购订单已经入过库了,请作废该采购入库单!",
+          type: "error",
+          center: "true",
+        });
+        return
+      }
       if (this.CgddOrder.approverRemark==''||this.CgddOrder.approverRemark==undefined){
         Message({
           message: "请输入核批意见!",

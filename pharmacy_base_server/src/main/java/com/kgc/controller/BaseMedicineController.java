@@ -50,6 +50,13 @@ public class BaseMedicineController {
         return message;
     }
 
+    @RequestMapping("/getMedicineById")
+    @ResponseBody
+    public Message getMedicineById(@RequestParam("id") int id) {
+        Message message = baseMedicineService.getMedicineById(id);
+        return message;
+    }
+
     @RequestMapping("/updateBaseMedicineById")
     @ResponseBody
     public Message updateBaseMedicineById(@RequestBody BaseMedicine baseMedicine) {

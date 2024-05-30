@@ -22,36 +22,26 @@
         <div style="font-size: 12px;font-family: SimSun;font-weight: bolder;margin: 0 0 10px 5px;float: left;">订单明细:</div>
         <table class="yk-table" border="1pm" cellspacing="0" align="center" width="100%" style="font-size: 12px;font-family: SimSun; table-layout:fixed;word-wrap:break-word;word-break:break-all">
           <tr>
-            <th width="55px">序号</th>
             <th>批次号</th>
             <th>医用商品名称</th>
             <th>型号规格</th>
-            <th>药品类型</th>
             <th>计量单位</th>
             <th>目的仓库</th>
             <th>数量</th>
             <th>金额（元）</th>
           </tr>
-          <tr v-for="(item, index) in medicineDetailList" :key="index" align="center">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.batchCode }}</td>
-            <td>{{ item.medicineName }}</td>
-            <td>{{ item.specification}}</td>
-            <td>{{ item.categoryName}}</td>
-            <td>{{ item.unitName }}</td>
-            <td>{{ item.aimStoreHouseName }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.price }}</td>
-          </tr>
           <tr align="center">
-            <td colspan="7" style="font-weight: bolder;">合计</td>
-            <td>{{saleOrder.totalCount}}</td>
-            <td>{{saleOrder.price
-              }}</td>
+            <td>{{ saleOrder.batchCode }}</td>
+            <td>{{ saleOrder.medicineName }}</td>
+            <td>{{ saleOrder.specification}}</td>
+            <td>{{ saleOrder.unitName }}</td>
+            <td>{{ saleOrder.aimStoreHouseName }}</td>
+            <td>{{ saleOrder.quantity }}</td>
+            <td>{{ saleOrder.dispatchPrice }}</td>
           </tr>
           <tr align="center">
             <td style="font-weight: bolder;">备注</td>
-            <td colspan="8">{{saleOrder.remark}}</td>
+            <td colspan="6">{{saleOrder.remark}}</td>
           </tr>
         </table>
       </div>
@@ -65,10 +55,6 @@
 </template>
 
 <script>
-
-
-import {getKcDistowareOrder} from "@/api/DdrkOrder";
-
 export default {
   name:"printView",
   data() {
@@ -76,25 +62,11 @@ export default {
       saleOrder:"",
       medicineDetailList:"",
       commonStyle: { width: '100%' },
-      // name:"123",
-      //   specification:"123",
-      //   categoryName:"123",
-      //   unitName:"123",
-      //   quantity:"123",
-      //   totalPrice:"123",
     }
   },
   mounted() {
-    this.getSaleOrderByOrderNo(this.$route.query.orderNo);
+    this.saleOrder = this.$route.query;
   },
-  methods:{
-    async getSaleOrderByOrderNo(orderNo) {
-      let data = await getKcDistowareOrder(orderNo);
-      console.log(data)
-      this.saleOrder=data.data;
-      this.medicineDetailList = this.saleOrder.medicineList;
-    },
-  }
 }
 </script>
 

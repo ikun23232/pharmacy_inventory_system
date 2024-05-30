@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.alibaba.fastjson.JSON;
 import com.kgc.annotation.Log;
-import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.SysLogManage;
 import com.kgc.entity.SysUser;
 import com.kgc.service.SysLogManageService;
@@ -42,7 +41,7 @@ import java.util.Map;
 public class LogAspect {
 
     private final SysLogManageService sysOperationLogService;
-    private final SysUserMapper sysUserMapper;
+
 
     @Pointcut("@annotation(com.kgc.annotation.Log)")
     public void logAspect() {
@@ -52,7 +51,8 @@ public class LogAspect {
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String tokenValue = StpUtil.getTokenValue();
         String loginIdByToken = (String)StpUtil.getLoginIdByToken(tokenValue);
-        SysUser loginUser = sysUserMapper.existUser(loginIdByToken,null);
+//        SysUser loginUser = sysUserMapper.existUser(loginIdByToken,null);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
         Object result = null;
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         Method method = signature.getMethod();
@@ -71,7 +71,8 @@ public class LogAspect {
         operationLog.setUsageTime(stopWatch.getTotalTimeMillis());
         operationLog.setRequestUrl(SpringUtil.getRequest().getRequestURI());
         operationLog.setRequestMethod(method.getDeclaringClass().getName() + "." + method.getName() + "()");
-        operationLog.setRequestParams(JSON.toJSONString(getFieldsName(proceedingJoinPoint)));
+//        operationLog.setRequestParams(JSON.toJSONString(getFieldsName(proceedingJoinPoint)));
+        operationLog.setRequestParams("params");
         operationLog.setResponseResult(JSON.toJSONString(result));
         operationLog.setOperationTime(new Date());
         sysOperationLogService.save(operationLog);

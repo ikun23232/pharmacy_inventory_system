@@ -17,6 +17,7 @@ import java.util.List;
 @Mapper
 public interface BaseMedicineCategoryMapper extends BaseMapper<BaseMedicineCategory> {
     List<BaseMedicineCategory> getAllCategoryList();
+    List<BaseMedicineCategory> getAllCategoryListALL();
 
     BaseMedicineCategory checkCatByName(String name);
 

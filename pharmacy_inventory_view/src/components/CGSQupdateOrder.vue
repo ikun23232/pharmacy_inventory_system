@@ -39,7 +39,6 @@
                   clearable
                   filterable
               >
-            <el-option label="请选择" value="0"></el-option>
           <el-option v-for="item in cgTypeList" :label="item.name" :value="item.id" :key="item.id"></el-option>
 
               </el-select>
@@ -88,7 +87,7 @@
 
 
           <el-table
-
+              show-summary
               v-loading="loading"
               :data="bcglXiangXiList"
               :row-class-name="rowClassName"
@@ -121,6 +120,7 @@
            <template slot-scope="scope">
              <el-select
                  clearable
+                 filterable
                  @change="changeMedicine(scope.row)"
                  v-model="bcglXiangXiList[scope.row.xh-1].medicineId"
              >
@@ -191,7 +191,6 @@
 
        <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
        <div style="text-align: left;">
-       <div style=" margin-bottom:25px;">合计{{ totalPrice }}元</div>
 
      <span>备注:</span><el-input class="" v-model="CgsqOrder.remark" placeholder="请输入备注"
                                style="width: 1000px;"></el-input>
@@ -217,21 +216,24 @@
   <el-input
       placeholder="请输入内容"
       prefix-icon="el-icon-search"
-      v-model="input2"
+      v-model="CgsqOrder.approverremark"
       style="width: 1000px;" disabled>
   </el-input>
 </div>
 
-      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select v-model="CgsqOrder.approvement"
+      <div style="margin-top: 20px; margin-bottom: 25px;">核批结果:<el-select v-model="CgsqOrder.approvalstatus"
                                                                           placeholder="请选择" disabled>
-
+   <el-option
+       label="未审批"
+       :value="0">
+    </el-option>
     <el-option
         label="未通过"
-        value="0">
+        :value="1">
     </el-option>
     <el-option
         label="通过"
-        value="1">
+        :value="2">
     </el-option>
   </el-select>
 </div>
@@ -365,6 +367,7 @@ export default {
         voidState: "",
       },
       list: {},
+      falg:false,
       activeName: "first",
       adddialogVisible: false,
       cgsqdialog: false,
@@ -373,31 +376,22 @@ export default {
       cgTypeList: [],
       rules: {
         subject: [
-          {required: true, message: "请输入主题名称", trigger: "blur"},
-          {min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur"},
+          {required: true, message: "请输入采购主题", trigger: "blur"},
+          {min: 4, max: 12, message: "长度在 4 到 12 个字符", trigger: "blur"},
         ],
         type: [
-          {required: true, message: "请选择采购类型", trigger: "blur"},
-        ],
-
-        capacity: [
-          {required: true, message: "仓库面积不能为空"},
-          {
-            type: "number",
-            min: 1,
-            max: 10000,
-            message: "仓库面积必须为范围在1-10000的整数",
-          },
+          {required: true, message: "请选择采购类型", trigger: "change"},
         ],
       },
-      loading:true
+      loading: true
     };
   },
+
   async mounted() {
     await this.initCgSqOrder(this.id)
     this.initProvider()
     this.initCgType()
-    this.loading=false;
+    this.loading = false;
   },
   methods: {
     async initCgSqOrder(id) {
@@ -494,7 +488,7 @@ export default {
     rowClassName({row, rowIndex}) {
       row.xh = rowIndex + 1;
     },
-    checkj(){
+    checkj() {
       // alert(1)
       this.$forceUpdate()
     },
@@ -506,7 +500,6 @@ export default {
       } else {
         this.checkedDetail = selection;
       }
-
 
     },
     async handleAddDetails() {
@@ -544,7 +537,7 @@ export default {
       this.bcglXiangXiList.push(obj);
     },
     async initProvider() {
-      let resp = await init('', 0, 1, 5);
+      let resp = await init('', 0, 1, 100);
       this.providerList = resp.data.list
     },
     handleDeleteDetails() {
@@ -562,26 +555,40 @@ export default {
     },
 
     async changeProvider(obj) {
-      // alert(obj.providerId)
-
+      if (this.checkFalg) {
+        obj.medicineId = ''
+      }
       obj.medicineList = []
       if (obj.providerId != '') {
-
+        // alert("bushikond")
         let resp = await getBaseMedicineListByProviderId(obj.providerId)
         // obj.medicineList = resp.data.data
-
-        this.$set(obj,'medicineList',resp.data.data)
-        console.log("看看我",obj.medicineList)
-        console.log("我是失败",this.bcglXiangXiList)
+        this.$set(obj, 'medicineList', resp.data.data)
+        console.log("看看我", obj.medicineList)
+        console.log("我是失败", this.bcglXiangXiList)
       }
       if (obj.providerId == '') {
+        // alert("konle")
+
         obj.medicineId = ''
         obj.specification = ''
         obj.price = ''
         obj.totalPrice = ''
         obj.unitName = ''
       }
+      this.bcglXiangXiList = [...this.bcglXiangXiList]; // 通过展开运算符创建数组的浅拷贝
+
+      // this.$set(obj,'medicineList',obj.medicineList)
+
       // this.$forceUpdate();
+    },
+
+
+    handleSelectChange(row) {
+      // 这里可以添加逻辑，根据row.selectedValue来更新表格数据
+      // 例如，可以调用一个方法来重新获取或更新tableData
+      this.fetchData(row);
+      this.falg=!this.falg
     },
     fetchData(row) {
       // 模拟从API获取数据
@@ -589,26 +596,23 @@ export default {
       setTimeout(() => {
         this.tableData = [
           this.changeProvider(row)
+
         ];
-      }, 300);
-    },
-    handleSelectChange(row) {
-      // 这里可以添加逻辑，根据row.selectedValue来更新表格数据
-      // 例如，可以调用一个方法来重新获取或更新tableData
-      this.fetchData(row);
+      }, 10);
     },
     async changeMedicine(obj) {
+
       console.log("bcgl", this.bcglXiangXiList);
       console.log("obj", obj);
       if (this.checkFalg) {
         let isDuplicate = false;
         for (let i = 0; i < this.bcglXiangXiList.length; i++) {
-       if (this.bcglXiangXiList[i].xh === obj.xh){
-      continue;
-      }
+          if (this.bcglXiangXiList[i].xh === obj.xh || obj.medicineId == '') {
+            continue;
+          }
           if (this.bcglXiangXiList[i].medicineId === obj.medicineId &&
               this.bcglXiangXiList[i].providerId === obj.providerId
-              ) {
+          ) {
             // 如果找到重复项
             isDuplicate = true;
             break;
@@ -633,6 +637,7 @@ export default {
           obj.purchasePrice = objElement.purchasePrice
         }
       }
+
     },
     cacltotalPrice(row) {
       alert(row)
@@ -652,6 +657,7 @@ export default {
 
       // 使用reduce方法计算总价，并确保price和quantity都是数字
       return this.bcglXiangXiList.reduce((total, item) => {
+
         // 确保price和quantity都是数字
         const price = Number(item.price);
         const quantity = Number(item.quantity);
@@ -670,14 +676,6 @@ export default {
         row.totalPrice = row.quantity * row.price;
         return row.quantity * row.price;
       };
-    }
-  },
-  watch: {
-    bcglXiangXiList: {
-      handler(val, oldval) {
-        this.bcglXiangXiList=val
-      },
-      deep: true
     }
   }
 

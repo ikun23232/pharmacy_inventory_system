@@ -3,7 +3,7 @@
     <h1>采购订单</h1>
     <div>
       <el-row :gutter="20">
-        <el-col :span="6"
+        <el-col :span="4"
         ><div class="grid-content bg-purple">
           单据编号：
           <el-input
@@ -37,6 +37,10 @@
               clearable
               filterable
           >
+            <el-option
+              label="请选择"
+              :value="0">
+            </el-option>
             <el-option
                 v-for="item in cgType"
                 :key="item.id"

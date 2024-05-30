@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -92,6 +93,10 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         if (cgddOrder.getMedicineList().size() != count1){
             return Message.error("添加失败");
         }
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        logger.debug("loginUser:"+loginUser);
+        cgddOrder.setDocumenterBy(loginUser.getUserid());
+        cgddOrder.setCreateTime(new Date());
         cgddOrder.setCount(num);
         cgddOrder.setReferenceAmount(price);
         if (cgddOrder.getIsSave() == 1){
@@ -166,7 +171,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         }
         cgddOrder.setCount(num);
         cgddOrder.setReferenceAmount(price);
-        cgddOrder.setUpdateBy(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        cgddOrder.setUpdateBy(loginUser.getUserid());
         cgddOrder.setUpdateTime(new Date());
         if (cgddOrder.getIsSave() == 1){
             cgddOrder.setOrderStatus(2);
@@ -183,7 +189,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     @Override
     public Message auditingOrder(CgddOrder cgddOrder) {
         cgddOrder.setEffectiveTime(new Date());
-        cgddOrder.setApproverBy(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        cgddOrder.setApproverBy(loginUser.getUserid());
         cgddOrder.setApproverRemark(cgddOrder.getApproverRemark());
         if (cgddOrder.getApprovalStatus() == 2){
             if (cgddOrder.getPayType() == 2){

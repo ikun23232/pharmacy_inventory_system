@@ -122,7 +122,7 @@
             </el-table-column>
             <el-table-column prop="unitName" label="单位" width="120">
             </el-table-column>
-            <el-table-column prop="stock" label="剩余库存" width="120">
+            <el-table-column prop="stock" label="调度数量" width="120">
             </el-table-column>
             <el-table-column prop="purchasePrice" label="进价" width="120">
             </el-table-column>
@@ -405,6 +405,7 @@ export default {
       activeName: "first",
       adddialogVisible: false,
       kcmxdialog: false,
+      firstRender: true,
       kcmxListTemp: [],
       kcmxList: [],
       medicineListTemp: [],
@@ -445,6 +446,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if (this.KcDispatch.medicineList.length == 0) {
+            Message({
+              message: "请加入药品详情!",
+              type: "error",
+              center: "true",
+            });
+            return;
+          }
           for (
             let index = 0;
             index < this.KcDispatch.medicineList.length;
@@ -476,11 +485,6 @@ export default {
           return false;
         }
       });
-    },
-    resetForm(formName) {
-      var data = this.KcDispatch.code;
-      this.$refs[formName].resetFields();
-      this.KcDispatch.code = data;
     },
     cancel() {
       this.$emit("cancelUpdate");
@@ -529,7 +533,7 @@ export default {
       }
       if (this.changeMedicineList.length > 0) {
         for (let index = 0; index < this.changeMedicineList.length; index++) {
-          if (this.KcDispatch.medicineList.length > 0) {
+          if (this.KcDispatch.medicineList != null && this.KcDispatch.medicineList.length) {
             for (let i = 0; i < this.KcDispatch.medicineList.length; i++) {
               const element = this.KcDispatch.medicineList[i];
               if (
@@ -557,7 +561,7 @@ export default {
             aimStoreHouseList: this.storeHouseList,
             batchCode: this.changeMedicineList[index].batchCode,
             name: this.changeMedicineList[index].name,
-            medicineId: this.changeMedicineList[index].id,
+            medicineId: this.changeMedicineList[index].medicineId,
             unitId: this.changeMedicineList[index].unitId,
             unitName: this.changeMedicineList[index].unitName,
             specification: this.changeMedicineList[index].specification,
@@ -573,6 +577,11 @@ export default {
           this.bcglXiangXiList.push(obj);
         }
         this.KcDispatch.medicineList = this.bcglXiangXiList;
+          this.$message({
+            message: "添加成功",
+            type: "success",
+          });
+          this.activeName = "second";
       }
     },
     async showMedicineListDetail() {
@@ -638,6 +647,7 @@ export default {
     updateDispatchDetails() {
       this.medicineListTemp = [];
       this.bcglXiangXiList = [];
+      this.KcDispatch.medicineList = [];
     },
     changeStoreHouse(row, index) {
       if (this.KcDispatch.beforeWarehouseId == row.aimStoreHouseId) {
