@@ -79,7 +79,7 @@ public class BaseMedicineController {
     }
     @RequestMapping("/getBaseMedicineListByProviderId")
     @ResponseBody
-    public Message getBaseMedicineListByProviderId(int providerId) {
+    public Message getBaseMedicineListByProviderId(@RequestParam("providerId")int providerId) {
         Message baseMedicineList=baseMedicineService.getBaseMedicineListByProviderId(providerId);
         return Message.success(baseMedicineList);
     }

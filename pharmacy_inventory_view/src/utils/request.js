@@ -54,7 +54,7 @@ instance.interceptors.response.use(
 		}
 
 		if (error.response.status === 500) {
-			router.push("/login");
+			// router.push("/login");
 		}
 
 		Element.Message.error(error.response.data.message, {duration: 3000});
