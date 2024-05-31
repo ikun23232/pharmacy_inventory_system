@@ -9,7 +9,7 @@ import {
 import {Message} from "element-ui";
 import kcReported from "@/views/warehouse/KCBC/KcReported.vue";
 import { getAllUser} from "@/api/sysUser"
-export default {
+export default { 
   name: "CheckReported",
   data() {
     return {

@@ -109,7 +109,7 @@ export default {
 
         <el-col :span="8">
           <el-form-item label="审批人" prop="modificationBy">
-            <el-input v-model="reportedData.modificationBy" disabled ></el-input>
+            <el-input v-model="reportedData.modificationName" disabled ></el-input>
           </el-form-item>
         </el-col>
 

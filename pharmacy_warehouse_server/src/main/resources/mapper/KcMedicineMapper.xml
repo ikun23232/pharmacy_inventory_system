@@ -8,7 +8,7 @@
         FROM kc_medicine a
         LEFT JOIN base_medicine b ON a.medicineId=b.id
         LEFT JOIN base_provider c ON a.providerId=c.id
-        WHERE a.storehouseId=#{storehouseId}
+        WHERE a.quantity>0 AND a.storehouseId=#{storehouseId}
         <if test="medicineName!=null and medicineName!=''">
             and b.`name` like concat('%',#{medicineName},'%')
         </if>

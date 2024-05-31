@@ -83,12 +83,9 @@ export default {
       //审批库存报损对话框
       checkReportedVisible:false,
       // 修改库存报损数据
-      updateReported:{
-
-      },
+      updateReported:{},
       // 详情库存报损对话框
       detailsReportedVisible:false,
-
     }
   },
   mounted() {

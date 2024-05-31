@@ -37,6 +37,7 @@ export default {
         ],
         title: [
           { required: true, message: "请输入报损原因", trigger: "blur" },
+          { min: 1, max: 10, message: "报损原因长度必须在1到10个字符之间", trigger: "blur" }
         ],
         modificationBy: [
           { required: true, message: "请选择修改人", trigger: "blur" },
@@ -103,7 +104,10 @@ export default {
       this.$emit("cancel");
     },
     // 获取药品列表
-    getKcMedicines(){
+    getKcMedicines(val){
+      if (val){
+        this.medicineList.pageNum=val
+      }
       if (this.reportedData.storehouseId==''){
         Message({
           message: '请选择仓库',
@@ -388,6 +392,7 @@ export default {
               :controls="false"
               @input="handleDamageChange(scope.row)"
               style="width: 80px"
+              :precision="0"
           />
         </template>
       </el-table-column>

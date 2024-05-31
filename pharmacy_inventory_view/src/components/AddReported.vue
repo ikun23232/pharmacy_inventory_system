@@ -23,6 +23,7 @@ export default {
         ],
         title: [
           { required: true, message: "请输入报损原因", trigger: "blur" },
+          { min: 1, max: 10, message: "报损原因长度必须在1到10个字符之间", trigger: "blur" }
         ],
         documenterBy: [
           { required: true, message: "请选择报损人", trigger: "blur" },
@@ -104,7 +105,10 @@ export default {
       this.$emit("cancel");
     },
     // 获取药品列表
-    getKcMedicines(){
+    getKcMedicines(val){
+      if (val){
+        this.medicineList.pageNum=val
+      }
       if (this.addReportedData.storehouseId==''){
         Message({
           message: '请选择仓库',
@@ -176,14 +180,7 @@ export default {
     },
     // 报损数量改变
     handleDamageChange(row) {
-      const value = parseInt(row.reportedNum);
-      if (isNaN(value)) {
-        // 如果输入的不是数字，则可以重置为1或其他默认值
-        row.reportedNum = 1;
-      } else {
-        // 如果输入的是数字，则更新为这个数字
-        row.reportedNum = value;
-      }
+
       // console.log(this.wereAddList)
       // 确保报损数量不大于库存数量
       row.reportedNum = Math.min(row.reportedNum, row.quantity);
@@ -365,6 +362,7 @@ export default {
               :controls="false"
               @input="handleDamageChange(scope.row)"
               style="width: 80px"
+              :precision="0"
           />
         </template>
       </el-table-column>
