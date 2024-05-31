@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +38,7 @@ public class KcDispatchController {
     @RequestMapping("/addKcDispatch")
     @Log("库存调度添加")
     public Message addKcDispatch(@RequestBody Map map){
+        List<String> permissionList = StpUtil.getPermissionList();
         StpUtil.checkPermission("kcdd:tianjia");
         KcDispatch kcDispatch = JSON.parseObject(JSON.toJSONString(map.get("KcDispatch")),KcDispatch.class);
         Message kcDispathList = kcDispatchService.addKcDispatch(kcDispatch);

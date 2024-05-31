@@ -257,6 +257,7 @@ export default {
       await this.$axios
         .post("/warehouse/check/getAllCheckRkByPage", this.vo)
         .then((res) => {
+          console.log(res.data,"dayf");
           this.list = res.data;
           this.size = res.data.pageSize;
           this.vo.current = res.data.pageNum;
