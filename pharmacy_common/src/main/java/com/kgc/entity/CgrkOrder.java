@@ -71,7 +71,7 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("effectiveTime")
     @ExcelFiled("生效时间")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+
     private Date effectiveTime;
 
     /**
@@ -123,7 +123,6 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("createTime")
     @ExcelFiled("创造时间")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
     private Date createTime;
 
     /**
@@ -140,7 +139,6 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("updateTime")
     @ExcelFiled("修改时间")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
 
     private Date updateTime;
 

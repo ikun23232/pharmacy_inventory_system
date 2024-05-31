@@ -73,7 +73,7 @@ public class CgsqOrder implements Serializable {
      */
     @TableField("demandTime")
     @ExcelFiled("需求日期")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+
 
     private Date demandtime;
 
@@ -116,7 +116,6 @@ public class CgsqOrder implements Serializable {
      */
     @TableField("effectiveTime")
     @ExcelFiled("生效时期")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
 
     private Date effectivetime;
 
@@ -151,8 +150,6 @@ public class CgsqOrder implements Serializable {
      */
     @TableField("createTime")
     @ExcelFiled("制单时间")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
-
     private Date createtime;
 
     /**

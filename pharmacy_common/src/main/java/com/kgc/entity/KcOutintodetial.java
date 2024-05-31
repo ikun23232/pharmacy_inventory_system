@@ -54,7 +54,8 @@ public class KcOutintodetial implements Serializable {
      */
     @TableField("createDate")
     @ExcelFiled("执行时间")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+
 
     private Date createDate;
 
@@ -68,7 +69,8 @@ public class KcOutintodetial implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+
 
     private Date updateDate;
 

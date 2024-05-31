@@ -57,7 +57,7 @@
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="需求人" prop="demanderby" >{{CgsqOrder.demanderUserName}}
-              <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demainerId" >添加用户</el-button>
+              <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demainerBy" >添加用户</el-button>
             </el-form-item>
           </div></el-col
         >
@@ -441,7 +441,7 @@ export default {
   methods: {
     handleKcmxSuccess(value) {
       this.adddialogVisible11 = false;
-      this.kid=value.userid
+      this.CgsqOrder.demanderby=value.userid
       this.CgsqOrder.demanderUserName=value.username
       console.log(value,"ddddd");
     },
