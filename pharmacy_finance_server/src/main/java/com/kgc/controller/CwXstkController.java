@@ -32,17 +32,17 @@ public class CwXstkController {
         return cwXstkService.getXsysList(cwXsys, pageNum, pageSize);
     }
 
-    @Log("销售退款导出")
+//    @Log("销售退款导出")
     @RequestMapping("/cwXstkExcel")
     public void cwXstkExcel(HttpServletResponse response) {
-        StpUtil.checkPermission("cw:xstk:excel");
+//        StpUtil.checkPermission("cw:xstk:excel");
         cwXstkService.cwXstkExcel(response);
     }
 
-    @Log("销售应收导出")
+//    @Log("销售应收导出")
     @RequestMapping("/cwXsysExcel")
     public void cwXsysExcel(HttpServletResponse response) {
-        StpUtil.checkPermission("cw:xsys:excel");
+//        StpUtil.checkPermission("cw:xsys:excel");
         cwXstkService.cwXsysExcel(response);
     }
 

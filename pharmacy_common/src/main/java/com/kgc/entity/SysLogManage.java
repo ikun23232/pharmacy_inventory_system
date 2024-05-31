@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.kgc.annotation.ExcelFiled;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,7 +20,9 @@ import java.util.Date;
  * @since 2024-04-30
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysLogManage implements Serializable {
 
     private static final long serialVersionUID = 1L;

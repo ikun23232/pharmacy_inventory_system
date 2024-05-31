@@ -37,17 +37,32 @@ public class SysUserController {
         Message message = userService.login(loginForm);
         return message;
     }
-    @RequestMapping("/getUserListByPage")
-    public Message getUserListByPage(String username,Integer sex,Integer isstate,String currentNo){
-            int _currentPageNo = 1;
+    @RequestMapping("/existLogin")
+    public Message existLogin(@RequestBody SysUser loginForm){
+        Message message = userService.existLogin(loginForm);
+        return message;
+    }
+    @Log("修改密码")
+    @RequestMapping("/updatePass")
+    public Message updatePass( String password){
+        Message message = userService.updatePass(password);
+        return message;
+    }
 
+    @RequestMapping("/getUserListByPage")
+    public Message getUserListByPage(String username,Integer sex,Integer isstate,Integer roleId,String currentNo){
+        int _currentPageNo = 1;
+        String rd ="";
         if (currentNo!=null&&!"".equals(currentNo)) {
             _currentPageNo = Integer.parseInt(currentNo);
         }
         Page page = new Page();
-        page.setPageSize(1);
+        page.setPageSize(4);
         page.setCurrentPageNo(_currentPageNo);
-        Message message = userService.getUsersListByPage(username,sex,isstate,page);
+        if (roleId!=null){
+             rd = roleId.toString();
+        }
+        Message message = userService.getUsersListByPage(username,sex,isstate,rd,page);
         return message;
     }
     @Log("注销用户")
@@ -60,6 +75,7 @@ public class SysUserController {
     @Log("导出用户")
     @RequestMapping("Userexcel")
     public void Userexcel(@RequestBody SysUser sysUser , HttpServletResponse response) {
+        List<String> permissionList = StpUtil.getPermissionList();
         userService.Userexcel(sysUser,response);
     }
     @Log("删除用户")
@@ -112,7 +128,7 @@ public class SysUserController {
         Message message = userService.existUser(username,id);
         return message;
     }
-    @Log("修改密码")
+    @Log("重置密码")
     @RequestMapping("/repass")
     public Message repass(Integer userId) {
         Message message = userService.repass(userId);

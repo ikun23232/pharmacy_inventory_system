@@ -1,9 +1,11 @@
 package com.kgc.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.dao.CgsqOrderMapper;
 import com.kgc.dao.ProcurementOrderMapper;
 import com.kgc.entity.*;
 import com.kgc.feign.CwAccountsFegin;
@@ -46,6 +48,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
     private CwAccountsFegin cwAccountsFegin;
     @Autowired
     private CwCgyfFeign cwCgyfFeign;
+    @Autowired
+    private CgsqOrderMapper cgsqOrderMapper;
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public Message getCgddOrder(CgddOrder cgddOrder, Page page) {
@@ -188,7 +192,6 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
 
     @Override
     public Message auditingOrder(CgddOrder cgddOrder) {
-        cgddOrder.setEffectiveTime(new Date());
         SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
         cgddOrder.setApproverBy(loginUser.getUserid());
         cgddOrder.setApproverRemark(cgddOrder.getApproverRemark());
@@ -224,6 +227,19 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
             }
             cgddOrder.setPayTime(new Date());
             cgddOrder.setOrderStatus(3);
+            cgddOrder.setEffectiveTime(new Date());
+            for (BaseMedicine baseMedicine : cgddOrder.getMedicineList()) {
+                UpdateWrapper upda = new UpdateWrapper<>();
+                upda.eq("code",baseMedicine.getSourceCode());
+                if (baseMedicine.getSourceCode() != null ){
+                    CgsqOrder cgsqOrder = new CgsqOrder();
+                    cgsqOrder.setOrderstatus(4);
+                    int update = cgsqOrderMapper.update(cgsqOrder, upda);
+                    if (update == 0){
+                        throw new RuntimeException("修改采购申请单异常！");
+                    }
+                }
+            }
         }else {
             cgddOrder.setOrderStatus(4);
         }

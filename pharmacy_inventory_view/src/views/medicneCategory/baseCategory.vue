@@ -93,6 +93,7 @@ export default {
   methods: {
     async getList() {
       let data = await initCat();
+      console.log("skdakdksakdsakdskadsadsadsad");
       console.log(data);
       this.list = data;
     },

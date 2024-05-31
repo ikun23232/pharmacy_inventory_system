@@ -86,8 +86,8 @@
           <span>{{ scope.row.requestMethod }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="requestParams" label="响应参数" width="120">
-      </el-table-column>
+      <!-- <el-table-column prop="requestParams" label="响应参数" width="120">
+      </el-table-column> -->
       
       <el-table-column
         label="响应结果"

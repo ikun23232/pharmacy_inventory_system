@@ -160,5 +160,4 @@ public class BaseMedicine implements Serializable {
     @TableField(exist=false)
     private String orderDateEnd;
 
-
 }

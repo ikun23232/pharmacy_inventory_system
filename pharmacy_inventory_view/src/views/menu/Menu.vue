@@ -76,28 +76,33 @@
         label-width="100px"
         class="demo-editForm"
       >
+        <!-- <el-form-item label="上级菜单" prop="parentid">
+					<el-select v-model="editForm.parentid" placeholder="请选择上级菜单">
+						<el-option :label="'一级目录'" :value="0"></el-option>
+						<template v-for="item in tableData">
+							<el-option :label="item.menuname" :value="item.id" :key="item.id"></el-option>
+							<template v-for="child in item.children">
+								<el-option :label="child.menuname" :value="child.id" :key="child.id">
+									<span>{{ "- " + child.menuname }}</span>
+								</el-option>
+							</template>
+						</template>
+					</el-select>
+				</el-form-item> -->
         <el-form-item label="上级菜单" prop="parentid">
-          <el-select v-model="editForm.parentid" placeholder="请选择上级菜单">
-            <el-option :label="'一级目录'" :value="0"></el-option>
-            <template v-for="item in tableData">
-              <el-option
-                :label="item.menuname"
-                :value="item.id"
-                :key="item.id"
-              ></el-option>
-              <template v-for="child in item.children">
-                <el-option
-                  :label="child.menuname"
-                  :value="child.id"
-                  :key="child.id"
-                >
-                  <span>{{ "- " + child.menuname }}</span>
-                </el-option>
-              </template>
-            </template>
-          </el-select>
+          <el-cascader
+            v-model="selectedMenu"
+            :options="cascaderData"
+            :props="{
+              label: 'menuname',
+              value: 'id',
+              children: 'children',
+              checkStrictly: true,
+            }"
+            placeholder="默认一级菜单"
+            @change="handleCascaderChange"
+          ></el-cascader>
         </el-form-item>
-
         <el-form-item label="菜单名称" prop="menuname" label-width="100px">
           <el-input v-model="editForm.menuname" autocomplete="off"></el-input>
         </el-form-item>
@@ -141,28 +146,47 @@
 </template>
 
 <script>
-import { Message } from "element-ui";
 export default {
   inject: ["reload"],
   name: "Menu",
   data() {
     return {
+      id: null,
       dialogVisible: false,
-      editForm: {},
+      editForm: { parentid: 0 },
       editFormRules: {
-        parentid: [
-          { required: true, message: "请选择上级菜单", trigger: "blur" },
+        menuname: [
+          {
+            required: true,
+            message: "请输入名称",
+            trigger: "blur",
+          },
+          {
+            validator: this.validatePass,
+            trigger: "blur",
+          },
+          {
+            pattern: /^.{2,10}$/,
+            message: "用户名长度为2-10个字符",
+            trigger: "blur",
+          },
         ],
-        menuname: [{ required: true, message: "请输入名称", trigger: "blur" }],
-        perms: [{ required: true, message: "请输入权限编码", trigger: "blur" }],
+        perms: [
+          { required: true, message: "请输入权限编码", trigger: "blur" },
+          {
+            validator: this.validatePass1,
+            trigger: "blur",
+          },
+        ],
         type: [{ required: true, message: "请选择状态", trigger: "blur" }],
-
         statu: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
       tableData: [],
+      cascaderData: [],
+      selectedMenu: [],
     };
   },
-  created() {
+  async created() {
     this.getMenuTree();
   },
   methods: {
@@ -171,7 +195,30 @@ export default {
         console.log("kkk");
         console.log(res.data);
         this.tableData = res.data;
+        this.handleAddMenu(this.tableData);
       });
+    },
+    handleAddMenu(data) {
+      const traverseData = (data) => {
+        return data.map((item) => formatData(item));
+      };
+
+      const formatData = (item) => {
+        return {
+          id: item.id,
+          menuname: item.menuname,
+          children: item.children
+            ? item.children.map((child) => formatData(child))
+            : [],
+        };
+      };
+      console.log(traverseData(data));
+      this.cascaderData = traverseData(data);
+    },
+
+    handleCascaderChange(value) {
+      this.selectedMenu = value;
+      this.editForm.parentid = value[value.length - 1];
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -182,13 +229,17 @@ export default {
               this.editForm
             )
             .then((res) => {
-              Message({
-                type: "success",
-                message: "操作成功",
-              });
-              this.getMenuTree();
-              this.reload();
-              this.dialogVisible = false;
+              if (res.code === "200") {
+                this.$message({
+                  showClose: true,
+                  message: "恭喜你，操作成功",
+                  type: "success",
+                });
+                this.getMenuTree();
+                this.reload();
+                this.dialogVisible = false;
+              }
+              this.$message.error(res.message);
             });
         } else {
           console.log("error submit!!");
@@ -201,9 +252,44 @@ export default {
         console.log("111lllppp");
         console.log(res.data);
         this.editForm = res.data;
-
         this.dialogVisible = true;
+        this.id = id;
       });
+    },
+    async validatePass(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("请输入菜单名称"));
+      } else {
+        await this.$axios
+          .get("/user/menu/exsitMenuName", {
+            params: { menuname: value, id: this.id }
+          })
+          .then((resp) => {
+            console.log(resp,"dyf");
+            if (resp.code == "200") {
+              callback();
+            } else if (resp.code == "202") {
+              callback(new Error("菜单名已经重复"));
+            }
+          });
+      }
+    },
+    async validatePass1(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("请输入权限名称"));
+      } else {
+        await this.$axios
+          .get("/user/menu/exsitMenuPerms", {
+            params: { perms: value, id: this.id }
+          })
+          .then((resp) => {
+            if (resp.code == "200") {
+              callback();
+            } else if (resp.code == "202") {
+              callback(new Error("权限名已经重复"));
+            }
+          });
+      }
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();

@@ -499,8 +499,7 @@
             <el-form-item class="anniu" label="单据主题">
               <el-input
                 v-model="vo.subject"
-                placeholder="请输入单据编号"
-              ></el-input>
+                placeholder="请输入单据编号"></el-input>
             </el-form-item>
             <el-form-item class="anniu" label="采购类型">
               <el-select v-model="vo.type" placeholder="请选择采购类型">
@@ -562,8 +561,7 @@
             <el-table-column
               prop="referenceamount"
               label="参考金额"
-              width="120"
-            >
+              width="120">
             </el-table-column>
           </el-table>
           <div class="block">
@@ -572,8 +570,7 @@
               :current-page.sync="list.pageNum"
               :page-size="list.pageSize"
               layout="prev, pager, next, jumper"
-              :total="list.total"
-            >
+              :total="list.total">
             </el-pagination>
             <el-row type="flex" justify="center">
               <el-col :span="2">
@@ -634,6 +631,9 @@ export default {
         type: "0",
         startTime: "",
         endTime: "",
+        orderStatus:3,
+        approvalStatus:2,
+        voidState:0
       },
       list: {},
       cgType: {},

@@ -1,5 +1,6 @@
 package com.kgc.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -53,6 +55,11 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
 
     public Message addBaseMedicine(BaseMedicine baseMedicine){
         Message message=new Message();
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        baseMedicine.setCreateBy(loginUser.getUserid());
+        baseMedicine.setCreateTime(new Date());
+        baseMedicine.setUpdateBy(loginUser.getUserid());
+        baseMedicine.setUpdateTime(new Date());
         int count=baseMedicineMapper.insert(baseMedicine);
         if(count>0){
             message.setCode("200");
@@ -72,8 +79,22 @@ public class BaseMedicineServiceImpl extends ServiceImpl<BaseMedicineMapper, Bas
     }
 
     @Override
+    public Message getMedicineById(int id) {
+        Message message=new Message();
+        BaseMedicine baseMedicine=baseMedicineMapper.getMedicineById(id);
+        if(baseMedicine!=null){
+            message.setCode("200");
+            message.setData(baseMedicine);
+        }
+        return message;
+    }
+
+    @Override
     public Message updateBaseMedicineById(BaseMedicine baseMedicine) {
         Message message=new Message();
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        baseMedicine.setUpdateBy(loginUser.getUserid());
+        baseMedicine.setUpdateTime(new Date());
         int count=baseMedicineMapper.updateById(baseMedicine);
         if(count>0){
             message.setCode("200");

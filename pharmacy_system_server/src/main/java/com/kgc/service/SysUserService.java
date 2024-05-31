@@ -26,7 +26,8 @@ import java.util.List;
 public interface SysUserService extends IService<SysUser> {
     public Message existUser(String userName,Integer id);
     public Message login(SysUser user);
-    public Message getUsersListByPage(String username,Integer sex,Integer isstate, Page page);
+    public Message existLogin(SysUser user);
+    public Message getUsersListByPage(String username,Integer sex,Integer isstate,String roleId, Page page);
     public Message getAllUser();
     public Message delUserById(Integer[] ids);
     public Message updateUser(SysUser sysUser);
@@ -40,6 +41,8 @@ public interface SysUserService extends IService<SysUser> {
     void clearUserAuthorityInfoByMenuId(Integer menuId);
     public Message repass( Integer userId);
     public void Userexcel(SysUser sysUser, HttpServletResponse response);
+
+    public Message updatePass(String password);
 
 
 }

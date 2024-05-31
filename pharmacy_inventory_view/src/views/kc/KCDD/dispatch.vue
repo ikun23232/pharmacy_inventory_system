@@ -235,8 +235,7 @@
       title="调度单审核"
       :visible.sync="auditingdialogVisible"
       width="1300px"
-      v-if="auditingdialogVisible"
-    >
+      v-if="auditingdialogVisible">
       <AuditingDispatch
         :code="this.code"
         :id="this.id"

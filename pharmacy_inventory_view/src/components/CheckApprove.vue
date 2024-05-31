@@ -636,7 +636,7 @@ export default {
     },
     async initallProvider(value1, value2) {
       await this.$axios
-        .get("/base/getProviderByWareAndMe", {
+        .get("/base/baseProvider/getProviderByWareAndMe", {
           params: { warehouseId: value1, medecineId: value2 },
         })
         .then((resp) => {

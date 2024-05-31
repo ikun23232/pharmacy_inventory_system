@@ -93,8 +93,6 @@
           {{ scope.$index + (pageInfo.pageNum - 1) * pageInfo.pageSize + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="医用商品编码" width="120">
-      </el-table-column>
       <el-table-column prop="name" label="医用商品名称" width="150">
       </el-table-column>
       <el-table-column prop="categoryName" label="医用商品类型" width="120">
@@ -106,6 +104,8 @@
       <el-table-column prop="salePrice" label="零售价" width="120">
       </el-table-column>
       <el-table-column prop="warning" label="库存预警值" width="120">
+      </el-table-column>
+      <el-table-column prop="totalWarning" label="药品总预警值" width="120">
       </el-table-column>
       <el-table-column prop="createByName" label="创建人" width="120">
       </el-table-column>
@@ -176,8 +176,7 @@
           <el-form-item
             label="医用商品名称"
             prop="name"
-            :label-width="formLabelWidth"
-          >
+            :label-width="formLabelWidth">
             <el-input
               v-model="baseMedicine.name"
               autocomplete="off"
@@ -187,26 +186,23 @@
           <el-form-item
             label="医用商品类型"
             prop="categoryId"
-            :label-width="formLabelWidth"
-          >
-            <el-cascader
-              v-model="value"
-              :options="options"
-              @change="handleChange"
-              style="width: 380px"
-            >
-            </el-cascader>
+            :label-width="formLabelWidth">
+            <el-select v-model="baseMedicine.categoryId" placeholder="请选择" style="width: 100%;">
+            <el-option
+                v-for="dict in baseCategoryList"
+                :key="dict.id"
+                :label="dict.name"
+                :value="dict.id"/>
+            </el-select>
           </el-form-item>
           <el-form-item
             label="医用商品规格"
             prop="specification"
-            :label-width="formLabelWidth"
-          >
+            :label-width="formLabelWidth">
             <el-input
               v-model="baseMedicine.specification"
               autocomplete="off"
-              placeholder="请输入"
-            ></el-input>
+              placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item
             label="计量单位"
@@ -244,6 +240,17 @@
           >
             <el-input
               v-model="baseMedicine.warning"
+              autocomplete="off"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="库存总预警值"
+            prop="totalWarning"
+            :label-width="formLabelWidth"
+          >
+            <el-input
+              v-model="baseMedicine.totalWarning"
               autocomplete="off"
               placeholder="请输入"
             ></el-input>
@@ -321,7 +328,7 @@
 import {
   initMedicine,
   addBaseMedicine,
-  getBaseMedicineById,
+  getMedicineById,
   updateBaseMedicine,
   deleteBaseMedicine,
   baseMedicineExcel,
@@ -330,6 +337,9 @@ import {
 } from "../../api/baseMedicine.js";
 import { Message } from "element-ui";
 import { getAllBaseProvider } from "@/api/BaseProvider.js";
+import { getAllBaseMedicine} from "@/api/baseMedicine.js";
+import { getAllBaseUnit} from "@/api/BaseUnit.js";
+import { getAllBaseCategory} from "@/api/BaseCategory.js";
 export default {
   name: "baseMedicine",
   data() {
@@ -362,6 +372,7 @@ export default {
         unitId: "",
         currentPage: 1,
       },
+      time: {},
       pageInfo: "",
       list: "",
       title: "",
@@ -373,6 +384,7 @@ export default {
         unitId: "",
         salePrice: "",
         warning: "",
+        totalWarning: "",
       },
       providerMedicine: {
         providerId: "",
@@ -401,9 +413,15 @@ export default {
         ],
         salePrice: [
           { required: true, message: "请输入零售价", trigger: "blur" },
+          { type: "number", message: "请输入正确的零售价", trigger: "blur" },
         ],
         warning: [
           { required: true, message: "请输入库存预警值", trigger: "blur" },
+        ],
+        totalWarning: [
+          { required: true, message: "请输入库存预警值", trigger: "blur" },
+          // {min: 200, message: '最小库存预警值不能低于200', trigger: 'blur'},
+          { pattern: /^\d*$/, message: "只能输入数字", trigger: "blur" },
         ],
       },
       providerMedicineRules: {
@@ -484,11 +502,6 @@ export default {
       this.$refs["baseMedicineForm"].resetFields();
       this.$refs["baseMedicineForm"].clearValidate();
     },
-    handleAddCancel() {
-      this.dialogAddProvider = false;
-      this.$refs["providerMedicine"].resetFields();
-      this.$refs["providerMedicine"].clearValidate();
-    },
     handleAdd() {
       this.title = "添加医用商品信息";
       this.dialogFormVisible = true;
@@ -514,8 +527,7 @@ export default {
     async handleUpdate(id) {
       this.title = "修改医用商品信息";
       this.dialogFormVisible = true;
-      alert(1);
-      let data = await getBaseMedicineById(id);
+      let data = await getMedicineById(id);
       this.baseMedicine = data.data;
     },
     updateBaseMedicine() {

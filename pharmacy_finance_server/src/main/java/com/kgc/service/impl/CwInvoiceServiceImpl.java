@@ -14,6 +14,7 @@ import com.kgc.vo.CwAccountsVO;
 import com.kgc.vo.CwInvoiceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class CwInvoiceServiceImpl extends ServiceImpl<CwInvoiceDao, CwInvoice> implements CwInvoiceService {
 
     @Autowired

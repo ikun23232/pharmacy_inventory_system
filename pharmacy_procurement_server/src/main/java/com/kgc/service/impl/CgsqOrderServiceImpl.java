@@ -71,6 +71,9 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
         paramsMap.put("type", vo.getType());
         paramsMap.put("startTime", vo.getStartTime());
         paramsMap.put("endTime", vo.getEndTime());
+        paramsMap.put("approvalStatus", vo.getApprovalStatus());
+        paramsMap.put("orderStatus", vo.getOrderStatus());
+        paramsMap.put("voidState", vo.getVoidState());
         PageHelper.startPage(vo.getCurrentPageNo(), vo.getPageSize());
         List<CgsqOrder> cgsqOrderList = cgsqOrderMapper.getCgsqOrderByStates(paramsMap);
         PageInfo<CgsqOrder> pageInfo = new PageInfo<>(cgsqOrderList);
