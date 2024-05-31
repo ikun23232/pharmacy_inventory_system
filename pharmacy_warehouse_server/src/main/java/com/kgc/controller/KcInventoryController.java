@@ -51,11 +51,18 @@ public class KcInventoryController {
     }
 
     @RequestMapping("/check/getKcMedicineByMedicine")
-    public Message getKcMedicineByMedicine(Integer warehouseId,Integer materialCategoryId) {
+    public Message getKcMedicineByMedicine(Integer warehouseId,Integer materialCategoryId,String currentNo) {
+        int _currentPageNo = 1;
+        if (currentNo!=null&&!"".equals(currentNo)&&!"0".equals(currentNo)) {
+            _currentPageNo = Integer.parseInt(currentNo);
+        }
+        Page page = new Page();
+        page.setPageSize(4);
+        page.setCurrentPageNo(_currentPageNo);
         KcInventoryVo vo = new KcInventoryVo();
         vo.setMaterialCategoryId(materialCategoryId);
         vo.setWarehouseId(warehouseId);
-        Message message = iKcInventoryService.getKcMedicineByMedicine(vo);
+        Message message = iKcInventoryService.getKcMedicineByMedicine(vo,page);
         return message;
     }
     @Log("盘点信息添加")

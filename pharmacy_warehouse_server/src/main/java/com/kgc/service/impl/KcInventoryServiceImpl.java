@@ -57,10 +57,11 @@ public class KcInventoryServiceImpl extends ServiceImpl<KcInventoryMapper, KcInv
 
 
     @Override
-    public Message getKcMedicineByMedicine(KcInventoryVo inventory) {
+    public Message getKcMedicineByMedicine(KcInventoryVo inventory,Page page) {
+        PageHelper.startPage(page.getCurrentPageNo(),page.getPageSize());
         List<KcInventorydetail> kcMedicineByMedicine = kcInventoryMapper.getKcMedicineByMedicine(inventory.getWarehouseId(), inventory.getMaterialCategoryId());
-
-        return Message.success(kcMedicineByMedicine);
+        PageInfo pageInfo = new PageInfo(kcMedicineByMedicine);
+        return Message.success(pageInfo);
     }
 
     @Override
