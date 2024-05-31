@@ -25,7 +25,6 @@ import java.util.List;
  */
 @Service
 public class BankAccountServiceImpl extends ServiceImpl<BankAccountMapper, BankAccount> implements BankAccountService {
-
     @Autowired
     private BankAccountMapper bankAccountMapper;
 

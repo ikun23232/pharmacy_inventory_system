@@ -1,5 +1,6 @@
 package com.kgc.remote;
 
+import com.kgc.entity.SysUser;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,5 +19,7 @@ public interface SysUserRemote{
     @RequestMapping("/getAuthpermission")
     @ResponseBody
     public List<String> getAuthpermission(@RequestParam("loginId") Object loginId,@RequestParam("loginType") String loginType);
+
+
 
 }

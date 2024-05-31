@@ -25,7 +25,7 @@
         base_provider.isDel,
         base_provider_type.id AS providerTypeId
         FROM
-        .base_provider
+        base_provider
         INNER JOIN
         base_provider_type ON base_provider.type = base_provider_type.id
         LEFT JOIN

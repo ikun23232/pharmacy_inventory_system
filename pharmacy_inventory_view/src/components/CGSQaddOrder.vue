@@ -58,14 +58,14 @@
         ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
-            <el-form-item label="需求人" prop="demainerId">
-            <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demainerId">添加用户</el-button>
+            <el-form-item label="需求人" prop="demainerId" >{{kname}}
+            <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demainerId" v-if="kname==null">添加用户</el-button>
             </el-form-item>
           </div></el-col
         >
       </el-row>
       <el-dialog
-        title="采购申请订单添加"
+        title="用户添加"
         :visible.sync="adddialogVisible11"
         width="1400px"
         v-if="adddialogVisible11"
@@ -400,6 +400,7 @@ export default {
     //   });
     // };
     return {
+      kid:null,
       bcglXiangXiList: [],
       //选中的从表数据
       checkedDetail: [],
@@ -460,6 +461,8 @@ export default {
   methods: {
     handleKcmxSuccess(value) {
       this.adddialogVisible11 = false;
+      this.kid=value.userid
+      this.kname=value.username
       console.log(value,"ddddd");
     },
     addOrder() {
@@ -509,6 +512,7 @@ export default {
             this.CgsqOrder.orderstatus = 2;
           }
           this.CgsqOrder.medicineList = this.bcglXiangXiList;
+          this.CgsqOrder.demainerId=this.kid
           addCgddOrder(this.CgsqOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {

@@ -1,4 +1,4 @@
-package com.kgc.service.impl;
+package com.kgc.service.Impl;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.kgc.feign.UserAuth;
