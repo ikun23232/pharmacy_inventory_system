@@ -26,6 +26,8 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      List<SysUser> getUsersListByPage(@Param("username") String username, @Param("sex")Integer sex, @Param("isstate")Integer isstate,@Param("roleId") String roleId);
      List<SysUser> listByMenuId(Integer menuId);
 
+
+     List<SysUser> getAllKcAdmin();
 //     List<SysUser> getAllUser();
 
 }

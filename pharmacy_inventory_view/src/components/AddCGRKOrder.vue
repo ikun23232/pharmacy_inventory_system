@@ -85,7 +85,12 @@
                 clearable
                 filterable
               >
-                <el-option label="捞大" :value="1"> </el-option>
+              <el-option
+              v-for="item in kcadminlist"
+              :label="item.username"
+              :value="item.userid"
+              :key="item.userid"
+            ></el-option>
               </el-select>
             </el-form-item></div
         ></el-col>
@@ -666,6 +671,7 @@ export default {
       changeMedicineList: [],
       providerList: [],
       cgddMedicineionList: [],
+      kcadminlist:[],
       cgddRules: {
         type: [
           { required: true, message: "请输入采购类型", trigger: "change" },
@@ -705,6 +711,7 @@ export default {
     };
   },
   async mounted() {
+    await this.getAllKCAdmin()
     await this.initCgSqOrderList();
     this.CgddOrder.code = await getCurrentTime("CGRK");
     this.initProvider();
@@ -714,6 +721,11 @@ export default {
     console.log(this.cgType);
   },
   methods: {
+    async getAllKCAdmin() {
+      await this.$axios.get("/warehouse/getAllKcAdmin").then((resp) => {
+        this.kcadminlist=resp.data
+      });
+    },
     async initCgSqOrderList() {
       let data = await initCgSqOrderList(this.vo);
       console.log(data);
