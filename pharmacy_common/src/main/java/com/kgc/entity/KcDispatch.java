@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -94,13 +95,13 @@ public class KcDispatch implements Serializable {
      * 作废状态
      */
     @TableField("voidState")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Integer voidState;
 
     /**
      * 创造时间
      */
     @TableField("createDate")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
 
@@ -111,7 +112,7 @@ public class KcDispatch implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDate;
 
     /**
@@ -139,6 +140,7 @@ public class KcDispatch implements Serializable {
     private Integer isCommit;
 
     @TableField("dispatchTime")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dispatchTime;//调度时间
 
     @TableField("totalCount")

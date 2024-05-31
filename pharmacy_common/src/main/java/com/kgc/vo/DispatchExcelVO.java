@@ -2,6 +2,7 @@ package com.kgc.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kgc.annotation.ExcelFiled;
 import com.kgc.entity.BaseMedicine;
 import lombok.Data;
@@ -74,6 +75,7 @@ public class DispatchExcelVO implements Serializable {
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ExcelFiled("创造时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
 
@@ -85,6 +87,7 @@ public class DispatchExcelVO implements Serializable {
      */
     @ExcelFiled("修改时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDate;
 
 
@@ -101,6 +104,7 @@ public class DispatchExcelVO implements Serializable {
 
 
     @ExcelFiled("调度时间")
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date dispatchTime;//调度时间
 
     @ExcelFiled("调度总数")
