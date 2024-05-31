@@ -38,7 +38,7 @@ public class CwInvoiceController {
     @Log("发票导出")
     @RequestMapping("/cwInvoiceExcel")
     public void cwInvoiceExcel(HttpServletResponse response){
-        StpUtil.checkPermission("cw:invoice:excel");
+//        StpUtil.checkPermission("cw:invoice:excel");
         cwInvoiceService.cwInvoiceExcel(response);
     }
 
