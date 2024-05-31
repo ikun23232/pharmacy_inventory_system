@@ -19,6 +19,7 @@ export default {
       },
       // 采购应付查询数据
       cwCgyf:{
+        isPay:0,
         code:'',
         cgddCode:''
       },
@@ -210,6 +211,12 @@ export default {
           start-placeholder="开始日期"
           end-placeholder="结束日期"
       />&nbsp;&nbsp;&nbsp;&nbsp;
+      支付状态
+      <el-select v-model="cwCgyf.isPay" placeholder="请选择付款状态">
+        <el-option label="全部" :value="0"></el-option>
+        <el-option label="待付款" :value="1"></el-option>
+        <el-option label="已付款" :value="2"></el-option>
+      </el-select>&nbsp;&nbsp;&nbsp;&nbsp;
       <el-button type="primary" @click="getCwCgyfLists()">查询</el-button>
       <el-button type="primary" @click="clean()">清空</el-button>
       <el-button type="primary" @click="printExcel()">导出</el-button>
