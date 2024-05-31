@@ -8,6 +8,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @description 功能描述
  * @create 2024/5/28 14:59
  */
-@FeignClient(name = "SystemProviderOYH",contextId = "PublicOMedicineFegin")
+@FeignClient(name = "pharmacySystem",contextId = "PublicOMedicineFegin")
 public interface PublicOMedicineFegin extends PublicOMedicineRemote {
 }

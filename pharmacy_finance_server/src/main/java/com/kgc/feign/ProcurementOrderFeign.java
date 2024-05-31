@@ -5,6 +5,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 
 @Service
-@FeignClient(value = "procurementProviderOYH", contextId = "ProcurementOrderFeign")
+@FeignClient(value = "pharmacyProcurement", contextId = "ProcurementOrderFeign")
 public interface ProcurementOrderFeign extends ProcurementOrderRemote {
 }
