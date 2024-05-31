@@ -45,6 +45,8 @@ public class DispatchExcelVO implements Serializable {
     @ExcelFiled("原仓库")
     private String beforeWareName;
 
+    @ExcelFiled("调度人")
+    private String dispatchName;
     /**
      * 备注
      */

@@ -55,26 +55,6 @@
               </el-select>
             </el-form-item></div
         ></el-col>
-         <el-col :span="6"
-          ><div class="grid-content bg-purple">
-            <el-form-item label="调度人" prop="beforeWarehouseId">
-              <el-select
-                @change="cleanList"
-                v-model="KcDispatch.userList"
-                placeholder="请选择调度人"
-                clearable
-                filterable
-              >
-                <el-option
-                  v-for="item in userList"
-                  :key="item.userId"
-                  :label="item.userName"
-                  :value="item.userId"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item></div
-        ></el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <el-button
@@ -88,6 +68,24 @@
         >
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="库管员" prop="dispatchBy">
+              <el-select
+                v-model="KcDispatch.dispatchBy"
+                placeholder="请选择库管员"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in kcadminlist"
+                  :label="item.username"
+                  :value="item.userid"
+                  :key="item.userid"
+                ></el-option>
+              </el-select>
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="调度主题" prop="subject">
@@ -278,7 +276,8 @@
               label="目标仓库"
               align="center"
               prop="aimStoreHouseId"
-              width="150">
+              width="150"
+            >
               <template slot-scope="scope">
                 <el-select
                   clearable
@@ -386,9 +385,8 @@ import { Message } from "element-ui";
 import { getCurrentTime } from "./../api/util.js";
 import { addKcDispatch } from "./../api/KcDispatch";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
-import _ from 'lodash';
-import { getAllUser } from '@/api/sysUser';
-
+import _ from "lodash";
+import { getAllUser } from "@/api/sysUser";
 
 export default {
   name: "addDispatch",
@@ -408,7 +406,7 @@ export default {
         isCommit: "",
         dispatchTime: new Date(),
         medicineList: [],
-        
+        dispatchBy: "",
       },
       storeHouseList: [],
       list: {},
@@ -420,7 +418,7 @@ export default {
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
-      userList:[],
+      kcadminlist: [],
       dispatchRules: {
         beforeWarehouseId: [
           { required: true, message: "请输入源仓库", trigger: "change" },
@@ -431,18 +429,27 @@ export default {
         subject: [
           { required: true, message: "请输入调度主题", trigger: "blur" },
         ],
+        dispatchBy: [
+          { required: true, message: "请选择库管员", trigger: "change" },
+        ],
       },
     };
   },
   async mounted() {
     this.KcDispatch.code = await getCurrentTime("KCDD");
     let data = await getAllStoreHouseList();
+    await this.getAllKCAdmin();
     let userList = await getAllUser();
-    this.userList = userList.data
+    this.userList = userList.data;
     console.log("data:", data);
     this.storeHouseList = data.data;
   },
   methods: {
+    async getAllKCAdmin() {
+      await this.$axios.get("/warehouse/getAllKcAdmin").then((resp) => {
+        this.kcadminlist = resp.data;
+      });
+    },
     cleanList() {
       this.medicineListTemp = [];
       this.bcglXiangXiList = [];
@@ -646,7 +653,7 @@ export default {
   },
   created() {
     this.getMedicineListDetail = _.debounce(this.getMedicineListDetail, 500);
-  }
+  },
 };
 </script>
 

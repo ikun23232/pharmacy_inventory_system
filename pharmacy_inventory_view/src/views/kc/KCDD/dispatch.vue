@@ -122,9 +122,7 @@
       </el-table-column>
       <el-table-column prop="code" label="调度单编号" width="150" fixed>
         <template slot-scope="scope">
-          <a href="#" @click="viewOrder(scope.row)">{{
-            scope.row.code
-          }}</a>
+          <a href="#" @click="viewOrder(scope.row)">{{ scope.row.code }}</a>
         </template>
       </el-table-column>
       <el-table-column prop="subject" label="调度主题" width="120">
@@ -132,6 +130,8 @@
       <el-table-column prop="price" label="调度总价格" width="120">
       </el-table-column>
       <el-table-column prop="beforeWareName" label="原仓库" width="120">
+      </el-table-column>
+      <el-table-column prop="dispatchName" label="调度人" width="120">
       </el-table-column>
       <el-table-column prop="remark" label="备注" width="120"></el-table-column>
       <el-table-column
@@ -223,7 +223,8 @@
       title="调度单修改"
       :visible.sync="updatedialogVisible"
       width="1300px"
-      v-if="updatedialogVisible">
+      v-if="updatedialogVisible"
+    >
       <updateDispatch
         :code="this.code"
         :id="this.id"
@@ -235,7 +236,8 @@
       title="调度单审核"
       :visible.sync="auditingdialogVisible"
       width="1300px"
-      v-if="auditingdialogVisible">
+      v-if="auditingdialogVisible"
+    >
       <AuditingDispatch
         :code="this.code"
         :id="this.id"
@@ -264,7 +266,7 @@ import {
   getKcDispathList,
   deleteDispatch,
   updateVoidStatus,
-  excelDispatch
+  excelDispatch,
 } from "@/api/KcDispatch";
 import { Message } from "element-ui";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
@@ -344,12 +346,12 @@ export default {
     this.storeHouseList = data.data;
   },
   methods: {
-      async excel(){
-        await excelDispatch();
+    async excel() {
+      await excelDispatch();
     },
     viewOrder(row) {
       this.code = row.code;
-      this.id = row.id
+      this.id = row.id;
       this.viewdialogVisible = true;
     },
     closeviewOrder() {

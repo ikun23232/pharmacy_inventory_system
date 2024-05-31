@@ -6,7 +6,8 @@
         remark, approverBy,(select userName from sys_user where approverBy = userId) as approverName,approvalStatus, approverRemark,
         documenterBy, (select userName from sys_user where documenterBy = userId) as createName,voidState, createDate,
          updateDate, updateBy, (select userName from sys_user where kd.updateBy = userId) as updateName,orderStatus,
-         (select type from order_statue where orderStatus = order_statue.id) as orderStatusResult
+         (select type from order_statue where orderStatus = order_statue.id) as orderStatusResult,
+        (select userName from sys_user where dispatchBy = userId) as dispatchName,dispatchBy
         from kc_dispatch kd
         <where>
             kd.isDel = 0
@@ -37,13 +38,14 @@
                remark, approverBy,(select userName from sys_user where approverBy = userId) as approverName,approvalStatus, approverRemark,
                documenterBy, (select userName from sys_user where documenterBy = userId) as createName,voidState, createDate,
                updateDate, updateBy, (select userName from sys_user where kd.updateBy = userId) as updateName,orderStatus,
-               (select type from order_statue where orderStatus = order_statue.id) as orderStatusResult
+               (select type from order_statue where orderStatus = order_statue.id) as orderStatusResult,
+               (select userName from sys_user where dispatchBy = userId) as dispatchName,dispatchBy
         from kc_dispatch kd
         where kd.id = #{id}
     </select>
 
     <select id="excelDispatch" resultMap="BaseResultMap">
-        select kd.id, code, subject, kd.price, beforeWarehouseId,(select name from base_storehouse where kd.beforeWarehouseId = base_storehouse.id) as beforeWareName,
+        select kd.id, code,(select userName from sys_user where dispatchBy = userId) as dispatchName, subject, kd.price, beforeWarehouseId,(select name from base_storehouse where kd.beforeWarehouseId = base_storehouse.id) as beforeWareName,
                remark, approverBy,(select userName from sys_user where approverBy = userId) as approverName,approvalStatus, approverRemark,
                documenterBy, (select userName from sys_user where documenterBy = userId) as createName,voidState, createDate,
                updateDate, updateBy, (select userName from sys_user where kd.updateBy = userId) as updateName,orderStatus,

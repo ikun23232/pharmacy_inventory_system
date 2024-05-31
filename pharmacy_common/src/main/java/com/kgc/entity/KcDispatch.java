@@ -59,6 +59,11 @@ public class KcDispatch implements Serializable {
     @TableField(exist = false)
     private String beforeWareName;
 
+    @TableField("dispatchBy")
+    private Integer dispatchBy;
+
+    @TableField(exist = false)
+    private String dispatchName;
     /**
      * 备注
      */

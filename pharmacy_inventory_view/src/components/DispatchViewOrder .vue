@@ -70,6 +70,24 @@
         >
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="库管员" prop="dispatchBy">
+              <el-select
+                v-model="KcDispatch.dispatchBy"
+                placeholder="请选择库管员"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in kcadminlist"
+                  :label="item.username"
+                  :value="item.userid"
+                  :key="item.userid"
+                ></el-option>
+              </el-select>
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="调度主题" prop="subject">
@@ -412,6 +430,7 @@ export default {
         dispatchTime: "",
         medicineList: [],
         approvalStatus: "",
+        dispatchBy: "",
       },
       storeHouseList: [],
       list: {},
@@ -423,6 +442,7 @@ export default {
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
+      kcadminlist: [],
       dispatchRules: {
         beforeWarehouseId: [
           { required: true, message: "请输入源仓库", trigger: "change" },
@@ -440,6 +460,7 @@ export default {
     let data = await getAllStoreHouseList();
     console.log("data:", data);
     this.storeHouseList = data.data;
+    await this.getAllKCAdmin();
     let dispatch = await getKcDispatchById(this.id);
     this.KcDispatch = dispatch.data;
     let kcDetailsList = await getKcDetailsList(this.KcDispatch.code);
@@ -447,6 +468,11 @@ export default {
     await this.getMedicineListDetail();
   },
   methods: {
+    async getAllKCAdmin() {
+      await this.$axios.get("/warehouse/getAllKcAdmin").then((resp) => {
+        this.kcadminlist = resp.data;
+      });
+    },
     commit(formName) {
       this.KcDispatch.isCommit = 1;
       this.submitForm(formName);

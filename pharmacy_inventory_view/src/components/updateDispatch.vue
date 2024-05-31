@@ -68,6 +68,24 @@
         >
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="库管员" prop="dispatchBy">
+              <el-select
+                v-model="KcDispatch.dispatchBy"
+                placeholder="请选择库管员"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in kcadminlist"
+                  :label="item.username"
+                  :value="item.userid"
+                  :key="item.userid"
+                ></el-option>
+              </el-select>
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="调度主题" prop="subject">
@@ -399,6 +417,7 @@ export default {
         isCommit: "",
         dispatchTime: "",
         medicineList: [],
+        dispatchBy: "",
       },
       storeHouseList: [],
       list: {},
@@ -411,6 +430,7 @@ export default {
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
+      kcadminlist: [],
       dispatchRules: {
         beforeWarehouseId: [
           { required: true, message: "请输入源仓库", trigger: "change" },
@@ -428,6 +448,7 @@ export default {
     let data = await getAllStoreHouseList();
     console.log("data:", data);
     this.storeHouseList = data.data;
+    await this.getAllKCAdmin()
     let dispatch = await getKcDispatchById(this.id);
     this.KcDispatch = dispatch.data;
     let kcDetailsList = await getKcDetailsList(this.KcDispatch.code);
@@ -435,6 +456,11 @@ export default {
     await this.showMedicineListDetail();
   },
   methods: {
+    async getAllKCAdmin() {
+      await this.$axios.get("/warehouse/getAllKcAdmin").then((resp) => {
+        this.kcadminlist = resp.data;
+      });
+    },
     commit(formName) {
       this.KcDispatch.isCommit = 1;
       this.submitForm(formName);
@@ -533,7 +559,10 @@ export default {
       }
       if (this.changeMedicineList.length > 0) {
         for (let index = 0; index < this.changeMedicineList.length; index++) {
-          if (this.KcDispatch.medicineList != null && this.KcDispatch.medicineList.length) {
+          if (
+            this.KcDispatch.medicineList != null &&
+            this.KcDispatch.medicineList.length
+          ) {
             for (let i = 0; i < this.KcDispatch.medicineList.length; i++) {
               const element = this.KcDispatch.medicineList[i];
               if (
@@ -577,11 +606,11 @@ export default {
           this.bcglXiangXiList.push(obj);
         }
         this.KcDispatch.medicineList = this.bcglXiangXiList;
-          this.$message({
-            message: "添加成功",
-            type: "success",
-          });
-          this.activeName = "second";
+        this.$message({
+          message: "添加成功",
+          type: "success",
+        });
+        this.activeName = "second";
       }
     },
     async showMedicineListDetail() {
