@@ -400,6 +400,7 @@ export default {
     //   });
     // };
     return {
+      kid:null,
       bcglXiangXiList: [],
       //选中的从表数据
       checkedDetail: [],
@@ -460,6 +461,7 @@ export default {
   methods: {
     handleKcmxSuccess(value) {
       this.adddialogVisible11 = false;
+      this.kid=value
       console.log(value,"ddddd");
     },
     addOrder() {
@@ -509,6 +511,7 @@ export default {
             this.CgsqOrder.orderstatus = 2;
           }
           this.CgsqOrder.medicineList = this.bcglXiangXiList;
+          this.CgsqOrder.demainerId=this.kid
           addCgddOrder(this.CgsqOrder).then((resp) => {
             console.log(resp);
             if (resp.code == 200) {

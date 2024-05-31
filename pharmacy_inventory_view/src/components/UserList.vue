@@ -41,16 +41,16 @@
         <el-table-column prop="username" label="用户名" width="120">
         </el-table-column>
         <el-table-column prop="code" label="角色名称">
-          <template slot-scope="scope">
-            <el-tag
-              size="small"
-              type="info"
-              v-for="item in scope.row.sysRoles"
-              :key="item.id"
-              >{{ item.name }}</el-tag
-            >
-          </template>
-        </el-table-column>
+        <template slot-scope="scope">
+          <el-tag
+            size="small"
+            type="info"
+            v-for="item in scope.row.sysRoles"
+            :key="item.roleid"
+            >{{ item.rolename }}</el-tag
+          >
+        </template>
+      </el-table-column>
         <el-table-column prop="email" label="邮箱"> </el-table-column>
         <el-table-column prop="sex" label="年龄">
           <template slot-scope="scope">
