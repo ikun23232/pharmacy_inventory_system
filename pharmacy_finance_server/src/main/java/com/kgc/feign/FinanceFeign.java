@@ -6,6 +6,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 /**
  * @author daidai
  */
-@FeignClient(name = "pharmacySystemServer",contextId = "user-server4")
+@FeignClient(name = "pharmacySystem",contextId = "user-server4")
 public interface FinanceFeign extends SysLogRemote {
 }

@@ -10,4 +10,5 @@ import org.springframework.cloud.openfeign.FeignClient;
  */
 @FeignClient(value = "pharmacyFinance",contextId = "CwAccountsFegin")
 public interface CwAccountsFegin extends CwAccountsRemote {
+
 }
