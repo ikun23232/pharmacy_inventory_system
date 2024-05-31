@@ -8,6 +8,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @description 功能描述
  * @create 2024/5/29 14:41
  */
-@FeignClient(value = "financeProviderOYH",contextId = "CwCgyfFeign")
+@FeignClient(value = "financeProvider",contextId = "CwCgyfFeign")
 public interface CwCgyfFeign extends CwCgyfRemote {
 }

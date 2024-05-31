@@ -8,8 +8,10 @@ import com.kgc.feign.SaleOrderFeign;
 import com.kgc.service.CwXsysService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CwXsysServiceImpl extends ServiceImpl<CwXsysMapper, CwXsys> implements CwXsysService {
 
     @Autowired

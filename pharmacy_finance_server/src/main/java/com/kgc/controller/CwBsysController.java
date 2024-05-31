@@ -36,10 +36,10 @@ public class CwBsysController {
         return cwBsysService.getStorehouseList();
     }
 
-    @Log("报损应收导出")
+//    @Log("报损应收导出")
     @RequestMapping("/cwbsysExcel")
     public void cwbsysExcel(HttpServletResponse response){
-        StpUtil.checkPermission("cw:bsys:excel");
+//        StpUtil.checkPermission("cw:bsys:excel");
         cwBsysService.cwbsysExcel(response);
     }
 

@@ -64,6 +64,8 @@ public class KcReportedController {
     @RequestMapping("/addKcReportedAll")//添加库存报损明细
     public Message addKcReportedAll(@RequestBody Map map)
     {
+//        List<String> permissionList = StpUtil.getPermissionList();
+//        System.out.println(permissionList);
         StpUtil.checkPermission("wa:kcbc:add");
         return kcReportedService.addKcReportedAndDetail(map);
     }
@@ -108,10 +110,10 @@ public class KcReportedController {
         kcReportedService.kcReportedExcel(kcReportedVO, response);
     }
 
-    @Log("报损出库库导出")
+//    @Log("报损出库库导出")
     @RequestMapping("/kcReportedfromwareExcel")
     public void kcReportedfromwareExcel(HttpServletResponse response) {
-        StpUtil.checkPermission("wa:bsck:excel");
+//        StpUtil.checkPermission("wa:bsck:excel");
         kcReportedService.kcReportedfromwareExcel(response);
     }
 

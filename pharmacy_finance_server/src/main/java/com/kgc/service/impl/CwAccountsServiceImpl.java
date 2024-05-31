@@ -14,6 +14,7 @@ import com.kgc.utils.ExeclUtil;
 import com.kgc.vo.CwAccountsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Transactional
 public class CwAccountsServiceImpl extends ServiceImpl<CwAccountsDao, CwAccounts> implements CwAccountsService {
 
     @Autowired

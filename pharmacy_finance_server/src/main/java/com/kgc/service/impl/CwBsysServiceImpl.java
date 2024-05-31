@@ -15,6 +15,7 @@ import com.kgc.vo.CwBsysVO;
 import com.kgc.vo.KcMedicineBSVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@Transactional
 public class CwBsysServiceImpl extends ServiceImpl<CwBsysDao, CwBsys> implements CwBsysService {
 
     @Autowired
