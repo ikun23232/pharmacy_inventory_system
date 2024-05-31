@@ -1,5 +1,6 @@
 package com.kgc.controller;
 
+import com.kgc.annotation.Log;
 import com.kgc.entity.BaseMedicine;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
@@ -31,7 +32,7 @@ public class StockDetailController {
         Message message=stockDetailService.getStockDetailList();
         return message;
     }
-
+    @Log("库存明细导出")
     @RequestMapping("/stockDetailExcel")
     public void saleOrderExcel(@RequestBody BaseMedicine baseMedicine,HttpServletResponse response) {
         stockDetailService.stockDetailExcel(baseMedicine,response);

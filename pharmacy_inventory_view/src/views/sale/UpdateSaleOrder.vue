@@ -157,6 +157,9 @@
            <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
          </el-col>
          <el-col :span="2">
+            <el-button type="primary" size="mini" @click="payOrder" :disabled="!isPay?true:false">支付</el-button>
+         </el-col>
+         <el-col :span="2">
            <el-button size="mini" @click="cancelForm">取消</el-button>
          </el-col>
        </el-row>
@@ -192,6 +195,7 @@
            totalPrice:"",
            totalNumber:""
          },   
+         isPay:false,
          rules:{
            orderNo:[
                { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -333,13 +337,15 @@
           this.saleOrder.totalPrice=this.sumPrice
           this.saleOrder.totalNumber=this.totalNumber
           updateSaleOrder(this.saleOrder).then((resp) => {
+            this.isPay=true;
+            console.log("999",this.isPay)
             if (resp.code == "200") {
               Message({
                 message: "修改成功!",
                 type: "success",
                 center: "true",
               });
-              this.$emit("handleDialogFormVisible",false);
+              // this.$emit("handleDialogFormVisible",false);
             }         
           });   
            } else {
@@ -348,6 +354,9 @@
            }
          });
        },
+       payOrder(){
+        window.location.href = "sale/createOrder?orderNo="+this.saleOrder.orderNo+"&totalPrice="+this.saleOrder.totalPrice;
+      },
        saveForm(formName){
          this.$refs[formName].validate((valid) => {
            if (valid) {

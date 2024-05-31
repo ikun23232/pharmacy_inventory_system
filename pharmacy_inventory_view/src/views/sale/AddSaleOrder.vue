@@ -154,7 +154,9 @@
       </el-col>
       <el-col :span="2">
         <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
-        <!-- <el-button type="primary" size="mini" @click="payOrder">支付</el-button> -->
+      </el-col>
+      <el-col :span="2">
+        <el-button type="primary" size="mini" @click="payOrder" :disabled="!isPay?true:false">支付</el-button>
       </el-col>
       <el-col :span="2">
         <el-button size="mini" @click="cancelForm">取消</el-button>
@@ -180,7 +182,7 @@
 
 <script>
 import { Message } from "element-ui";
-import {addSaleOrder,saveSaleOrder} from "../../api/saleOrder.js";
+import {addSaleOrder,saveSaleOrder,createOrder} from "../../api/saleOrder.js";
 import {getAllBankCountList} from "../../api/BankAccount.js";
 import { getCurrentTime } from "../../api/util.js";
 import {getAllBaseMedicine,getBaseMedicineById,getAllBatchCodeByMedicineId} from "../../api/baseMedicine.js";
@@ -203,7 +205,8 @@ export default {
         totalNumber:""
       },   
       checkedDetail:[],
-      dialogVisible:false,
+      isPay:false,
+      // dialogVisible:false,
       rules:{
         orderNo:[
             { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -226,13 +229,6 @@ export default {
     this.getAllBaseMedicine();
   },
   methods: {
-    // download(){
-
-    // },
-    // payOrder(){
-    //   this.dialogVisible=true;
-
-    // },
     //拿到所有的银行账户
     async getAllBankCountList() {
       let data = await getAllBankCountList();
@@ -342,13 +338,14 @@ export default {
           this.saleOrder.totalPrice=this.sumPrice
           this.saleOrder.totalNumber=this.totalNumber
           addSaleOrder(this.saleOrder).then((resp) => {
+            this.isPay=true;
+            console.log("999",this.isPay)
             if (resp.code == "200") {
               Message({
                 message: "添加成功!",
                 type: "success",
                 center: "true",
-              });
-              this.$emit("handleDialogFormVisible",false);
+              });   
             }         
           });
         } else {
@@ -357,7 +354,11 @@ export default {
         }
       });
     },
+    payOrder(){
+      window.location.href = "sale/createOrder?orderNo="+this.saleOrder.orderNo+"&totalPrice="+this.saleOrder.totalPrice;
+    },
     saveForm(formName){
+      alert(111)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           for (const obj of this.medicineDetailList) {

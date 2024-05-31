@@ -1,5 +1,6 @@
 package com.kgc.service.Impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -55,19 +56,20 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
 
     @Override
     public Message addSaleOrder(XsOrder xsOrder) {
-        xsOrder.setCreateBy(1);
-        xsOrder.setUpdateBy(1);
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
+        xsOrder.setCreateBy(loginUser.getUserid());
+        xsOrder.setUpdateBy(loginUser.getUserid());
         xsOrder.setType(0);
         xsOrder.setUpdateDate(xsOrder.getOrderDate());
         xsOrder.setEditStatus(1);
         //添加销售订单
         int count=saleOrderMapper.insert(xsOrder);
-        //生成销售出库单
-        String code= CodeUtil.createCode("XXCK");
-        KcSalefromware kcSalefromware=new KcSalefromware();
-        kcSalefromware.setCode(code);
-        kcSalefromware.setOrderNo(xsOrder.getOrderNo());
-        Message saleOutWarehouseMessage=saleOutWarehouseFeign.addSaleOutWarehouse(kcSalefromware);
+//        //生成销售出库单
+//        String code= CodeUtil.createCode("XXCK");
+//        KcSalefromware kcSalefromware=new KcSalefromware();
+//        kcSalefromware.setCode(code);
+//        kcSalefromware.setOrderNo(xsOrder.getOrderNo());
+//        Message saleOutWarehouseMessage=saleOutWarehouseFeign.addSaleOutWarehouse(kcSalefromware);
         //获取订单详情
         List<OrderMedicine> medicineDetailList=xsOrder.getMedicineDetailList();
         boolean result=true;
@@ -75,58 +77,63 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
             orderMedicine.setCode(xsOrder.getOrderNo());
             //生成销售明细单
             int count2=saleOrderMapper.addSaleOrderDetail(orderMedicine);
-            //更新库存明细
-            Message stockDetailMessage=stockDetailFeign.reduceStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
-            //生成销售出库明细单
-            String code2=CodeUtil.createCode("CRKMX");
-            KcOutintodetial kcOutintodetial=new KcOutintodetial();
-            kcOutintodetial.setCode(code2);
-            kcOutintodetial.setTypeId(5);
-            kcOutintodetial.setCreateBy(1);
-            kcOutintodetial.setCreateDate(xsOrder.getOrderDate());
-            kcOutintodetial.setOrderCode(xsOrder.getOrderNo());
-            kcOutintodetial.setMedicineId(orderMedicine.getMedicineId());
-            kcOutintodetial.setToStockMoney(orderMedicine.getTotalPrice());
-            kcOutintodetial.setBatchCode(orderMedicine.getBatchCode());
-            kcOutintodetial.setToStockQuantity(orderMedicine.getQuantity());
-            kcOutintodetial.setPrice(orderMedicine.getSalePrice());
-            Message kcOutintodetialMessage=kcOutintodetialFeign.addKcOutintodetial(kcOutintodetial);
-            if(count2<0&&"200".equals(stockDetailMessage.getCode())&&"200".equals(kcOutintodetialMessage.getCode())){
-                result=false;
-            }
+//            //更新库存明细
+//            Message stockDetailMessage=stockDetailFeign.reduceStockDetailByMedicineId(orderMedicine.getMedicineId(),orderMedicine.getQuantity(),orderMedicine.getBatchCode());
+//            //生成销售出库明细单
+//            String code2=CodeUtil.createCode("CRKMX");
+//            KcOutintodetial kcOutintodetial=new KcOutintodetial();
+//            kcOutintodetial.setCode(code2);
+//            kcOutintodetial.setTypeId(5);
+//            kcOutintodetial.setCreateBy(loginUser.getUserid());
+//            kcOutintodetial.setCreateDate(xsOrder.getOrderDate());
+//            kcOutintodetial.setOrderCode(xsOrder.getOrderNo());
+//            kcOutintodetial.setMedicineId(orderMedicine.getMedicineId());
+//            kcOutintodetial.setToStockMoney(orderMedicine.getTotalPrice());
+//            kcOutintodetial.setBatchCode(orderMedicine.getBatchCode());
+//            kcOutintodetial.setToStockQuantity(orderMedicine.getQuantity());
+//            kcOutintodetial.setPrice(orderMedicine.getSalePrice());
+//            Message kcOutintodetialMessage=kcOutintodetialFeign.addKcOutintodetial(kcOutintodetial);
+//            if(count2<0&&"200".equals(stockDetailMessage.getCode())&&"200".equals(kcOutintodetialMessage.getCode())){
+//                result=false;
+//            }
         }
         //生成销售收款单
-        CwXsys cwXsys=new CwXsys();
-        String code3=CodeUtil.createCode("CWXSYS");
-        cwXsys.setCode(code3);
-        cwXsys.setOriginalOrder(xsOrder.getOrderNo());
-        cwXsys.setCreateTime(xsOrder.getOrderDate());
-        cwXsys.setCost(xsOrder.getTotalPrice());
-        cwXsys.setCreateBy(1);
-        Message cwXsysMessage=cwXsysFeign.addCwXsys(cwXsys);
-        //生成销售应收流水
-        CwAccounts cwAccounts=new CwAccounts();
-        String code4=CodeUtil.createCode("XSYSLS");
-        cwAccounts.setCode(code4);
-        cwAccounts.setOrderCode(xsOrder.getOrderNo());
-        cwAccounts.setCategoryId(3);
-        cwAccounts.setCost(xsOrder.getTotalPrice());
-        cwAccounts.setBankAcountId(xsOrder.getBankAccountId());
-        cwAccounts.setDescription(xsOrder.getRemark());
-        cwAccounts.setCreateTime(xsOrder.getOrderDate());
-        cwAccounts.setCreateBy(1);
-        Message cwAccountsMessage=cwAccountsFeign.insertCwAccounts(cwAccounts);
-        //生成销售应收发票
-        CwInvoice cwInvoice=new CwInvoice();
-        String code5=CodeUtil.createCode("XSYSFP");
-        cwInvoice.setCode(code5);
-        cwInvoice.setCategoryId(3);
-        cwInvoice.setOrderNumber(xsOrder.getOrderNo());
-        cwInvoice.setCreateTime(xsOrder.getOrderDate());
-        cwInvoice.setCreateBy(1);
-        cwInvoice.setCost(xsOrder.getTotalPrice());
-        Message cwInvoiceMessage=cwInvoiceFeign.addCwInvoice(cwInvoice);
-        if(count>0&&"200".equals(saleOutWarehouseMessage.getCode())&&result&&"200".equals(cwXsysMessage.getCode())&&"200".equals(cwAccountsMessage.getCode())&&"200".equals(cwInvoiceMessage.getCode())){
+//        CwXsys cwXsys=new CwXsys();
+//        String code3=CodeUtil.createCode("CWXSYS");
+//        cwXsys.setCode(code3);
+//        cwXsys.setOriginalOrder(xsOrder.getOrderNo());
+//        cwXsys.setCreateTime(xsOrder.getOrderDate());
+//        cwXsys.setCost(xsOrder.getTotalPrice());
+//        cwXsys.setCreateBy(loginUser.getUserid());
+//        Message cwXsysMessage=cwXsysFeign.addCwXsys(cwXsys);
+//        //生成销售应收流水
+//        CwAccounts cwAccounts=new CwAccounts();
+//        String code4=CodeUtil.createCode("XSYSLS");
+//        cwAccounts.setCode(code4);
+//        cwAccounts.setOrderCode(xsOrder.getOrderNo());
+//        cwAccounts.setCategoryId(3);
+//        cwAccounts.setCost(xsOrder.getTotalPrice());
+//        cwAccounts.setBankAcountId(xsOrder.getBankAccountId());
+//        cwAccounts.setDescription(xsOrder.getRemark());
+//        cwAccounts.setCreateTime(xsOrder.getOrderDate());
+//        cwAccounts.setCreateBy(loginUser.getUserid());
+//        Message cwAccountsMessage=cwAccountsFeign.insertCwAccounts(cwAccounts);
+//        //生成销售应收发票
+//        CwInvoice cwInvoice=new CwInvoice();
+//        String code5=CodeUtil.createCode("XSYSFP");
+//        cwInvoice.setCode(code5);
+//        cwInvoice.setCategoryId(3);
+//        cwInvoice.setOrderNumber(xsOrder.getOrderNo());
+//        cwInvoice.setCreateTime(xsOrder.getOrderDate());
+//        cwInvoice.setCreateBy(loginUser.getUserid());
+//        cwInvoice.setCost(xsOrder.getTotalPrice());
+//        Message cwInvoiceMessage=cwInvoiceFeign.addCwInvoice(cwInvoice);
+//        if(count>0&&"200".equals(saleOutWarehouseMessage.getCode())&&result&&"200".equals(cwXsysMessage.getCode())&&"200".equals(cwAccountsMessage.getCode())&&"200".equals(cwInvoiceMessage.getCode())){
+//            return Message.success();
+//        }else{
+//            return Message.error();
+//        }
+        if(count>0){
             return Message.success();
         }else{
             return Message.error();
@@ -135,8 +142,9 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
 
     @Override
     public Message saveSaleOrder(XsOrder xsOrder) {
-        xsOrder.setCreateBy(1);
-        xsOrder.setUpdateBy(1);
+        SysUser loginUser = (SysUser)StpUtil.getSession().get("user");
+        xsOrder.setCreateBy(loginUser.getUserid());
+        xsOrder.setUpdateBy(loginUser.getUserid());
         xsOrder.setType(0);
         xsOrder.setUpdateDate(xsOrder.getOrderDate());
         xsOrder.setEditStatus(0);
