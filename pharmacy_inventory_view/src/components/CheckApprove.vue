@@ -698,7 +698,6 @@ export default {
               },
             })
             .then((resp) => {
-              if (resp.status === 200) {
                 if (resp.code === "200" && resp.message === "审核信息未通过") {
                   this.$message({
                     message: "审核成功!",
@@ -720,9 +719,7 @@ export default {
                     center: true,
                   });
                 }
-              } else {
-                console.log("Response status is not 200");
-              }
+              
             })
             .catch((error) => {
               console.error("Error in sending request:", error);

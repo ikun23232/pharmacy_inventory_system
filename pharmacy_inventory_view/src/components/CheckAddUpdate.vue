@@ -747,12 +747,10 @@ export default {
             if(extantValue===null){
               extantValue=item.totalQuantity
             }
-            alert(extantValue)
             item.totalQuantity
             this.checkextount(extantValue)
             // 在这里可以对每个extant属性值进行操作
           });
-          alert(this.isfalg)
           if(this.isfalg){
             this.$message.error("数量不能为糟糕的值！！")
             return

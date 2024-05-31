@@ -212,22 +212,27 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
                     throw new RuntimeException("添加流水成失败！");
                 }
                 //添加采购订单采购应付记录
-                CwCgyf cwCgyf = new CwCgyf();
-                cwCgyf.setCode(CodeUtil.createCode("CGYF"));
-                cwCgyf.setCgddCode(cgddOrder.getCode());
-                cwCgyf.setProviderId(cgddOrder.getProviderId());
+            }
+            CwCgyf cwCgyf = new CwCgyf();
+            cwCgyf.setCode(CodeUtil.createCode("CGYF"));
+            cwCgyf.setCgddCode(cgddOrder.getCode());
+            cwCgyf.setProviderId(cgddOrder.getProviderId());
+            if (cgddOrder.getPayType() == 2){
+                cwCgyf.setIsPay(2);
+            }else {
                 cwCgyf.setIsPay(1);
-                cwCgyf.setCost(cgddOrder.getReferenceAmount());
-                cwCgyf.setCreateTime(new Date());
-                cwCgyf.setPaymentTime(new Date());
-                Message message1 = cwCgyfFeign.addCgyf(cwCgyf);
-                if (!message1.getCode().equals("200")){
-                    throw new RuntimeException("添加采购应付失败！");
-                }
+            }
+            cwCgyf.setCost(cgddOrder.getReferenceAmount());
+            cwCgyf.setCreateTime(new Date());
+            cwCgyf.setPaymentTime(new Date());
+            Message message1 = cwCgyfFeign.addCgyf(cwCgyf);
+            if (!message1.getCode().equals("200")){
+                throw new RuntimeException("添加采购应付失败！");
             }
             cgddOrder.setPayTime(new Date());
             cgddOrder.setOrderStatus(3);
             cgddOrder.setEffectiveTime(new Date());
+            //这个有问题，等下测试
             for (BaseMedicine baseMedicine : cgddOrder.getMedicineList()) {
                 UpdateWrapper upda = new UpdateWrapper<>();
                 upda.eq("code",baseMedicine.getSourceCode());

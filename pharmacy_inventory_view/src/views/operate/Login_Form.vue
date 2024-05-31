@@ -1,6 +1,6 @@
 <template>
-  <div class="login-page">
-    <div class="login-box">
+  <div class="login-page" >
+    <div class="login-box" v-loading=loading>
       <div class="left-half">
         <div class="logo">
           <div
@@ -20,7 +20,7 @@
           </li>
         </ul>
       </div>
-      <div class="right-half">
+      <div class="right-half" >
         <div class="form-box">
           <div class="login-form" style="margin-left: -52px; margin-top: 30px">
             <el-header class="header" height="45px">
@@ -28,6 +28,7 @@
             </el-header>
             <div class="form">
               <el-form
+                
                 :model="loginForm"
                 :rules="rules"
                 ref="loginForm"
@@ -110,6 +111,7 @@ export default {
     };
 
     return {
+      loading:false,
       code: "",
       loginForm: {
         username: "",
@@ -156,6 +158,7 @@ export default {
       this.code = code.toLowerCase();
     },
     submitForm(formName) {
+      this.loading=true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           getLogin(this.loginForm).then((res) => {
@@ -181,6 +184,7 @@ export default {
                 offset: 50,
               });
               this.$router.push("/index");
+              this.loading=false
             } else {
               this.$message.error(res.message);
             }
