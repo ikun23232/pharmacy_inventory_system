@@ -105,7 +105,9 @@ export default {
       multipleSelection: [],
       roleTreeData: [],
       templateSelection: [],
+      AlluserList:{},
       userid:0,
+      isflag:false
     };
   },
   created() {
@@ -151,18 +153,22 @@ export default {
     singleElection(row) {
       console.log(row);
       
-      this.userid = row.userid
-      console.log(this.userid);
+      this.AlluserList = row
+      console.log(this.AlluserList);
     },
     submitForm() {
-      console.log(this.userid,"dyf");
-      if (this.userid == null ) {
+      console.log(this.AlluserList,"dyf");
+      if (this.AlluserList == null ) {
         this.$message({
           message: "请选择执行人！",
           type: "error",
         });
+        this.isflag=true
       }
-      this.$emit("handleKcmxSuccess", this.userid);
+      if(!this.isflag){
+        this.$emit("handleKcmxSuccess", this.AlluserList);
+
+      }
     },
     
   },

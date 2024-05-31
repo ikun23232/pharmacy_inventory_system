@@ -26,6 +26,8 @@
     </select>
 
 
+
+
     <select id="getRoleListPage" resultType="com.kgc.entity.SysRole">
 
         SELECT  *  FROM sys_role
