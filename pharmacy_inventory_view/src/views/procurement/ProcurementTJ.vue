@@ -122,6 +122,7 @@ export default {
       if (!this.year){
         this.thisDate = '全年'
       }
+
     },
     initEChart() {
       var myChart = echarts.init(this.$refs.echart);
@@ -259,8 +260,7 @@ export default {
       this.pay.fail = 0
       // 调用getCgPayCom函数并传入年份和月份
       getCgPayCom(year, month).then(resp => {
-        console.log("11111111111111111111111111111111111111111111111111111111111");
-        console.log(resp.data);
+
         for (let i = 0; i < resp.data.length; i++) {
           if (resp.data[i].paymentStatus == '已支付') {
             this.pay.success = resp.data[i].orderCount;

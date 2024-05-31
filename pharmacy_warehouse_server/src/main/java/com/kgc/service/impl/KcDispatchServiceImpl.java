@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -40,7 +41,8 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
 
     @Autowired
     private KcDispatchMapper kcDispatchMapper;
-    @Autowired
+
+    @Resource
     private KcDispatchDetailMapper dispatchDetailMapper;
     @Autowired
     private KcDisfromwareMapper kcDisfromwareMapper;
