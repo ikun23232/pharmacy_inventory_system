@@ -83,8 +83,8 @@
               style="width:960px"
               >
               <el-table-column type="selection" width="50" align="center" />
-                <el-table-column label="序号" fixed align="center" prop="xh" width="80">
-                </el-table-column>
+                <!-- <el-table-column label="序号" fixed align="center" prop="index" width="80">
+                </el-table-column> -->
                 <el-table-column prop="orderNo" label="单据编号" width="150">
                 </el-table-column>
                 <el-table-column prop="orderDate" label="单据日期" width="120">

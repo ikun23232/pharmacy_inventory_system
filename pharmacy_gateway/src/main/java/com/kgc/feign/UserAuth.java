@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 /**
  * @author daidai
  */
-@FeignClient(name = "pharmacySystem",contextId = "user-server")
+@FeignClient(name = "pharmacySystem",contextId = "user-server22")
 public interface UserAuth extends SysUserRemote {
 
 }

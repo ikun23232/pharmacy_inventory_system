@@ -60,7 +60,7 @@
              base_unit un,base_medicine_category mc,kc_medicine k
         where b.categoryId=mc.id and b.unitId=un.id and k.medicineId=b.id
           and b.isDel=0 and c.isDel=0 and u.isDel=0 and un.isDel=0 and mc.isDel=0 and k.isDel=0
-          and b.id=#{id} and k.batchCode=#{batchCode}
+          and b.id=#{id} and k.batchCode=#{batchCode} AND k.storehouseId=1
     </select>
 
     <select id="getMedicineById" resultType="com.kgc.entity.BaseMedicine">
@@ -81,7 +81,7 @@
     </select>
 
     <select id="getAllBatchCodeByMedicineId" resultType="com.kgc.entity.KcMedicine">
-        select kc_medicine.* FROM kc_medicine where medicineId=#{medicineId}
+        select kc_medicine.* FROM kc_medicine where medicineId=#{medicineId}  and storehouseId = 1
     </select>
 
     <select id="getMedicineVOListByCode" resultType="com.kgc.vo.MedicineVO">
@@ -89,7 +89,7 @@
                b.createBy,b.createTime,b.updateBy,b.updateTime,
                un.name as unitName,mc.name as categoryName,b.totalWarning,
                (SELECT userName FROM sys_user u WHERE b.createBy=u.userId)
-                                                                        as createByName, (SELECT userName FROM sys_user u WHERE b.updateBy=u.userId) as updateByName,
+               as createByName, (SELECT userName FROM sys_user u WHERE b.updateBy=u.userId) as updateByName,
                p.price AS purchasePrice,
                o.sourceCode,o.id as medicineOrderId
         from base_medicine b,
