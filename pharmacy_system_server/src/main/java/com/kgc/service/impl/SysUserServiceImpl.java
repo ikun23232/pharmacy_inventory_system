@@ -113,19 +113,28 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 
     @Override
-    public Message getUsersListByPage(String username,Integer sex,Integer isstate,String roleId,Page page) {
+    public Message getUsersListByPage(String username, Integer sex, Integer isstate, String roleId, Page page) {
+        long count = PageHelper.count(() -> sysUserMapper.getUsersListByPage(username, sex, isstate, roleId));
         PageHelper.startPage(page.getCurrentPageNo(), page.getPageSize());
-        List<SysUser> list=new ArrayList<SysUser>();
-        List<SysUser> usersListByPage = sysUserMapper.getUsersListByPage(username,sex,isstate,roleId);
+        List<SysUser> usersListByPage = sysUserMapper.getUsersListByPage(username, sex, isstate, roleId);
+
+        List<SysUser> list = new ArrayList<>();
         for (SysUser user : usersListByPage) {
             List<SysRole> roleList = sysRoleMapper.getRoleList(user.getUserid());
             user.setSysRoles(roleList);
             list.add(user);
         }
-        PageInfo pageInfo = new PageInfo(list);
-        if (usersListByPage != null){
+
+        // 获取实际总记录数
+        PageInfo pageInfo = new PageInfo(usersListByPage);
+
+        if (usersListByPage != null) {
+
+            pageInfo.setTotal(count);
+
             return Message.success(pageInfo);
         }
+
         return Message.error("数据为空");
     }
 
