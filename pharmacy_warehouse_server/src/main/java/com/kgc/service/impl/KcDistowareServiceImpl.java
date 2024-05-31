@@ -45,7 +45,6 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
         paramsMap.put("subject", vo.getSubject());
         paramsMap.put("startTime", vo.getStartTime());
         paramsMap.put("endTime", vo.getEndTime());
-//        paramsMap.put("approvalStatus", vo.getApprovalStatus());
         paramsMap.put("fowardWarhouseId", vo.getAimWarehouseId());
         paramsMap.put("beforeWarhouseId", vo.getBeforeWarehouseId());
         logger.debug("KcDistowareServiceImpl getKcDistowareList paramsMap:"+paramsMap);
@@ -74,7 +73,7 @@ public class KcDistowareServiceImpl extends ServiceImpl<KcDistowareMapper, KcDis
     public void ddrkExcel(KcDistoware kcDistoware, HttpServletResponse response) {
         List<KcDistoware> kcDisfromwareList = kcDistowareMapper.getKcDistowareListByExcel(new HashMap<>());
         try {
-            ExeclUtil.write(kcDisfromwareList,KcDistoware.class,response,"调度出库");
+            ExeclUtil.write(kcDisfromwareList,KcDistoware.class,response,"调度入库");
         } catch (IOException e) {
             e.printStackTrace();
         }
