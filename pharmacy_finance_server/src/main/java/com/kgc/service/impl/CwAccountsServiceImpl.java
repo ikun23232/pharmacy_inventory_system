@@ -90,49 +90,4 @@ public class CwAccountsServiceImpl extends ServiceImpl<CwAccountsDao, CwAccounts
             return Message.error();
         }
     }
-
-    @Override
-    public boolean saveBatch(Collection<CwAccounts> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdateBatch(Collection<CwAccounts> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean updateBatchById(Collection<CwAccounts> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdate(CwAccounts entity) {
-        return false;
-    }
-
-    @Override
-    public CwAccounts getOne(Wrapper<CwAccounts> queryWrapper, boolean throwEx) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Object> getMap(Wrapper<CwAccounts> queryWrapper) {
-        return null;
-    }
-
-    @Override
-    public <V> V getObj(Wrapper<CwAccounts> queryWrapper, Function<? super Object, V> mapper) {
-        return null;
-    }
-
-    @Override
-    public CwAccountsDao getBaseMapper() {
-        return null;
-    }
-
-    @Override
-    public Class<CwAccounts> getEntityClass() {
-        return null;
-    }
 }
