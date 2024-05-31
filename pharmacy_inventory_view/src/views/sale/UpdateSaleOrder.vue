@@ -154,13 +154,13 @@
            <el-button type="primary" size="mini" @click="saveForm('saleOrderForm')">保存</el-button>
          </el-col>
          <el-col :span="2">
-           <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
+           <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')" :disabled="isPay?true:false">提交</el-button>
          </el-col>
          <el-col :span="2">
             <el-button type="primary" size="mini" @click="payOrder" :disabled="!isPay?true:false">支付</el-button>
          </el-col>
          <el-col :span="2">
-           <el-button size="mini" @click="cancelForm">取消</el-button>
+           <el-button size="mini" @click="cancelForm" :disabled="isPay?true:false">取消</el-button>
          </el-col>
        </el-row>
      </el-form>

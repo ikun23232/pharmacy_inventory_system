@@ -68,7 +68,6 @@ public class KcOutintodetial implements Serializable {
      * 修改时间
      */
     @TableField("updateDate")
-    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
 
     private Date updateDate;
 

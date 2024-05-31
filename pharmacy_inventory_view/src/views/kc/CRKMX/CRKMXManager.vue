@@ -62,7 +62,8 @@
       </el-table-column>
       <el-table-column prop="type" label="单据类型" width="120">
       </el-table-column>
-
+      <el-table-column prop="orderCode" label="原单号" width="120">
+      </el-table-column>
       <el-table-column prop="providerName" label="供应商" width="120">
       </el-table-column>
       <el-table-column prop="medicineName" label="商品名称" width="120">

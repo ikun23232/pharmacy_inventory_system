@@ -1,16 +1,10 @@
-package com.kgc.providerContorller;
+package com.kgc.providerController;
 
-import cn.dev33.satoken.stp.StpInterface;
 import com.kgc.entity.SysLogManage;
 import com.kgc.remote.SysLogRemote;
-import com.kgc.remote.SysUserRemote;
 import com.kgc.service.SysLogManageService;
-import com.kgc.service.SysLoginLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author daidai

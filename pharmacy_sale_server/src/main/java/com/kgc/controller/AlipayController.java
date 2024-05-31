@@ -28,6 +28,28 @@ public class AlipayController {
 
 	@Autowired
 	private AlipayService alipayService;
+//	@RequestMapping("createOrder")
+//	public void createOrder(HttpServletResponse response,String orderNo,int totalPrice) {
+//		logger.info("AlipayController createOrder is start...");
+//		response.setContentType("text/html;charset=utf-8");
+//		Message responseMessage=alipayService.createOrder(orderNo,totalPrice);
+//		logger.debug("AlipayController createOrder responseMessage:"+responseMessage);
+//		PrintWriter pWriter=null;
+//		try {
+//			pWriter=response.getWriter();
+//			if("200".equals(responseMessage.getCode())) {
+//				pWriter.print(responseMessage.getData());
+//			}
+//		} catch (IOException e) {
+//			logger.error("AlipayController createOrder is error, responseMessage:"+responseMessage);
+//			e.printStackTrace();
+//		}
+//		if(pWriter!=null) {
+//			pWriter.print("error");
+//		}
+//
+//	}
+
 
 	@RequestMapping("createOrder")
 	public void createOrder(HttpServletResponse response,String orderNo,int totalPrice) {

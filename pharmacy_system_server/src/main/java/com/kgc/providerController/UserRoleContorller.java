@@ -1,8 +1,7 @@
-package com.kgc.providerContorller;
+package com.kgc.providerController;
 
 import com.kgc.dao.SysUserMapper;
 import com.kgc.entity.SysUser;
-import com.kgc.remote.SysUserRemote;
 import com.kgc.remote.SysUserRoleRemote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;

@@ -37,7 +37,7 @@ public class SaleOrderController {
     @RequestMapping("/addSaleOrder")
     @ResponseBody
     public Message addSaleOrder(@RequestBody Map<String,Object> map) {
-        StpUtil.checkPermission("xsdd:add");
+//        StpUtil.checkPermission("xsdd:add");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = saleOrderService.addSaleOrder(xsOrder);
         return message;
@@ -62,7 +62,7 @@ public class SaleOrderController {
     @RequestMapping("/updateSaleOrder")
     @ResponseBody
     public Message updateSaleOrder(@RequestBody Map<String,Object> map) {
-        StpUtil.checkPermission("xsdd:update");
+//        StpUtil.checkPermission("xsdd:update");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = saleOrderService.updateSaleOrder(xsOrder);
         return message;
