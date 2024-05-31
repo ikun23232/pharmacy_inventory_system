@@ -167,6 +167,14 @@ export default {
     },
     // 报损数量改变
     handleDamageChange(row) {
+      const value = parseInt(row.reportedNum);
+      if (isNaN(value)) {
+        // 如果输入的不是数字，则可以重置为1或其他默认值
+        row.reportedNum = 1;
+      } else {
+        // 如果输入的是数字，则更新为这个数字
+        row.reportedNum = value;
+      }
       // console.log(this.wereAddList)
       // 确保报损数量不大于库存数量
       row.reportedNum = Math.min(row.reportedNum, row.quantity);
