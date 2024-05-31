@@ -28,10 +28,10 @@
                  </el-date-picker>
                </el-form-item></div>
            </el-col>
-           <el-col :span="8"><div class="grid-content bg-purple">
+           <!-- <el-col :span="8"><div class="grid-content bg-purple">
                <el-form-item label="制单人" prop="createByName">
                  <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
-               </el-form-item></div></el-col>
+               </el-form-item></div></el-col> -->
            <el-col :span="8"
              ><div class="grid-content bg-purple">
                <el-form-item label="银行账户" prop="bankAccountId">
@@ -115,7 +115,7 @@
             </el-table-column>
             <el-table-column label="数量" align="center" prop="quantity" width="160">
               <template slot-scope="scope">
-                  <el-input-number size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
+                  <el-input-number :precision="0" size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
               </template>
             </el-table-column>
             <el-table-column label="单价" align="center" prop="salePrice" width="120">
@@ -154,10 +154,13 @@
            <el-button type="primary" size="mini" @click="saveForm('saleOrderForm')">保存</el-button>
          </el-col>
          <el-col :span="2">
-           <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
+           <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')" :disabled="isPay?true:false">提交</el-button>
          </el-col>
          <el-col :span="2">
-           <el-button size="mini" @click="cancelForm">取消</el-button>
+            <el-button type="primary" size="mini" @click="payOrder" :disabled="!isPay?true:false">支付</el-button>
+         </el-col>
+         <el-col :span="2">
+           <el-button size="mini" @click="cancelForm" :disabled="isPay?true:false">取消</el-button>
          </el-col>
        </el-row>
      </el-form>
@@ -185,13 +188,13 @@
          saleOrder:{
            orderNo:"",
            orderDate:new Date(),
-           createByName:"",
            bankAccountId:"",
            remark:'',
            medicineDetailList:[],
            totalPrice:"",
            totalNumber:""
          },   
+         isPay:false,
          rules:{
            orderNo:[
                { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -333,13 +336,15 @@
           this.saleOrder.totalPrice=this.sumPrice
           this.saleOrder.totalNumber=this.totalNumber
           updateSaleOrder(this.saleOrder).then((resp) => {
+            this.isPay=true;
+            console.log("999",this.isPay)
             if (resp.code == "200") {
               Message({
                 message: "修改成功!",
                 type: "success",
                 center: "true",
               });
-              this.$emit("handleDialogFormVisible",false);
+              // this.$emit("handleDialogFormVisible",false);
             }         
           });   
            } else {
@@ -348,6 +353,9 @@
            }
          });
        },
+       payOrder(){
+        window.location.href = "sale/createOrder?orderNo="+this.saleOrder.orderNo+"&totalPrice="+this.saleOrder.totalPrice;
+      },
        saveForm(formName){
          this.$refs[formName].validate((valid) => {
            if (valid) {
@@ -365,6 +373,7 @@
             this.saleOrder.totalPrice=this.sumPrice
             this.saleOrder.totalNumber=this.totalNumber
             saveUpdateSaleOrder(this.saleOrder).then((resp) => {
+              this.$emit("handleDialogFormVisible",false);
                  console.log(resp);
                  if (resp.code == "200") {
                    Message({
@@ -372,7 +381,6 @@
                      type: "success",
                      center: "true",
                    });
-                   this.$emit("handleDialogFormVisible",false);
                  }         
                });
            } else {

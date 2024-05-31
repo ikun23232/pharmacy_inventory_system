@@ -1,6 +1,8 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
+import com.kgc.annotation.Log;
 import com.kgc.entity.Message;
 import com.kgc.entity.XsOrder;
 import com.kgc.service.AlipayService;
@@ -31,14 +33,17 @@ public class SaleOrderController {
         Message message=saleOrderService.getSaleOrderListByPage(xsOrder);
         return message;
     }
+    @Log("销售订单添加")
     @RequestMapping("/addSaleOrder")
     @ResponseBody
     public Message addSaleOrder(@RequestBody Map<String,Object> map) {
+//        StpUtil.checkPermission("xsdd:add");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = saleOrderService.addSaleOrder(xsOrder);
         return message;
     }
 
+    @Log("保存销售订单添加")
     @RequestMapping("/saveSaleOrder")
     @ResponseBody
     public Message saveSaleOrder(@RequestBody Map<String,Object> map) {
@@ -53,15 +58,16 @@ public class SaleOrderController {
         Message message=saleOrderService.getSaleOrderByOrderNo(orderNo);
         return message;
     }
-
+    @Log("销售订单修改")
     @RequestMapping("/updateSaleOrder")
     @ResponseBody
     public Message updateSaleOrder(@RequestBody Map<String,Object> map) {
+//        StpUtil.checkPermission("xsdd:update");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = saleOrderService.updateSaleOrder(xsOrder);
         return message;
     }
-
+    @Log("保存销售订单修改")
     @RequestMapping("/saveUpdateSaleOrder")
     @ResponseBody
     public Message saveUpdateSaleOrder(@RequestBody Map<String,Object> map) {
@@ -69,23 +75,27 @@ public class SaleOrderController {
         Message message = saleOrderService.saveUpdateSaleOrder(xsOrder);
         return message;
     }
-
+    @Log("销售订单删除")
     @RequestMapping("/deleteSaleOrder")
     @ResponseBody
     public Message deleteSaleOrder(@RequestParam("orderNo") String orderNo) {
+//        StpUtil.checkPermission("xsdd:delete");
         Message message=saleOrderService.deleteSaleOrder(orderNo);
         return message;
     }
 
+    @Log("销售订单作废")
     @RequestMapping("/cancelSaleOrder")
     @ResponseBody
     public Message cancelSaleOrder(@RequestParam("orderNo") String orderNo) {
+//        StpUtil.checkPermission("xsdd:cancel");
         Message message=saleOrderService.cancelSaleOrder(orderNo);
         return message;
     }
-
+    @Log("销售订单导出")
     @RequestMapping("/saleOrderExcel")
     public void saleOrderExcel(@RequestBody XsOrder xsOrder, HttpServletResponse response) {
+//        StpUtil.checkPermission("xsdd:excel");
         saleOrderService.saleOrderExcel(xsOrder,response);
     }
 

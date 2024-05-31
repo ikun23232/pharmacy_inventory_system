@@ -28,10 +28,10 @@
                  </el-date-picker>
                </el-form-item></div>
            </el-col>
-           <el-col :span="8"><div class="grid-content bg-purple">
+           <!-- <el-col :span="8"><div class="grid-content bg-purple">
                <el-form-item label="制单人" prop="createByName">
                  <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
-               </el-form-item></div></el-col>
+               </el-form-item></div></el-col> -->
         <el-col :span="8"><div class="grid-content bg-purple">
         <el-form-item label="退款原因" prop="refundTypeId">
             <el-select
@@ -119,47 +119,47 @@
             <el-table-column label="序号" fixed align="center" type="index" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].name"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].name"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].batchCode"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].batchCode"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="规格型号" align="center" prop="specification" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].specification"></el-input>
+              <el-input readonly  v-model="medicineDetailList[scope.$index].specification"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="药品类型" align="center" prop="categoryId" width="120">
             <template slot-scope="scope">
-              <el-input v-model="medicineDetailList[scope.$index].categoryName"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].categoryName"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="计量单位" align="center" prop="unitId" width="120">
             <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].unitName"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].unitName"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="数量" align="center" prop="quantity" width="160">
               <template slot-scope="scope">
-                  <el-input-number size="small"  v-model="medicineDetailList[scope.$index].quantity"></el-input-number>
+                  <el-input-number disabled size="small"  v-model="medicineDetailList[scope.$index].quantity"></el-input-number>
               </template>
             </el-table-column>
             <el-table-column label="单价" align="center" prop="salePrice" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].salePrice"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].salePrice"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="总价" align="center" prop="totalPrice" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].totalPrice"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].totalPrice"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="当前库存" align="center" prop="stock" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].stock"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].stock"></el-input>
               </template>
             </el-table-column>
            </el-table>
@@ -178,47 +178,47 @@
             <el-table-column label="序号" fixed align="center" type="index" width="80"></el-table-column>
             <el-table-column label="医用商品名称" fixed align="center"  width="150" prop="medicineId">
               <template slot-scope="scope">
-              <el-input  v-model="saleOrder.checkedDetail[scope.$index].name"></el-input>
+              <el-input readonly v-model="saleOrder.checkedDetail[scope.$index].name"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="批次号" align="center"  width="120" prop="batchCode">
               <template slot-scope="scope">
-              <el-input  v-model="saleOrder.checkedDetail[scope.$index].name"></el-input>
+              <el-input readonly v-model="saleOrder.checkedDetail[scope.$index].name"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="规格型号" align="center" prop="specification" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="saleOrder.checkedDetail[scope.$index].specification"></el-input>
+              <el-input readonly v-model="saleOrder.checkedDetail[scope.$index].specification"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="药品类型" align="center" prop="categoryId" width="120">
             <template slot-scope="scope">
-              <el-input v-model="medicineDetailList[scope.$index].categoryName"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].categoryName"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="计量单位" align="center" prop="unitId" width="120">
             <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].unitName"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].unitName"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="数量" align="center" prop="quantity" width="160">
               <template slot-scope="scope">
-                  <el-input-number size="small" v-model="medicineDetailList[scope.$index].quantity"></el-input-number>
+                  <el-input-number disabled size="small" v-model="medicineDetailList[scope.$index].quantity"></el-input-number>
               </template>
             </el-table-column>
             <el-table-column label="单价" align="center" prop="salePrice" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].salePrice"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].salePrice"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="总价" align="center" prop="totalPrice" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].totalPrice"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].totalPrice"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="当前库存" align="center" prop="stock" width="120">
               <template slot-scope="scope">
-              <el-input  v-model="medicineDetailList[scope.$index].stock"></el-input>
+              <el-input readonly v-model="medicineDetailList[scope.$index].stock"></el-input>
               </template>
             </el-table-column>
             </el-table>
@@ -245,6 +245,7 @@
             <el-col :span="12"><div>
               <el-form-item label="核批意见:" label-width="80px" size="small" prop="opinion">
                 <el-input
+                disabled
                 type="textarea"
                 autosize
                 placeholder="请输入内容"
@@ -254,7 +255,7 @@
             </div></el-col>
             <el-col :span="12"><div>
               <el-form-item label="核批结果:" label-width="80px" size="small" prop="isCheck">
-                <el-select v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
+                <el-select disabled v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
                   <el-option label="同意" value="1"></el-option>
                   <el-option label="拒绝" value="2"></el-option>
                 </el-select>
@@ -372,7 +373,10 @@
         },
         //显示要退款的销售订单
         async chooseSaleOrderList(val){
-          this.saleOrderList=val;
+          for(var i=0;i<val.length;i++){
+            this.saleOrderList.push(val[i]);
+          }
+          // this.saleOrderList=val;
           this.medicineDetailList=[];
           //查询订单详情
           for(var i=0;i<this.saleOrderList.length;i++){

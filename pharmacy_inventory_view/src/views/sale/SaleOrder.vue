@@ -87,7 +87,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="handleDelete(scope.row.orderNo)">删除</el-dropdown-item>
-            <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)" :disabled="scope.row.cancelStatus==1?true:false" >作废</el-dropdown-item>
+            <el-dropdown-item @click.native="handleCancel(scope.row.orderNo)" :disabled="scope.row.cancelStatus==1?true:false">作废</el-dropdown-item>
             <el-dropdown-item @click.native="printSaleOrder(scope.row.orderNo)">打印</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

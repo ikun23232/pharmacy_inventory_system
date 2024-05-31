@@ -9,14 +9,18 @@
                   <el-input placeholder="单据编号" v-model="object.orderNo" size="small"></el-input>
               </el-form-item>
               <el-form-item label="单据日期">
-                <el-col :span="11">
-                  <el-date-picker type="date" placeholder="请选择开始" v-model="object.orderDateBegin" style="width: 100%;" size="small"></el-date-picker>
-                </el-col>
-                <el-col class="line" :span="1">~</el-col>
-                  <el-col :span="11">
-                  <el-date-picker type="date" placeholder="请选择结束" v-model="object.orderDateEnd" style="width: 100%;" size="small"></el-date-picker>
-                </el-col>
-              </el-form-item>
+              <el-col :span="11">
+                <el-date-picker
+                    v-model="time"
+                    type="daterange"
+                    align="right"
+                    unlink-panels
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    :picker-options="pickerOptions"
+                /></el-col>
+            </el-form-item>
               <el-form-item label="创建人">
                 <el-select v-model="object.createBy" size="small">
                   <el-option
@@ -107,6 +111,7 @@
               editStatus:1,
               isCheck:1
           },
+          time:{},
           pageInfo:"",
           list:"",
           saleOrderList:[],
@@ -124,6 +129,13 @@
         this.userList=data.data;
       },
       async initSaleOrderByPage(currentPage) {
+        if (Array.isArray(this.time) && this.time.length > 0) {
+        this.object.orderDateBegin = this.time[0];
+        this.object.orderDateEnd = this.time[1];
+      } else {
+        this.object.orderDateBegin = null;
+        this.object.orderDateEnd = null;
+      }
           this.object.currentPage=currentPage;
           let data = await initSaleOrder(this.object);
           this.pageInfo=data.data;

@@ -1,4 +1,4 @@
-package com.kgc.providerContorller;
+package com.kgc.providerController;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.kgc.remote.SysUserRemote;

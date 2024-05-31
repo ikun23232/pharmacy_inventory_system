@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface AlipayService {
 
-	public Message createOrder(XsOrder xsOrder);
+	public Message createOrder(String orderNo,int totalPrice);
 
 	public Message alipayNotify(Map<String, String> values);
 }

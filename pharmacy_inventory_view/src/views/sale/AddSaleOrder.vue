@@ -28,10 +28,10 @@
               </el-date-picker>
             </el-form-item></div>
         </el-col>
-        <el-col :span="8"><div>
+        <!-- <el-col :span="8"><div>
             <el-form-item label="制单人" prop="createByName">
               <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
-            </el-form-item></div></el-col>
+            </el-form-item></div></el-col> -->
         <el-col :span="8"
           ><div>
             <el-form-item label="银行账户" prop="bankAccountId">
@@ -114,7 +114,7 @@
          </el-table-column>
          <el-table-column label="数量" align="center" prop="quantity" width="160">
            <template slot-scope="scope">
-               <el-input-number size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
+               <el-input-number :precision="0" size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
            </template>
          </el-table-column>
          <el-table-column label="单价" align="center" prop="salePrice" width="120">
@@ -153,11 +153,13 @@
         <el-button type="primary" size="mini" @click="saveForm('saleOrderForm')">保存</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')">提交</el-button>
-        <!-- <el-button type="primary" size="mini" @click="payOrder">支付</el-button> -->
+        <el-button type="primary" size="mini" @click="submitForm('saleOrderForm')" :disabled="isPay?true:false">提交</el-button>
       </el-col>
       <el-col :span="2">
-        <el-button size="mini" @click="cancelForm">取消</el-button>
+        <el-button type="primary" size="mini" @click="payOrder" :disabled="!isPay?true:false">支付</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button size="mini" @click="cancelForm" :disabled="isPay?true:false">取消</el-button>
       </el-col>
     </el-row>
   </el-form>
@@ -180,7 +182,7 @@
 
 <script>
 import { Message } from "element-ui";
-import {addSaleOrder,saveSaleOrder} from "../../api/saleOrder.js";
+import {addSaleOrder,saveSaleOrder,createOrder} from "../../api/saleOrder.js";
 import {getAllBankCountList} from "../../api/BankAccount.js";
 import { getCurrentTime } from "../../api/util.js";
 import {getAllBaseMedicine,getBaseMedicineById,getAllBatchCodeByMedicineId} from "../../api/baseMedicine.js";
@@ -195,7 +197,6 @@ export default {
       saleOrder:{
         orderNo:"",
         orderDate:new Date(),
-        createByName:"张三",
         bankAccountId:"",
         remark:'',
         medicineDetailList:[],
@@ -203,7 +204,8 @@ export default {
         totalNumber:""
       },   
       checkedDetail:[],
-      dialogVisible:false,
+      isPay:false,
+      // dialogVisible:false,
       rules:{
         orderNo:[
             { required: true, message: "请输入订单编号", trigger: "blur" },
@@ -226,13 +228,6 @@ export default {
     this.getAllBaseMedicine();
   },
   methods: {
-    // download(){
-
-    // },
-    // payOrder(){
-    //   this.dialogVisible=true;
-
-    // },
     //拿到所有的银行账户
     async getAllBankCountList() {
       let data = await getAllBankCountList();
@@ -342,13 +337,14 @@ export default {
           this.saleOrder.totalPrice=this.sumPrice
           this.saleOrder.totalNumber=this.totalNumber
           addSaleOrder(this.saleOrder).then((resp) => {
+            this.isPay=true;
+            console.log("999",this.isPay)
             if (resp.code == "200") {
               Message({
                 message: "添加成功!",
                 type: "success",
                 center: "true",
-              });
-              this.$emit("handleDialogFormVisible",false);
+              });   
             }         
           });
         } else {
@@ -356,6 +352,9 @@ export default {
           return false;
         }
       });
+    },
+    payOrder(){
+      window.location.href = "sale/createOrder?orderNo="+this.saleOrder.orderNo+"&totalPrice="+this.saleOrder.totalPrice;
     },
     saveForm(formName){
       this.$refs[formName].validate((valid) => {
@@ -375,12 +374,12 @@ export default {
           this.saleOrder.totalNumber=this.totalNumber
           saveSaleOrder(this.saleOrder).then((resp) => {
               if (resp.code == "200") {
+                this.$emit("handleDialogFormVisible",false);
                 Message({
                   message: "保存成功!",
                   type: "success",
                   center: "true",
                 });
-                this.$emit("handleDialogFormVisible",false);
               }         
             });
         } else {

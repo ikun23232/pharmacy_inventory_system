@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,35 +21,55 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @RestController
+@RequestMapping("/sale")
 public class AlipayController {
 
 	private Logger logger= LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private AlipayService alipayService;
+//	@RequestMapping("createOrder")
+//	public void createOrder(HttpServletResponse response,String orderNo,int totalPrice) {
+//		logger.info("AlipayController createOrder is start...");
+//		response.setContentType("text/html;charset=utf-8");
+//		Message responseMessage=alipayService.createOrder(orderNo,totalPrice);
+//		logger.debug("AlipayController createOrder responseMessage:"+responseMessage);
+//		PrintWriter pWriter=null;
+//		try {
+//			pWriter=response.getWriter();
+//			if("200".equals(responseMessage.getCode())) {
+//				pWriter.print(responseMessage.getData());
+//			}
+//		} catch (IOException e) {
+//			logger.error("AlipayController createOrder is error, responseMessage:"+responseMessage);
+//			e.printStackTrace();
+//		}
+//		if(pWriter!=null) {
+//			pWriter.print("error");
+//		}
+//
+//	}
+
 
 	@RequestMapping("createOrder")
-	public Message createOrder(HttpServletResponse response,XsOrder xsOrder) {
+	public void createOrder(HttpServletResponse response,String orderNo,int totalPrice) {
 		logger.info("AlipayController createOrder is start...");
 		response.setContentType("text/html;charset=utf-8");
-		Message message = alipayService.createOrder(null);
-		logger.debug("AlipayController createOrder message:" + message);
-
+		Message responseMessage=alipayService.createOrder(orderNo,totalPrice);
+		logger.debug("AlipayController createOrder responseMessage:"+responseMessage);
 		PrintWriter pWriter=null;
 		try {
 			pWriter=response.getWriter();
-			if("200".equals(message.getCode())) {
-				pWriter.print(message.getData());
+			if("200".equals(responseMessage.getCode())) {
+				pWriter.print(responseMessage.getData());
 			}
 		} catch (IOException e) {
-			logger.error("AlipayController createOrder is error, message:"+message);
+			logger.error("AlipayController createOrder is error, responseMessage:"+responseMessage);
 			e.printStackTrace();
 		}
 		if(pWriter!=null) {
 			pWriter.print("error");
 		}
-		return message;
-
 	}
 	
 	@RequestMapping("alipayNotify")
