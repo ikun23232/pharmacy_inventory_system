@@ -7,6 +7,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 /**
  * @author daidai
  */
-@FeignClient(name = "SystemProviderOYH",contextId = "sysUserRoleFeign")
+@FeignClient(name = "pharmacySystem",contextId = "sysUserRoleFeign")
 public interface SysUserRoleFeign extends SysUserRoleRemote {
 }

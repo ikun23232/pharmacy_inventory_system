@@ -103,7 +103,7 @@ public class SaleOrderController {
         return message;
     }
 
-//    @RequestMapping(value="/getAliPayImg")
+//    @RequestMapping("getAliPayImg")
 //    public void qrcode(XsOrder xsOrder, HttpServletResponse response) throws Exception {
 //        Message order = alipayService.createOrder(xsOrder);
 //        QRcodeUtil.encode(order.getData().toString(), response);

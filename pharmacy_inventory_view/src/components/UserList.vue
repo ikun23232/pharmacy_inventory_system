@@ -22,7 +22,7 @@
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%"
+        style="width: 1000px"
         @row-click="singleElection"
         border
         stripe

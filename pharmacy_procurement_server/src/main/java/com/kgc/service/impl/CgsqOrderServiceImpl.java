@@ -113,8 +113,8 @@ public class CgsqOrderServiceImpl extends ServiceImpl<CgsqOrderMapper, CgsqOrder
             cgsqOrder.setOrderstatus(1);
         }
         SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
-        cgsqOrder.setDemanderby(loginUser.getUserid());
         cgsqOrder.setVoidstate(0);
+        cgsqOrder.setDocumenterby(loginUser.getUserid());
         cgsqOrderMapper.insert(cgsqOrder);
         for (BaseMedicine baseMedicine : cgsqOrder.getMedicineList()) {
             OrderMedicine orderMedicine = new OrderMedicine();

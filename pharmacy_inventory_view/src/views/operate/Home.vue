@@ -184,6 +184,7 @@ h1 {
 }
 
 .el-main {
+  background-color: aliceblue;
   color: #333;
   padding: 0;
 }

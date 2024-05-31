@@ -419,7 +419,7 @@ export default {
   data() {
     return {
       Useroptions: [],
-      billDate: new Date(),
+      billDate: "",
       medicineoptions: [],
       selectedProduct: [],
       warehouseList: [],
@@ -471,6 +471,8 @@ export default {
     };
   },
   async mounted() {
+    let formattedDate = new Date();
+    this.billDate = formattedDate.toLocaleDateString('zh-CN');
     await this.initStoreHouse();
     await this.getAllMedicine();
     await this.initCheckUser();
@@ -543,6 +545,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.StoreCheck.kcMedicineList = this.bcglXiangXiList;
+          
           this.$axios
             .post("/warehouse/check/addCheck", this.StoreCheck, {
               headers: {
@@ -623,7 +626,7 @@ export default {
   },
 };
 </script>
-  
+  q
   <style>
 .anniu {
   float: left;

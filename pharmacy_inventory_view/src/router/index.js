@@ -125,12 +125,7 @@ const routes = [
     name: 'printRefundOrder',
     component: PrintRefundOrder
   },
-  {
-    //采购统计
-    path:'/procurementTJ',
-    name: 'procurementTJ',
-    component: () => import('../views/procurement/ProcurementTJ.vue')
-  },
+
   {
     //库存报损打印
     path:'/PrintKcReported',
@@ -208,11 +203,7 @@ const routes = [
     name: 'printDDRKOrder',
      component: () => import('@/views/kc/DDRK/PrintDDRKOrder')
   },
-  {
-    path:'/crkmxManager',
-    name: 'CRKMXManager',
-    component: () => import('@/views/kc/CRKMX/CRKMXManager')
-  },
+
   {
     //调度出库单打印
     path: '/printDDCKOrder',

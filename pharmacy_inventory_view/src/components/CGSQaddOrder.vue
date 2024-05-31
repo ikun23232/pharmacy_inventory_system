@@ -58,11 +58,24 @@
         ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
-            <el-form-item label="需求人" prop="demainerId" >{{kname}}
-            <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demainerId" v-if="kname==null">添加用户</el-button>
+            <el-form-item label="需求人" prop="demanderBy" >
+            <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demanderBy" >选择需求人</el-button>
             </el-form-item>
           </div></el-col
         >
+
+           <el-col :span="6"
+           ><div class="grid-content bg-purple">
+   <el-input
+       type="text"
+       v-model="kname"
+       disabled
+   ></el-input>
+
+
+            </el-form-item>
+          </div></el-col
+           >
       </el-row>
       <el-dialog
         title="用户添加"
@@ -206,6 +219,7 @@
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="handleChange"
+                  :precision="0"
                   :min="1"
                   :max="100"
                 ></el-input-number>
@@ -240,7 +254,7 @@
               width="150"
             >
               <template slot-scope="scope" @change="cacltotalPrice(scope.row)">
-                {{ calculatedTotalPrice(scope.row) }}
+                {{ calculatedTotalPrice(scope.row).toFixed(2) }}
               </template>
             </el-table-column>
           </el-table>
@@ -399,8 +413,16 @@ export default {
     //     }
     //   });
     // };
+    var validatePass2 = (rule, value, callback) => {
+      if (this.kname === '') {
+        callback(new Error('请选择需求人'));
+      }else {
+        callback();
+      }
+    };
     return {
       kid:null,
+      kname:'',
       bcglXiangXiList: [],
       //选中的从表数据
       checkedDetail: [],
@@ -449,6 +471,9 @@ export default {
         type: [
           { required: true, message: "请选择采购类型", trigger: "change" },
         ],
+        demanderBy: [
+          { validator: validatePass2, trigger: 'blur' }
+        ],
       },
     };
   },
@@ -464,6 +489,7 @@ export default {
       this.kid=value.userid
       this.kname=value.username
       console.log(value,"ddddd");
+     this.CgsqOrder.demanderBy=this.kid;
     },
     addOrder() {
       this.adddialogVisible11 = true;

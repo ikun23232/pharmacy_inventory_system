@@ -56,24 +56,20 @@
         ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
-            <el-form-item label="需求人" prop="demainerId">
-              <el-select
-                v-model="CgsqOrder.demainerId"
-                placeholder="请选择需求人"
-                clearable
-                filterable
-              >
-                <!-- <el-option v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option> -->
-              </el-select>
+            <el-form-item label="需求人" prop="demanderby" >{{CgsqOrder.demanderUserName}}
+              <el-button type="primary" @click="addOrder" v-model="CgsqOrder.demainerBy" >添加用户</el-button>
             </el-form-item>
           </div></el-col
         >
       </el-row>
-
+      <el-dialog
+        title="用户添加"
+        :visible.sync="adddialogVisible11"
+        width="1400px"
+        v-if="adddialogVisible11"
+      >
+        <Userlist @handleKcmxSuccess="handleKcmxSuccess"> </Userlist>
+      </el-dialog>
       <el-tabs v-model="activeName">
         <el-tab-pane label="明细" name="first">
           <el-button
@@ -366,9 +362,12 @@ import { getBaseMedicineListByProviderId } from "@/api/baseMedicine";
 import { init } from "../api/BaseProvider.js";
 import { Message } from "element-ui";
 import { updateCgsqOrder, getCgsqOrderById } from "@/api/CgsdOrder";
-
+import Userlist from "@/components/UserList.vue"
 export default {
   name: "addProcOrder",
+  components:{
+    Userlist
+  },
   props: {
     id: {
       type: Number,
@@ -377,6 +376,9 @@ export default {
   },
   data() {
     return {
+      kid:null,
+      kname:"",
+      adddialogVisible11:false,
       bcglXiangXiList: [],
       //选中的从表数据
       checkedDetail: [],
@@ -437,8 +439,18 @@ export default {
     this.loading = false;
   },
   methods: {
+    handleKcmxSuccess(value) {
+      this.adddialogVisible11 = false;
+      this.CgsqOrder.demanderby=value.userid
+      this.CgsqOrder.demanderUserName=value.username
+      console.log(value,"ddddd");
+    },
+    addOrder() {
+      this.adddialogVisible11 = true;
+    },
     async initCgSqOrder(id) {
       let resp = await getCgsqOrderById(id);
+      console.log(resp.data,"resp.data");
       this.CgsqOrder = resp.data;
       console.log("hhhh", this.CgsqOrder);
       for (const medicineListElement of resp.data.medicineList) {
