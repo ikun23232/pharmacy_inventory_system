@@ -33,7 +33,7 @@ public class RefundOrderController {
     @RequestMapping("/addRefundOrder")
     @ResponseBody
     public Message addRefundOrder(@RequestBody Map<String,Object> map) {
-        StpUtil.checkPermission("xstk:add");
+//        StpUtil.checkPermission("xstk:add");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = refundOrderService.addRefundOrder(xsOrder);
         return message;
@@ -51,7 +51,7 @@ public class RefundOrderController {
     @RequestMapping("/updateRefundOrder")
     @ResponseBody
     public Message updateRefundOrder(@RequestBody Map<String,Object> map) {
-        StpUtil.checkPermission("xstk:update");
+//        StpUtil.checkPermission("xstk:update");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = refundOrderService.updateRefundOrder(xsOrder);
         return message;
@@ -68,7 +68,7 @@ public class RefundOrderController {
     @RequestMapping("/checkedRefundOrder")
     @ResponseBody
     public Message checkedRefundOrder(@RequestBody Map<String,Object> map) {
-        StpUtil.checkPermission("xstk:check");
+//        StpUtil.checkPermission("xstk:check");
         XsOrder xsOrder = JSON.parseObject(JSON.toJSONString(map.get("xsOrder")),XsOrder.class);
         Message message = refundOrderService.checkedRefundOrder(xsOrder);
         return message;
@@ -76,7 +76,7 @@ public class RefundOrderController {
     @Log("销售退款订单导出")
     @RequestMapping("/refundOrderExcel")
     public void saleOrderExcel(@RequestBody XsOrder xsOrder, HttpServletResponse response) {
-        StpUtil.checkPermission("xstk:excel");
+//        StpUtil.checkPermission("xstk:excel");
         refundOrderService.refundOrderExcel(xsOrder,response);
     }
 }

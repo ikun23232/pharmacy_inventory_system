@@ -1,5 +1,6 @@
 package com.kgc.service.Impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -60,6 +61,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
 
     @Override
     public Message addRefundOrder(XsOrder xsOrder) {
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
         xsOrder.setCreateBy(1);
         xsOrder.setUpdateBy(1);
         xsOrder.setUpdateDate(new Date());
@@ -111,6 +113,7 @@ public class RefundOrderServiceImpl extends ServiceImpl<RefundOrderMapper, XsOrd
 
     @Override
     public Message updateRefundOrder(XsOrder xsOrder) {
+        SysUser loginUser = (SysUser) StpUtil.getSession().get("user");
         xsOrder.setUpdateBy(1);
         xsOrder.setUpdateDate(new Date());
         xsOrder.setEditStatus(1);

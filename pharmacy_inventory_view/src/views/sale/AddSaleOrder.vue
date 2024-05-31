@@ -28,10 +28,10 @@
               </el-date-picker>
             </el-form-item></div>
         </el-col>
-        <el-col :span="8"><div>
+        <!-- <el-col :span="8"><div>
             <el-form-item label="制单人" prop="createByName">
               <el-input type="text" disabled v-model="saleOrder.createByName" size="small"></el-input>
-            </el-form-item></div></el-col>
+            </el-form-item></div></el-col> -->
         <el-col :span="8"
           ><div>
             <el-form-item label="银行账户" prop="bankAccountId">
@@ -114,7 +114,7 @@
          </el-table-column>
          <el-table-column label="数量" align="center" prop="quantity" width="160">
            <template slot-scope="scope">
-               <el-input-number size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
+               <el-input-number :precision="0" size="small" :min="1" :step="1"  @change="changeQuantity(scope.row)" v-model="medicineDetailList[scope.row.xh-1].quantity"></el-input-number>
            </template>
          </el-table-column>
          <el-table-column label="单价" align="center" prop="salePrice" width="120">
@@ -197,7 +197,6 @@ export default {
       saleOrder:{
         orderNo:"",
         orderDate:new Date(),
-        createByName:"张三",
         bankAccountId:"",
         remark:'',
         medicineDetailList:[],
@@ -375,12 +374,12 @@ export default {
           this.saleOrder.totalNumber=this.totalNumber
           saveSaleOrder(this.saleOrder).then((resp) => {
               if (resp.code == "200") {
+                this.$emit("handleDialogFormVisible",false);
                 Message({
                   message: "保存成功!",
                   type: "success",
                   center: "true",
                 });
-                this.$emit("handleDialogFormVisible",false);
               }         
             });
         } else {

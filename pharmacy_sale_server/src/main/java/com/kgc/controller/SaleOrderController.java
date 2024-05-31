@@ -79,7 +79,7 @@ public class SaleOrderController {
     @RequestMapping("/deleteSaleOrder")
     @ResponseBody
     public Message deleteSaleOrder(@RequestParam("orderNo") String orderNo) {
-        StpUtil.checkPermission("xsdd:delete");
+//        StpUtil.checkPermission("xsdd:delete");
         Message message=saleOrderService.deleteSaleOrder(orderNo);
         return message;
     }
@@ -88,14 +88,14 @@ public class SaleOrderController {
     @RequestMapping("/cancelSaleOrder")
     @ResponseBody
     public Message cancelSaleOrder(@RequestParam("orderNo") String orderNo) {
-        StpUtil.checkPermission("xsdd:cancel");
+//        StpUtil.checkPermission("xsdd:cancel");
         Message message=saleOrderService.cancelSaleOrder(orderNo);
         return message;
     }
     @Log("销售订单导出")
     @RequestMapping("/saleOrderExcel")
     public void saleOrderExcel(@RequestBody XsOrder xsOrder, HttpServletResponse response) {
-        StpUtil.checkPermission("xsdd:excel");
+//        StpUtil.checkPermission("xsdd:excel");
         saleOrderService.saleOrderExcel(xsOrder,response);
     }
 

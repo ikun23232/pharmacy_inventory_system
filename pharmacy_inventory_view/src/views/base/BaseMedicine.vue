@@ -162,7 +162,7 @@
           auto-complete="on"
           style="width: 500px"
         >
-          <el-form-item
+          <!-- <el-form-item
             label="医用商品编号"
             prop="id"
             :label-width="formLabelWidth"
@@ -172,7 +172,7 @@
               autocomplete="off"
               placeholder="请输入"
             ></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item
             label="医用商品名称"
             prop="name"
@@ -413,15 +413,16 @@ export default {
         ],
         salePrice: [
           { required: true, message: "请输入零售价", trigger: "blur" },
-          { type: "number", message: "请输入正确的零售价", trigger: "blur" },
+          { pattern: /^\d{1,3}(,\d{3})*(\.\d+)?$/, message: "请输入正确的零售价", trigger: "blur" },
         ],
         warning: [
           { required: true, message: "请输入库存预警值", trigger: "blur" },
+          { pattern: /^[1-9]\d*$/, message: "请输入正确的数量", trigger: "blur" },
         ],
         totalWarning: [
           { required: true, message: "请输入库存预警值", trigger: "blur" },
-          // {min: 200, message: '最小库存预警值不能低于200', trigger: 'blur'},
-          { pattern: /^\d*$/, message: "只能输入数字", trigger: "blur" },
+          // { type:"number",min: 200, message: '最小库存预警值不能低于200', trigger: 'blur'},
+          { pattern: /^[1-9]\d*$/, message: "请输入正确的数量", trigger: "blur" },
         ],
       },
       providerMedicineRules: {
@@ -450,6 +451,9 @@ export default {
     this.providerList = data.data;
   },
   methods: {
+    handleAddCancel(){
+      this.dialogAddProvider=false;
+    },
     async getAllBaseMedicine() {
       let data = await getAllBaseMedicine();
       console.log("12345", data.data);

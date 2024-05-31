@@ -245,6 +245,7 @@
             <el-col :span="12"><div>
               <el-form-item label="核批意见:" label-width="80px" size="small" prop="opinion">
                 <el-input
+                disabled
                 type="textarea"
                 autosize
                 placeholder="请输入内容"
@@ -254,7 +255,7 @@
             </div></el-col>
             <el-col :span="12"><div>
               <el-form-item label="核批结果:" label-width="80px" size="small" prop="isCheck">
-                <el-select v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
+                <el-select disabled v-model="saleOrder.isCheck"  placeholder="请选择" style="width:100%">
                   <el-option label="同意" value="1"></el-option>
                   <el-option label="拒绝" value="2"></el-option>
                 </el-select>
