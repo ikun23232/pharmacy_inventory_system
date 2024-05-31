@@ -135,8 +135,8 @@
 </template>
 
 <script>
-import {initSaleOrder,deleteSaleOrder,cancelSaleOrder,saleOrderExcel} from "../../api/saleOrder.js";
-import {getAllUser} from "../../api/sysUser.js";
+import {initSaleOrder,deleteSaleOrder,cancelSaleOrder,saleOrderExcel} from "@/api/saleOrder";
+import {getAllUser} from "@/api/sysUser";
 import AddSaleOrder from "../sale/AddSaleOrder.vue";
 import UpdateSaleOrder from "../sale/UpdateSaleOrder.vue";
 import SaleOrderDetail from "../sale/SaleOrderDetail.vue";

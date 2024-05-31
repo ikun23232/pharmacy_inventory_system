@@ -65,3 +65,7 @@ hs_err_pid*
 !/pharmacy_server/pharmacy_sale_server/target/
 !/pharmacy_server/pharmacy_system_server/target/
 !/pharmacy_server/pharmacy_warehouse_server/target/
+/pharmacy_common/target/classes/application.properties
+/pharmacy_common/target/maven-archiver/pom.properties
+/pharmacy_common/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/pharmacy_common/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst

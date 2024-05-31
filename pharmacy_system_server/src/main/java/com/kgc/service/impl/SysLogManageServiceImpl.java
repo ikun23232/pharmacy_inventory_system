@@ -45,9 +45,16 @@ public class SysLogManageServiceImpl extends ServiceImpl<SysLogManageMapper, Sys
     @Override
     public void LogManageexcel(SysOperationLogVo sysOperationLogVo, HttpServletResponse response) {
         List<SysOperationLogVo> sysOperationLogVos = sysLogManageMapper.queryList(null, null, null, null, null);
-
+        for (SysOperationLogVo sysOperationLog : sysOperationLogVos){
+            if (sysOperationLog.getRequestMethod().length() > 255){
+                sysOperationLog.setRequestMethod(sysOperationLog.getRequestMethod().substring(0, 254));
+            }
+            if (sysOperationLog.getResponseResult().length() > 255){
+                sysOperationLog.setResponseResult(sysOperationLog.getResponseResult().substring(0, 254));
+            }
+        }
         try {
-            ExeclUtil.write(sysOperationLogVos, SysOperationLogVo.class,response,"操作日志信息");
+            ExeclUtil.write(sysOperationLogVos, SysLogManage.class,response,"操作日志信息");
         } catch (IOException e) {
             e.printStackTrace();
         }

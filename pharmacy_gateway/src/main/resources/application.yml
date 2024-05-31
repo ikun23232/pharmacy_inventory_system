@@ -4,13 +4,15 @@ server:
 #  level:
 #    root: debug
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: gatewayServe
   cloud:
     nacos:
       discovery:
         server-addr: 8.134.253.155:8848
-        namespace: 78c95adb-0b11-4fba-95da-8146c87f0f8b
+        namespace: 6254e531-8f50-4c73-b421-0af02765ae6f
 
     gateway:
       routes:
@@ -75,5 +77,5 @@ sa-token:
   # 是否从cookie中读取token
   is-read-cookie: false
 gateway-config:
-  open-token: false
+  open-token: true
   open-replay: false

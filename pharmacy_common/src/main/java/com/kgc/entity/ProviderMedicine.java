@@ -26,25 +26,24 @@ public class ProviderMedicine implements Serializable {
     /**
      * 供应商药品表主键id
      */
-      @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
      * 供应商id
      */
     @TableField("providerId")
-    private String providerid;
+    private String providerId;
 
     /**
      * 药品id
      */
     @TableField("medicineId")
-    private Integer medicineid;
+    private Integer medicineId;
 
     /**
      * 价格
      */
+    @TableField("price")
     private BigDecimal price;
-
-
 }

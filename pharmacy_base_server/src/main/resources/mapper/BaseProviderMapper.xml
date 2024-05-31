@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kgc.dao.BaseProviderMapper">
     <update id="del">
-        update pharmacy.base_provider
+        update base_provider
         set isDel = 1
         where id = #{id}
     </update>
@@ -25,13 +25,13 @@
         base_provider.isDel,
         base_provider_type.id AS providerTypeId
         FROM
-        pharmacy.base_provider
+        base_provider
         INNER JOIN
-        pharmacy.base_provider_type ON base_provider.type = base_provider_type.id
+        base_provider_type ON base_provider.type = base_provider_type.id
         LEFT JOIN
-        pharmacy.sys_user AS create_user ON base_provider.createBy = create_user.userId
+        sys_user AS create_user ON base_provider.createBy = create_user.userId
         LEFT JOIN
-        pharmacy.sys_user AS update_user ON base_provider.updateBy = update_user.userId
+        sys_user AS update_user ON base_provider.updateBy = update_user.userId
         WHERE
         base_provider.isDel = 0
         <if test="name != '' and name != null">
@@ -51,7 +51,7 @@
                updateBy,
                updateDate,
                isDel
-        from pharmacy.base_provider
+        from base_provider
         where id = #{id}
           and isDel = 0
     </select>
@@ -65,7 +65,7 @@
                updateBy,
                updateDate,
                isDel
-        from pharmacy.base_provider
+        from base_provider
         where isDel = 0
           and name = #{name}
     </select>

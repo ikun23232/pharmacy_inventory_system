@@ -25,6 +25,9 @@
         SELECT  *  FROM sys_role   WHERE (roleId IN (select roleId from sys_userrole where userId = #{userId}))
     </select>
 
+
+
+
     <select id="getRoleListPage" resultType="com.kgc.entity.SysRole">
 
         SELECT  *  FROM sys_role

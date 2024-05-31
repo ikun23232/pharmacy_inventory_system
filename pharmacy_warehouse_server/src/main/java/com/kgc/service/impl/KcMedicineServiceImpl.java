@@ -10,12 +10,14 @@ import com.kgc.service.KcMedicineService;
 import com.kgc.vo.KcMedicineBSVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
 @Service
+@Transactional
 public class KcMedicineServiceImpl implements KcMedicineService {
 
     @Autowired

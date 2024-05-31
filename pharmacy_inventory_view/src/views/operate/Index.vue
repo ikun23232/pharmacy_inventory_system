@@ -4,8 +4,10 @@
       <div slot="header" class="clearfix">
         <span>概况</span>
         <el-button style="float: right; padding: 3px 0" type="text" size="big">
-          详情
+          <router-link :to="{  path: '/runningWater' }">详情</router-link>
+
         </el-button>
+
       </div>
       <div style="font-size: 18px; color: gray">
         <div style="float: left; margin-left: 40px">
@@ -69,7 +71,7 @@
       <div slot="header" class="clearfix">
         <span>销售订单</span>
         <el-button style="float: right; padding: 3px 0" type="text" >
-
+          <router-link :to="{  path: '/runningWater' }">详情</router-link>
         </el-button>
       </div>
       <div class="content">
@@ -103,7 +105,7 @@
       <div slot="header" class="clearfix">
         <span>销售退款</span>
         <el-button style="float: right; padding: 3px 0" type="text" >
-
+          <router-link :to="{  path: '/runningWater' }">详情</router-link>
         </el-button>
       </div>
       <div class="content">
@@ -142,7 +144,7 @@
       <div slot="header" class="clearfix">
         <span>采购订单</span>
         <el-button style="float: right; padding: 3px 0" type="text" >
-
+          <router-link :to="{  path: '/runningWater' }">详情</router-link>
         </el-button>
       </div>
       <div class="content">

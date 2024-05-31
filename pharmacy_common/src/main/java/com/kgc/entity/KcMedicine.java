@@ -96,4 +96,6 @@ public class KcMedicine implements Serializable {
     private Integer reporteddetailId;
     @TableField(exist = false)
     private Integer totalQuantity;
+
+    private Integer totalWarning;
 }

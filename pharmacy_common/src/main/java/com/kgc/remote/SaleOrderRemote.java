@@ -9,7 +9,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 public interface SaleOrderRemote {
+
+    @RequestMapping("/getSaleOrderDetailListByOrderNo")
+    @ResponseBody
+    public List<BaseMedicine> getSaleOrderDetailListByOrderNo(@RequestParam("orderNo") String orderNo);
+
     @RequestMapping("/getSaleOrderDetailByOrderNo")
     @ResponseBody
     public List<BaseMedicine> getSaleOrderDetailByOrderNo(@RequestParam("orderNo") String orderNo);
+
+
 }

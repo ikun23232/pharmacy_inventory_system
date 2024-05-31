@@ -1,6 +1,8 @@
 package com.kgc.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.KcDisfromware;
 import com.kgc.entity.Message;
 import com.kgc.service.KcDisfromwareService;
@@ -34,15 +36,20 @@ public class KcOutintodetialController {
         Message kcOutinTOdetailList = kcOutintodetialService.getKcOutinTOdetailList(dispatchVO);
         return kcOutinTOdetailList;
     }
+
+    @Log("删除出入库明细")
     @RequestMapping("/delKcOutinTodetail")
     public Message delKcOutinTodetail(int id){
+        StpUtil.checkPermission("aiwdoiajwd");
+
         Message message = kcOutintodetialService.delKcOutinTodetail(id);
         return message;
     }
 
-
+    @Log("导出出入库明细")
     @RequestMapping("/crkmxExcel")
     public Message crkmxExcel(@RequestBody DispatchVO vo, HttpServletResponse response) {
+        StpUtil.checkPermission("awidw2222aa");
         kcOutintodetialService.crkmxExcel(vo,response);
         return Message.success(null);
     }

@@ -18,4 +18,8 @@ public class SaleOrderFeignController implements SaleOrderRemote {
         List<BaseMedicine> baseMedicineList=saleOrderService.getSaleOrderDetailByOrderNo(orderNo);
         return baseMedicineList;
     }
+    @Override
+    public List<BaseMedicine> getSaleOrderDetailListByOrderNo(String orderNo){
+        return saleOrderService.getSaleOrderDetailListByOrderNo(orderNo);
+    }
 }

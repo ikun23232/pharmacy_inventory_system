@@ -4,6 +4,7 @@ package com.kgc.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.kgc.annotation.Log;
 import com.kgc.entity.*;
 import com.kgc.service.IKcInventoryService;
 import com.kgc.service.IKcInventorydetailService;
@@ -57,7 +58,7 @@ public class KcInventoryController {
         Message message = iKcInventoryService.getKcMedicineByMedicine(vo);
         return message;
     }
-
+    @Log("盘点信息添加")
     @RequestMapping("/check/addCheck")
     public Message addCheck(@RequestBody KcInventoryVo kcInventory ) {
         Message message = iKcInventoryService.addCheck(kcInventory);
@@ -69,16 +70,19 @@ public class KcInventoryController {
         Message message = iKcInventoryService.getKcInventoryVoById(id);
         return message;
     }
+    @Log("盘点信息修改单据状态")
     @RequestMapping("/check/updateorderStatus")
     public Message updateorderStatus(Integer id ) {
         Message message = iKcInventoryService.updateorderStatus(id);
         return message;
     }
+    @Log("盘点信息修改作废状态")
     @RequestMapping("/check/updateisVoid")
     public Message updateisVoid(Integer id ) {
         Message message = iKcInventoryService.updateisVoid(id);
         return message;
     }
+    @Log("盘点信息删除")
     @RequestMapping("/check/deleteCheck")
     public Message info(@RequestBody Integer[] ids) {
 
@@ -89,13 +93,13 @@ public class KcInventoryController {
         iKcInventorydetailService.update(updateWrapper);
         return Message.success("操作成功");
     }
-
+    @Log("盘点信息审核")
     @RequestMapping("/check/approveCheck")
     public Message approveCheck(@RequestBody KcInventoryVo vo) {
         Message message = iKcInventoryService.approveCheck(vo);
         return message;
     }
-
+    @Log("盘点信息导出")
     @RequestMapping("/check/checkExcel")
     public void checkExcel(@RequestBody KcInventoryVo vo, HttpServletResponse response) {
         iKcInventoryService.checkExcel(vo,response);

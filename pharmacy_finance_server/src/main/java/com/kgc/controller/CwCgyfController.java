@@ -1,5 +1,7 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.CwCgyf;
 import com.kgc.entity.Message;
@@ -31,8 +33,10 @@ public class CwCgyfController {
         return message;
     }
 
+//    @Log("采购应付付款")
     @RequestMapping("/updateCwCgyf")
     public Message updateCwCgyf(@RequestBody CwCgyf cwCgyf){
+//        StpUtil.checkPermission("cw:cgyf:add");
         Message message = cwCgyfService.updateCwCgyf(cwCgyf);
         return message;
     }
@@ -55,8 +59,10 @@ public class CwCgyfController {
         return message;
     }
 
+//    @Log("采购应付导出")
     @RequestMapping("/cwCgyfExcel")
     public void cwCgyfExcel(HttpServletResponse response) {
+//        StpUtil.checkPermission("cw:cgyf:excel");
         cwCgyfService.cwCgyfExcel(response);
     }
 }

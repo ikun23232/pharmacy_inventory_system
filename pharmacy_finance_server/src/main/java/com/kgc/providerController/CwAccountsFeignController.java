@@ -4,14 +4,15 @@ import com.kgc.entity.CwAccounts;
 import com.kgc.entity.Message;
 import com.kgc.remote.CwAccountsRemote;
 import com.kgc.service.CwAccountsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 @RestController
 public class CwAccountsFeignController implements CwAccountsRemote {
 
-    @Autowired
+    @Resource
     private CwAccountsService cwAccountsService;
 
     @Override
@@ -25,4 +26,5 @@ public class CwAccountsFeignController implements CwAccountsRemote {
         Message message=cwAccountsService.insertCwAccounts(cwAccounts);
         return message;
     }
+
 }

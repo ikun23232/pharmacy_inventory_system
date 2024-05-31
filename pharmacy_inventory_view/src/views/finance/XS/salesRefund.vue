@@ -83,7 +83,7 @@ export default {
       <el-row :gutter="20">
         <el-col :span="6"
         ><div class="grid-content bg-purple">
-          单据编号：
+          销售退款编号：
           <el-input
               v-model="cwXstk.code"
               style="width: 200px"
@@ -92,7 +92,7 @@ export default {
         ></el-col>
         <el-col :span="6"
         ><div class="grid-content bg-purple">
-          单据编号：
+          销售订单编号：
           <el-input
               v-model="cwXstk.originalOrder"
               style="width: 200px"

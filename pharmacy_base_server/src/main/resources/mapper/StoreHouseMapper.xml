@@ -37,7 +37,7 @@
         where id = #{id}
     </update>
 
-    <select id="checkName" resultType="BaseStorehouse">
+    <select id="checkName" resultType="com.kgc.entity.BaseStorehouse">
         select id,
                name,
 --                address,

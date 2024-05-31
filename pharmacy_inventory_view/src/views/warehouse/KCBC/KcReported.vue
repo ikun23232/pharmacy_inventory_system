@@ -4,11 +4,13 @@ import AddReported from "@/components/AddReported.vue";
 import { Message } from "element-ui";
 import UpdateReported from "@/components/UpdateReported.vue";
 import DetailsReported from "@/components/DetailsReported.vue";
+import CheckReported from "@/components/CheckReported.vue";
 export default {
   name: "KcReported",
-  components: {DetailsReported, UpdateReported, AddReported},
+  components: {CheckReported, DetailsReported, UpdateReported, AddReported},
   data() {
     return {
+      loading:false,
       // 登录用户
       loginUser:1,
       // 库存报损模糊查询数据
@@ -78,6 +80,8 @@ export default {
       },
       // 修改库存报损对话框
       updateReportedVisible:false,
+      //审批库存报损对话框
+      checkReportedVisible:false,
       // 修改库存报损数据
       updateReported:{
 
@@ -88,6 +92,7 @@ export default {
     }
   },
   mounted() {
+    this.loading=true
     // 初始化分页数据
     this.getKcReportedLists()
     // 初始化仓库列表
@@ -118,6 +123,7 @@ export default {
           }
           this.kcReportedPage=resp.data
         })
+      this.loading=false
     },
     // 审批状态
     approvalStatusFormatter(row, column) {
@@ -147,6 +153,10 @@ export default {
     updateReporteds(row) {
       this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
       this.updateReportedVisible = true;
+    },
+    checkReporteds(row) {
+      this.updateReported = Object.assign({}, row); // 深度复制 row 对象，以避免引用相同的对象
+      this.checkReportedVisible = true;
     },
     detailsReporteds(row) {
       console.log(row)
@@ -207,7 +217,7 @@ export default {
 
 <template>
   <div>
-    <div class="title">库存报损</div>
+<!--    <div class="title">库存报损</div>-->
     <!--查询条件-->
     <div class="condition">
       报损编号：
@@ -267,7 +277,7 @@ export default {
     </div><br/>
     <!--表格内容-->
     <div class="table">
-      <el-table :data="kcReportedPage.list" border style="width: 100%">
+      <el-table :data="kcReportedPage.list" border style="width: 100%" v-loading="loading">
         <el-table-column prop="code" label="报损编号" width="150" fixed/>
         <el-table-column prop="storehouseName" label="仓库" width="120"/>
         <el-table-column prop="reportedTypeName" label="报损类型" width="120"/>
@@ -286,8 +296,8 @@ export default {
         <el-table-column prop="modificationName" label="修改人" width="120"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus!=2">修改</el-button>&nbsp;
-            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus==2">详情</el-button>&nbsp;
+            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus==1">修改</el-button>
+            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus!=1">详情</el-button>
             <el-dropdown>
           <span class="el-dropdown-link">
             更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -295,6 +305,7 @@ export default {
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="print(row.code)">打印</el-dropdown-item>
                 <el-dropdown-item @click.native="deleteReported(row)">删除</el-dropdown-item>
+                <el-dropdown-item @click.native="checkReporteds(row)" v-if="row.approvalStatus==1">审批</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -324,6 +335,14 @@ export default {
                         @cancel="updateReportedVisible=false" />
       </el-dialog>
     </div>
+
+    <div>
+      <el-dialog title="审批报损" :visible.sync="checkReportedVisible" width="1500px">
+        <CheckReported :row-data="updateReported" @handleAddSuccess="checkReportedVisible=false;;getKcReportedLists(1)"
+                        @cancel="checkReportedVisible=false" />
+      </el-dialog>
+    </div>
+
     <div>
       <el-dialog title="详情报损" :visible.sync="detailsReportedVisible" width="1500px">
         <DetailsReported :row-data="updateReported"

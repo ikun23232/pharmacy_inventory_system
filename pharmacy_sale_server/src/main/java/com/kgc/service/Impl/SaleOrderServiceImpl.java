@@ -306,5 +306,14 @@ public class SaleOrderServiceImpl extends ServiceImpl<SaleOrderMapper, XsOrder> 
         }
     }
 
+    @Override
+    public List<BaseMedicine> getSaleOrderDetailListByOrderNo(String orderNo) {
+        List<BaseMedicine> baseMedicineDetailList=saleOrderMapper.getSaleOrderDetailByOrderNo(orderNo);
+        if (baseMedicineDetailList!=null){
+            return baseMedicineDetailList;
+        }
+        return null;
+    }
+
 
 }

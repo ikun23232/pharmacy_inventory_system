@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column prop="code" label="订单编码" width="150" fixed>
         <template slot-scope="scope">
-          <a href="#" @click="viewOrder(scope.row.id)">{{ scope.row.code }}</a>
+          <a href="#" >{{ scope.row.code }}</a>
         </template>
       </el-table-column>
 
@@ -94,27 +94,8 @@
 
       <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button
-              @click="updateOrder(scope.row.id)"
-              type="primary"
-              size="small"
-              :disabled="scope.row.orderstatus>=2"
-          >编辑
+          <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
           </el-button>
-          <el-dropdown>
-      <span class="el-dropdown-link">
-        更多<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item ><el-button @click="handleDelete(scope.row)" type="danger" size="small">删除
-              </el-button></el-dropdown-item>
-
-
-
-
-
-            </el-dropdown-menu>
-          </el-dropdown>
 
         </template>
       </el-table-column>

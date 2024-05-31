@@ -71,10 +71,16 @@ export function getMedicineListByCodeComblie(code) {
         params: {
             code: code,
         }
-
     });
 }
 
+export function addProviderMedicine(ProvideMedicine) {
+    return request.post(baseUrl + "/addProviderMedicine", ProvideMedicine);
+}
+
+export function checkProviderExits(ProvideMedicine) {
+    return request.post(baseUrl + "/checkProviderExits", ProvideMedicine);
+}
 //导出库存明细
 export function baseMedicineExcel(baseMedicine) {
     return request.post(baseUrl + "/baseMedicineExcel", {

@@ -1,5 +1,7 @@
 package com.kgc.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import com.kgc.annotation.Log;
 import com.kgc.entity.CwBsys;
 import com.kgc.entity.Message;
 import com.kgc.service.CwBsysService;
@@ -34,8 +36,10 @@ public class CwBsysController {
         return cwBsysService.getStorehouseList();
     }
 
+//    @Log("报损应收导出")
     @RequestMapping("/cwbsysExcel")
     public void cwbsysExcel(HttpServletResponse response){
+//        StpUtil.checkPermission("cw:bsys:excel");
         cwBsysService.cwbsysExcel(response);
     }
 

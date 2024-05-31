@@ -2,15 +2,16 @@ package com.kgc.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kgc.dao.KcInventoryMapper;
 import com.kgc.dao.KcInventorydetailMapper;
 import com.kgc.entity.*;
-import com.kgc.dao.KcInventoryMapper;
 import com.kgc.service.IKcInventoryService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kgc.service.IKcInventorydetailService;
 import com.kgc.service.IKcInventoryrkService;
+import com.kgc.service.KcReportedService;
 import com.kgc.utils.ExeclUtil;
 import com.kgc.utils.TimeUtil;
 import com.kgc.vo.KcInventoryVo;
@@ -22,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -45,6 +44,8 @@ public class KcInventoryServiceImpl extends ServiceImpl<KcInventoryMapper, KcInv
     private IKcInventorydetailService iKcInventorydetailService;
     @Autowired
     private IKcInventoryrkService inventoryrkService;
+    @Autowired
+    private KcReportedService kcReportedService;
 
     @Override
     public Message getAllCheckByPage(KcInventoryVo vo, Page page) {
@@ -53,7 +54,6 @@ public class KcInventoryServiceImpl extends ServiceImpl<KcInventoryMapper, KcInv
         PageInfo<KcInventory> pageInfo = new PageInfo<>(allCheckByPage);
         return Message.success(pageInfo);
     }
-
 
 
     @Override
@@ -112,30 +112,47 @@ public class KcInventoryServiceImpl extends ServiceImpl<KcInventoryMapper, KcInv
     }
 
     @Override
-    public Message approveCheck(KcInventoryVo inventory ) {
+    public Message approveCheck(KcInventoryVo inventory) {
 
-        if (inventory.getIsApproved()==2){
+        if (inventory.getIsApproved() == 2) {
             List<KcInventorydetail> kcInventorydetailList = inventory.getKcInventorydetailList();
-            for (KcInventorydetail kcInventorydetail : kcInventorydetailList){
+            for (KcInventorydetail kcInventorydetail : kcInventorydetailList) {
                 List<KcInventorydetail> kcMedicineByMedicine = kcInventoryMapper.getKcMedicineByMedicine(kcInventorydetail.getStorehouseId(), kcInventorydetail.getMedicineId());
-                for (KcInventorydetail kcMedicine : kcMedicineByMedicine){
+                for (KcInventorydetail kcMedicine : kcMedicineByMedicine) {
                     //盘亏处理
-                    if (kcMedicine.getTotalQuantity()>kcInventorydetail.getExactCount()){
+                    if (kcMedicine.getTotalQuantity() > kcInventorydetail.getExactCount()) {
 
+                        Map<String, Object> map = new HashMap<>();// 创建外部Map
 
+                        Map<String, Object> theData = new HashMap<>();// 创建内部Map，包含theData所需的键值对
 
-
-                    }else if (kcMedicine.getTotalQuantity()<kcInventorydetail.getExactCount()){
-                        KcInventoryrk kcInventoryrk=new KcInventoryrk();
+                        // 设置storehouseId
+                        theData.put("storehouseId", kcInventorydetail.getStorehouseId()); // 假设仓库ID为1
+                        // 设置documenterBy
+                        theData.put("documenterBy", 1); // 假设记录人ID为2
+                        // 创建药品列表
+                        List<Map<String, Object>> list = new ArrayList<>();
+                        // 添加药品信息到列表
+                        Map<String, Object> medicineInfo1 = new HashMap<>();
+                        medicineInfo1.put("reportedNum", kcMedicine.getTotalQuantity() - kcInventorydetail.getExactCount()); // 假设报告数量为10
+                        medicineInfo1.put("medicineId", kcInventorydetail.getMedicineId()); // 假设药品ID为101
+                        list.add(medicineInfo1);
+                        // 将药品列表添加到theData Map中
+                        theData.put("list", list);
+                        // 将theData Map添加到外部Map中
+                        map.put("theData", theData);
+                        kcReportedService.addKcReportedAllByPk(map);
+                    } else if (kcMedicine.getTotalQuantity() < kcInventorydetail.getExactCount()) {
+                        KcInventoryrk kcInventoryrk = new KcInventoryrk();
                         kcInventoryrk.setInventoryCode(TimeUtil.getCurrentTime("PDRK"));
                         kcInventoryrk.setInventorydetailId(inventory.getId());
                         kcInventoryrk.setMedicineId(kcMedicine.getMedicineId());
-                        kcInventoryrk.setRkQuantity(kcInventorydetail.getExactCount()-kcMedicine.getTotalQuantity());
+                        kcInventoryrk.setRkQuantity(kcInventorydetail.getExactCount() - kcMedicine.getTotalQuantity());
                         kcInventoryrk.setStorehouseId(kcInventorydetail.getStorehouseId());
                         kcInventoryrk.setProviderId(kcInventorydetail.getProviderId());
                         inventoryrkService.save(kcInventoryrk);
 
-                    }else {
+                    } else {
 
                     }
                 }
@@ -149,7 +166,7 @@ public class KcInventoryServiceImpl extends ServiceImpl<KcInventoryMapper, KcInv
                     .eq("id", inventory.getId())
             );
             return Message.success("");
-        }else {
+        } else {
             KcInventory vo = new KcInventory();
             vo.setIsApproved(inventory.getIsApproved());
             vo.setApproverRemark(inventory.getApproverRemark());
@@ -173,7 +190,7 @@ public class KcInventoryServiceImpl extends ServiceImpl<KcInventoryMapper, KcInv
             temp.add(vo);
         }
         try {
-            ExeclUtil.write(temp, PandianDetailVo.class,response,"盘点明细");
+            ExeclUtil.write(temp, PandianDetailVo.class, response, "盘点明细");
         } catch (IOException e) {
             e.printStackTrace();
         }
