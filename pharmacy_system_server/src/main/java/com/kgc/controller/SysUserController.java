@@ -53,7 +53,7 @@ public class SysUserController {
     public Message getUserListByPage(String username,Integer sex,Integer isstate,Integer roleId,String currentNo){
         int _currentPageNo = 1;
         String rd ="";
-        if (currentNo!=null&&!"".equals(currentNo)) {
+        if (currentNo!=null&&!"".equals(currentNo)&&!"0".equals(currentNo)) {
             _currentPageNo = Integer.parseInt(currentNo);
         }
         Page page = new Page();
