@@ -205,6 +205,8 @@
             :row-class-name="rowClassName"
             @selection-change="chandleDetailSelectionChange"
             ref="tb"
+            stripe
+            tooltip-effect="dark"
             show-summary
           >
             <el-table-column label="序号" align="center" prop="xh" width="50">
@@ -276,6 +278,15 @@
             >
             </el-table-column>
           </el-table>
+
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="current"
+            :page-size="size"
+            :total="total"
+          >
+          </el-pagination>
 
           <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
           <div style="text-align: left">
@@ -418,6 +429,9 @@ export default {
   name: "addCheck",
   data() {
     return {
+      total: 0,
+      size: 10,
+      current: 1,
       Useroptions: [],
       billDate: "",
       medicineoptions: [],
@@ -472,13 +486,23 @@ export default {
   },
   async mounted() {
     let formattedDate = new Date();
-    this.billDate = formattedDate.toLocaleDateString('zh-CN');
+    this.billDate = formattedDate.toLocaleDateString("zh-CN");
     await this.initStoreHouse();
     await this.getAllMedicine();
     await this.initCheckUser();
     this.StoreCheck.code = await getCurrentTime("KCPD");
   },
   methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.size = val;
+      this.initcheckShop();
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.current = val;
+      this.initcheckShop();
+    },
     onChange(value) {
       console.log(value);
       if (value && value.length >= 3) {
@@ -528,24 +552,24 @@ export default {
           params: {
             warehouseId: this.StoreCheck.warehouseId,
             materialCategoryId: this.StoreCheck.materialCategoryId,
+            currentNo: this.current,
           },
         })
         .then((resp) => {
-          console.log(this.bcglXiangXiList);
-
-          this.bcglXiangXiList = resp.data;
+          console.log(resp,"sadlll");
+          this.bcglXiangXiList = resp.data.list;
+          this.size = resp.data.pageSize;
+          this.current = resp.data.pageNum;
+          this.total = resp.data.total;
         });
     },
 
-    handleCurrentChange(val) {
-      this.page.pageNum = val;
-      this.getList(this.page);
-    },
+   
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.StoreCheck.kcMedicineList = this.bcglXiangXiList;
-          
+
           this.$axios
             .post("/warehouse/check/addCheck", this.StoreCheck, {
               headers: {
@@ -553,22 +577,20 @@ export default {
               },
             })
             .then((resp) => {
-          
-                if (resp.code === "200") {
-                  this.$message({
-                    message: "添加成功!",
-                    type: "success",
-                    center: true,
-                  });
-                  this.$emit("addSuccess");
-                } else {
-                  this.$message({
-                    message: "添加失败!",
-                    type: "error",
-                    center: true,
-                  });
-                }
-              
+              if (resp.code === "200") {
+                this.$message({
+                  message: "添加成功!",
+                  type: "success",
+                  center: true,
+                });
+                this.$emit("addSuccess");
+              } else {
+                this.$message({
+                  message: "添加失败!",
+                  type: "error",
+                  center: true,
+                });
+              }
             })
             .catch((error) => {
               console.error("Error in sending request:", error);

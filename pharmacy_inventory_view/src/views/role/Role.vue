@@ -43,7 +43,7 @@
       border
       stripe
       @selection-change="handleSelectionChange"
-      v-loading=loading
+      v-loading="loading"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
 
@@ -135,6 +135,7 @@
     <el-dialog title="分配权限" :visible.sync="permDialogVisible" width="600px">
       <el-form :model="permForm">
         <el-tree
+
           :data="permTreeData"
           show-checkbox
           ref="permTree"
@@ -161,7 +162,7 @@ export default {
   name: "Role",
   data() {
     return {
-      loading:false,
+      loading: false,
       searchForm: {
         name: "",
       },
@@ -201,6 +202,7 @@ export default {
     });
   },
   methods: {
+
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
@@ -237,12 +239,12 @@ export default {
     },
 
     getRoleList() {
-      this.loading=true
+      this.loading = true;
       this.$axios
         .get("/user/role/list", {
           params: {
             rolename: this.searchForm.name,
-            isUse:this.searchForm.isUse,
+            isUse: this.searchForm.isUse,
             current: this.current,
           },
         })
@@ -253,7 +255,7 @@ export default {
           this.size = res.data.pageSize;
           this.current = res.data.pageNum;
           this.total = res.data.total;
-          this.loading=false
+          this.loading = false;
         });
     },
 
@@ -336,19 +338,18 @@ export default {
           console.log("perm");
 
           console.log(res);
-		  if(res.code==="200"){
-			this.$message({
-            showClose: true,
-            message: "恭喜你，操作成功",
-            type: "success",
-            onClose: () => {
-              this.getRoleList();
-            },
-          });
-          this.permDialogVisible = false;
-          this.resetForm(formName);
-		  }
-         
+          if (res.code === "200") {
+            this.$message({
+              showClose: true,
+              message: "恭喜你，操作成功",
+              type: "success",
+              onClose: () => {
+                this.getRoleList();
+              },
+            });
+            this.permDialogVisible = false;
+            this.resetForm(formName);
+          }
         });
     },
   },

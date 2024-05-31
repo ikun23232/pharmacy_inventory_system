@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface IKcInventoryService extends IService<KcInventory> {
     public Message getAllCheckByPage(KcInventoryVo vo, Page page);
-    public Message getKcMedicineByMedicine(KcInventoryVo inventory);
+    public Message getKcMedicineByMedicine(KcInventoryVo inventory,Page page);
     public Message addCheck(KcInventoryVo inventory);
     public Message getKcInventoryVoById(Integer id);
     public Message updateorderStatus(Integer id);
