@@ -243,7 +243,7 @@
     <el-dialog
       title="盘点申请添加"
       :visible.sync="adddialogVisible"
-      width="85%"
+      width="1600px"
       v-if="adddialogVisible"
     >
       <StoreCheck width="75%" @addSuccess="addSuccess"> </StoreCheck>

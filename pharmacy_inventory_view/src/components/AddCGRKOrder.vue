@@ -733,7 +733,7 @@ export default {
       console.log(this.list);
     },
     async initProvider() {
-      let resp = await init("", 0, 1, 5);
+      let resp = await init("", 0, 1, 100);
       this.providerList = resp.data.list;
     },
     async initWarHourseList() {

@@ -76,7 +76,7 @@ public class SysMenuController {
         sysMenu.setCreatedate(new Date());
         sysMenu.setCreateby(1);
         sysMenuService.save(sysMenu);
-        return Message.success(sysMenu);
+        return Message.success();
 //        }
 //        return Message.error("无此权限");
     }
