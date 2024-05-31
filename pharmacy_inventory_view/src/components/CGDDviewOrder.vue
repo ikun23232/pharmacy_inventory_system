@@ -70,12 +70,14 @@
                 v-model="CgddOrder.payType"
                 placeholder="请选择付款方式"
                 clearable
-                filterable>
+                filterable
+              >
                 <el-option label="货到付款" :value="0"> </el-option>
                 <el-option label="全款后发货" :value="1"> </el-option>
                 <el-option label="直接付款" :value="2"> </el-option>
               </el-select>
-            </el-form-item></div></el-col>
+            </el-form-item></div
+        ></el-col>
         <el-col :span="6"
           ><div class="grid-content bg-purple">
             <el-form-item label="交货日期" prop="deliveryDate">

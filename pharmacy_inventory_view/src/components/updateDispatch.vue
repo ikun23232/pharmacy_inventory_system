@@ -405,7 +405,7 @@ export default {
       activeName: "first",
       adddialogVisible: false,
       kcmxdialog: false,
-      firstRender: false,
+      firstRender: true,
       kcmxListTemp: [],
       kcmxList: [],
       medicineListTemp: [],
@@ -533,7 +533,7 @@ export default {
       }
       if (this.changeMedicineList.length > 0) {
         for (let index = 0; index < this.changeMedicineList.length; index++) {
-          if (this.KcDispatch.medicineList.length > 0) {
+          if (this.KcDispatch.medicineList != null && this.KcDispatch.medicineList.length) {
             for (let i = 0; i < this.KcDispatch.medicineList.length; i++) {
               const element = this.KcDispatch.medicineList[i];
               if (
@@ -561,7 +561,7 @@ export default {
             aimStoreHouseList: this.storeHouseList,
             batchCode: this.changeMedicineList[index].batchCode,
             name: this.changeMedicineList[index].name,
-            medicineId: this.changeMedicineList[index].id,
+            medicineId: this.changeMedicineList[index].medicineId,
             unitId: this.changeMedicineList[index].unitId,
             unitName: this.changeMedicineList[index].unitName,
             specification: this.changeMedicineList[index].specification,
@@ -577,15 +577,11 @@ export default {
           this.bcglXiangXiList.push(obj);
         }
         this.KcDispatch.medicineList = this.bcglXiangXiList;
-        if (this.firstRender) {
-          alert(111)
           this.$message({
             message: "添加成功",
             type: "success",
           });
           this.activeName = "second";
-        }
-        this.firstRender = true;
       }
     },
     async showMedicineListDetail() {
@@ -651,6 +647,7 @@ export default {
     updateDispatchDetails() {
       this.medicineListTemp = [];
       this.bcglXiangXiList = [];
+      this.KcDispatch.medicineList = [];
     },
     changeStoreHouse(row, index) {
       if (this.KcDispatch.beforeWarehouseId == row.aimStoreHouseId) {

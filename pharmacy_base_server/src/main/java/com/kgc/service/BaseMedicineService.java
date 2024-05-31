@@ -25,6 +25,8 @@ public interface BaseMedicineService extends IService<BaseMedicine> {
 
     public Message getBaseMedicineById(int id, int batchCode);
 
+    public Message getMedicineById(int id);
+
     public Message updateBaseMedicineById(BaseMedicine baseMedicine);
 
     public Message deleteBaseMedicineById(int id);
