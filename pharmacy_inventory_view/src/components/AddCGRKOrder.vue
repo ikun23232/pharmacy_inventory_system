@@ -642,7 +642,7 @@ export default {
         createTime: new Date(),
         documenterBy: 1,
         medicineList: [],
-        warhouseUserId: 1,
+        warhouseUserId: null,
         purchaseId: "",
       },
       CgddOrderTempList: [],
