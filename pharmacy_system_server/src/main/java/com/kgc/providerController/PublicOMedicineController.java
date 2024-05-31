@@ -36,7 +36,11 @@ public class PublicOMedicineController implements PublicOMedicineRemote {
 
     @Override
     public Message selectMaxYourField() {
+
         Message message = publicOMedicineService.selectMaxYourField();
+        if (message.getData()==null){
+            message.setData("1001");
+        }
         return message;
     }
 }

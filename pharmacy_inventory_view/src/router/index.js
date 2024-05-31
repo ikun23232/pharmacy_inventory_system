@@ -32,7 +32,6 @@ import SaleStatistics from "../views/saleStatistics/SaleStatistics.vue";
 import SaleOrderDetailStatistics from "../views/saleStatistics/SaleOrderDetailStatistics.vue";
 import RefundOrderDetailStatistics from "../views/saleStatistics/RefundOrderDetailStatistics.vue";
 import IndexHome from "../views/index/IndexHome.vue";
-import User from '@/views/user/User.vue'
 
 Vue.use(VueRouter)
 
@@ -60,11 +59,7 @@ const routes = [
 			},
     ]
   },
-	{
-		path: '/User',
-		name: 'User',
-		component: User,
-	},
+
 	{
 		path: '/login',
 		name: 'Login',
@@ -130,7 +125,6 @@ const routes = [
     name: 'printRefundOrder',
     component: PrintRefundOrder
   },
-
   {
     //库存报损打印
     path:'/PrintKcReported',

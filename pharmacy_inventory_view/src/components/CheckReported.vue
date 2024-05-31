@@ -8,7 +8,7 @@ import {
 } from "@/api/KcReported";
 import {Message} from "element-ui";
 import kcReported from "@/views/warehouse/KCBC/KcReported.vue";
-
+import { getAllUser} from "@/api/sysUser"
 export default {
   name: "CheckReported",
   data() {
@@ -34,6 +34,18 @@ export default {
         total: 0,
         list: []
       },
+      userList:[],
+      rules: {
+
+        modificationBy: [
+          { required: true, message: "请选择审批人", trigger: "blur" },
+        ],
+        approverRemark: [
+          { required: true, message: "请输入审批意见", trigger: "blur" },
+        ],
+
+
+      },
 
     }
   },
@@ -46,6 +58,13 @@ export default {
   },
   // 使用 mounted 生命周期钩子来在组件挂载后打印 rowData
   mounted() {
+    getAllUser().then(resp=>{
+      if (resp.code!=200){
+        return
+      }
+      this.userList=resp.data
+
+    })
     this.reportedData = this.rowData;
     getStorehouseList().then(resp => {
       if (resp.code != 200) {
@@ -175,6 +194,31 @@ export default {
       }
     },
     updateReporteds() {
+      if (this.reportedData.approverRemark == ''){
+        Message({
+          message: '请输入审批意见',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
+      if (this.reportedData.approvalStatus == 0){
+        Message({
+          message: '请选择审批状态',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
+      if (this.reportedData.modificationBy == 0){
+        Message({
+          message: '请选择审批人',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return
+      }
+
       if (this.wereAddList.length == 0) {
         Message({
           message: '请添加药品',
@@ -194,7 +238,7 @@ export default {
           return; // 退出方法
         }
       }
-      this.reportedData.modificationBy = this.loginUser;
+      // this.reportedData.modificationBy = this.loginUser;
       const theData = {
         kcReported: this.reportedData,
         kcMedicineList: this.wereAddList
@@ -219,7 +263,7 @@ export default {
 
 <template>
   <div>
-    <el-form :model="reportedData" ref="addReported" label-width="100px" class="demo-ruleForm">
+    <el-form :model="reportedData" :rules="rules" ref="addReported" label-width="100px" class="demo-ruleForm">
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item label="报损编号" prop="code">
@@ -233,7 +277,7 @@ export default {
         </el-col>
         <el-col :span="8">
           <el-form-item label="报损类型" prop="reportedTypeId">
-            <el-select v-model="reportedData.reportedTypeId" placeholder="请选择报损类型" name="reportedTypeId">
+            <el-select v-model="reportedData.reportedTypeId" placeholder="请选择报损类型" name="reportedTypeId" disabled>
               <el-option
                   v-for="item in reportedTypeList"
                   :key="item.id"
@@ -243,6 +287,35 @@ export default {
             </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="报损标题" prop="title">
+            <el-input v-model="reportedData.title" placeholder="请输入报损主题" disabled></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8">
+          <el-form-item label="报损人" prop="documenterName">
+            <el-input v-model="reportedData.documenterName" disabled ></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8">
+          <el-form-item label="审批人" prop="modificationBy">
+            <el-select v-model="reportedData.modificationBy" placeholder="请选择人" name="modificationBy" >
+              <el-option :value="0" label="请选择人" disabled></el-option>
+              <el-option
+                  v-for="item in userList"
+                  :key="item.userid"
+                  :label="item.username"
+                  :value="item.userid">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+
       </el-row>
       <el-row :gutter="20">
         <el-col :span="11">
@@ -266,8 +339,8 @@ export default {
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span=11>
-          <el-input v-model="reportedData.approverRemark" placeholder="请输入审批理由" name="approvalReason"></el-input>
+        <el-col :span=11 prop="approverRemark">
+          <el-input v-model="reportedData.approverRemark" placeholder="请输入审批理由" name="approverRemark"></el-input>
         </el-col>
       </el-row>
 

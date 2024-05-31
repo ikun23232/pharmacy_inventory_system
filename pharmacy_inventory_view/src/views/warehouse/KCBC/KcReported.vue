@@ -279,6 +279,7 @@ export default {
     <div class="table">
       <el-table :data="kcReportedPage.list" border style="width: 100%" v-loading="loading">
         <el-table-column prop="code" label="报损编号" width="150" fixed/>
+        <el-table-column prop="title" label="报损标题" width="150" />
         <el-table-column prop="storehouseName" label="仓库" width="120"/>
         <el-table-column prop="reportedTypeName" label="报损类型" width="120"/>
         <el-table-column
@@ -296,8 +297,8 @@ export default {
         <el-table-column prop="modificationName" label="修改人" width="120"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus==1">修改</el-button>
-            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus!=1">详情</el-button>
+            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus==0">修改</el-button>
+            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus!=0">详情</el-button>
             <el-dropdown>
           <span class="el-dropdown-link">
             更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -305,7 +306,7 @@ export default {
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="print(row.code)">打印</el-dropdown-item>
                 <el-dropdown-item @click.native="deleteReported(row)">删除</el-dropdown-item>
-                <el-dropdown-item @click.native="checkReporteds(row)" v-if="row.approvalStatus==1">审批</el-dropdown-item>
+                <el-dropdown-item @click.native="checkReporteds(row)" v-if="row.approvalStatus==0">审批</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>

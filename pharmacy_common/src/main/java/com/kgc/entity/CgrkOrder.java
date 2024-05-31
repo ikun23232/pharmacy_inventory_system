@@ -47,7 +47,7 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("medicinePrice")
     @ExcelFiled("库存总价值")
-    private Double medicineprice;
+    private BigDecimal medicineprice;
 
     /**
      * 采购单Id
@@ -71,7 +71,7 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("effectiveTime")
     @ExcelFiled("生效时间")
-
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
     private Date effectiveTime;
 
     /**
@@ -139,7 +139,7 @@ public class CgrkOrder implements Serializable {
      */
     @TableField("updateTime")
     @ExcelFiled("修改时间")
-
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd mm:hh:ss")
     private Date updateTime;
 
     /**

@@ -32,6 +32,9 @@ public class KcReported implements Serializable {
      */
     @TableField("code")
     private String code;
+
+    @TableField("title")
+    private String title;
     /**
      * 仓库Id
      */

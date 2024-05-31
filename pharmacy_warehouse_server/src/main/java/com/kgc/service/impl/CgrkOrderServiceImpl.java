@@ -87,7 +87,7 @@ public class CgrkOrderServiceImpl extends ServiceImpl<CgrkOrderMapper, CgrkOrder
             referencCount = referencCount.add(multiply); // 使用BigDecimal的add方法进行精确加法计算
         }
         cgrqOrder.setCount(count);
-        cgrqOrder.setMedicineprice(referencCount.doubleValue());
+        cgrqOrder.setMedicineprice(referencCount);
         if (cgrqOrder.getOrderStatus()>0){
             cgrqOrder.setOrderStatus(cgrqOrder.getOrderStatus());
         }else {

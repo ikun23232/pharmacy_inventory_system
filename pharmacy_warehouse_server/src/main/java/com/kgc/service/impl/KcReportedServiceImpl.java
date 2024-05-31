@@ -223,6 +223,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
         Map a = (Map) map.get("theData");
         KcReported kcReported = new KcReported();
         kcReported.setCode((String) a.get("code"));
+        kcReported.setTitle((String) a.get("title"));
         kcReported.setStorehouseId((Integer) a.get("storehouseId"));
         kcReported.setReportedTypeId((Integer) a.get("reportedTypeId"));
         kcReported.setDocumenterBy((Integer) a.get("documenterBy"));
@@ -252,6 +253,7 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
         KcReported kcReported = new KcReported();
         kcReported.setId((Integer) kcReportedMap.get("id"));
         kcReported.setCode((String) kcReportedMap.get("code"));
+        kcReported.setTitle((String) kcReportedMap.get("title"));
         kcReported.setApprovalStatus(Integer.valueOf(kcReportedMap.get("approvalStatus").toString()));
         kcReported.setReportedTypeId(Integer.valueOf(kcReportedMap.get("reportedTypeId").toString()));
         kcReported.setApproverRemark((String) kcReportedMap.get("approverRemark"));
