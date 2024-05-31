@@ -33,10 +33,10 @@ public class CwCgyfController {
         return message;
     }
 
-    @Log("采购应付付款")
+//    @Log("采购应付付款")
     @RequestMapping("/updateCwCgyf")
     public Message updateCwCgyf(@RequestBody CwCgyf cwCgyf){
-        StpUtil.checkPermission("cw:cgyf:add");
+//        StpUtil.checkPermission("cw:cgyf:add");
         Message message = cwCgyfService.updateCwCgyf(cwCgyf);
         return message;
     }
@@ -59,10 +59,10 @@ public class CwCgyfController {
         return message;
     }
 
-    @Log("采购应付导出")
+//    @Log("采购应付导出")
     @RequestMapping("/cwCgyfExcel")
     public void cwCgyfExcel(HttpServletResponse response) {
-        StpUtil.checkPermission("cw:cgyf:excel");
+//        StpUtil.checkPermission("cw:cgyf:excel");
         cwCgyfService.cwCgyfExcel(response);
     }
 }
