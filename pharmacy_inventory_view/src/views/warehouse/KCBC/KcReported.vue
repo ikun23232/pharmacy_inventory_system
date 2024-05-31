@@ -123,6 +123,7 @@ export default {
           }
           this.kcReportedPage=resp.data
         })
+      this.loading=false
     },
     // 审批状态
     approvalStatusFormatter(row, column) {

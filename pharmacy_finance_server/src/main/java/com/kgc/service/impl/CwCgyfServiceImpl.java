@@ -17,6 +17,7 @@ import com.kgc.vo.CwCgyfVO;
 import com.kgc.vo.MedicineVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ import java.util.function.Function;
  * @since 2024-05-20 09:23:53
  */
 @Service("cwCgyfService")
+@Transactional
 public class CwCgyfServiceImpl extends ServiceImpl<CwCgyfDao, CwCgyf> implements CwCgyfService {
 
     @Resource

@@ -15,6 +15,7 @@ import com.kgc.vo.CwXstkVO;
 import com.kgc.vo.CwXsysVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class CwXstkServiceImpl extends ServiceImpl<CwXstkDao, CwXstk> implements CwXstkService {
 
     @Autowired

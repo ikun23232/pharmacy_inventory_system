@@ -22,4 +22,5 @@ public class CgVO implements Serializable {
     private int approvalStatus;
     private int providerId;
     private int isPay;
+    private int orderStatus;
 }
