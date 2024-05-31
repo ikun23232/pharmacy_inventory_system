@@ -38,8 +38,8 @@ public class KcDispatchController {
     @RequestMapping("/addKcDispatch")
     @Log("库存调度添加")
     public Message addKcDispatch(@RequestBody Map map){
-        List<String> permissionList = StpUtil.getPermissionList();
-        StpUtil.checkPermission("kcdd:tianjia");
+//        List<String> permissionList = StpUtil.getPermissionList();
+//        StpUtil.checkPermission("kcdd:tianjia");
         KcDispatch kcDispatch = JSON.parseObject(JSON.toJSONString(map.get("KcDispatch")),KcDispatch.class);
         Message kcDispathList = kcDispatchService.addKcDispatch(kcDispatch);
         return kcDispathList;

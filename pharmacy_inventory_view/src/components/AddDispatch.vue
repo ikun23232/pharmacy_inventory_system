@@ -55,26 +55,26 @@
               </el-select>
             </el-form-item></div
         ></el-col>
-         <!-- <el-col :span="6"
+         <el-col :span="6"
           ><div class="grid-content bg-purple">
-            <el-form-item label="需求人" prop="beforeWarehouseId">
+            <el-form-item label="调度人" prop="beforeWarehouseId">
               <el-select
                 @change="cleanList"
-                v-model="KcDispatch.beforeWarehouseId"
-                placeholder="请选择原仓库"
+                v-model="KcDispatch.userList"
+                placeholder="请选择调度人"
                 clearable
                 filterable
               >
                 <el-option
-                  v-for="item in storeHouseList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
+                  v-for="item in userList"
+                  :key="item.userId"
+                  :label="item.userName"
+                  :value="item.userId"
                 >
                 </el-option>
               </el-select>
             </el-form-item></div
-        ></el-col> -->
+        ></el-col>
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <el-button
@@ -387,6 +387,7 @@ import { getCurrentTime } from "./../api/util.js";
 import { addKcDispatch } from "./../api/KcDispatch";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
 import _ from 'lodash';
+import { getAllUser } from '@/api/sysUser';
 
 
 export default {
@@ -407,6 +408,7 @@ export default {
         isCommit: "",
         dispatchTime: new Date(),
         medicineList: [],
+        
       },
       storeHouseList: [],
       list: {},
@@ -418,6 +420,7 @@ export default {
       medicineListTemp: [],
       changeMedicineList: [],
       providerList: [],
+      userList:[],
       dispatchRules: {
         beforeWarehouseId: [
           { required: true, message: "请输入源仓库", trigger: "change" },
@@ -434,6 +437,8 @@ export default {
   async mounted() {
     this.KcDispatch.code = await getCurrentTime("KCDD");
     let data = await getAllStoreHouseList();
+    let userList = await getAllUser();
+    this.userList = userList.data
     console.log("data:", data);
     this.storeHouseList = data.data;
   },
@@ -550,7 +555,7 @@ export default {
               const element = this.KcDispatch.medicineList[i];
               if (
                 this.changeMedicineList[index].batchCode == element.batchCode &&
-                this.changeMedicineList[index].id == element.medicineId
+                this.changeMedicineList[index].medicineId == element.medicineId
               ) {
                 Message({
                   message:
@@ -640,7 +645,7 @@ export default {
     },
   },
   created() {
-    this.getMedicineListDetail = _.debounce(this.getMedicineListDetail, 1000);
+    this.getMedicineListDetail = _.debounce(this.getMedicineListDetail, 500);
   }
 };
 </script>
