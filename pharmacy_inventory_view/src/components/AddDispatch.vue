@@ -55,6 +55,26 @@
               </el-select>
             </el-form-item></div
         ></el-col>
+         <!-- <el-col :span="6"
+          ><div class="grid-content bg-purple">
+            <el-form-item label="需求人" prop="beforeWarehouseId">
+              <el-select
+                @change="cleanList"
+                v-model="KcDispatch.beforeWarehouseId"
+                placeholder="请选择原仓库"
+                clearable
+                filterable
+              >
+                <el-option
+                  v-for="item in storeHouseList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item></div
+        ></el-col> -->
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <el-button
@@ -258,8 +278,7 @@
               label="目标仓库"
               align="center"
               prop="aimStoreHouseId"
-              width="150"
-            >
+              width="150">
               <template slot-scope="scope">
                 <el-select
                   clearable
@@ -367,6 +386,9 @@ import { Message } from "element-ui";
 import { getCurrentTime } from "./../api/util.js";
 import { addKcDispatch } from "./../api/KcDispatch";
 import { getAllStoreHouseList } from "@/api/storeHouse.js";
+import _ from 'lodash';
+
+
 export default {
   name: "addDispatch",
   components: {
@@ -548,7 +570,7 @@ export default {
             aimStoreHouseList: this.storeHouseList,
             batchCode: this.changeMedicineList[index].batchCode,
             name: this.changeMedicineList[index].name,
-            medicineId: this.changeMedicineList[index].id,
+            medicineId: this.changeMedicineList[index].medicineId,
             unitId: this.changeMedicineList[index].unitId,
             unitName: this.changeMedicineList[index].unitName,
             specification: this.changeMedicineList[index].specification,
@@ -617,6 +639,9 @@ export default {
       };
     },
   },
+  created() {
+    this.getMedicineListDetail = _.debounce(this.getMedicineListDetail, 1000);
+  }
 };
 </script>
 

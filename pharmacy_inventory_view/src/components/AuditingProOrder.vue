@@ -1053,6 +1053,7 @@ export default {
           let obj = {
             medicineList: resp.data.data,
             providerId: this.CgddOrder.providerId,
+            sourceCode: this.cgddMedicineionList[index].sourceCode,
             medicineId: this.cgddMedicineionList[index].id,
             unitName: this.cgddMedicineionList[index].unitName,
             specification: this.cgddMedicineionList[index].specification,

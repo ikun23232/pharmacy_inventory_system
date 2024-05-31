@@ -26,7 +26,7 @@ export function ddckExcel(kcDisfromware) {
         let url = window.URL.createObjectURL(blob);
         const link = document.createElement('a'); //创建a标签
         link.href = url;
-        link.download = '调度出库单.xlsx'; //重命名文件
+        link.download = '调度入库单.xlsx'; //重命名文件
         link.click();
         URL.revokeObjectURL(url);
     }).catch(error =>{

@@ -117,6 +117,7 @@ public class CgddOrder implements Serializable {
     @TableField("approverBy")
     private Integer approverBy;
 
+    @TableField(exist = false)
     private String approverName;//核批人名字
 
     /**

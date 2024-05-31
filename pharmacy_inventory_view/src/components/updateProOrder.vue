@@ -396,6 +396,10 @@
             >
               <template slot-scope="scope">
                 <el-input-number
+                  min="1"
+                  max="1000"
+                  :step="1"
+                  :precision="0"
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="handleChange"
@@ -671,8 +675,9 @@ export default {
         type: "0",
         startTime: "",
         endTime: "",
+        orderStatus: 3,
+        approvalStatus: 2,
         voidState: 0,
-        approvalStatus: 1,
       },
       list: {},
       cgType: {},

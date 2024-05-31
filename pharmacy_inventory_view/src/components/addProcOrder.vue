@@ -369,6 +369,10 @@
             >
               <template slot-scope="scope">
                 <el-input-number
+                  min="1"
+                  max="1000"
+                  :step="1"
+                  :precision="0"
                   v-model="bcglXiangXiList[scope.row.xh - 1].quantity"
                   controls-position="right"
                   @change="handleChange"
@@ -499,7 +503,8 @@
             <el-form-item class="anniu" label="单据主题">
               <el-input
                 v-model="vo.subject"
-                placeholder="请输入单据编号"></el-input>
+                placeholder="请输入单据编号"
+              ></el-input>
             </el-form-item>
             <el-form-item class="anniu" label="采购类型">
               <el-select v-model="vo.type" placeholder="请选择采购类型">
@@ -561,7 +566,8 @@
             <el-table-column
               prop="referenceamount"
               label="参考金额"
-              width="120">
+              width="120"
+            >
             </el-table-column>
           </el-table>
           <div class="block">
@@ -570,7 +576,8 @@
               :current-page.sync="list.pageNum"
               :page-size="list.pageSize"
               layout="prev, pager, next, jumper"
-              :total="list.total">
+              :total="list.total"
+            >
             </el-pagination>
             <el-row type="flex" justify="center">
               <el-col :span="2">
@@ -631,9 +638,9 @@ export default {
         type: "0",
         startTime: "",
         endTime: "",
-        orderStatus:3,
-        approvalStatus:2,
-        voidState:0
+        orderStatus: 3,
+        approvalStatus: 2,
+        voidState: 0,
       },
       list: {},
       cgType: {},
@@ -713,7 +720,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.CgddOrder.medicineList == null || this.CgddOrder.medicineList.length == 0) {
+          if (
+            this.CgddOrder.medicineList == null ||
+            this.CgddOrder.medicineList.length == 0
+          ) {
             Message({
               message: "请添加药品明细!",
               type: "error",
@@ -796,6 +806,13 @@ export default {
           }
         }
         console.log("medicineListTemp:", this.medicineListTemp);
+      }
+      if (this.medicineListTemp.length == 0) {
+        Message({
+          message: "选择的采购申请单下没有该供应商的药品！",
+          type: "error",
+          center: "true",
+        });
       }
       this.cgsqdialog = false;
       this.cgsqListTemp = [];
@@ -997,7 +1014,7 @@ export default {
         return 0;
       }
       return this.bcglXiangXiList.reduce(
-        (total, item) => total + item.totalPrice * item.quantity,
+        (total, item) => total + item.price * item.quantity,
         0
       );
     },

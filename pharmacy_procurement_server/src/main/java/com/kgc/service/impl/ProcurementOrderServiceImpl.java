@@ -260,8 +260,8 @@ public class ProcurementOrderServiceImpl extends ServiceImpl<ProcurementOrderMap
         List<CgddVO> order = mapper.imExcel();
         List<CgddVO> temp = new ArrayList<>();
         for (CgddVO cgddVO :order) {
-            Message message = baseMedicineService.getMedicineVOListByCode(cgddVO.getCode());
-            cgddVO.setMedicineList((List<MedicineVO>) message.getData());
+            List<MedicineVO> medicineVOListByCodes = baseMedicineService.getMedicineVOListByCodes(cgddVO.getCode());
+            cgddVO.setMedicineList(medicineVOListByCodes);
             temp.add(cgddVO);
         }
         try {
