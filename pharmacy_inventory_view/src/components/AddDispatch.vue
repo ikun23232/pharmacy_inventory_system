@@ -548,7 +548,7 @@ export default {
             aimStoreHouseList: this.storeHouseList,
             batchCode: this.changeMedicineList[index].batchCode,
             name: this.changeMedicineList[index].name,
-            medicineId: this.changeMedicineList[index].id,
+            medicineId: this.changeMedicineList[index].medicineId,
             unitId: this.changeMedicineList[index].unitId,
             unitName: this.changeMedicineList[index].unitName,
             specification: this.changeMedicineList[index].specification,

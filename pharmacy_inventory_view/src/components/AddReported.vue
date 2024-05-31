@@ -1,12 +1,14 @@
 <script>
 import {getStorehouseList,getReportedType,addKcReported,getKcMedicine,addKcReportedAll} from '@/api/KcReported';
 import { Message } from "element-ui";
+import _ from 'lodash';
+import { getAllUser} from "@/api/sysUser"
 export default {
   name: "AddReported",
   data() {
     return {
       // 登录用户
-      loginUser:1,
+      loginUser:2,
       // 仓库列表
       storehouseList:[],
       // 报损类型列表
@@ -19,6 +21,13 @@ export default {
         reportedTypeId: [
           { required: true, message: "请选择类别", trigger: "blur" },
         ],
+        title: [
+          { required: true, message: "请输入报损原因", trigger: "blur" },
+        ],
+        documenterBy: [
+          { required: true, message: "请选择报损人", trigger: "blur" },
+        ],
+
 
 
       },
@@ -27,7 +36,8 @@ export default {
         code:'',
         storehouseId:'',
         reportedTypeId:'',
-        documenterBy:1,
+        documenterBy:'',
+        title:'',
         list:[]
       },
       // 添加报损详情
@@ -44,10 +54,19 @@ export default {
       //报损单药品列表
       reportedDetailList:[],
       // 将要报损药品列表
-      wereAddList:[]
+      wereAddList:[],
+      //用户列表
+      userList:[],
     }
   },
   mounted() {
+    getAllUser().then(resp=>{
+      if (resp.code!=200){
+        return
+      }
+      this.userList=resp.data
+
+    })
     // 初始化仓库列表
     this.getStorehouseLists()
     // 初始化报损类型列表
@@ -157,6 +176,14 @@ export default {
     },
     // 报损数量改变
     handleDamageChange(row) {
+      const value = parseInt(row.reportedNum);
+      if (isNaN(value)) {
+        // 如果输入的不是数字，则可以重置为1或其他默认值
+        row.reportedNum = 1;
+      } else {
+        // 如果输入的是数字，则更新为这个数字
+        row.reportedNum = value;
+      }
       // console.log(this.wereAddList)
       // 确保报损数量不大于库存数量
       row.reportedNum = Math.min(row.reportedNum, row.quantity);
@@ -213,6 +240,9 @@ export default {
     disabledStorehouse() {
       return this.wereAddList.length > 0;
     }
+  },
+  created() {
+    this.submitForm = _.debounce(this.submitForm, 1000);
   }
 }
 </script>
@@ -251,6 +281,28 @@ export default {
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="报损标题" prop="title">
+            <el-input v-model="addReportedData.title" placeholder="请输入报损主题" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="报损人" prop="documenterBy">
+            <el-select v-model="addReportedData.documenterBy" placeholder="请选择人" name="documenterBy" >
+
+              <el-option
+                  v-for="item in userList"
+                  :key="item.userid"
+                  :label="item.username"
+                  :value="item.userid">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+
 
     </el-form>
     <hr/>
@@ -304,17 +356,17 @@ export default {
       <el-table-column prop="batchCode" label="批次编号" width="150">
       </el-table-column>
       <el-table-column prop="quantity" label="报损数量" width="110">
-      <template slot-scope="scope">
-        <el-input-number
-            v-model="scope.row.reportedNum"
-            :min="1"
-            :max="parseInt(scope.row.quantity)"
-            label="报损数量"
-            :controls="false"
-            @input="handleDamageChange(scope.row)"
-            style="width: 80px"
-        />
-      </template>
+        <template slot-scope="scope">
+          <el-input-number
+              v-model="scope.row.reportedNum"
+              :min="1"
+              :max="parseInt(scope.row.quantity)"
+              label="报损数量"
+              :controls="false"
+              @input="handleDamageChange(scope.row)"
+              style="width: 80px"
+          />
+        </template>
       </el-table-column>
       <el-table-column prop="allPrice" label="药品总价" width="120">
       </el-table-column>

@@ -279,6 +279,7 @@ export default {
     <div class="table">
       <el-table :data="kcReportedPage.list" border style="width: 100%" v-loading="loading">
         <el-table-column prop="code" label="报损编号" width="150" fixed/>
+        <el-table-column prop="title" label="报损标题" width="150" />
         <el-table-column prop="storehouseName" label="仓库" width="120"/>
         <el-table-column prop="reportedTypeName" label="报损类型" width="120"/>
         <el-table-column

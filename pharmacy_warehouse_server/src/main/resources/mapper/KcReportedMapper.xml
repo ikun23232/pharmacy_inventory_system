@@ -6,6 +6,7 @@
         SELECT
             a.id,
             a.`code`,
+            a.title,
             a.storehouseId,
             f.name AS storehouseName,
             a.reportedTypeId,
@@ -57,6 +58,7 @@
         SELECT
             a.id,
             a.`code`,
+            a.title,
             a.storehouseId,
             f.name AS storehouseName,
             a.reportedTypeId,
@@ -135,8 +137,8 @@
     </select>
 <!--    添加报损-->
     <insert id="addKcReported" parameterType="com.kgc.entity.KcReported">
-        INSERT INTO kc_reported(code,storehouseId,reportedTypeId,documenterBy,createTime,createBy)
-        VALUES(#{code},#{storehouseId},#{reportedTypeId},#{documenterBy},now(),#{documenterBy})
+        INSERT INTO kc_reported(code,title,storehouseId,reportedTypeId,documenterBy,createTime,createBy)
+        VALUES(#{code},#{title},#{storehouseId},#{reportedTypeId},#{documenterBy},now(),#{documenterBy})
     </insert>
 <!--    添加报损明细-->
     <insert id="addKcReporteddetail" parameterType="com.kgc.entity.KcReporteddetail">
@@ -148,6 +150,7 @@
         SELECT
             a.id,
             a.`code`,
+            a.title,
             a.storehouseId,
             f.name AS storehouseName,
             a.reportedTypeId,
@@ -201,6 +204,7 @@
         UPDATE kc_reported
         SET
             approverBy=#{approverBy},
+            title=#{title},
             reportedTypeId=#{reportedTypeId},
             approvalStatus=#{approvalStatus},
             approverRemark=#{approverRemark},

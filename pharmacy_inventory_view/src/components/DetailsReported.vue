@@ -95,6 +95,27 @@ export default {
         </el-col>
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="报损标题" prop="title">
+            <el-input v-model="reportedData.title" placeholder="请输入报损主题" disabled></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8">
+          <el-form-item label="报损人" prop="documenterName">
+            <el-input v-model="reportedData.documenterName" disabled ></el-input>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8">
+          <el-form-item label="审批人" prop="modificationBy">
+            <el-input v-model="reportedData.modificationBy" disabled ></el-input>
+          </el-form-item>
+        </el-col>
+
+
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="11">
           <el-form-item label="报损审批">
             <el-select v-model="reportedData.approvalStatus" placeholder="请选择审批状态" name="approvalStatus" disabled>
