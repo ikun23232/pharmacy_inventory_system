@@ -73,6 +73,7 @@ public class KcDispatchServiceImpl extends ServiceImpl<KcDispatchMapper, KcDispa
             kcDispatchDetails.setPrice(baseMedicine.getPurchasePrice());
             kcDispatchDetails.setDispatchCode(kcDispatch.getCode());
             kcDispatchDetails.setProviderId(baseMedicine.getProviderId());
+            logger.debug("addKcDispatch kcDispatchDetails:"+kcDispatchDetails);
             int temp = dispatchDetailMapper.insert(kcDispatchDetails);
             if (temp > 0){
                 count1++;
