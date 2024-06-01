@@ -130,6 +130,10 @@ export default {
           status === 1 ? '未通过' :
               status === 2 ? '通过' : '未知状态';
     },
+    isCanFormatter(row, column) {
+      const status = row[column.property];
+      return status === 0 ? '否' : '是';
+    },
     // 获取仓库列表
     getStorehouseLists(){
       getStorehouseList().then(resp=>{
@@ -321,7 +325,7 @@ export default {
         <el-table-column prop="documenterName" label="制单人" width="120"/>
         <el-table-column prop="approverName" label="审批人" width="120"/>
         <el-table-column prop="modificationName" label="修改人" width="120"/>
-        <el-table-column prop="isCan" label="是否作废" width="120"/>
+        <el-table-column prop="isCan" label="是否作废" width="120" :formatter="isCanFormatter"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
             <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus==0 ">修改</el-button>
