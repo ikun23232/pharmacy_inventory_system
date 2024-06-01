@@ -46,20 +46,21 @@
         >
         <el-col :span="6"
         ><div class="grid-content bg-purple">
-            <el-form-item label="需求人" prop="demainerId">
-              <el-select
+            <el-form-item label="需求人" prop="demanderUserName">
+              <el-input type="text" v-model="CgsqOrder.demanderUserName" disabled></el-input>
+              <!-- <el-select
                   v-model="CgsqOrder.demainerId"
                   placeholder="请选择需求人"
                   clearable
                   filterable
                   disabled
               >
-                <!-- <el-option v-for="item in options"
+                <el-option v-for="item in options"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
-                </el-option> -->
-              </el-select>
+                </el-option>
+              </el-select> -->
             </el-form-item>
           </div></el-col
         >

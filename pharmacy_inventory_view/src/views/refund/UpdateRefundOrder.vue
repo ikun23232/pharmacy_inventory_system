@@ -533,7 +533,11 @@
          }
        });
      },
-     cancelForm(){
+     async cancelForm(){
+      for(var i=0;i<this.saleOrderList.length;i++){
+          const orderNo=this.saleOrderList[i].orderNo;
+          const data=await recoverSaleOrderByOrderNo(orderNo)
+        }
        this.$emit("handleDialogFormVisible",false);
      },
  

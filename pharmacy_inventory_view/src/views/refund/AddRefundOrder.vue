@@ -373,10 +373,9 @@
         },
         //显示要退款的销售订单
         async chooseSaleOrderList(val){
-          for(var i=0;i<val.length;i++){
+          for(var i=0; i<val.length; i++){
             this.saleOrderList.push(val[i]);
           }
-          // this.saleOrderList=val;
           this.medicineDetailList=[];
           //查询订单详情
           for(var i=0;i<this.saleOrderList.length;i++){
@@ -408,9 +407,14 @@
       //    }
       //  },
        //清空
-       handleDeleteAllDetails() {
+      async handleDeleteAllDetails() {
+        for(var i=0;i<this.saleOrderList.length;i++){
+          const orderNo=this.saleOrderList[i].orderNo;
+          const data=await recoverSaleOrderByOrderNo(orderNo)
+        }
          this.saleOrderList = [];
          this.medicineDetailList=[];
+
        },
        //处理要添加的订单详情
        handleSelectionDetail(val){
