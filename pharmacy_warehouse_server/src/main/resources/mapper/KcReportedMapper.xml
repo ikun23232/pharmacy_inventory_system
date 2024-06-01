@@ -19,6 +19,7 @@
             a.createBy,
             a.modificationTime,
             a.modificationBy,
+            a.isCan,
             b.userName AS approverName,
             c.userName AS documenterName,
             d.userName AS createName,
@@ -50,6 +51,9 @@
         </if>
         <if test="code != null and code != ''">
             and a.code like concat('%',#{code},'%')
+        </if>
+        <if test="title != null and title != ''">
+            and a.title like concat('%',#{title},'%')
         </if>
 
     </select>
@@ -228,6 +232,16 @@
         WHERE
             `code`=#{code}
     </update>
+
+    <update id="noCanReportedByCode" parameterType="com.kgc.entity.KcReported">
+        UPDATE kc_reported
+        SET
+            isCan=1
+        WHERE
+            `code`=#{code}
+    </update>
+
+
     <insert id="addKcReportedfromwareByReported" parameterType="com.kgc.entity.KcReportedfromware">
         INSERT INTO kc_reportedfromware(code,reportedId)
         VALUES(#{code},#{reportedId})

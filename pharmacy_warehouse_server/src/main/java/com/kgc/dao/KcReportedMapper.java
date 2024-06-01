@@ -59,6 +59,8 @@ public interface KcReportedMapper extends BaseMapper<KcReported> {
 
     int delKcReportedByCode(@Param("code") String code);
 
+    int noCanReportedByCode(@Param("code") String code);
+
     int addKcReportedfromwareByReported(KcReportedfromware kcReportedfromware);
 
     List<KcReportedfromware> getKcReportedfromware(KcReportedfromware kcReportedfromware);

@@ -214,6 +214,16 @@ public class KcReportedServiceImpl extends ServiceImpl<KcReportedMapper, KcRepor
         }
         return Message.error();
     }
+
+    @Override
+    public Message noCanReportedByCode(String code) {
+        int isCan =kcReportedMapper.noCanReportedByCode(code);
+        if (isCan>0){
+            return Message.success();
+        }
+        return Message.error();
+    }
+
     /**
      * 添加库存报损和明细
      * @param map

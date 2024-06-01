@@ -1,6 +1,6 @@
 package com.kgc.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
+
 import com.kgc.annotation.Log;
 import com.kgc.entity.CgddOrder;
 import com.kgc.entity.KcReported;
@@ -64,23 +64,18 @@ public class KcReportedController {
     @RequestMapping("/addKcReportedAll")//添加库存报损明细
     public Message addKcReportedAll(@RequestBody Map map)
     {
-//        List<String> permissionList = StpUtil.getPermissionList();
-//        System.out.println(permissionList);
-        StpUtil.checkPermission("wa:kcbc:add");
         return kcReportedService.addKcReportedAndDetail(map);
     }
 
     @Log("修改库存报损")
     @RequestMapping("/updateReportedByCode")//修改库存报损
     public Message updateReportedByCode(@RequestBody Map map){
-        StpUtil.checkPermission("wa:kcbc:update");
         return kcReportedService.updateReportedAndDetail(map);
     }
 
     @Log("删除库存报损")
     @RequestMapping("/delKcReportedAndDetailByCode")//删除库存报损
     public Message delKcReportedAndDetailByCode(@RequestParam("code") String code){
-        StpUtil.checkPermission("wa:kcbc:del");
         return kcReportedService.delKcReportedAndDetailByCode(code);
     }
 
@@ -106,14 +101,12 @@ public class KcReportedController {
     @Log("报损导出")
     @RequestMapping("/kcReportedExcel")
     public void kcReportedExcel(@RequestBody KcReportedVO kcReportedVO, HttpServletResponse response) {
-        StpUtil.checkPermission("wa:kcbs:excel");
         kcReportedService.kcReportedExcel(kcReportedVO, response);
     }
 
 //    @Log("报损出库库导出")
     @RequestMapping("/kcReportedfromwareExcel")
     public void kcReportedfromwareExcel(HttpServletResponse response) {
-//        StpUtil.checkPermission("wa:bsck:excel");
         kcReportedService.kcReportedfromwareExcel(response);
     }
 
@@ -149,6 +142,12 @@ public class KcReportedController {
         map.put("theData", theData);
         Message message =kcReportedService.addKcReportedAllByPk(map);
         return message;
+    }
+
+    @RequestMapping("/noCanReportedByCode")
+    public Message noCanReportedByCode(@RequestParam("code") String code)
+    {
+        return kcReportedService.noCanReportedByCode(code);
     }
 
 }

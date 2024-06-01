@@ -101,6 +101,11 @@ public class KcReported implements Serializable {
     @TableField("isDel")
     private int isDel;
     /**
+     * 是否作废
+     */
+    @TableField("isCan")
+    private Integer isCan;
+    /**
      * 审批人姓名(外表字段)
      */
     @TableField(exist = false)

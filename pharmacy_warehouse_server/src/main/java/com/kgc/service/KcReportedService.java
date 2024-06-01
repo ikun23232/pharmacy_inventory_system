@@ -35,6 +35,8 @@ public interface KcReportedService extends IService<KcReported> {
     //删除库存报损
     Message delKcReportedByCode(String code);
 
+    Message noCanReportedByCode(String code);
+
     //添加库存报损和详情
     Message addKcReportedAndDetail(Map map);
     //修改库存报损和详情
