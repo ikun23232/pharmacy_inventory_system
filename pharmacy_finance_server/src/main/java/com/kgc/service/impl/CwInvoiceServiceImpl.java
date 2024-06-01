@@ -64,7 +64,7 @@ public class CwInvoiceServiceImpl extends ServiceImpl<CwInvoiceDao, CwInvoice> i
     @Override
     public void cwInvoiceExcel(HttpServletResponse response) {
         List<CwInvoiceVO> listExcel=cwInvoiceDao.getCwInvoiceVO();
-        List<CwInvoiceVO> listExcels=new ArrayList<>();
+       List<CwInvoiceVO> listExcels=new ArrayList<>();
         for (CwInvoiceVO cwInvoiceVO:listExcel){
             List<BaseMedicine> baseMedicineList = saleOrderFeign.getSaleOrderDetailListByOrderNo(cwInvoiceVO.getOrderNumber());
             cwInvoiceVO.setBaseMedicineList(baseMedicineList);
