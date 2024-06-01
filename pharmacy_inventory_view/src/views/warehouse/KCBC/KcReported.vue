@@ -1,5 +1,5 @@
 <script>
-import {getKcReportedList,getStorehouseList,getReportedType,delKcReportedAndDetailByCode,kcReportedExcel} from '@/api/KcReported';
+import {getKcReportedList,getStorehouseList,getReportedType,delKcReportedAndDetailByCode,kcReportedExcel,noCanReportedByCode} from '@/api/KcReported';
 import AddReported from "@/components/AddReported.vue";
 import { Message } from "element-ui";
 import UpdateReported from "@/components/UpdateReported.vue";
@@ -7,7 +7,7 @@ import DetailsReported from "@/components/DetailsReported.vue";
 import CheckReported from "@/components/CheckReported.vue";
 export default {
   name: "KcReported",
-  components: {CheckReported, DetailsReported, UpdateReported, AddReported},
+  components: {CheckReported, DetailsReported, UpdateReported, AddReported,},
   data() {
     return {
       loading:false,
@@ -20,6 +20,7 @@ export default {
         beginTime:'',
         endTime:'',
         code:'',
+        title:''
       },
       // 时间
       time:{},
@@ -206,6 +207,27 @@ export default {
         code:code
       }})
       window.open(newPage.href,'_blank')
+    },
+    noCanReportedByCodes(code){
+      if (code){
+        const confirmDelete = confirm('确定要作废报损吗？');
+
+        if (!confirmDelete) {
+          // 如果用户点击“取消”，则不执行删除操作
+          return;
+        }
+        noCanReportedByCode(code).then(resp=>{
+          if (resp.code!=200){
+            return
+          }
+          Message({
+            message: '取消成功',
+            type: 'success',
+            duration: 5 * 1000
+          })
+          this.getKcReportedLists()
+        })
+      }
     }
   }
 
@@ -268,6 +290,13 @@ export default {
           end-placeholder="结束日期"
           :picker-options="pickerOptions"
       />&nbsp;&nbsp;&nbsp;&nbsp;
+      报损标题:
+      <el-input
+          v-model="kcReportedSelect.title"
+          style="width: 200px"
+          placeholder="请输入报损标题"
+      ></el-input>&nbsp;&nbsp;
+
       <el-button type="primary" @click="getKcReportedLists()">查询</el-button>
       <el-button type="primary" @click="addReportedVisible=true">添加</el-button>
       <el-button type="primary" @click="printExcel">导出</el-button>
@@ -292,10 +321,11 @@ export default {
         <el-table-column prop="documenterName" label="制单人" width="120"/>
         <el-table-column prop="approverName" label="审批人" width="120"/>
         <el-table-column prop="modificationName" label="修改人" width="120"/>
+        <el-table-column prop="isCan" label="是否作废" width="120"/>
         <el-table-column align="center" label="操作" fixed="right" width="200">
           <template #default="{ row }">
-            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus==0">修改</el-button>
-            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus!=0">详情</el-button>
+            <el-button type="primary" plain @click="updateReporteds(row)" v-if="row.approvalStatus==0 ">修改</el-button>
+            <el-button type="primary" plain @click="detailsReporteds(row)" v-if="row.approvalStatus!=0 ">详情</el-button>
             <el-dropdown>
           <span class="el-dropdown-link">
             更多<i class="el-icon-arrow-down el-icon--right"></i>
@@ -303,7 +333,8 @@ export default {
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="print(row.code)">打印</el-dropdown-item>
                 <el-dropdown-item @click.native="deleteReported(row)">删除</el-dropdown-item>
-                <el-dropdown-item @click.native="checkReporteds(row)" v-if="row.approvalStatus==0">审批</el-dropdown-item>
+                <el-dropdown-item @click.native="checkReporteds(row)" v-if="row.approvalStatus==0 && row.isCan==0">审批</el-dropdown-item>
+                <el-dropdown-item @click.native="noCanReportedByCodes(row.code)" v-if="row.approvalStatus==0 && row.isCan==0">作废</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>

@@ -123,3 +123,11 @@ export function getKcReportedByCode(code) {
         }
     });
 }
+
+export function noCanReportedByCode(code) {
+    return request.get(baseUrl + "/noCanReportedByCode",{
+        params:{
+            code:code
+        }
+    });
+}
