@@ -353,6 +353,10 @@ export default {
   mounted() {
     this.initCgSqOrderList(1);
     this.initProvider();
+    if(this.$route.query.code){
+        this.vo.code = this.$route.query.code
+        this.initCgSqOrderList();
+    }
   },
   methods: {
     async initCgSqOrderList(currentPageNo) {

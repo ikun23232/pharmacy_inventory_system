@@ -408,13 +408,13 @@
               width="150"
             >
               <template slot-scope="scope">
-                {{ calculatedTotalPrice(scope.row) }}
+                {{ calculatedTotalPrice(scope.row).toFixed(2) }}
               </template>
             </el-table-column>
           </el-table>
           <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
           <div style="text-align: left">
-            <div style="margin-bottom: 25px">合计{{ totalPrice }}元</div>
+            <div style="margin-bottom: 25px">合计{{ totalPrice.toFixed(2) }}元</div>
           </div>
         </el-tab-pane>
       </el-tabs>

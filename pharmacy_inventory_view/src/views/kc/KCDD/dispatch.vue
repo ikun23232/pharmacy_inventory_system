@@ -344,6 +344,10 @@ export default {
     let data = await getAllStoreHouseList();
     console.log("data:", data);
     this.storeHouseList = data.data;
+    if (this.$route.query.code) {
+      this.DispatchVO.code = this.$route.query.code;
+      this.getOrderList();
+    }
   },
   methods: {
     async excel() {

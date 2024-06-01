@@ -152,13 +152,6 @@
                 clearable
                 filterable
               >
-                <!-- <el-option
-                  v-for="item in cgType"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option> -->
                 <el-option label="未编制" :value="1"></el-option>
                 <el-option label="编制完" :value="2"></el-option>
                 <el-option label="执行中" :value="3"></el-option>
@@ -435,7 +428,7 @@
               width="150"
             >
               <template slot-scope="scope">
-                {{ calculatedTotalPrice(scope.row) }}
+                {{ calculatedTotalPrice(scope.row).toFixed(2) }}
               </template>
             </el-table-column>
           </el-table>
@@ -666,6 +659,7 @@ export default {
         subject: "",
         medicineList: [],
         isSave: 0,
+        demanderBy: "",
       },
       vo: {
         currentPageNo: 1,

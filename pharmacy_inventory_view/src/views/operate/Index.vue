@@ -15,7 +15,7 @@
           <p>{{ this.CWStatistics.totalExpense}}</p>
         </div>
         <div>
-          <p>本月收出(元)</p>
+          <p>本月收入(元)</p>
           <p>{{ this.CWStatistics.totalIncome}}</p>
         </div>
       </div>
@@ -71,7 +71,7 @@
       <div slot="header" class="clearfix">
         <span>销售订单</span>
         <el-button style="float: right; padding: 3px 0" type="text" >
-          <router-link :to="{  path: '/runningWater' }">详情</router-link>
+          <router-link :to="{  path: '/SaleOrder' }">详情</router-link>
         </el-button>
       </div>
       <div class="content">
@@ -105,7 +105,7 @@
       <div slot="header" class="clearfix">
         <span>销售退款</span>
         <el-button style="float: right; padding: 3px 0" type="text" >
-          <router-link :to="{  path: '/runningWater' }">详情</router-link>
+          <router-link :to="{  path: '/XSTK' }">详情</router-link>
         </el-button>
       </div>
       <div class="content">
@@ -144,7 +144,7 @@
       <div slot="header" class="clearfix">
         <span>采购订单</span>
         <el-button style="float: right; padding: 3px 0" type="text" >
-          <router-link :to="{  path: '/runningWater' }">详情</router-link>
+          <router-link :to="{  path: '/CGDDOrder' }">详情</router-link>
         </el-button>
       </div>
       <div class="content">
